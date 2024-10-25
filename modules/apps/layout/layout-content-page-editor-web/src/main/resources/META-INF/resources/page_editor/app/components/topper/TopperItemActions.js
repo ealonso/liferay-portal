@@ -42,6 +42,20 @@ import useHasRequiredChild from '../../utils/useHasRequiredChild';
 import SaveFragmentCompositionModal from '../SaveFragmentCompositionModal';
 import hasDropZoneChild from '../layout_data_items/hasDropZoneChild';
 
+function getItemAction(action, portletId) {
+	return {
+		action: () => {
+			openModal({
+				onClose: () => Liferay.Portlet.refresh(`#p_p_id_${portletId}_`),
+				title: action.title,
+				url: action.url,
+			});
+		},
+		icon: action.icon,
+		label: action.title,
+	};
+}
+
 export default function TopperItemActions({disabled, item}) {
 	const copiedItemIds = useCopiedItemIds();
 	const dispatch = useDispatch();
@@ -173,15 +187,22 @@ export default function TopperItemActions({disabled, item}) {
 			});
 		}
 
-		if (widget && Liferay.FeatureFlags['LPD-32075']) {
-			items.push({
-				action: () =>
-					Liferay.Util.getPortletConfigurationIconAction(
-						`_${widget.portletId}_exportImport`
-					)(),
-				icon: 'order-arrow',
-				label: Liferay.Language.get('export-import'),
-			});
+		const fragmentEntryLink =
+			fragmentEntryLinks[item.config.fragmentEntryLinkId];
+
+		if (
+			widget &&
+			fragmentEntryLink.actions &&
+			Liferay.FeatureFlags['LPD-32075']
+		) {
+			const exportImportAction =
+				fragmentEntryLink.actions[
+					'ExportImportEditModePortletConfigurationIcon'
+				];
+
+			if (exportImportAction) {
+				items.push(getItemAction(exportImportAction, widget.portletId));
+			}
 		}
 
 		if (
@@ -222,45 +243,44 @@ export default function TopperItemActions({disabled, item}) {
 
 		addDivider(items);
 
-		if (widget && Liferay.FeatureFlags['LPD-32075']) {
-			items.push(
-				{
-					action: () =>
-						Liferay.Util.getPortletConfigurationIconAction(
-							`_${widget.portletId}_configuration`
-						)(),
-					icon: 'cog',
-					label: Liferay.Language.get('configuration'),
-				},
-				{
-					action: () => {
-						openModal({
-							onClose: () =>
-								Liferay.Portlet.refresh(
-									`#p_p_id_${widget.portletId}_`
-								),
-							title: Liferay.Language.get(
-								'configuration-templates'
-							),
-							url: widget.configurationTemplatesURL,
-						});
-					},
-					label: Liferay.Language.get('configuration-templates'),
-				},
-				{
-					action: () => {
-						openModal({
-							onClose: () =>
-								Liferay.Portlet.refresh(
-									`#p_p_id_${widget.portletId}_`
-								),
-							title: Liferay.Language.get('permissions'),
-							url: widget.permissionsURL,
-						});
-					},
-					label: Liferay.Language.get('permissions'),
-				}
-			);
+		if (
+			widget &&
+			fragmentEntryLink.actions &&
+			Liferay.FeatureFlags['LPD-32075']
+		) {
+			const configurationAction =
+				fragmentEntryLink.actions[
+					'ModalConfigurationEditModePortletConfigurationIcon'
+				];
+
+			if (configurationAction) {
+				items.push(
+					getItemAction(configurationAction, widget.portletId)
+				);
+			}
+
+			const configurationTemplatesAction =
+				fragmentEntryLink.actions[
+					'ConfigurationTemplatesEditModePortletConfigurationIcon'
+				];
+
+			if (configurationTemplatesAction) {
+				items.push(
+					getItemAction(
+						configurationTemplatesAction,
+						widget.portletId
+					)
+				);
+			}
+
+			const permissionAction =
+				fragmentEntryLink.actions[
+					'PortletPermissionsEditModePortletConfigurationIcon'
+				];
+
+			if (permissionAction) {
+				items.push(getItemAction(permissionAction, widget.portletId));
+			}
 		}
 
 		addDivider(items);
