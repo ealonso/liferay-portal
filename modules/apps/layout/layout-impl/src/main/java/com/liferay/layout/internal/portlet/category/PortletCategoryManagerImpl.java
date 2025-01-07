@@ -516,6 +516,8 @@ public class PortletCategoryManagerImpl implements PortletCategoryManager {
 						return false;
 					}
 				).put(
+					"deprecated", true
+				).put(
 					"highlighted",
 					highlightedPortletIds.contains(portlet.getPortletId())
 				).put(
