@@ -162,7 +162,7 @@ public class JenkinsResultsParserUtil {
 		URL_CACHE + "/liferay-jenkins-ee/jenkins.properties"
 	};
 
-	public static boolean debug;
+	public static boolean debug = true;
 
 	public static void addRedactToken(String token) {
 		if (_redactTokens.isEmpty()) {

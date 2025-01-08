@@ -394,6 +394,8 @@ public class PlaywrightBatchTestClassGroup extends BatchTestClassGroup {
 			Process process = JenkinsResultsParserUtil.executeBashCommands(
 				true, baseDir, 1000 * 60 * 10, sb.toString());
 
+			System.out.println("");
+
 			return JenkinsResultsParserUtil.readInputStream(
 				process.getInputStream());
 		}
@@ -630,7 +632,7 @@ public class PlaywrightBatchTestClassGroup extends BatchTestClassGroup {
 			try {
 				_callNPMCommand(playwrightBaseDir, "npm install");
 
-				String result = _callNPMCommand(
+				 String result = _callNPMCommand(
 					playwrightBaseDir,
 					"npm run playwright test -- --list --reporter=json");
 
