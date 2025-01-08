@@ -1,6 +1,60 @@
 definition {
 
 	@summary = "Default summary"
+	macro _selectContent(navItem = null, entryTitle = null) {
+		if (IsTextEqual(key_fieldLabel = "Item", locator1 = "PageEditor#ITEM_SELECTOR_CONTENT_INPUT", value1 = "")) {
+			Click(
+				key_fieldLabel = "Item",
+				key_text = "plus",
+				locator1 = "Icon#ANY_ITEM_SELECTOR");
+		}
+		else {
+			Click(
+				key_fieldLabel = "Item",
+				key_text = "change",
+				locator1 = "Icon#ANY_ITEM_SELECTOR");
+		}
+
+		if (IsElementPresent(key_menuItem = "Select Item...", locator1 = "MenuItem#ANY_MENU_ITEM")) {
+			MenuItem.click(menuItem = "Select Item...");
+		}
+
+		SelectFrame(locator1 = "IFrame#MODAL_BODY");
+
+		MenuBar.click(menuBar = ${navItem});
+
+		if (${navItem} == "Categories") {
+			Portlet.expandTree();
+
+			AssertVisible(
+				key_nodeName = ${entryTitle},
+				locator1 = "Treeview#NODE_ITEM");
+
+			Click(
+				key_nodeName = ${entryTitle},
+				locator1 = "Treeview#NODE_UNSELECTED");
+		}
+		else {
+			LexiconEntry.changeDisplayStyle(displayStyle = "cards");
+
+			Click(
+				key_card = ${entryTitle},
+				locator1 = "Card#CARD_TITLE");
+		}
+
+		SelectFrameTop();
+	}
+
+	@summary = "Default summary"
+	macro _selectField(field = null) {
+		WaitForEditable(locator1 = "PageEditorEditableLink#FIELD");
+
+		Select(
+			locator1 = "PageEditorEditableLink#FIELD",
+			value1 = ${field});
+	}
+
+	@summary = "Default summary"
 	macro gotoEditableFieldLink(fragmentName = null, id = null, contributed = null) {
 		PageEditor.clickEditableField(
 			contributed = ${contributed},

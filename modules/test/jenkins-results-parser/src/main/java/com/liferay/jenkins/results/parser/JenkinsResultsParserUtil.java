@@ -687,13 +687,13 @@ public class JenkinsResultsParserUtil {
 			}
 		}
 
-		if (debug) {
+		if (true) {
 			System.out.println(
 				"Output stream: " +
 					readInputStream(process.getInputStream(), true));
 		}
 
-		if (debug && (returnCode != 0)) {
+		if (true && (returnCode != 0)) {
 			System.out.println(
 				"Error stream: " +
 					readInputStream(process.getErrorStream(), true));

@@ -51,13 +51,9 @@ definition {
 			pageName = "Test Page2",
 			siteName = "Site Name");
 
-		Click(
-			key_status = "view",
-			locator1 = "ControlMenu#TOGGLE_CONTROLS");
+		WidgetPages.switchToggleControls(status = "view");
 
-		AssertVisible(
-			key_status = "hidden",
-			locator1 = "ControlMenu#TOGGLE_CONTROLS");
+		WidgetPages.viewToggleControls(status = "hidden");
 
 		// Assert all bundles installed
 

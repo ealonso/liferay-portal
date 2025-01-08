@@ -179,9 +179,7 @@ definition {
 			menuItem = "Configure",
 			pageName = "Staging Test Page");
 
-		AssertElementPresent(
-			key_card = "1 Column",
-			locator1 = "Card#CARD_SELECTED");
+		PagesAdmin.viewSelectedLayoutColumn(columnName = "1 Column");
 
 		Navigator.openStagingSiteURL(siteName = "Site Name");
 
@@ -193,9 +191,7 @@ definition {
 			menuItem = "Configure",
 			pageName = "Staging Test Page");
 
-		AssertElementPresent(
-			key_card = "2 Columns",
-			locator1 = "Card#CARD_SELECTED");
+		PagesAdmin.viewSelectedLayoutColumn(columnName = "2 Columns");
 
 		Navigator.openStagingSiteURL(siteName = "Site Name");
 
@@ -207,9 +203,7 @@ definition {
 			menuItem = "Configure",
 			pageName = "Staging Test Page");
 
-		AssertElementPresent(
-			key_card = "1 Column",
-			locator1 = "Card#CARD_SELECTED");
+		PagesAdmin.viewSelectedLayoutColumn(columnName = "1 Column");
 
 		Navigator.openStagingSiteURL(siteName = "Site Name");
 
@@ -223,9 +217,7 @@ definition {
 			menuItem = "Configure",
 			pageName = "Staging Test Page");
 
-		AssertElementPresent(
-			key_card = "1 Column",
-			locator1 = "Card#CARD_SELECTED");
+		PagesAdmin.viewSelectedLayoutColumn(columnName = "1 Column");
 	}
 
 	@priority = 3

@@ -280,11 +280,10 @@ definition {
 			category = "Site Builder",
 			portlet = "Pages");
 
-		AssertTextEquals(
+		PagesAdmin.viewPageStatus(
 			index = 2,
-			key_itemName = "Page Name",
-			locator1 = "PagesAdmin#LIST_GROUP_ITEM_PAGE_STATUS",
-			value1 = "Pending");
+			pageName = "Page Name",
+			status = "Pending");
 	}
 
 }

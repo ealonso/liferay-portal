@@ -680,9 +680,7 @@ definition {
 
 		PagesAdmin.viewActiveURL(activeURL = "/new-test-page");
 
-		AssertElementNotPresent(
-			key_oldFriendlyURL = "/test-page",
-			locator1 = "PagesAdmin#FRIENDLY_URL_HISTORY_ITEM");
+		PagesAdmin.viewOldFriendlyURLNotPresent(oldFriendlyURLList = "/test-page");
 	}
 
 	@description = "This ensures that a previous friendlyURL of web content can be deleted when updating."

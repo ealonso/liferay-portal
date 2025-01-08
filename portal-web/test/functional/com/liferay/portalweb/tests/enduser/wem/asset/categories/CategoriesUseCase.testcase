@@ -1320,11 +1320,9 @@ definition {
 				menuItem = "Configure",
 				pageName = "Page Name");
 
-			Navigator.gotoNavTab(navTab = "SEO");
-
-			AssertElementNotPresent(
-				key_vocabularyName = "Vocabulary Name",
-				locator1 = "AssetCategorization#CATEGORY_SELECT");
+			PagesAdmin.viewVocabularyNotPresent(
+				pageName = "Page Name",
+				vocabularyName = "Vocabulary Name");
 		}
 	}
 

@@ -123,9 +123,7 @@ definition {
 				fragmentHtml = ${fragmentHtml},
 				htmlSnippet = ${htmlSnippet});
 
-			WaitForElementNotPresent(locator1 = "FragmentEditor#SAVING_CHANGES_MESSAGE");
-
-			WaitForVisible(locator1 = "FragmentEditor#CHANGES_SAVED_MESSAGE");
+			FragmentsEditor.waitForAutoSave();
 
 			PortletEntry.publish();
 		}

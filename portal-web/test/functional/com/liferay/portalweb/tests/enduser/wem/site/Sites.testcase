@@ -354,9 +354,7 @@ definition {
 				menuItem = "Configure",
 				pageName = "Site Page");
 
-			AssertTextEquals(
-				locator1 = "PagesAdmin#DETAILS_FRIENDLY_BASE_URL",
-				value1 = "${portalURL}/web/${randomSiteURLKey}");
+			PagesAdmin.viewBaseFriendlyURL(siteFriendlyURL = "${portalURL}/web/${randomSiteURLKey}");
 		}
 	}
 
