@@ -7,6 +7,7 @@ import {ClayButtonWithIcon} from '@clayui/button';
 import ClayCard from '@clayui/card';
 import ClayIcon from '@clayui/icon';
 import classNames from 'classnames';
+import {FeatureIndicator} from 'frontend-js-components-web';
 import {sub} from 'frontend-js-web';
 import PropTypes from 'prop-types';
 import React, {useCallback, useState} from 'react';
@@ -387,33 +388,37 @@ const AddButton = ({isNavigationTarget, item, setItemActive}) => {
 	const disableMovement = useDisableKeyboardMovement();
 
 	return (
-		<ClayButtonWithIcon
-			aria-label={sub(Liferay.Language.get('add-x'), item.label)}
-			borderless
-			className="mr-2 my-0 page-editor__fragments-widgets__tab__add-button"
-			displayType="secondary"
-			onBlur={() => {
-				setItemActive(false);
-				disableMovement();
-			}}
-			onClick={() =>
-				setMovementSources([
-					{
-						...item.data,
-						fragmentEntryType: item.data.type,
-						icon: item.icon,
-						isWidget: Boolean(item.data.portletId),
-						name: item.label,
-						type: item.type,
-					},
-				])
-			}
-			onFocus={() => setItemActive(true)}
-			onKeyDown={(event) => event.stopPropagation()}
-			symbol="plus"
-			tabIndex={isNavigationTarget ? 0 : -1}
-			title={sub(Liferay.Language.get('add-x'), item.label)}
-		/>
+		<>
+			<ClayButtonWithIcon
+				aria-label={sub(Liferay.Language.get('add-x'), item.label)}
+				borderless
+				className="mr-2 my-0 page-editor__fragments-widgets__tab__add-button"
+				displayType="secondary"
+				onBlur={() => {
+					setItemActive(false);
+					disableMovement();
+				}}
+				onClick={() =>
+					setMovementSources([
+						{
+							...item.data,
+							fragmentEntryType: item.data.type,
+							icon: item.icon,
+							isWidget: Boolean(item.data.portletId),
+							name: item.label,
+							type: item.type,
+						},
+					])
+				}
+				onFocus={() => setItemActive(true)}
+				onKeyDown={(event) => event.stopPropagation()}
+				symbol="plus"
+				tabIndex={isNavigationTarget ? 0 : -1}
+				title={sub(Liferay.Language.get('add-x'), item.label)}
+			/>
+
+			{item.deprecated ? <FeatureIndicator type="deprecated" /> : null}
+		</>
 	);
 };
 
