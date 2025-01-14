@@ -49,7 +49,7 @@ definition {
 			DisplayPageTemplatesAdmin.gotoDisplayPage(displayPageName = "Display Page Name");
 
 			PageEditor.addFragment(
-				collectionName = "Featured Content",
+				collectionName = "Featured Content Deprecated",
 				composition = "true",
 				fragmentName = "Banner Center");
 		}

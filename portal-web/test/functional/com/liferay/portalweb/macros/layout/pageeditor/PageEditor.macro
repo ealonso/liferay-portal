@@ -450,187 +450,6 @@ definition {
 	}
 
 	@summary = "Default summary"
-	macro addElementToDropdownPanel(navTab = null, fragmentName = null, collectionName = null, portletName = null) {
-		PageEditor.gotoTab(tabName = "Fragments and Widgets");
-
-		if (!(isSet(displayStyle))) {
-			var displayStyle = "list";
-		}
-
-		if (!(isSet(indexItem))) {
-			var indexItem = 1;
-		}
-
-		if (${displayStyle} == "list") {
-			var switchTo = "card";
-		}
-		else {
-			var switchTo = "list";
-		}
-
-		if (IsElementNotPresent(key_switchTo = ${switchTo}, locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_DISPLAY_STYLE_BUTTON")) {
-			Click(
-				key_switchTo = "",
-				locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_DISPLAY_STYLE_BUTTON");
-		}
-
-		AssertVisible(
-			key_switchTo = ${switchTo},
-			locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_DISPLAY_STYLE_BUTTON");
-
-		Navigator.gotoNavTab(navTab = ${navTab});
-
-		if ((${navTab} == "Fragments") && (${displayStyle} == "card")) {
-			PageEditor.expandFragmentCollection(collectionName = ${collectionName});
-
-			DragAndDrop.javaScriptDragAndDropToObject(
-				key_collectionName = ${collectionName},
-				key_element = "//div[contains(@class,'page-editor__root')]",
-				key_fragmentName = ${fragmentName},
-				locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_FRAGMENT_CARD_ITEM",
-				locator2 = "Fragment#DROPDOWN_FRAGMENT_MENU_CONTENT");
-		}
-
-		if ((${navTab} == "Fragments") && (${displayStyle} == "list")) {
-			PageEditor.expandFragmentCollection(collectionName = ${collectionName});
-
-			DragAndDrop.javaScriptDragAndDropToObject(
-				key_collectionName = ${collectionName},
-				key_element = "//div[contains(@class,'page-editor__root')]",
-				key_fragmentName = ${fragmentName},
-				locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_FRAGMENT",
-				locator2 = "Fragment#DROPDOWN_FRAGMENT_MENU_CONTENT");
-		}
-
-		if (${navTab} == "Widgets") {
-			Type.sendKeysApplicationSearch(
-				locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_SEARCH_FIELD",
-				value1 = ${portletName});
-
-			DragAndDrop.javaScriptDragAndDropToObject(
-				key_element = "//div[contains(@class,'page-editor__root')]",
-				key_indexItem = ${indexItem},
-				key_portletName = ${portletName},
-				locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_WIDGET",
-				locator2 = "Fragment#DROPDOWN_FRAGMENT_MENU_CONTENT");
-		}
-
-		PageEditor.waitForAutoSave();
-
-		if (${navTab} == "Fragments") {
-			AssertElementPresent(
-				key_fragmentName = ${fragmentName},
-				key_inFragmentName = "Dropdown",
-				locator1 = "Fragment#FRAGMENT_BODY_IN_FRAGMENT");
-		}
-
-		if (${navTab} == "Widgets") {
-			AssertElementPresent(
-				key_fragmentName = ${portletName},
-				key_inFragmentName = "Dropdown",
-				locator1 = "Fragment#FRAGMENT_BODY_IN_FRAGMENT");
-
-			Click(locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_SEARCH_CLEAR_BUTTON");
-		}
-	}
-
-	@summary = "Default summary"
-	macro addElementToTab(navTab = null, navItem = null, fragmentName = null, index = null, position = null, collectionName = null, portletName = null) {
-		PageEditor.gotoTabsFragmentNavItem(navItem = ${navItem});
-
-		AssertVisible(
-			key_content = "Drag and drop fragments or widgets here.",
-			key_fragmentClass = "content",
-			key_position = ${position},
-			locator1 = "Fragment#DROP_ZONE_NO_FRAGMENTS_MESSAGE");
-
-		PageEditor.gotoTab(tabName = "Fragments and Widgets");
-
-		if (!(isSet(displayStyle))) {
-			var displayStyle = "list";
-		}
-
-		if (!(isSet(indexItem))) {
-			var indexItem = 1;
-		}
-
-		if (${displayStyle} == "list") {
-			var switchTo = "card";
-		}
-		else {
-			var switchTo = "list";
-		}
-
-		if (IsElementNotPresent(key_switchTo = ${switchTo}, locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_DISPLAY_STYLE_BUTTON")) {
-			Click(
-				key_switchTo = "",
-				locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_DISPLAY_STYLE_BUTTON");
-		}
-
-		AssertVisible(
-			key_switchTo = ${switchTo},
-			locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_DISPLAY_STYLE_BUTTON");
-
-		Navigator.gotoNavTab(navTab = ${navTab});
-
-		if ((${navTab} == "Fragments") && (${displayStyle} == "card")) {
-			PageEditor.expandFragmentCollection(collectionName = ${collectionName});
-
-			DragAndDrop.javaScriptDragAndDropToObject(
-				key_collectionName = ${collectionName},
-				key_fragmentName = ${fragmentName},
-				key_index = ${index},
-				locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_FRAGMENT_CARD_ITEM",
-				locator2 = "PageEditor#FRAGMENT_WITH_DROP_TARGET",
-				value1 = "");
-		}
-
-		if ((${navTab} == "Fragments") && (${displayStyle} == "list")) {
-			PageEditor.expandFragmentCollection(collectionName = ${collectionName});
-
-			DragAndDrop.javaScriptDragAndDropToObject(
-				key_collectionName = ${collectionName},
-				key_fragmentName = ${fragmentName},
-				key_index = ${index},
-				locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_FRAGMENT",
-				locator2 = "PageEditor#FRAGMENT_WITH_DROP_TARGET",
-				value1 = "");
-		}
-
-		if (${navTab} == "Widgets") {
-			Type.sendKeysApplicationSearch(
-				locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_SEARCH_FIELD",
-				value1 = ${portletName});
-
-			DragAndDrop.javaScriptDragAndDropToObject(
-				key_index = ${index},
-				key_indexItem = ${indexItem},
-				key_portletName = ${portletName},
-				locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_WIDGET",
-				locator2 = "PageEditor#FRAGMENT_WITH_DROP_TARGET",
-				value1 = ${portletName});
-		}
-
-		PageEditor.waitForAutoSave();
-
-		if (${navTab} == "Fragments") {
-			AssertElementPresent(
-				key_fragmentName = ${fragmentName},
-				key_inFragmentName = "Tabs",
-				locator1 = "Fragment#FRAGMENT_BODY_IN_FRAGMENT");
-		}
-
-		if (${navTab} == "Widgets") {
-			AssertElementPresent(
-				key_fragmentName = ${portletName},
-				key_inFragmentName = "Tabs",
-				locator1 = "Fragment#FRAGMENT_BODY_IN_FRAGMENT");
-
-			Click(locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_SEARCH_CLEAR_BUTTON");
-		}
-	}
-
-	@summary = "Default summary"
 	macro addEntryWithLink(entryExternalURL = null, fragmentName = null, id = null, contributed = null) {
 		PageEditor.gotoEditableFieldEdit(
 			contributed = ${contributed},
@@ -721,6 +540,8 @@ definition {
 			locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_DISPLAY_STYLE_BUTTON");
 
 		Navigator.gotoNavTab(navTab = "Fragments");
+
+		takeScreenshot();
 
 		PageEditor.expandFragmentCollection(collectionName = ${collectionName});
 
@@ -865,6 +686,8 @@ definition {
 
 		Navigator.gotoNavTab(navTab = "Fragments");
 
+		takeScreenshot();
+
 		PageEditor.expandFragmentCollection(collectionName = ${collectionName});
 
 		if (isSet(targetFragmentName) && (${displayStyle} == "card")) {
@@ -908,210 +731,6 @@ definition {
 		}
 
 		PageEditor.waitForAutoSave();
-	}
-
-	@summary = "Default summary"
-	macro addFragmentToFormContainer(targetFragmentName = null, fragmentName = null, collectionName = null) {
-		if (!(isSet(position))) {
-			var position = 1;
-		}
-
-		if (!(isSet(index))) {
-			var index = 1;
-		}
-
-		if (!(isSet(height))) {
-			var height = "Short";
-		}
-
-		PageEditor.gotoTab(tabName = "Fragments and Widgets");
-
-		PageEditor.expandFragmentCollection(collectionName = ${collectionName});
-
-		if (isSet(targetFragmentName)) {
-			if (${height} == "Tall") {
-				DragAndDrop.javaScriptDragAndDropObjectBelowTallNestedObject(
-					index = ${index},
-					key_collectionName = ${collectionName},
-					key_fragmentName = ${fragmentName},
-					key_targetFragmentName = ${targetFragmentName},
-					locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_FRAGMENT",
-					locator2 = "PageEditor#ANY_FRAGMENT_DROP_TARGET");
-			}
-			else if (${height} == "Short") {
-				DragAndDrop.javaScriptDragAndDropObjectBelowShortNestedObject(
-					index = ${index},
-					key_collectionName = ${collectionName},
-					key_fragmentName = ${fragmentName},
-					key_targetFragmentName = ${targetFragmentName},
-					locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_FRAGMENT",
-					locator2 = "PageEditor#ANY_FRAGMENT_DROP_TARGET");
-			}
-		}
-		else {
-			DragAndDrop.javaScriptDragAndDropToObject(
-				key_collectionName = ${collectionName},
-				key_fragmentName = ${fragmentName},
-				key_position = ${position},
-				key_targetFragmentName = "Form Container",
-				locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_FRAGMENT",
-				locator2 = "PageEditor#FORM_CONTAINER_CONTAINER");
-		}
-
-		PageEditor.waitForAutoSave();
-	}
-
-	@summary = "Default summary"
-	macro addFragmentViaKeyboard(fragmentName = null, upCount = null, collectionName = null) {
-		PageEditor.assertFragmentSidebarLoaded();
-
-		PageEditor.gotoTab(tabName = "Fragments and Widgets");
-
-		if (!(isSet(displayStyle))) {
-			var displayStyle = "list";
-		}
-
-		if (${displayStyle} == "list") {
-			var switchTo = "card";
-		}
-		else {
-			var switchTo = "list";
-		}
-
-		if (!(isSet(index))) {
-			var index = 1;
-		}
-
-		if (IsElementNotPresent(key_switchTo = ${switchTo}, locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_DISPLAY_STYLE_BUTTON")) {
-			Click(
-				key_switchTo = "",
-				locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_DISPLAY_STYLE_BUTTON");
-		}
-
-		AssertVisible(
-			key_switchTo = ${switchTo},
-			locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_DISPLAY_STYLE_BUTTON");
-
-		Navigator.gotoNavTab(navTab = "Fragments");
-
-		PageEditor.expandFragmentCollection(collectionName = ${collectionName});
-
-		if (${displayStyle} == "card") {
-			KeyPress(
-				ariaLabel = "Add ${fragmentName}",
-				key_collectionName = ${collectionName},
-				key_fragmentName = ${fragmentName},
-				locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_FRAGMENT_CARD_ITEM_BUTTON_WITH_ARIA_LABEL",
-				value1 = "\ENTER");
-
-			if (isSet(upCount)) {
-				var i = 0;
-
-				while (${i} != ${upCount}) {
-					KeyPress(
-						ariaLabel = "Add ${fragmentName}",
-						key_collectionName = ${collectionName},
-						key_fragmentName = ${fragmentName},
-						locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_FRAGMENT_CARD_ITEM_BUTTON_WITH_ARIA_LABEL",
-						value1 = "\UP");
-
-					var i = ${i} + 1;
-				}
-			}
-
-			KeyPress(
-				ariaLabel = "Add ${fragmentName}",
-				key_collectionName = ${collectionName},
-				key_fragmentName = ${fragmentName},
-				locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_FRAGMENT_CARD_ITEM_BUTTON_WITH_ARIA_LABEL",
-				value1 = "\ENTER");
-		}
-
-		if (${displayStyle} == "list") {
-			KeyPress(
-				ariaLabel = "Add ${fragmentName}",
-				key_collectionName = ${collectionName},
-				key_fragmentName = ${fragmentName},
-				locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_FRAGMENT_BUTTON_WITH_ARIA_LABEL",
-				value1 = "\ENTER");
-
-			if (isSet(upCount)) {
-				var i = 0;
-
-				while (${i} != ${upCount}) {
-					KeyPress(
-						ariaLabel = "Add ${fragmentName}",
-						key_collectionName = ${collectionName},
-						key_fragmentName = ${fragmentName},
-						locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_FRAGMENT_BUTTON_WITH_ARIA_LABEL",
-						value1 = "\UP");
-
-					var i = ${i} + 1;
-				}
-			}
-
-			KeyPress(
-				ariaLabel = "Add ${fragmentName}",
-				key_collectionName = ${collectionName},
-				key_fragmentName = ${fragmentName},
-				locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_FRAGMENT_BUTTON_WITH_ARIA_LABEL",
-				value1 = "\ENTER");
-		}
-
-		PageEditor.waitForAutoSave();
-	}
-
-	@summary = "Add a page rule"
-	macro addPageRule(selectActionValue = null, selectItemForTheCondition = null, selectConditionValue = null, ruleName = null, selectItemForTheAction = null, selectAction = null, selectCondition = null) {
-		Button.click(button = "New Rule");
-
-		AssertTextEquals(
-			locator1 = "Modal#HEADER",
-			value1 = "New Rule");
-
-		if (isSet(ruleName)) {
-			InputField.editText(
-				fieldLabel = "Rule Name",
-				text = ${ruleName});
-		}
-
-		Click(
-			index = 1,
-			locator1 = "PageEditor#PAGE_RULE_BUILDER_CONDITION_ITEM");
-
-		DropdownMenuItem.click(menuItem = ${selectItemForTheCondition});
-
-		Click(
-			index = 2,
-			locator1 = "PageEditor#PAGE_RULE_BUILDER_CONDITION_ITEM");
-
-		DropdownMenuItem.click(menuItem = ${selectCondition});
-
-		Click(
-			index = 3,
-			locator1 = "PageEditor#PAGE_RULE_BUILDER_CONDITION_ITEM");
-
-		DropdownMenuItem.click(menuItem = ${selectConditionValue});
-
-		Click(
-			index = 1,
-			locator1 = "PageEditor#PAGE_RULE_BUILDER_ACTION_ITEM");
-
-		DropdownMenuItem.click(menuItem = ${selectAction});
-
-		Click(
-			index = 2,
-			locator1 = "PageEditor#PAGE_RULE_BUILDER_ACTION_ITEM");
-
-		DropdownMenuItem.click(menuItem = ${selectItemForTheAction});
-
-		Click(
-			index = 3,
-			locator1 = "PageEditor#PAGE_RULE_BUILDER_ACTION_ITEM");
-
-		DropdownMenuItem.click(menuItem = ${selectActionValue});
-
-		Modal.save();
 	}
 
 	@summary = "Default summary"
@@ -1198,83 +817,6 @@ definition {
 	}
 
 	@summary = "Default summary"
-	macro addWidgetViaKeyboard(widgetName = null, upCount = null, categoryName = null) {
-		PageEditor.assertFragmentSidebarLoaded();
-
-		PageEditor.gotoTab(tabName = "Fragments and Widgets");
-
-		Navigator.gotoNavTab(navTab = "Widgets");
-
-		Type.sendKeysApplicationSearch(
-			locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_SEARCH_FIELD",
-			value1 = ${widgetName});
-
-		KeyPress(
-			ariaLabel = "Add ${widgetName}",
-			key_collectionName = ${categoryName},
-			key_fragmentName = ${widgetName},
-			locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_FRAGMENT_BUTTON_WITH_ARIA_LABEL",
-			value1 = "\ENTER");
-
-		if (isSet(upCount)) {
-			var i = 0;
-
-			while (${i} != ${upCount}) {
-				KeyPress(
-					ariaLabel = "Add ${widgetName}",
-					key_collectionName = ${categoryName},
-					key_fragmentName = ${widgetName},
-					locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_FRAGMENT_BUTTON_WITH_ARIA_LABEL",
-					value1 = "\UP");
-
-				var i = ${i} + 1;
-			}
-		}
-
-		KeyPress(
-			ariaLabel = "Add ${widgetName}",
-			key_collectionName = ${categoryName},
-			key_fragmentName = ${widgetName},
-			locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_FRAGMENT_BUTTON_WITH_ARIA_LABEL",
-			value1 = "\ENTER");
-
-		PageEditor.waitForAutoSave();
-
-		Click(locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_SEARCH_CLEAR_BUTTON");
-	}
-
-	@summary = "Default summary"
-	macro assertAutoImageResolution(type = null, element = null, adaptiveMediaName = null) {
-		if (${type} == "backgroundImage") {
-			var backgroundImage = Css.getCssValue(
-				attribute = "background-image",
-				element = ${element});
-
-			if (contains(${backgroundImage}, ${adaptiveMediaName})) {
-				echo("The auto image resolution is right.");
-			}
-			else {
-				TestUtils.fail(message = "The auto image resolution is wrong.");
-			}
-		}
-		else {
-			var currentSrc = selenium.getAttribute("${element}@currentSrc");
-
-			if (contains(${currentSrc}, ${adaptiveMediaName})) {
-				echo("The auto image resolution is right.");
-			}
-			else {
-				TestUtils.fail(message = "The auto image resolution is wrong.");
-			}
-		}
-	}
-
-	@summary = "Default summary"
-	macro assertFalseEntryIsNotPresent() {
-		AssertElementNotPresent(locator1 = "PageEditor#COLLECTION_ITEM_FALSE_ENTRY");
-	}
-
-	@summary = "Default summary"
 	macro assertFragmentSidebarLoaded() {
 		WaitForPageLoad();
 
@@ -1332,24 +874,6 @@ definition {
 		AssertVisible(
 			key_currentLocale = StringUtil.lowerCase(${locale}),
 			locator1 = "Button#TRANSLATIONS_LOCALIZATION");
-	}
-
-	@summary = "Default summary"
-	macro clearSelection(fieldLabel = null) {
-		if (contains(${fieldLabel}, "Image")) {
-			Click.clickNoWaitForVisible(
-				key_fieldLabel = ${fieldLabel},
-				key_text = "times-circle",
-				locator1 = "Icon#ANY_ITEM_SELECTOR");
-		}
-		else {
-			Click.clickNoWaitForVisible(
-				key_fieldLabel = ${fieldLabel},
-				key_text = "restore",
-				locator1 = "Icon#ANY_ITEM_SELECTOR");
-		}
-
-		PageEditor.waitForAutoSave();
 	}
 
 	@summary = "Default summary"
@@ -1874,29 +1398,6 @@ definition {
 	}
 
 	@summary = "Default summary"
-	macro configureFragmentViaKeyboard(fieldLabel = null, difference = null) {
-		if (${difference} == "Up") {
-			KeyPress(
-				key_fieldLabel = ${fieldLabel},
-				locator1 = "FormFields#NUMBER_FIELD",
-				value1 = "\UP");
-		}
-		else {
-			KeyPress(
-				key_fieldLabel = ${fieldLabel},
-				locator1 = "FormFields#NUMBER_FIELD",
-				value1 = "\DOWN");
-		}
-
-		KeyPress(
-			key_fieldLabel = ${fieldLabel},
-			locator1 = "FormFields#NUMBER_FIELD",
-			value1 = "\ENTER");
-
-		PageEditor.waitForAutoSave();
-	}
-
-	@summary = "Default summary"
 	macro deleteAllExperiences() {
 		PageEditor.openExperienceMenu();
 
@@ -1953,47 +1454,6 @@ definition {
 		Confirm.dismissAlert();
 	}
 
-	@summary = "Delete the page rule"
-	macro deletePageRule(ruleName = null) {
-		Click(
-			key_ruleName = ${ruleName},
-			locator1 = "PageEditor#PAGE_RULE_LIST_ITEM_ELLIPSIS");
-
-		DropdownMenuItem.click(menuItem = "Delete");
-
-		Alert.viewSuccessMessage();
-	}
-
-	@summary = "Delete a page rule action"
-	macro deletePageRuleAction() {
-		if (!(isSet(index))) {
-			var index = 1;
-		}
-
-		MouseOver.mouseOverNotVisible(
-			index = ${index},
-			locator1 = "PageEditor#PAGE_RULE_BUILDER_ACTION_DELETE_BUTTON");
-
-		Click(
-			index = ${index},
-			locator1 = "PageEditor#PAGE_RULE_BUILDER_ACTION_DELETE_BUTTON");
-	}
-
-	@summary = "Delete a page rule condition"
-	macro deletePageRuleCondition() {
-		if (!(isSet(index))) {
-			var index = 1;
-		}
-
-		MouseOver.mouseOverNotVisible(
-			index = ${index},
-			locator1 = "PageEditor#PAGE_RULE_BUILDER_CONDITION_DELETE_BUTTON");
-
-		Click(
-			index = ${index},
-			locator1 = "PageEditor#PAGE_RULE_BUILDER_CONDITION_DELETE_BUTTON");
-	}
-
 	@summary = "Default summary"
 	macro deprioritizeExperience(experienceName = null) {
 		var key_experienceName = ${experienceName};
@@ -2027,66 +1487,6 @@ definition {
 		AssertElementPresent(
 			key_experienceName = "Copy of ${experienceName}",
 			locator1 = "PageEditor#EXPERIENCE_SELECT_ITEM");
-	}
-
-	@summary = "Default summary"
-	macro editAppliedFilters(columnNumber = null, targetCollection = null) {
-		var key_fragmentName = "Applied Filters";
-
-		if (isSet(columnNumber)) {
-			Click.clickNoWaitForVisible(
-				key_columnNumber = ${columnNumber},
-				key_elementHeader = "//div[@data-name='${key_fragmentName}']",
-				key_position = 1,
-				locator1 = "PageEditor#GRID_COLUMN_NESTED_ELEMENT");
-		}
-		else {
-			PageEditor.clickConfigurableField(fragmentName = "Applied Filters");
-
-			PageEditor.gotoTab(tabName = "Browser");
-		}
-
-		WaitForVisible(
-			key_sidebarButton = "Browser",
-			locator1 = "PageEditor#FRAGMENT_SIDEBAR_TITLE");
-
-		Navigator.gotoNavTab(navTab = "General");
-
-		if (isSet(targetCollection)) {
-			Click(
-				key_fieldLabel = "Target Collection",
-				key_text = "Select",
-				locator1 = "Button#ANY_WITH_LABEL");
-
-			Check.checkNotVisible(
-				key_checkboxName = ${targetCollection},
-				locator1 = "MenuItem#ANY_CHECKBOX");
-
-			PageEditor.waitForAutoSave();
-		}
-
-		if (isSet(includeClearFiltersOption)) {
-			Check.checkNotVisible(
-				checkboxName = "Include Clear Filters Option",
-				locator1 = "Checkbox#ANY_CHECKBOX");
-
-			PageEditor.waitForAutoSave();
-		}
-	}
-
-	@summary = "Default summary"
-	macro editCDLayoutAndMaxNumber(maxNumber = null, layoutColumns = null) {
-		Click.clickNoWaitForVisible(locator1 = "Masterclass#COLLECTION_DISPLAY");
-
-		Navigator.gotoNavTab(navTab = "General");
-
-		Select(
-			locator1 = "Masterclass#LAYOUT_SELECT",
-			value1 = ${layoutColumns});
-
-		Type(
-			locator1 = "Masterclass#MAX_NUMBER_OF_ITEMS",
-			value1 = ${maxNumber});
 	}
 
 	@summary = "Default summary"
@@ -3366,200 +2766,6 @@ definition {
 	}
 
 	@summary = "Default summary"
-	macro editFragmentTextViaPageContentPanel(itemName = null, style = null, text = null) {
-		Click.clickAtNotVisible(
-			key_itemName = ${itemName},
-			locator1 = "PageEditor#PAGE_CONTENTS_ITEM_EDIT_PENCIL");
-
-		AssertElementPresent(
-			key_text = "Edit Text",
-			locator1 = "Button#ANY_DISABLED");
-
-		if (isSet(text)) {
-			Type(
-				key_editor = "content",
-				locator1 = "AlloyEditor#EDITOR",
-				value1 = ${text});
-		}
-
-		if (isSet(style)) {
-			SelectFieldText(
-				key_editor = "content",
-				locator1 = "AlloyEditor#EDITOR");
-
-			Click(locator1 = "AlloyEditor#TEXT_FORMATTING_STYLE");
-
-			Click(
-				key_styleFormat = ${style},
-				locator1 = "AlloyEditor#TEXT_FORMATTING_STYLE_DROPDOWN");
-		}
-
-		PageEditor.clickManagementBar();
-
-		PageEditor.waitForAutoSave();
-	}
-
-	@summary = "Default summary"
-	macro editInput(helpText = null, numberOfLines = null, numberOfOptions = null, markAsRequired = null, label = null, showAllOptions = null, showCharactersCount = null, field = null, fragmentName = null, placeholder = null, hideLabel = null, hideHelpText = null) {
-		if (!(isSet(index))) {
-			var index = 1;
-		}
-
-		PageEditor.gotoConfiguration(
-			fragmentName = ${fragmentName},
-			index = ${index});
-
-		if (isSet(field)) {
-			Select(
-				key_fieldLabel = "Field",
-				locator1 = "Select#GENERIC_SELECT_FIELD",
-				value1 = ${field});
-
-			PageEditor.waitForAutoSave();
-		}
-
-		if (${markAsRequired} == "true") {
-			Check.checkNotVisible(
-				checkboxName = "Mark as Required",
-				locator1 = "Checkbox#ANY_CHECKBOX");
-
-			PageEditor.waitForAutoSave();
-		}
-		else if (${markAsRequired} == "false") {
-			Uncheck.uncheckNotVisible(
-				checkboxName = "Mark as Required",
-				locator1 = "Checkbox#ANY_CHECKBOX");
-
-			PageEditor.waitForAutoSave();
-		}
-
-		if (${hideLabel} == "true") {
-			Uncheck.uncheckToggleSwitch(
-				key_toggleSwitchLabel = "Show Label",
-				locator1 = "ToggleSwitch#ANY_TOGGLE_SWITCH");
-
-			PageEditor.waitForAutoSave();
-		}
-		else if (${hideLabel} == "false") {
-			Check.checkToggleSwitch(
-				key_toggleSwitchLabel = "Show Label",
-				locator1 = "ToggleSwitch#ANY_TOGGLE_SWITCH");
-
-			PageEditor.waitForAutoSave();
-		}
-
-		if (isSet(label)) {
-			Type(
-				key_text = "Label",
-				locator1 = "TextInput#ANY",
-				value1 = ${label});
-
-			Click(
-				key_sidebarButton = "Browser",
-				locator1 = "PageEditor#FRAGMENT_SIDEBAR_TITLE");
-
-			PageEditor.waitForAutoSave();
-		}
-
-		if (${hideHelpText} == "true") {
-			Uncheck.uncheckToggleSwitch(
-				key_toggleSwitchLabel = "Show Help Text",
-				locator1 = "ToggleSwitch#ANY_TOGGLE_SWITCH");
-
-			PageEditor.waitForAutoSave();
-		}
-		else if (${hideHelpText} == "false") {
-			Check.checkToggleSwitch(
-				key_toggleSwitchLabel = "Show Help Text",
-				locator1 = "ToggleSwitch#ANY_TOGGLE_SWITCH");
-
-			PageEditor.waitForAutoSave();
-		}
-
-		if (isSet(helpText)) {
-			Type(
-				key_text = "Help Text",
-				locator1 = "TextInput#ANY",
-				value1 = ${helpText});
-
-			Click(
-				key_sidebarButton = "Browser",
-				locator1 = "PageEditor#FRAGMENT_SIDEBAR_TITLE");
-
-			PageEditor.waitForAutoSave();
-		}
-
-		if (isSet(numberOfLines)) {
-			Type(
-				key_text = "Number of Lines",
-				locator1 = "TextInput#ANY",
-				value1 = ${numberOfLines});
-
-			Click(
-				key_sidebarButton = "Browser",
-				locator1 = "PageEditor#FRAGMENT_SIDEBAR_TITLE");
-
-			PageEditor.waitForAutoSave();
-		}
-
-		if (isSet(numberOfOptions)) {
-			Type(
-				key_text = "Number of Options",
-				locator1 = "TextInput#ANY",
-				value1 = ${numberOfOptions});
-
-			Click(
-				key_sidebarButton = "Browser",
-				locator1 = "PageEditor#FRAGMENT_SIDEBAR_TITLE");
-
-			PageEditor.waitForAutoSave();
-		}
-
-		if (isSet(placeholder)) {
-			Type(
-				key_text = "Placeholder",
-				locator1 = "TextInput#ANY",
-				value1 = ${placeholder});
-
-			Click(
-				key_sidebarButton = "Browser",
-				locator1 = "PageEditor#FRAGMENT_SIDEBAR_TITLE");
-
-			PageEditor.waitForAutoSave();
-		}
-
-		if (${showAllOptions} == "false") {
-			Uncheck.uncheckToggleSwitch(
-				key_toggleSwitchLabel = "Show All Options",
-				locator1 = "ToggleSwitch#ANY_TOGGLE_SWITCH");
-
-			PageEditor.waitForAutoSave();
-		}
-		else if (${showAllOptions} == "true") {
-			Check.checkToggleSwitch(
-				key_toggleSwitchLabel = "Show All Options",
-				locator1 = "ToggleSwitch#ANY_TOGGLE_SWITCH");
-
-			PageEditor.waitForAutoSave();
-		}
-
-		if (${showCharactersCount} == "false") {
-			Uncheck.uncheckToggleSwitch(
-				key_toggleSwitchLabel = "Show Characters Count",
-				locator1 = "ToggleSwitch#ANY_TOGGLE_SWITCH");
-
-			PageEditor.waitForAutoSave();
-		}
-		else if (${showCharactersCount} == "true") {
-			Check.checkToggleSwitch(
-				key_toggleSwitchLabel = "Show Characters Count",
-				locator1 = "ToggleSwitch#ANY_TOGGLE_SWITCH");
-
-			PageEditor.waitForAutoSave();
-		}
-	}
-
-	@summary = "Default summary"
 	macro editKBArticleNavigationMaxNestingLevel(maxNestingLevel = null) {
 		var key_fragmentName = "Knowledge Base Navigation";
 
@@ -4405,9 +3611,7 @@ definition {
 
 		Navigator.gotoNavTab(navTab = "Fragments");
 
-		AssertVisible(
-			key_collectionName = ${collectionName},
-			locator1 = "PageEditor#FRAGMENT_SIDEBAR_COLLECTION_PANEL");
+		takeScreenshot();
 
 		if (IsElementPresent(key_collectionName = ${collectionName}, locator1 = "PageEditor#FRAGMENT_SIDEBAR_COLLECTION_PANEL_COLLAPSED")) {
 			AssertClick(
@@ -4415,31 +3619,6 @@ definition {
 				locator1 = "PageEditor#FRAGMENT_SIDEBAR_COLLECTION_PANEL_COLLAPSED",
 				value1 = ${collectionName});
 		}
-
-		AssertElementPresent(
-			key_collectionName = ${collectionName},
-			locator1 = "PageEditor#FRAGMENT_SIDEBAR_COLLECTION_PANEL_EXPANDED");
-	}
-
-	@summary = "Default summary"
-	macro expandWidgetCategory(categoryName = null) {
-		PageEditor.gotoTab(tabName = "Fragments and Widgets");
-
-		Navigator.gotoNavTab(navTab = "Widgets");
-
-		AssertVisible(
-			key_collectionName = ${categoryName},
-			locator1 = "PageEditor#FRAGMENT_SIDEBAR_COLLECTION_PANEL");
-
-		if (IsElementPresent(key_collectionName = ${categoryName}, locator1 = "PageEditor#FRAGMENT_SIDEBAR_COLLECTION_PANEL_COLLAPSED")) {
-			Click(
-				key_collectionName = ${categoryName},
-				locator1 = "PageEditor#FRAGMENT_SIDEBAR_COLLECTION_PANEL_COLLAPSED");
-		}
-
-		AssertElementPresent(
-			key_collectionName = ${categoryName},
-			locator1 = "PageEditor#FRAGMENT_SIDEBAR_COLLECTION_PANEL_EXPANDED");
 	}
 
 	@summary = "Default summary"
@@ -5003,101 +4182,6 @@ return	Array.from(getWebElement("(//div[@data-name='${fragmentName}'])[${index}]
 	}
 
 	@summary = "Default summary"
-	macro reorderElementViaKeyboard(downCount = null, upCount = null, elementName = null) {
-		if (!(isSet(index))) {
-			var index = 1;
-		}
-
-		KeyPress(
-			ariaLabel = "Move ${elementName}",
-			key_index = ${index},
-			key_nodeName = ${elementName},
-			locator1 = "Treeview#PAGE_STRUCTURE_TREE_NODE_BUTTON_WITH_ARIA_LABEL_INDEX",
-			value1 = "\ENTER");
-
-		if (isSet(upCount)) {
-			var i = 0;
-
-			while (${i} != ${upCount}) {
-				KeyPress(
-					ariaLabel = "Move ${elementName}",
-					key_index = ${index},
-					key_nodeName = ${elementName},
-					locator1 = "Treeview#PAGE_STRUCTURE_TREE_NODE_BUTTON_WITH_ARIA_LABEL_INDEX",
-					value1 = "\UP");
-
-				var i = ${i} + 1;
-			}
-		}
-
-		if (isSet(downCount)) {
-			var i = 0;
-
-			while (${i} != ${downCount}) {
-				KeyPress(
-					ariaLabel = "Move ${elementName}",
-					key_index = ${index},
-					key_nodeName = ${elementName},
-					locator1 = "Treeview#PAGE_STRUCTURE_TREE_NODE_BUTTON_WITH_ARIA_LABEL_INDEX",
-					value1 = "\DOWN");
-
-				var i = ${i} + 1;
-			}
-		}
-
-		KeyPress(
-			ariaLabel = "Move ${elementName}",
-			key_index = ${index},
-			key_nodeName = ${elementName},
-			locator1 = "Treeview#PAGE_STRUCTURE_TREE_NODE_BUTTON_WITH_ARIA_LABEL_INDEX",
-			value1 = "\ENTER");
-
-		PageEditor.waitForAutoSave();
-	}
-
-	@summary = "Default summary"
-	macro reorderSets(navTab = null, setName = null, action = null) {
-		Click(locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_REORDER_SETS_BUTTON");
-
-		Modal.gotoNavTab(navTab = ${navTab});
-
-		KeyPress(
-			key_card = ${setName},
-			locator1 = "Card#CARD_DRAG_ICON",
-			value1 = "\ENTER");
-
-		if (${action} == "Move Up") {
-			KeyPress(
-				key_card = ${setName},
-				locator1 = "Card#CARD_DRAG_ICON",
-				value1 = "\UP");
-
-			KeyPress(
-				key_card = ${setName},
-				locator1 = "Card#CARD_DRAG_ICON",
-				value1 = "\ENTER");
-		}
-		else if (${action} == "Move Down") {
-			KeyPress(
-				key_card = ${setName},
-				locator1 = "Card#CARD_DRAG_ICON",
-				value1 = "\DOWN");
-
-			KeyPress(
-				key_card = ${setName},
-				locator1 = "Card#CARD_DRAG_ICON",
-				value1 = "\DOWN");
-
-			KeyPress(
-				key_card = ${setName},
-				locator1 = "Card#CARD_DRAG_ICON",
-				value1 = "\ENTER");
-		}
-
-		Button.click(button = "Save");
-	}
-
-	@summary = "Default summary"
 	macro replyToComment(commentReply = null) {
 		AssertClick(
 			locator1 = "Button#REPLY",
@@ -5113,83 +4197,12 @@ return	Array.from(getWebElement("(//div[@data-name='${fragmentName}'])[${index}]
 	}
 
 	@summary = "Default summary"
-	macro resizeConfigurationPanel(fragmentName = null, position = null) {
-		PageEditor.clickConfigurableField(fragmentName = ${fragmentName});
-
-		PageEditor.gotoTab(tabName = "Browser");
-
-		AssertElementPresent(
-			key_nodeName = ${fragmentName},
-			locator1 = "Treeview#PAGE_STRUCTURE_TREE_NODE_ACTIVE");
-
-		var defaultHeight = selenium.getElementHeight("PageEditor#CONFIGURATION_PANEL_CONFIGURATION");
-
-		echo("### The default height of item configuration panel is ${defaultHeight}");
-
-		DragAndDrop.dragAndDrop(
-			locator1 = "PageEditor#CONFIGURATION_PANEL_HANDLE",
-			value1 = ${position});
-
-		WaitForElementNotPresent(locator1 = "PageEditor#ACTIVE_CONFIGURATION_PANEL_HANDLE");
-
-		var updatedHeight = selenium.getElementHeight("PageEditor#CONFIGURATION_PANEL_CONFIGURATION");
-
-		echo("### The updated height of item configuration panel is ${updatedHeight}");
-
-		TestUtils.assertNotEquals(
-			actual = ${updatedHeight},
-			expected = ${defaultHeight});
-	}
-
-	@summary = "Default summary"
 	macro resolveComment(fragmentComment = null) {
 		AssertElementPresent(locator1 = "PageEditor#FRAGMENT_SIDEBAR_SHOW_RESOLVED_COMMENTS_CHECKBOX_DISABLED");
 
 		Click.clickNoMouseOver(locator1 = "Button#RESOLVE");
 
 		AssertTextNotPresent(value1 = ${fragmentComment});
-	}
-
-	@summary = "Default summary"
-	macro restoreDefaultHidePropertyForFragment(fragmentName = null) {
-		if (!(isSet(index))) {
-			var index = 1;
-		}
-
-		PageEditor.gotoTab(tabName = "Browser");
-
-		Click(
-			key_index = ${index},
-			key_nodeName = ${fragmentName},
-			locator1 = "Treeview#PAGE_STRUCTURE_TREE_NODE_INDEX");
-
-		Navigator.gotoNavTab(navTab = "General");
-
-		Click(locator1 = "Button#RESTORE_DEFAULT");
-
-		PageEditor.waitForAutoSave();
-	}
-
-	@summary = "Default summary"
-	macro restoreSpacing(fieldLabel = null) {
-		Click(
-			ariaLabel = ${fieldLabel},
-			locator1 = "Button#ANY_WITH_ARIA_LABEL");
-
-		Click(
-			key_text = "restore",
-			locator1 = "MenuItem#ANY_ICON");
-
-		PageEditor.waitForAutoSave();
-	}
-
-	@summary = "Default summary"
-	macro searchInPageContentPanel(searchTerm = null) {
-		PageEditor.gotoTab(tabName = "Page Content");
-
-		Type(
-			locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_SEARCH_FIELD",
-			value1 = ${searchTerm});
 	}
 
 	@summary = "Default summary"
@@ -5209,38 +4222,6 @@ return	Array.from(getWebElement("(//div[@data-name='${fragmentName}'])[${index}]
 		Click(
 			key_colorSwatchItem = ${colorSwatchItem},
 			locator1 = "Button#COLOR_SWATCH_ITEM");
-	}
-
-	@summary = "Default summary"
-	macro selectContentFilter(filter = null) {
-		AssertVisible(
-			key_sidebarButton = "Page Content",
-			locator1 = "PageEditor#FRAGMENT_SIDEBAR_TITLE");
-
-		Click(locator1 = "PageEditor#PAGE_CONTENTS_CONTENT_FILTER_TOGGLE");
-
-		DropdownMenuItem.click(menuItem = ${filter});
-
-		AssertTextEquals(
-			locator1 = "PageEditor#PAGE_CONTENTS_CONTENT_FILTER_TOGGLE",
-			value1 = ${filter});
-	}
-
-	@summary = "Default summary"
-	macro selectItemToPreviewWithObject(entryValue = null) {
-		Click(locator1 = "PageEditor#PREVIEW_WITH_DROPDOWN_MENU");
-
-		Click(locator1 = "PageEditor#PREVIEW_WITH_OTHER_ITEM");
-
-		SelectFrame(
-			key_title = "Select",
-			locator1 = "IFrame#MODAL_ANY");
-
-		Click(
-			key_entryValue = ${entryValue},
-			locator1 = "PageEditor#PREVIEW_WITH_CUSTOM_OBJECT_ITEM");
-
-		IFrame.selectTopFrame();
 	}
 
 	@summary = "Default summary"
@@ -5279,136 +4260,6 @@ return	Array.from(getWebElement("(//div[@data-name='${fragmentName}'])[${index}]
 		Click(
 			key_text = "view",
 			locator1 = "Icon#ANY");
-	}
-
-	@summary = "Default summary"
-	macro unhideFragmentViaPageStructure(fragmentName = null) {
-		if (!(isSet(index))) {
-			var index = 1;
-		}
-
-		PageEditor.gotoTab(tabName = "Browser");
-
-		Click.clickNoWaitForVisible(
-			key_index = ${index},
-			key_nodeName = ${fragmentName},
-			locator1 = "Treeview#PAGE_STRUCTURE_TREE_NODE_HIDE_INDEX");
-
-		PageEditor.waitForAutoSave();
-	}
-
-	@summary = "Default summary"
-	macro unhideFragmentViaPageStyles(fragmentName = null) {
-		PageEditor.gotoTab(tabName = "Browser");
-
-		if (IsElementNotPresent(key_nodeName = ${fragmentName}, locator1 = "Treeview#PAGE_STRUCTURE_TREE_NODE_ACTIVE")) {
-			Click(
-				key_nodeName = ${fragmentName},
-				locator1 = "Treeview#PAGE_STRUCTURE_TREE_NODE");
-		}
-
-		Navigator.gotoNavTab(navTab = "General");
-
-		PageEditor.configureFragment(hideFragment = "false");
-	}
-
-	@summary = "Default summary"
-	macro unmarkFavorite(fragmentName = null, collectionName = null) {
-		if (isSet(displayStyle)) {
-			var displayStyle = "list";
-		}
-
-		if (${displayStyle} == "card") {
-			Click.clickAtNotVisible(
-				ariaLabel = "Unmark ${fragmentName} as Favorite",
-				key_collectionName = ${collectionName},
-				key_fragmentName = ${fragmentName},
-				locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_FRAGMENT_CARD_ITEM_BUTTON_WITH_ARIA_LABEL");
-		}
-		else {
-			Click.clickAtNotVisible(
-				ariaLabel = "Unmark ${fragmentName} as Favorite",
-				key_collectionName = ${collectionName},
-				key_fragmentName = ${fragmentName},
-				locator1 = "PageEditor#FRAGMENTS_AND_WIDGETS_TAB_FRAGMENT_BUTTON_WITH_ARIA_LABEL");
-		}
-
-		PageEditor.waitForAutoSave();
-	}
-
-	@summary = "Default summary"
-	macro viewCollectionDisplayStyle(layout = null, alignItems = null, flexWrap = null, columnCount = null, position = null, spaceBetweenColumns = null, justifyContent = null) {
-		if (!(isSet(rowNumber))) {
-			var rowNumer = 1;
-		}
-
-		if (isSet(columnCount)) {
-			var i = 0;
-
-			while (${i} != ${columnCount}) {
-				var columnNumber = ${i} + 1;
-
-				AssertElementPresent(
-					key_columnNumber = ${columnNumber},
-					key_position = ${position},
-					key_rowNumber = ${rowNumer},
-					locator1 = "PageEditor#COLLECTION_DISPLAY_COLUMN");
-			}
-
-			var columnNumber = ${columnCount} + 1;
-
-			AssertElementNotPresent(
-				key_columnNumber = ${columnNumber},
-				key_position = ${position},
-				key_rowNumber = ${rowNumer},
-				locator1 = "PageEditor#COLLECTION_DISPLAY_COLUMN");
-		}
-
-		if (isSet(alignItems)) {
-			AssertElementPresent(
-				key_alignItems = ${alignItems},
-				key_position = ${position},
-				locator1 = "PageEditor#COLLECTION_DISPLAY_CONFIGURATION_ALIGN_ITEMS");
-		}
-
-		if (isSet(flexWrap)) {
-			AssertElementPresent(
-				key_flexWrap = ${flexWrap},
-				key_position = ${position},
-				locator1 = "PageEditor#COLLECTION_DISPLAY_CONFIGURATION_FLEX_WRAP");
-		}
-
-		if (isSet(justifyContent)) {
-			AssertElementPresent(
-				key_justifyContent = ${justifyContent},
-				key_position = ${position},
-				locator1 = "PageEditor#COLLECTION_DISPLAY_CONFIGURATION_JUSTIFY_CONTENT");
-		}
-
-		if (isSet(layout)) {
-			AssertElementPresent(
-				key_layout = ${layout},
-				key_position = ${position},
-				locator1 = "PageEditor#COLLECTION_DISPLAY_CONFIGURATION_LAYOUT");
-		}
-
-		if (${spaceBetweenColumns} == "true") {
-			AssertElementNotPresent(
-				key_position = ${position},
-				locator1 = "PageEditor#COLLECTION_DISPLAY_COLUMNS_NO_GUTTER");
-		}
-		else if (${spaceBetweenColumns} == "false") {
-			AssertElementPresent(
-				key_position = ${position},
-				locator1 = "PageEditor#COLLECTION_DISPLAY_COLUMNS_NO_GUTTER");
-		}
-	}
-
-	@summary = "Default summary"
-	macro viewCollectionNotPresent(collectionName = null) {
-		AssertElementNotPresent(
-			key_collectionName = ${collectionName},
-			locator1 = "PageEditor#FRAGMENT_SIDEBAR_COLLECTION_PANEL");
 	}
 
 	@summary = "Default summary"
@@ -5674,110 +4525,8 @@ return	Array.from(getWebElement("(//div[@data-name='${fragmentName}'])[${index}]
 	}
 
 	@summary = "Default summary"
-	macro viewDuplicateFragment(fragmentName = null) {
-		AssertElementPresent(
-			index = 2,
-			key_fragmentName = ${fragmentName},
-			locator1 = "Fragment#FRAGMENT_LABEL");
-	}
-
-	@summary = "Default summary"
 	macro viewEditorEmpty() {
 		AssertElementPresent(locator1 = "PageEditor#EMPTY_MESSAGE");
-	}
-
-	@summary = "Default summary"
-	macro viewElementInsideModule(moduleNumber = null, elementName = null) {
-		if (!(isSet(position))) {
-			var position = 1;
-		}
-
-		AssertElementPresent(
-			key_columnNumber = ${moduleNumber},
-			key_elementHeader = "//div[@data-name='${elementName}']",
-			key_position = ${position},
-			locator1 = "PageEditor#GRID_COLUMN_NESTED_ELEMENT");
-	}
-
-	@summary = "Default summary"
-	macro viewElementNotPresentInsideModule(moduleNumber = null, elementName = null) {
-		if (!(isSet(position))) {
-			var position = 1;
-		}
-
-		AssertElementNotPresent(
-			key_columnNumber = ${moduleNumber},
-			key_elementHeader = "//div[@data-name='${elementName}']",
-			key_position = ${position},
-			locator1 = "PageEditor#GRID_COLUMN_NESTED_ELEMENT");
-	}
-
-	@summary = "Default summary"
-	macro viewExperienceActiveInEditMode(experienceName = null) {
-		PageEditor.openExperienceMenu();
-
-		AssertElementPresent(
-			key_experienceName = ${experienceName},
-			locator1 = "PageEditor#EXPERIENCE_ACTIVE_LABEL");
-	}
-
-	@summary = "Default summary"
-	macro viewExperienceActiveInViewModeControlMenu(experienceName = null) {
-		ContentPages.openExperienceMenu();
-
-		AssertElementPresent(
-			key_experienceName = ${experienceName},
-			locator1 = "PageEditor#EXPERIENCE_ACTIVE_LABEL_VIEW_CONTROL_MENU");
-	}
-
-	@summary = "Default summary"
-	macro viewExperienceActiveInViewModeDropdown(experienceName = null) {
-		ContentPages.openExperienceMenu();
-
-		AssertTextEquals(
-			key_experienceName = ${experienceName},
-			locator1 = "PageEditor#EXPERIENCE_ACTIVE_LABEL_VIEW_DROPDOWN",
-			value1 = "Active");
-	}
-
-	@summary = "Default summary"
-	macro viewExperienceNotActiveInEditMode(experienceName = null) {
-		PageEditor.openExperienceMenu();
-
-		AssertElementPresent(
-			key_experienceName = ${experienceName},
-			locator1 = "PageEditor#EXPERIENCE_INACTIVE_LABEL");
-	}
-
-	@summary = "Default summary"
-	macro viewExperienceNotActiveInViewModeControlMenu(experienceName = null) {
-		ContentPages.openExperienceMenu();
-
-		AssertElementPresent(
-			key_experienceName = ${experienceName},
-			locator1 = "PageEditor#EXPERIENCE_INACTIVE_LABEL_VIEW_CONTROL_MENU");
-	}
-
-	@summary = "Default summary"
-	macro viewExperienceNotActiveInViewModeDropdown(experienceName = null) {
-		ContentPages.openExperienceMenu();
-
-		AssertTextEquals(
-			key_experienceName = ${experienceName},
-			locator1 = "PageEditor#EXPERIENCE_INACTIVE_LABEL_VIEW_DROPDOWN",
-			value1 = "Inactive");
-	}
-
-	@summary = "Default summary"
-	macro viewExperienceValues(experienceName = null, segmentName = null) {
-		PageEditor.openExperienceMenu();
-
-		AssertVisible(
-			key_experienceName = ${experienceName},
-			key_segmentName = ${segmentName},
-			locator1 = "PageEditor#EXPERIENCE_VALUES");
-
-		Click(locator1 = "PageEditor#EXPERIENCE_LABEL");
 	}
 
 	@summary = "Default summary"
@@ -5882,20 +4631,6 @@ return	Array.from(getWebElement("(//div[@data-name='${fragmentName}'])[${index}]
 	}
 
 	@summary = "Default summary"
-	macro viewFragmentHeaderNotVisible(fragmentName = null) {
-		AssertElementNotPresent(
-			key_fragmentName = ${fragmentName},
-			locator1 = "Fragment#FRAGMENT_HEADER");
-	}
-
-	@summary = "Default summary"
-	macro viewFragmentHeaderVisible(fragmentName = null) {
-		AssertVisible(
-			key_fragmentName = ${fragmentName},
-			locator1 = "Fragment#FRAGMENT_HEADER");
-	}
-
-	@summary = "Default summary"
 	macro viewFragmentMessageInfo(fragmentName = null) {
 		if (${fragmentName} == "Collection Display") {
 			if (!(isSet(messageInfo))) {
@@ -5945,26 +4680,6 @@ return	Array.from(getWebElement("(//div[@data-name='${fragmentName}'])[${index}]
 			index = ${position},
 			key_fragmentName = ${fragmentName},
 			locator1 = "Fragment#FRAGMENT_LABEL");
-	}
-
-	@summary = "Default summary"
-	macro viewFragmentNotVisible(fragmentName = null) {
-		if (!(isSet(position))) {
-			var position = 1;
-		}
-
-		AssertNotVisible(
-			index = ${position},
-			key_fragmentName = ${fragmentName},
-			locator1 = "Fragment#FRAGMENT_LABEL");
-	}
-
-	@summary = "Default summary"
-	macro viewFragmentOrder(fragmentName = null, position = null) {
-		AssertElementPresent(
-			key_fragmentName = ${fragmentName},
-			key_position = ${position},
-			locator1 = "Fragment#FRAGMENT_POSITION");
 	}
 
 	@summary = "Default summary"
@@ -6169,153 +4884,6 @@ return	Array.from(getWebElement("(//div[@data-name='${fragmentName}'])[${index}]
 	}
 
 	@summary = "Default summary"
-	macro viewGridStyle(layout = null, columnCount = null, position = null, spaceBetweenColumns = null, verticalAlignment = null) {
-		if (isSet(columnCount)) {
-			var i = 0;
-
-			while (${i} != ${columnCount}) {
-				var columnNumber = ${i} + 1;
-
-				AssertElementPresent(
-					key_columnNumber = ${columnNumber},
-					key_position = ${position},
-					locator1 = "PageEditor#GRID_COLUMN");
-			}
-
-			var columnNumber = ${columnCount} + 1;
-
-			AssertElementNotPresent(
-				key_columnNumber = ${columnNumber},
-				key_position = ${position},
-				locator1 = "PageEditor#GRID_COLUMN");
-		}
-
-		if (isSet(inverseOrder)) {
-			AssertElementPresent(
-				key_position = ${position},
-				locator1 = "PageEditor#GRID_CONFIGURATION_INVERSE_ORDER");
-		}
-
-		if (isSet(layout)) {
-			AssertElementPresent(
-				key_layout = ${layout},
-				key_position = ${position},
-				locator1 = "PageEditor#GRID_CONFIGURATION_LAYOUT");
-		}
-
-		if (${spaceBetweenColumns} == "true") {
-			AssertElementNotPresent(
-				key_position = ${position},
-				locator1 = "PageEditor#GRID_CONFIGURATION_COLUMNS_NO_GUTTER");
-		}
-		else if (${spaceBetweenColumns} == "false") {
-			AssertElementPresent(
-				key_position = ${position},
-				locator1 = "PageEditor#GRID_CONFIGURATION_COLUMNS_NO_GUTTER");
-		}
-
-		if (${verticalAlignment} == "Top") {
-			AssertElementPresent(
-				key_position = ${position},
-				key_verticalAlignment = "",
-				locator1 = "PageEditor#GRID_CONFIGURATION_VERTICAL_ALIGNMENT");
-		}
-		else if (${verticalAlignment} == "Middle") {
-			AssertElementPresent(
-				key_position = ${position},
-				key_verticalAlignment = "middle",
-				locator1 = "PageEditor#GRID_CONFIGURATION_VERTICAL_ALIGNMENT");
-		}
-		else if (${verticalAlignment} == "Bottom") {
-			AssertElementPresent(
-				key_position = ${position},
-				key_verticalAlignment = "bottom",
-				locator1 = "PageEditor#GRID_CONFIGURATION_VERTICAL_ALIGNMENT");
-		}
-	}
-
-	@summary = "Default summary"
-	macro viewInputStyle(charactersCount = null, helpText = null, numberOfLines = null, label = null, placeholder = null, type = null, showLabel = null, showHelpText = null) {
-		if (!(isSet(position))) {
-			var position = 1;
-		}
-
-		if (isSet(charactersCount)) {
-			AssertTextEquals(
-				index = ${position},
-				locator1 = "Fragment#INPUT_LENGTH_INFO",
-				type = ${type},
-				value1 = ${charactersCount});
-		}
-
-		if (${showLabel} == "true") {
-			AssertTextEquals(
-				fieldLabel = ${label},
-				index = ${position},
-				locator1 = "Fragment#INPUT_LABEL",
-				type = ${type},
-				value1 = ${label});
-		}
-		else if (${showLabel} == "false") {
-			AssertElementPresent(
-				fieldLabel = ${label},
-				index = ${position},
-				locator1 = "Fragment#INPUT_LABEL_INVISIBLE",
-				type = ${type});
-		}
-
-		if (${showHelpText} == "true") {
-			AssertTextEquals(
-				index = ${position},
-				locator1 = "Fragment#INPUT_HELP_TEXT",
-				type = ${type},
-				value1 = ${helpText});
-		}
-		else if (${showHelpText} == "false") {
-			AssertElementNotPresent(
-				index = ${position},
-				locator1 = "Fragment#INPUT_HELP_TEXT",
-				type = ${type});
-		}
-
-		if (isSet(numberOfLines)) {
-			AssertAttributeValue(
-				index = ${position},
-				locator1 = "Fragment#TEXTAREA_FIELD",
-				type = ${type},
-				value1 = "rows",
-				value2 = ${numberOfLines});
-		}
-
-		if (isSet(placeholder)) {
-			if (${type} == "textarea") {
-				AssertAttributeValue(
-					index = ${position},
-					locator1 = "Fragment#TEXTAREA_FIELD",
-					type = ${type},
-					value1 = "placeholder",
-					value2 = ${placeholder});
-			}
-			else {
-				AssertAttributeValue(
-					index = ${position},
-					locator1 = "Fragment#INPUT_FIELD",
-					type = ${type},
-					value1 = "placeholder",
-					value2 = ${placeholder});
-			}
-		}
-
-		if (isSet(markAsRequired)) {
-			AssertElementPresent(
-				fieldLabel = ${label},
-				index = ${position},
-				locator1 = "Fragment#INPUT_REQUIRED",
-				type = ${type});
-		}
-	}
-
-	@summary = "Default summary"
 	macro viewItemSelectorText(fieldLabel = null, text = null) {
 		SelectFrameTop();
 
@@ -6323,34 +4891,6 @@ return	Array.from(getWebElement("(//div[@data-name='${fragmentName}'])[${index}]
 			key_fieldLabel = ${fieldLabel},
 			locator1 = "PageEditor#ITEM_SELECTOR_CONTENT_INPUT",
 			value1 = ${text});
-	}
-
-	@summary = "Default summary"
-	macro viewMentionPopupDisapper() {
-		AssertElementPresent(locator1 = "Mentions#MENTION_POPUP_DISAPPEAR");
-	}
-
-	@summary = "Default summary"
-	macro viewMentionsDisplayOption(mentionsUserScreenName = null, fragmentComment = null, noMentionsUserScreenName = null) {
-		Click.clickAt(locator1 = "PageEditor#FRAGMENT_SIDEBAR_COMMENTS");
-
-		Type.sendKeys(
-			locator1 = "PageEditor#FRAGMENT_SIDEBAR_COMMENTS",
-			value1 = ${fragmentComment});
-
-		if (isSet(noMentionsUserScreenName)) {
-			AssertElementNotPresent(
-				key_mentionsUserScreenName = ${noMentionsUserScreenName},
-				locator1 = "Mentions#MENTIONS_USER_DISPLAY_OPTION");
-		}
-
-		AssertElementPresent(
-			key_mentionsUserScreenName = ${mentionsUserScreenName},
-			locator1 = "Mentions#MENTIONS_USER_DISPLAY_OPTION");
-
-		Click.clickNoMouseOver(
-			key_mentionsUserScreenName = ${mentionsUserScreenName},
-			locator1 = "Mentions#MENTIONS_USER_DISPLAY_OPTION");
 	}
 
 	@summary = "Default summary"
@@ -6364,29 +4904,6 @@ return	Array.from(getWebElement("(//div[@data-name='${fragmentName}'])[${index}]
 		SelectFrame(locator1 = "IFrame#MODAL_BODY");
 
 		AssertElementNotPresent(locator1 = "//body[.='${elementValue}']");
-	}
-
-	@summary = "Default summary"
-	macro viewNumberOfCollectionItemsInCollectionPage(numberOfItems = null) {
-		AssertTextEquals(
-			locator1 = "ControlMenu#VIEW_COLLECTION_ITEMS_BUTTON",
-			value1 = ${numberOfItems});
-	}
-
-	@summary = "Default summary"
-	macro viewOrderOfSideBarButtons(buttonNameList = null) {
-		if (!(isSet(i))) {
-			var i = 1;
-		}
-
-		for (var buttonName : list ${buttonNameList}) {
-			AssertVisible(
-				index = ${i},
-				key_tabName = ${buttonName},
-				locator1 = "PageEditor#FRAGMENT_SIDEBAR_TAB_BUTTON_BY_INDEX");
-
-			var i = ${i} + 1;
-		}
 	}
 
 	@summary = "Default summary"

@@ -2967,6 +2967,9 @@ definition {
 	@description = "This is a use case for LPS-141138."
 	@priority = 4
 	test ViewObjectsSearchResultDetailsDisplayPageTemplate {
+		property test.liferay.virtual.instance = "false";
+		property test.run.type = "single";
+
 		task ("Enable featured content fragment set") {
 			FragmentsAdmin.enableFeaturedContent();
 		}
@@ -3033,7 +3036,7 @@ definition {
 		Button.clickSave();
 
 		PageEditor.addFragment(
-			collectionName = "Featured Content",
+			collectionName = "Featured ContentDeprecated",
 			composition = "true",
 			fragmentName = "Banner Center");
 

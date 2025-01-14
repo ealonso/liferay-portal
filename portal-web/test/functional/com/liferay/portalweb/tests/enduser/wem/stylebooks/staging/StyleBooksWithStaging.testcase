@@ -17,10 +17,6 @@ definition {
 			HeadlessSite.addSite(siteName = "Test Site Name");
 		}
 
-		task ("Enable featured content fragment set") {
-			FragmentsAdmin.enableFeaturedContent();
-		}
-
 		task ("Activate local live staging") {
 			JSONStaging.enableLocalStaging(groupName = "Test Site Name");
 		}
@@ -46,6 +42,13 @@ definition {
 	@description = "This is a test for LPS-116106. Page Creator can change style book of content page via Look and Feel settings in Staging site."
 	@priority = 3
 	test ChangeStyleBookOfContentPageViaLookAndFeelInStagingSite {
+		property test.liferay.virtual.instance = "false";
+		property test.run.type = "single";
+
+		task ("Enable featured content fragment set") {
+			FragmentsAdmin.enableFeaturedContent();
+		}
+
 		task ("Edit the style book and Publish it") {
 			StyleBooks.selectForm(formName = "Buttons");
 
@@ -91,7 +94,7 @@ definition {
 				siteName = "Test Site Name Staging");
 
 			PageEditor.addFragment(
-				collectionName = "Featured Content",
+				collectionName = "Featured ContentDeprecated",
 				composition = "true",
 				fragmentName = "Banner Center");
 		}
@@ -238,6 +241,13 @@ definition {
 	@description = "This is a test for LPS-116106. Page Creator can quickly change style book via Page Design Options panel in Staging site."
 	@priority = 4
 	test ChangeStyleBookOfContentPageViaPageDesignOptionsPanelInStagingSite {
+		property test.liferay.virtual.instance = "false";
+		property test.run.type = "single";
+
+		task ("Enable featured content fragment set") {
+			FragmentsAdmin.enableFeaturedContent();
+		}
+
 		task ("Edit the style book and Publish it") {
 			StyleBooks.selectForm(formName = "Buttons");
 
@@ -283,7 +293,7 @@ definition {
 				siteName = "Test Site Name Staging");
 
 			PageEditor.addFragment(
-				collectionName = "Featured Content",
+				collectionName = "Featured ContentDeprecated",
 				composition = "true",
 				fragmentName = "Banner Center");
 
@@ -551,6 +561,13 @@ definition {
 	@description = "This is a test for LPS-116078. Can preview the effect on page when edit the style book in Staging site."
 	@priority = 4
 	test PreviewTheEffectOnPageInStyleBookEditorInStagingSite {
+		property test.liferay.virtual.instance = "false";
+		property test.run.type = "single";
+
+		task ("Enable featured content fragment set") {
+			FragmentsAdmin.enableFeaturedContent();
+		}
+
 		task ("Edit the style book and Publish it") {
 			StyleBooks.selectForm(formName = "Buttons");
 
@@ -596,7 +613,7 @@ definition {
 				siteName = "Test Site Name Staging");
 
 			PageEditor.addFragment(
-				collectionName = "Featured Content",
+				collectionName = "Featured ContentDeprecated",
 				composition = "true",
 				fragmentName = "Banner Center");
 
@@ -638,6 +655,12 @@ definition {
 	@priority = 5
 	test ViewDataChangesOfStyleBookAreImmediatelyAvailableToLiveSite {
 		property portal.acceptance = "true";
+		property test.liferay.virtual.instance = "false";
+		property test.run.type = "single";
+
+		task ("Enable featured content fragment set") {
+			FragmentsAdmin.enableFeaturedContent();
+		}
 
 		task ("Edit the style book and Publish it") {
 			StyleBooks.selectForm(formName = "Buttons");
@@ -692,7 +715,7 @@ definition {
 				siteName = "Test Site Name Staging");
 
 			PageEditor.addFragment(
-				collectionName = "Featured Content",
+				collectionName = "Featured ContentDeprecated",
 				composition = "true",
 				fragmentName = "Banner Center");
 		}

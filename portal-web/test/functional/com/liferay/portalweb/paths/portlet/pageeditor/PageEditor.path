@@ -523,17 +523,12 @@
 </tr>
 <tr>
 	<td>FRAGMENT_SIDEBAR_COLLECTION_PANEL</td>
-	<td>//*[contains(@class,'collapse-icon')][normalize-space()='${key_collectionName}']</td>
+	<td>//button[contains(@class,'collapse-icon')][normalize-space()='${key_collectionName}']</td>
 	<td></td>
 </tr>
 <tr>
 	<td>FRAGMENT_SIDEBAR_COLLECTION_PANEL_COLLAPSED</td>
-	<td>//*[contains(@class,'panel-header-link collapse-icon') and contains(@class,'collapsed')][normalize-space()='${key_collectionName}']</td>
-	<td></td>
-</tr>
-<tr>
-	<td>FRAGMENT_SIDEBAR_COLLECTION_PANEL_EXPANDED</td>
-	<td>//*[contains(@class,'mb-3') and contains(@class,'panel-header') and contains(@class,'panel-header-link')][normalize-space()='${key_collectionName}']</td>
+	<td>//button[contains(@class,'collapsed')][normalize-space()='${key_collectionName}']</td>
 	<td></td>
 </tr>
 <tr>
@@ -715,7 +710,7 @@
 </tr>
 <tr>
 	<td>FRAGMENTS_AND_WIDGETS_TAB_FRAGMENT</td>
-	<td>//button[normalize-space()='${key_collectionName}']/following-sibling::ul/li[contains(@class,'page-editor__fragments-widgets__tab-list-item')][normalize-space()='${key_fragmentName}']//div[@draggable='true']</td>
+	<td>//ul//div[@draggable='true'][normalize-space()='${key_fragmentName}']</td>
 	<td></td>
 </tr>
 <tr>

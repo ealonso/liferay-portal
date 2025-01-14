@@ -14,10 +14,6 @@ definition {
 			AssetPublisherPortlet.enableDynamicAndManualSelection();
 		}
 
-		task ("Enable featured content fragment set") {
-			FragmentsAdmin.enableFeaturedContent();
-		}
-
 		HeadlessSite.addSite(siteName = "Test Site Name");
 
 		JSONDepot.addDepot(
@@ -633,6 +629,12 @@ definition {
 	@priority = 5
 	test CanViewDepotDMUsingDepotType {
 		property portal.upstream = "true";
+		property test.liferay.virtual.instance = "false";
+		property test.run.type = "single";
+
+		task ("Enable featured content fragment set") {
+			FragmentsAdmin.enableFeaturedContent();
+		}
 
 		JSONLayout.addPublicLayout(
 			groupName = "Test Site Name",
@@ -671,7 +673,7 @@ definition {
 		DisplayPageTemplatesAdmin.gotoDisplayPage(displayPageName = "Display Page Name");
 
 		PageEditor.addFragment(
-			collectionName = "Featured Content",
+			collectionName = "Featured ContentDeprecated",
 			composition = "true",
 			fragmentName = "Banner Center");
 
@@ -727,6 +729,12 @@ definition {
 	@priority = 5
 	test CanViewDepotDMUsingGlobalType {
 		property portal.upstream = "true";
+		property test.liferay.virtual.instance = "false";
+		property test.run.type = "single";
+
+		task ("Enable featured content fragment set") {
+			FragmentsAdmin.enableFeaturedContent();
+		}
 
 		JSONLayout.addPublicLayout(
 			groupName = "Test Site Name",
@@ -760,7 +768,7 @@ definition {
 		DisplayPageTemplatesAdmin.gotoDisplayPage(displayPageName = "Display Page Name");
 
 		PageEditor.addFragment(
-			collectionName = "Featured Content",
+			collectionName = "Featured ContentDeprecated",
 			composition = "true",
 			fragmentName = "Banner Center");
 
@@ -815,6 +823,13 @@ definition {
 	@description = "This test ensures that an asset library custom article can be displayed with the default display page template on a connected site."
 	@priority = 5
 	test CanViewDepotWCUsingDepotStructure {
+		property test.liferay.virtual.instance = "false";
+		property test.run.type = "single";
+
+		task ("Enable featured content fragment set") {
+			FragmentsAdmin.enableFeaturedContent();
+		}
+
 		JSONLayout.addPublicLayout(
 			groupName = "Test Site Name",
 			layoutName = "Test Page Name");
@@ -857,7 +872,7 @@ definition {
 		DisplayPageTemplatesAdmin.gotoDisplayPage(displayPageName = "Display Page Name");
 
 		PageEditor.addFragment(
-			collectionName = "Featured Content",
+			collectionName = "Featured ContentDeprecated",
 			composition = "true",
 			fragmentName = "Banner Center");
 
@@ -912,6 +927,13 @@ definition {
 	@description = "This test ensures that an asset library article created with a structure stored in the global site can be displayed with the default display page template on the generic site."
 	@priority = 5
 	test CanViewDepotWCUsingGlobalStructure {
+		property test.liferay.virtual.instance = "false";
+		property test.run.type = "single";
+
+		task ("Enable featured content fragment set") {
+			FragmentsAdmin.enableFeaturedContent();
+		}
+
 		JSONLayout.addPublicLayout(
 			groupName = "Test Site Name",
 			layoutName = "Test Page Name");
@@ -949,7 +971,7 @@ definition {
 		DisplayPageTemplatesAdmin.gotoDisplayPage(displayPageName = "Display Page Name");
 
 		PageEditor.addFragment(
-			collectionName = "Featured Content",
+			collectionName = "Featured ContentDeprecated",
 			composition = "true",
 			fragmentName = "Banner Center");
 
@@ -1004,6 +1026,13 @@ definition {
 	@description = "This test ensures that a site document entry created with a type stored in an asset library can be displayed with the default display page template on a connected site."
 	@priority = 5
 	test CanViewSiteDMUsingDepotType {
+		property test.liferay.virtual.instance = "false";
+		property test.run.type = "single";
+
+		task ("Enable featured content fragment set") {
+			FragmentsAdmin.enableFeaturedContent();
+		}
+
 		JSONLayout.addPublicLayout(
 			groupName = "Test Site Name",
 			layoutName = "Test Page Name");
@@ -1041,7 +1070,7 @@ definition {
 		DisplayPageTemplatesAdmin.gotoDisplayPage(displayPageName = "Display Page Name");
 
 		PageEditor.addFragment(
-			collectionName = "Featured Content",
+			collectionName = "Featured ContentDeprecated",
 			composition = "true",
 			fragmentName = "Banner Center");
 
@@ -1096,6 +1125,13 @@ definition {
 	@description = "This test ensures that a site article created with a structure stored in an asset library can be displayed with the default display page template on a connected site."
 	@priority = 5
 	test CanViewSiteWCUsingDepotStructure {
+		property test.liferay.virtual.instance = "false";
+		property test.run.type = "single";
+
+		task ("Enable featured content fragment set") {
+			FragmentsAdmin.enableFeaturedContent();
+		}
+
 		JSONLayout.addPublicLayout(
 			groupName = "Test Site Name",
 			layoutName = "Test Page Name");
@@ -1138,7 +1174,7 @@ definition {
 		DisplayPageTemplatesAdmin.gotoDisplayPage(displayPageName = "Display Page Name");
 
 		PageEditor.addFragment(
-			collectionName = "Featured Content",
+			collectionName = "Featured ContentDeprecated",
 			composition = "true",
 			fragmentName = "Banner Center");
 
