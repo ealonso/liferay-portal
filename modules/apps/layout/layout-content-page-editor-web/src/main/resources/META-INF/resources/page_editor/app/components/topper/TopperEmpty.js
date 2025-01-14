@@ -49,7 +49,7 @@ export default function ({activable = true, children, ...props}) {
 		return children;
 	}
 
-	if (Liferay.FeatureFlags['LPD-18221'] && activable) {
+	if (Liferay.FeatureFlags['LPD-31772'] && activable) {
 		return (
 			<ActivableTopperEmptyWrapper {...props}>
 				{children}
