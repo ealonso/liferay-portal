@@ -4,16 +4,26 @@
  */
 
 import classNames from 'classnames';
-import React from 'react';
+import React, {useCallback, useMemo} from 'react';
 
 import useSetRef from '../../../common/hooks/useSetRef';
 import {getLayoutDataItemPropTypes} from '../../../prop_types/index';
 import {config} from '../../config';
+import {useSelectItem} from '../../contexts/ControlsContext';
 import {useActiveStep} from '../../contexts/FormStepContext';
 import {useItemLocalConfig} from '../../contexts/LocalConfigContext';
-import {useSelector, useSelectorCallback} from '../../contexts/StoreContext';
+import {
+	useDispatch,
+	useSelector,
+	useSelectorCallback,
+} from '../../contexts/StoreContext';
+import removeFormStep from '../../thunks/removeFormStep';
+import {getFormParent} from '../../utils/getFormParent';
 import getLayoutDataItemTopperUniqueClassName from '../../utils/getLayoutDataItemTopperUniqueClassName';
+import getLayoutDataItemUniqueClassName from '../../utils/getLayoutDataItemUniqueClassName';
 import isItemEmpty from '../../utils/isItemEmpty';
+import {openConfirmModal} from '../../utils/openConfirmModal';
+import {updateStepperConfiguration} from '../../utils/updateStepperConfiguration';
 import TopperEmpty from '../topper/TopperEmpty';
 import getParentHeight from './getParentHeight';
 
@@ -33,13 +43,14 @@ const FormStepWithControls = React.forwardRef(({children, item}, ref) => {
 		[item]
 	);
 
-	const formId = useSelectorCallback(
-		(state) => state.layoutData.items[item.parentId]?.parentId,
+	const layoutData = useSelector((state) => state.layoutData);
 
-		[item]
+	const form = useMemo(
+		() => getFormParent(item, layoutData),
+		[item, layoutData]
 	);
 
-	const localConfig = useItemLocalConfig(formId);
+	const localConfig = useItemLocalConfig(form.itemId);
 
 	const activeStep = useActiveStep();
 
@@ -47,7 +58,67 @@ const FormStepWithControls = React.forwardRef(({children, item}, ref) => {
 
 	const [setRef, itemElement] = useSetRef(ref);
 
-	const layoutData = useSelector((state) => state.layoutData);
+	const fragmentEntryLinks = useSelector((state) => state.fragmentEntryLinks);
+
+	const dispatch = useDispatch();
+
+	const selectItem = useSelectItem();
+
+	const removeStep = useCallback(() => {
+		const numberOfSteps = form.config.numberOfSteps;
+
+		const executeAction = () => {
+			dispatch(
+				removeFormStep({
+					index,
+					itemId: item.itemId,
+					selectItem,
+				})
+			).then(() =>
+				updateStepperConfiguration({
+					dispatch,
+					formId: form.itemId,
+					fragmentEntryLinks,
+					layoutData,
+					numberOfSteps: numberOfSteps - 1,
+				})
+			);
+		};
+
+		if (numberOfSteps === 2) {
+			openConfirmModal({
+				buttonLabel: Liferay.Language.get('remove-and-convert'),
+				onConfirm: executeAction,
+				status: 'info',
+				text: Liferay.Language.get(
+					'removing-this-step-will-convert-your-multistep-form-into-a-simple-form'
+				),
+				title: Liferay.Language.get(
+					'remove-step-and-convert-to-simple-form'
+				),
+			});
+		}
+		else {
+			executeAction();
+		}
+
+		const formElement = document.querySelector(
+			`.${getLayoutDataItemUniqueClassName(form.itemId)}`
+		);
+
+		Liferay.fire('formFragment:changeStep', {
+			emitter: formElement,
+			step: index - 1,
+		});
+	}, [
+		dispatch,
+		form,
+		fragmentEntryLinks,
+		index,
+		item.itemId,
+		layoutData,
+		selectItem,
+	]);
 
 	return (
 		<TopperEmpty
@@ -57,6 +128,17 @@ const FormStepWithControls = React.forwardRef(({children, item}, ref) => {
 			)}
 			item={item}
 			itemElement={itemElement}
+			options={
+				Liferay.FeatureFlags['LPD-31772'] && index
+					? [
+							{
+								label: Liferay.Language.get('remove-step'),
+								onClick: removeStep,
+								symbol: 'times-circle',
+							},
+						]
+					: []
+			}
 		>
 			<FormStep
 				className={classNames('page-editor__form-step', {
