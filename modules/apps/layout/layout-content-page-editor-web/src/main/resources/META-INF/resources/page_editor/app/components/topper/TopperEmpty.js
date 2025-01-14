@@ -147,6 +147,7 @@ const ActivableTopperEmpty = ({
 	isActive,
 	isHovered,
 	item,
+	options = [],
 	itemElement,
 	shouldIgnoreEvents = () => {},
 }) => {
@@ -263,6 +264,7 @@ const ActivableTopperEmpty = ({
 						isHovered={isHovered && !isActive}
 						item={item}
 						itemElement={itemElement}
+						options={options}
 					/>
 				) : null}
 			</>
@@ -270,7 +272,13 @@ const ActivableTopperEmpty = ({
 	});
 };
 
-const TopperEmptyLabel = ({isActive, isHovered, item, itemElement}) => {
+const TopperEmptyLabel = ({
+	isActive,
+	isHovered,
+	item,
+	itemElement,
+	options,
+}) => {
 	const clipboard = useClipboard();
 	const activeItemIds = useActiveItemIds();
 
@@ -364,6 +372,21 @@ const TopperEmptyLabel = ({isActive, isHovered, item, itemElement}) => {
 										<FeatureIndicator type="beta" />
 									</span>
 								</ClayDropDown.Item>
+
+								{...options.map((option, index) => (
+									<ClayDropDown.Item
+										disabled={option.disabled}
+										key={index}
+										onClick={(event) => {
+											event.stopPropagation();
+
+											option.onClick();
+										}}
+										symbolLeft={option.symbol}
+									>
+										{option.label}
+									</ClayDropDown.Item>
+								))}
 							</ClayDropDown.ItemList>
 						</ClayDropDown>
 					</li>
