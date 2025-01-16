@@ -66,6 +66,29 @@ export default {
 		);
 	},
 
+	removeFormStep({
+		itemId,
+		onNetworkStatus,
+		segmentsExperienceId,
+	}: {
+		itemId: string;
+		onNetworkStatus: OnNetworkStatus;
+		segmentsExperienceId: string;
+	}) {
+		return draftServiceFetch<{
+			layoutData: LayoutData;
+		}>(
+			config.markItemForDeletionURL,
+			{
+				body: {
+					itemId,
+					segmentsExperienceId,
+				},
+			},
+			onNetworkStatus
+		);
+	},
+
 	updateFormItemConfig({
 		fields,
 		itemConfig,
