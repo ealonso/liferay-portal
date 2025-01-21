@@ -32,20 +32,6 @@ import org.osgi.service.component.annotations.Reference;
 public class LayoutSEOEntryServiceImpl extends LayoutSEOEntryServiceBaseImpl {
 
 	@Override
-	public LayoutSEOEntry updateCustomMetaTags(
-			long groupId, boolean privateLayout, long layoutId,
-			ServiceContext serviceContext)
-		throws PortalException {
-
-		LayoutPermissionUtil.checkLayoutUpdatePermission(
-			getPermissionChecker(),
-			_layoutLocalService.getLayout(groupId, privateLayout, layoutId));
-
-		return layoutSEOEntryLocalService.updateCustomMetaTags(
-			getUserId(), groupId, privateLayout, layoutId, serviceContext);
-	}
-
-	@Override
 	public LayoutSEOEntry updateLayoutSEOEntry(
 			long groupId, boolean privateLayout, long layoutId,
 			boolean canonicalURLEnabled, Map<Locale, String> canonicalURLMap,
