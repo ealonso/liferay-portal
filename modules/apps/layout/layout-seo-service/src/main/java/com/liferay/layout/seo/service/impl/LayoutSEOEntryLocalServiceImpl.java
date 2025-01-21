@@ -93,19 +93,35 @@ public class LayoutSEOEntryLocalServiceImpl
 	}
 
 	@Override
+	public LayoutSEOEntry deleteLayoutSEOEntry(LayoutSEOEntry layoutSEOEntry) {
+		layoutSEOEntryPersistence.remove(layoutSEOEntry);
+
+		// Layout SEO entry custom meta tags
+
+		_layoutSEOEntryCustomMetaTagLocalService.
+			deleteLayoutSEOEntryCustomMetaTags(
+				layoutSEOEntry.getGroupId(),
+				layoutSEOEntry.getLayoutSEOEntryId());
+
+		return layoutSEOEntry;
+	}
+
+	@Override
 	public void deleteLayoutSEOEntry(
 			long groupId, boolean privateLayout, long layoutId)
 		throws NoSuchEntryException {
 
-		layoutSEOEntryPersistence.removeByG_P_L(
-			groupId, privateLayout, layoutId);
+		layoutSEOEntryLocalService.deleteLayoutSEOEntry(
+			layoutSEOEntryPersistence.findByG_P_L(
+				groupId, privateLayout, layoutId));
 	}
 
 	@Override
 	public void deleteLayoutSEOEntry(String uuid, long groupId)
 		throws NoSuchEntryException {
 
-		layoutSEOEntryPersistence.removeByUUID_G(uuid, groupId);
+		layoutSEOEntryLocalService.deleteLayoutSEOEntry(
+			layoutSEOEntryPersistence.findByUUID_G(uuid, groupId));
 	}
 
 	@Override
