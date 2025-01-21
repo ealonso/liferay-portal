@@ -45,17 +45,6 @@ public interface LayoutSEOEntryService extends BaseService {
 	 *
 	 * Never modify this interface directly. Add custom service methods to <code>com.liferay.layout.seo.service.impl.LayoutSEOEntryServiceImpl</code> and rerun ServiceBuilder to automatically copy the method declarations to this interface. Consume the layout seo entry remote service via injection or a <code>org.osgi.util.tracker.ServiceTracker</code>. Use {@link LayoutSEOEntryServiceUtil} if injection and service tracking are not available.
 	 */
-	public LayoutSEOEntry copyLayoutSEOEntry(
-			long userId, long groupId, boolean privateLayout,
-			long sourceLayoutId, boolean canonicalURLEnabled,
-			Map<Locale, String> canonicalURLMap, long copyDDMStorageId,
-			boolean openGraphDescriptionEnabled,
-			Map<Locale, String> openGraphDescriptionMap,
-			Map<Locale, String> openGraphImageAltMap,
-			long openGraphImageFileEntryId, boolean openGraphTitleEnabled,
-			Map<Locale, String> openGraphTitleMap,
-			ServiceContext serviceContext)
-		throws PortalException;
 
 	/**
 	 * Returns the OSGi service identifier.
@@ -63,11 +52,6 @@ public interface LayoutSEOEntryService extends BaseService {
 	 * @return the OSGi service identifier
 	 */
 	public String getOSGiServiceIdentifier();
-
-	public LayoutSEOEntry updateCustomMetaTags(
-			long groupId, boolean privateLayout, long layoutId,
-			ServiceContext serviceContext)
-		throws PortalException;
 
 	public LayoutSEOEntry updateLayoutSEOEntry(
 			long groupId, boolean privateLayout, long layoutId,

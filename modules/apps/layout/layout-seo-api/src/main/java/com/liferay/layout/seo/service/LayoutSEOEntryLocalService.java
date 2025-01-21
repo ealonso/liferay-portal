@@ -80,13 +80,7 @@ public interface LayoutSEOEntryLocalService
 
 	public LayoutSEOEntry copyLayoutSEOEntry(
 			long userId, long groupId, boolean privateLayout,
-			long sourceLayoutId, boolean canonicalURLEnabled,
-			Map<Locale, String> canonicalURLMap, long copyDDMStorageId,
-			boolean openGraphDescriptionEnabled,
-			Map<Locale, String> openGraphDescriptionMap,
-			Map<Locale, String> openGraphImageAltMap,
-			long openGraphImageFileEntryId, boolean openGraphTitleEnabled,
-			Map<Locale, String> openGraphTitleMap,
+			long targetLayoutId, LayoutSEOEntry sourceLayoutSEOEntry,
 			ServiceContext serviceContext)
 		throws PortalException;
 
@@ -332,11 +326,6 @@ public interface LayoutSEOEntryLocalService
 	@Override
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public PersistedModel getPersistedModel(Serializable primaryKeyObj)
-		throws PortalException;
-
-	public LayoutSEOEntry updateCustomMetaTags(
-			long userId, long groupId, boolean privateLayout, long layoutId,
-			ServiceContext serviceContext)
 		throws PortalException;
 
 	/**

@@ -56,22 +56,13 @@ public class LayoutSEOEntryLocalServiceUtil {
 
 	public static LayoutSEOEntry copyLayoutSEOEntry(
 			long userId, long groupId, boolean privateLayout,
-			long sourceLayoutId, boolean canonicalURLEnabled,
-			Map<java.util.Locale, String> canonicalURLMap,
-			long copyDDMStorageId, boolean openGraphDescriptionEnabled,
-			Map<java.util.Locale, String> openGraphDescriptionMap,
-			Map<java.util.Locale, String> openGraphImageAltMap,
-			long openGraphImageFileEntryId, boolean openGraphTitleEnabled,
-			Map<java.util.Locale, String> openGraphTitleMap,
+			long targetLayoutId, LayoutSEOEntry sourceLayoutSEOEntry,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws PortalException {
 
 		return getService().copyLayoutSEOEntry(
-			userId, groupId, privateLayout, sourceLayoutId, canonicalURLEnabled,
-			canonicalURLMap, copyDDMStorageId, openGraphDescriptionEnabled,
-			openGraphDescriptionMap, openGraphImageAltMap,
-			openGraphImageFileEntryId, openGraphTitleEnabled, openGraphTitleMap,
-			serviceContext);
+			userId, groupId, privateLayout, targetLayoutId,
+			sourceLayoutSEOEntry, serviceContext);
 	}
 
 	/**
@@ -380,15 +371,6 @@ public class LayoutSEOEntryLocalServiceUtil {
 		throws PortalException {
 
 		return getService().getPersistedModel(primaryKeyObj);
-	}
-
-	public static LayoutSEOEntry updateCustomMetaTags(
-			long userId, long groupId, boolean privateLayout, long layoutId,
-			com.liferay.portal.kernel.service.ServiceContext serviceContext)
-		throws PortalException {
-
-		return getService().updateCustomMetaTags(
-			userId, groupId, privateLayout, layoutId, serviceContext);
 	}
 
 	/**
