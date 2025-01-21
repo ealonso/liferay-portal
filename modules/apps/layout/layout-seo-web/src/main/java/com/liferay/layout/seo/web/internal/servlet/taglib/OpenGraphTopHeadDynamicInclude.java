@@ -8,12 +8,8 @@ package com.liferay.layout.seo.web.internal.servlet.taglib;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.document.library.kernel.service.DLFileEntryMetadataLocalService;
 import com.liferay.document.library.util.DLURLHelper;
-import com.liferay.dynamic.data.mapping.model.Value;
 import com.liferay.dynamic.data.mapping.service.DDMFieldLocalService;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
-import com.liferay.dynamic.data.mapping.storage.DDMFormFieldValue;
-import com.liferay.dynamic.data.mapping.storage.DDMFormValues;
-import com.liferay.dynamic.data.mapping.storage.DDMStorageEngineManager;
 import com.liferay.info.constants.InfoDisplayWebKeys;
 import com.liferay.info.item.InfoItemDetails;
 import com.liferay.info.item.InfoItemFieldValues;
@@ -22,7 +18,9 @@ import com.liferay.info.item.provider.InfoItemFieldValuesProvider;
 import com.liferay.layout.seo.kernel.LayoutSEOLink;
 import com.liferay.layout.seo.kernel.LayoutSEOLinkManager;
 import com.liferay.layout.seo.model.LayoutSEOEntry;
+import com.liferay.layout.seo.model.LayoutSEOEntryCustomMetaTag;
 import com.liferay.layout.seo.open.graph.OpenGraphConfiguration;
+import com.liferay.layout.seo.service.LayoutSEOEntryCustomMetaTagLocalService;
 import com.liferay.layout.seo.service.LayoutSEOEntryLocalService;
 import com.liferay.layout.seo.service.LayoutSEOSiteLocalService;
 import com.liferay.layout.seo.template.LayoutSEOTemplateProcessor;
@@ -43,6 +41,7 @@ import com.liferay.portal.kernel.servlet.taglib.BaseDynamicInclude;
 import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.KeyValuePair;
 import com.liferay.portal.kernel.util.ListMergeable;
@@ -59,7 +58,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -143,47 +141,24 @@ public class OpenGraphTopHeadDynamicInclude extends BaseDynamicInclude {
 					layout.getGroupId(), layout.isPrivateLayout(),
 					layout.getLayoutId());
 
-			if ((layoutSEOEntry != null) &&
-				(layoutSEOEntry.getDDMStorageId() != 0)) {
+			if (layoutSEOEntry != null) {
+				List<LayoutSEOEntryCustomMetaTag> layoutSEOEntryCustomMetaTags =
+					_layoutSEOEntryCustomMetaTagLocalService.
+						getLayoutSEOEntryCustomMetaTags(
+							layoutSEOEntry.getGroupId(),
+							layoutSEOEntry.getLayoutSEOEntryId());
 
-				DDMFormValues ddmFormValues =
-					_ddmStorageEngineManager.getDDMFormValues(
-						layoutSEOEntry.getDDMStorageId());
+				for (LayoutSEOEntryCustomMetaTag layoutSEOEntryCustomMetaTag :
+						layoutSEOEntryCustomMetaTags) {
 
-				Map<String, List<DDMFormFieldValue>> ddmFormFieldValuesMap =
-					ddmFormValues.getDDMFormFieldValuesMap();
-
-				for (List<DDMFormFieldValue> ddmFormFieldValues :
-						ddmFormFieldValuesMap.values()) {
-
-					for (DDMFormFieldValue nameDDMFormFieldValue :
-							ddmFormFieldValues) {
-
-						if (_isLegacyDDMFormFieldValue(nameDDMFormFieldValue)) {
-							List<DDMFormFieldValue> nestedDDMFormFieldValues =
-								nameDDMFormFieldValue.
-									getNestedDDMFormFieldValues();
-
-							nameDDMFormFieldValue =
-								nestedDDMFormFieldValues.get(0);
-						}
-
-						Value nameValue = nameDDMFormFieldValue.getValue();
-
-						List<DDMFormFieldValue> nestedDDMFormFieldValues =
-							nameDDMFormFieldValue.getNestedDDMFormFieldValues();
-
-						DDMFormFieldValue valueDDMFormFieldValue =
-							nestedDDMFormFieldValues.get(0);
-
-						Value valueValue = valueDDMFormFieldValue.getValue();
-
-						printWriter.println(
-							_getOpenGraphTag(
-								nameValue.getString(themeDisplay.getLocale()),
-								valueValue.getString(
-									themeDisplay.getLocale())));
-					}
+					printWriter.println(
+						_getOpenGraphTag(
+							layoutSEOEntryCustomMetaTag.getProperty(),
+							GetterUtil.get(
+								layoutSEOEntryCustomMetaTag.getContent(
+									themeDisplay.getLocale()),
+								layoutSEOEntryCustomMetaTag.getContent(
+									themeDisplay.getSiteDefaultLocale()))));
 				}
 			}
 
@@ -472,27 +447,8 @@ public class OpenGraphTopHeadDynamicInclude extends BaseDynamicInclude {
 		}
 	}
 
-	private boolean _isLegacyDDMFormFieldValue(
-		DDMFormFieldValue ddmFormFieldValue) {
-
-		List<DDMFormFieldValue> nestedDDMFormFieldValues =
-			ddmFormFieldValue.getNestedDDMFormFieldValues();
-
-		DDMFormFieldValue childDDMFormFieldValue = nestedDDMFormFieldValues.get(
-			0);
-
-		if (Objects.equals(childDDMFormFieldValue.getName(), "property")) {
-			return true;
-		}
-
-		return false;
-	}
-
 	@Reference
 	private DDMFieldLocalService _ddmFieldLocalService;
-
-	@Reference
-	private DDMStorageEngineManager _ddmStorageEngineManager;
 
 	@Reference
 	private DDMStructureLocalService _ddmStructureLocalService;
@@ -514,6 +470,10 @@ public class OpenGraphTopHeadDynamicInclude extends BaseDynamicInclude {
 
 	private volatile LayoutSEODynamicRenderingConfiguration
 		_layoutSEODynamicRenderingConfiguration;
+
+	@Reference
+	private LayoutSEOEntryCustomMetaTagLocalService
+		_layoutSEOEntryCustomMetaTagLocalService;
 
 	@Reference
 	private LayoutSEOEntryLocalService _layoutSEOEntryLocalService;
