@@ -12,8 +12,6 @@ import com.liferay.asset.display.page.service.AssetDisplayPageEntryLocalService;
 import com.liferay.document.library.kernel.model.DLFolderConstants;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.document.library.util.DLURLHelper;
-import com.liferay.dynamic.data.mapping.model.DDMStructure;
-import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.info.constants.InfoDisplayWebKeys;
 import com.liferay.info.field.InfoField;
 import com.liferay.info.field.InfoFieldValue;
@@ -37,6 +35,7 @@ import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeCon
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
 import com.liferay.layout.seo.model.LayoutSEOEntry;
+import com.liferay.layout.seo.service.LayoutSEOEntryCustomMetaTagLocalService;
 import com.liferay.layout.seo.service.LayoutSEOEntryLocalService;
 import com.liferay.layout.seo.service.LayoutSEOSiteLocalService;
 import com.liferay.layout.test.util.LayoutTestUtil;
@@ -83,8 +82,6 @@ import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.translation.info.item.provider.InfoItemLanguagesProvider;
-
-import java.nio.charset.StandardCharsets;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -207,23 +204,22 @@ public class OpenGraphTopHeadDynamicIncludeTest {
 
 	@Test
 	public void testIncludeCustomMetaTags() throws Exception {
-		ServiceContext serviceContext =
-			ServiceContextTestUtil.getServiceContext();
+		LayoutSEOEntry layoutSEOEntry =
+			_layoutSEOEntryLocalService.updateLayoutSEOEntry(
+				_layout.getUserId(), _layout.getGroupId(),
+				_layout.isPrivateLayout(), _layout.getLayoutId(), false,
+				Collections.emptyMap(), false, Collections.emptyMap(),
+				Collections.emptyMap(), 0, false, Collections.emptyMap(),
+				ServiceContextTestUtil.getServiceContext());
 
-		serviceContext.setAttribute(
-			_getDDMStructureId() + "ddmFormValues",
-			new String(
-				FileUtil.getBytes(
-					getClass(),
-					"dependencies/custom_meta_tags_ddm_form_values.json"),
-				StandardCharsets.UTF_8));
-
-		_layoutSEOEntryLocalService.updateLayoutSEOEntry(
-			_layout.getUserId(), _layout.getGroupId(),
-			_layout.isPrivateLayout(), _layout.getLayoutId(), false,
-			Collections.emptyMap(), false, Collections.emptyMap(),
-			Collections.emptyMap(), 0, false, Collections.emptyMap(),
-			serviceContext);
+		_layoutSEOEntryCustomMetaTagLocalService.addLayoutSEOEntryCustomMetaTag(
+			_layout.getGroupId(), layoutSEOEntry.getLayoutSEOEntryId(),
+			"property1",
+			Collections.singletonMap(LocaleUtil.getSiteDefault(), "content1"));
+		_layoutSEOEntryCustomMetaTagLocalService.addLayoutSEOEntryCustomMetaTag(
+			_layout.getGroupId(), layoutSEOEntry.getLayoutSEOEntryId(),
+			"property2",
+			Collections.singletonMap(LocaleUtil.getSiteDefault(), "content2"));
 
 		MockHttpServletResponse mockHttpServletResponse =
 			new MockHttpServletResponse();
@@ -243,23 +239,22 @@ public class OpenGraphTopHeadDynamicIncludeTest {
 	public void testIncludeCustomMetaTagsWithDefaultValueForOtherLocale()
 		throws Exception {
 
-		ServiceContext serviceContext =
-			ServiceContextTestUtil.getServiceContext();
+		LayoutSEOEntry layoutSEOEntry =
+			_layoutSEOEntryLocalService.updateLayoutSEOEntry(
+				_layout.getUserId(), _layout.getGroupId(),
+				_layout.isPrivateLayout(), _layout.getLayoutId(), false,
+				Collections.emptyMap(), false, Collections.emptyMap(),
+				Collections.emptyMap(), 0, false, Collections.emptyMap(),
+				ServiceContextTestUtil.getServiceContext());
 
-		serviceContext.setAttribute(
-			_getDDMStructureId() + "ddmFormValues",
-			new String(
-				FileUtil.getBytes(
-					getClass(),
-					"dependencies/custom_meta_tags_ddm_form_values.json"),
-				StandardCharsets.UTF_8));
-
-		_layoutSEOEntryLocalService.updateLayoutSEOEntry(
-			_layout.getUserId(), _layout.getGroupId(),
-			_layout.isPrivateLayout(), _layout.getLayoutId(), false,
-			Collections.emptyMap(), false, Collections.emptyMap(),
-			Collections.emptyMap(), 0, false, Collections.emptyMap(),
-			serviceContext);
+		_layoutSEOEntryCustomMetaTagLocalService.addLayoutSEOEntryCustomMetaTag(
+			_layout.getGroupId(), layoutSEOEntry.getLayoutSEOEntryId(),
+			"property1",
+			Collections.singletonMap(LocaleUtil.getSiteDefault(), "content1"));
+		_layoutSEOEntryCustomMetaTagLocalService.addLayoutSEOEntryCustomMetaTag(
+			_layout.getGroupId(), layoutSEOEntry.getLayoutSEOEntryId(),
+			"property2",
+			Collections.singletonMap(LocaleUtil.getSiteDefault(), "content2"));
 
 		MockHttpServletResponse mockHttpServletResponse =
 			new MockHttpServletResponse();
@@ -277,25 +272,19 @@ public class OpenGraphTopHeadDynamicIncludeTest {
 
 	@Test
 	public void testIncludeCustomMetaTagsWithEmptyValues() throws Exception {
-		ServiceContext serviceContext =
-			ServiceContextTestUtil.getServiceContext();
+		LayoutSEOEntry layoutSEOEntry =
+			_layoutSEOEntryLocalService.updateLayoutSEOEntry(
+				_layout.getUserId(), _layout.getGroupId(),
+				_layout.isPrivateLayout(), _layout.getLayoutId(), false,
+				Collections.emptyMap(), false, Collections.emptyMap(),
+				Collections.emptyMap(), 0, false, Collections.emptyMap(),
+				ServiceContextTestUtil.getServiceContext());
 
-		serviceContext.setAttribute(
-			_getDDMStructureId() + "ddmFormValues",
-			new String(
-				FileUtil.getBytes(
-					getClass(),
-					"dependencies" +
-						"/custom_meta_tags_ddm_form_values_with_empty_values." +
-							"json"),
-				StandardCharsets.UTF_8));
-
-		_layoutSEOEntryLocalService.updateLayoutSEOEntry(
-			_layout.getUserId(), _layout.getGroupId(),
-			_layout.isPrivateLayout(), _layout.getLayoutId(), false,
-			Collections.emptyMap(), false, Collections.emptyMap(),
-			Collections.emptyMap(), 0, false, Collections.emptyMap(),
-			serviceContext);
+		_layoutSEOEntryCustomMetaTagLocalService.addLayoutSEOEntryCustomMetaTag(
+			_layout.getGroupId(), layoutSEOEntry.getLayoutSEOEntryId(),
+			"custom property",
+			Collections.singletonMap(
+				LocaleUtil.getSiteDefault(), StringPool.BLANK));
 
 		MockHttpServletResponse mockHttpServletResponse =
 			new MockHttpServletResponse();
@@ -314,25 +303,18 @@ public class OpenGraphTopHeadDynamicIncludeTest {
 	public void testIncludeCustomMetaTagsWithSpecialCharacters()
 		throws Exception {
 
-		ServiceContext serviceContext =
-			ServiceContextTestUtil.getServiceContext();
+		LayoutSEOEntry layoutSEOEntry =
+			_layoutSEOEntryLocalService.updateLayoutSEOEntry(
+				_layout.getUserId(), _layout.getGroupId(),
+				_layout.isPrivateLayout(), _layout.getLayoutId(), false,
+				Collections.emptyMap(), false, Collections.emptyMap(),
+				Collections.emptyMap(), 0, false, Collections.emptyMap(),
+				ServiceContextTestUtil.getServiceContext());
 
-		serviceContext.setAttribute(
-			_getDDMStructureId() + "ddmFormValues",
-			new String(
-				FileUtil.getBytes(
-					getClass(),
-					"dependencies" +
-						"/custom_meta_tags_ddm_form_values_with_special_" +
-							"characters.json"),
-				StandardCharsets.UTF_8));
-
-		_layoutSEOEntryLocalService.updateLayoutSEOEntry(
-			_layout.getUserId(), _layout.getGroupId(),
-			_layout.isPrivateLayout(), _layout.getLayoutId(), false,
-			Collections.emptyMap(), false, Collections.emptyMap(),
-			Collections.emptyMap(), 0, false, Collections.emptyMap(),
-			serviceContext);
+		_layoutSEOEntryCustomMetaTagLocalService.addLayoutSEOEntryCustomMetaTag(
+			_layout.getGroupId(), layoutSEOEntry.getLayoutSEOEntryId(),
+			"& property",
+			Collections.singletonMap(LocaleUtil.getSiteDefault(), "& content"));
 
 		MockHttpServletResponse mockHttpServletResponse =
 			new MockHttpServletResponse();
@@ -481,24 +463,23 @@ public class OpenGraphTopHeadDynamicIncludeTest {
 
 	@Test
 	public void testIncludeIncompleteCustomMetaTags() throws Exception {
-		ServiceContext serviceContext =
-			ServiceContextTestUtil.getServiceContext();
+		LayoutSEOEntry layoutSEOEntry =
+			_layoutSEOEntryLocalService.updateLayoutSEOEntry(
+				_layout.getUserId(), _layout.getGroupId(),
+				_layout.isPrivateLayout(), _layout.getLayoutId(), false,
+				Collections.emptyMap(), false, Collections.emptyMap(),
+				Collections.emptyMap(), 0, false, Collections.emptyMap(),
+				ServiceContextTestUtil.getServiceContext());
 
-		serviceContext.setAttribute(
-			_getDDMStructureId() + "ddmFormValues",
-			new String(
-				FileUtil.getBytes(
-					getClass(),
-					"dependencies" +
-						"/incomplete_custom_meta_tags_ddm_form_values.json"),
-				StandardCharsets.UTF_8));
-
-		_layoutSEOEntryLocalService.updateLayoutSEOEntry(
-			_layout.getUserId(), _layout.getGroupId(),
-			_layout.isPrivateLayout(), _layout.getLayoutId(), false,
-			Collections.emptyMap(), false, Collections.emptyMap(),
-			Collections.emptyMap(), 0, false, Collections.emptyMap(),
-			serviceContext);
+		_layoutSEOEntryCustomMetaTagLocalService.addLayoutSEOEntryCustomMetaTag(
+			_layout.getGroupId(), layoutSEOEntry.getLayoutSEOEntryId(),
+			"property1",
+			Collections.singletonMap(LocaleUtil.getSiteDefault(), "content1"));
+		_layoutSEOEntryCustomMetaTagLocalService.addLayoutSEOEntryCustomMetaTag(
+			_layout.getGroupId(), layoutSEOEntry.getLayoutSEOEntryId(),
+			"property2",
+			Collections.singletonMap(
+				LocaleUtil.getSiteDefault(), StringPool.BLANK));
 
 		MockHttpServletResponse mockHttpServletResponse =
 			new MockHttpServletResponse();
@@ -1858,19 +1839,6 @@ public class OpenGraphTopHeadDynamicIncludeTest {
 		return availableLocales;
 	}
 
-	private long _getDDMStructureId() throws Exception {
-		Group companyGroup = _groupLocalService.getCompanyGroup(
-			TestPropsValues.getCompanyId());
-
-		DDMStructure ddmStructure = _ddmStructureLocalService.getStructure(
-			companyGroup.getGroupId(),
-			_classNameLocalService.getClassNameId(
-				LayoutSEOEntry.class.getName()),
-			"custom-meta-tags");
-
-		return ddmStructure.getStructureId();
-	}
-
 	private FileEntry _getFileEntry() throws Exception {
 		return _addImageFileEntry(
 			"image.jpg",
@@ -2053,9 +2021,6 @@ public class OpenGraphTopHeadDynamicIncludeTest {
 	private CompanyLocalService _companyLocalService;
 
 	@Inject
-	private DDMStructureLocalService _ddmStructureLocalService;
-
-	@Inject
 	private DLAppLocalService _dlAppLocalService;
 
 	@Inject
@@ -2090,6 +2055,10 @@ public class OpenGraphTopHeadDynamicIncludeTest {
 	@Inject
 	private LayoutPageTemplateEntryLocalService
 		_layoutPageTemplateEntryLocalService;
+
+	@Inject
+	private LayoutSEOEntryCustomMetaTagLocalService
+		_layoutSEOEntryCustomMetaTagLocalService;
 
 	@Inject
 	private LayoutSEOEntryLocalService _layoutSEOEntryLocalService;
