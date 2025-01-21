@@ -6,33 +6,30 @@
 package com.liferay.layout.seo.internal.exportimport.data.handler;
 
 import com.liferay.document.library.kernel.service.DLAppLocalService;
-import com.liferay.dynamic.data.mapping.io.DDMFormValuesSerializer;
-import com.liferay.dynamic.data.mapping.io.DDMFormValuesSerializerSerializeRequest;
-import com.liferay.dynamic.data.mapping.io.DDMFormValuesSerializerSerializeResponse;
-import com.liferay.dynamic.data.mapping.model.DDMStructure;
-import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
-import com.liferay.dynamic.data.mapping.storage.DDMStorageEngineManager;
 import com.liferay.exportimport.kernel.lar.BaseStagedModelDataHandler;
 import com.liferay.exportimport.kernel.lar.ExportImportPathUtil;
 import com.liferay.exportimport.kernel.lar.PortletDataContext;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandler;
 import com.liferay.exportimport.kernel.lar.StagedModelDataHandlerUtil;
 import com.liferay.layout.seo.model.LayoutSEOEntry;
+import com.liferay.layout.seo.model.LayoutSEOEntryCustomMetaTag;
+import com.liferay.layout.seo.service.LayoutSEOEntryCustomMetaTagLocalService;
 import com.liferay.layout.seo.service.LayoutSEOEntryLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.repository.model.FileEntry;
-import com.liferay.portal.kernel.service.ClassNameLocalService;
-import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MapUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Element;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
@@ -88,38 +85,35 @@ public class LayoutSEOEntryStagedModelDataHandler
 				PortletDataContext.REFERENCE_TYPE_WEAK);
 		}
 
-		DDMStructure ddmStructure = _getDDMStructure(
-			portletDataContext.getCompanyId());
-
-		StagedModelDataHandlerUtil.exportReferenceStagedModel(
-			portletDataContext, layoutSEOEntry, ddmStructure,
-			PortletDataContext.REFERENCE_TYPE_STRONG);
-
 		Element layoutSEOEntryElement = portletDataContext.getExportDataElement(
 			layoutSEOEntry);
 
-		Element structureFieldsElement = layoutSEOEntryElement.addElement(
-			"structure-fields");
+		List<LayoutSEOEntryCustomMetaTag> layoutSEOEntryCustomMetaTags =
+			_layoutSEOEntryCustomMetaTagLocalService.
+				getLayoutSEOEntryCustomMetaTags(
+					layoutSEOEntry.getGroupId(),
+					layoutSEOEntry.getLayoutSEOEntryId());
 
-		if (layoutSEOEntry.getDDMStorageId() != 0) {
-			String ddmFormValuesPath = ExportImportPathUtil.getModelPath(
-				ddmStructure, String.valueOf(layoutSEOEntry.getDDMStorageId()));
+		for (LayoutSEOEntryCustomMetaTag layoutSEOEntryCustomMetaTag :
+				layoutSEOEntryCustomMetaTags) {
 
-			structureFieldsElement.addAttribute(
-				"ddm-form-values-path", ddmFormValuesPath);
+			Element customMetaTagElement = layoutSEOEntryElement.addElement(
+				"custom-meta-tag");
 
-			DDMFormValuesSerializerSerializeResponse
-				ddmFormValuesSerializerSerializeResponse =
-					_jsonDDMFormValuesSerializer.serialize(
-						DDMFormValuesSerializerSerializeRequest.Builder.
-							newBuilder(
-								_ddmStorageEngineManager.getDDMFormValues(
-									layoutSEOEntry.getDDMStorageId())
-							).build());
+			customMetaTagElement.addAttribute(
+				"property", layoutSEOEntryCustomMetaTag.getProperty());
 
-			portletDataContext.addZipEntry(
-				ddmFormValuesPath,
-				ddmFormValuesSerializerSerializeResponse.getContent());
+			Map<Locale, String> contentMap =
+				layoutSEOEntryCustomMetaTag.getContentMap();
+
+			for (Map.Entry<Locale, String> entry : contentMap.entrySet()) {
+				Element contentElement = customMetaTagElement.addElement(
+					"content");
+
+				contentElement.addAttribute(
+					"language-id", LocaleUtil.toLanguageId(entry.getKey()));
+				contentElement.addText(entry.getValue());
+			}
 		}
 
 		portletDataContext.addClassedModel(
@@ -144,69 +138,8 @@ public class LayoutSEOEntryStagedModelDataHandler
 			fetchStagedModelByUuidAndGroupId(
 				layoutSEOEntry.getUuid(), layoutSEOEntry.getGroupId());
 
-		if (existingLayoutSEOEntry == null) {
-			Layout layout = _layoutLocalService.getLayout(
-				portletDataContext.getPlid());
-
-			_layoutSEOEntryLocalService.updateLayoutSEOEntry(
-				layoutSEOEntry.getUserId(), layout.getGroupId(),
-				layout.isPrivateLayout(), layout.getLayoutId(),
-				layoutSEOEntry.isCanonicalURLEnabled(),
-				layoutSEOEntry.getCanonicalURLMap(),
-				layoutSEOEntry.isOpenGraphDescriptionEnabled(),
-				layoutSEOEntry.getOpenGraphDescriptionMap(),
-				layoutSEOEntry.getOpenGraphImageAltMap(),
-				openGraphImageFileEntryId,
-				layoutSEOEntry.isOpenGraphTitleEnabled(),
-				layoutSEOEntry.getOpenGraphTitleMap(),
-				_createServiceContext(
-					layoutSEOEntry, existingLayoutSEOEntry,
-					portletDataContext));
-		}
-		else {
-			_layoutSEOEntryLocalService.updateLayoutSEOEntry(
-				existingLayoutSEOEntry.getUserId(),
-				portletDataContext.getScopeGroupId(),
-				layoutSEOEntry.isPrivateLayout(),
-				existingLayoutSEOEntry.getLayoutId(),
-				layoutSEOEntry.isCanonicalURLEnabled(),
-				layoutSEOEntry.getCanonicalURLMap(),
-				layoutSEOEntry.isOpenGraphDescriptionEnabled(),
-				layoutSEOEntry.getOpenGraphDescriptionMap(),
-				layoutSEOEntry.getOpenGraphImageAltMap(),
-				openGraphImageFileEntryId,
-				layoutSEOEntry.isOpenGraphTitleEnabled(),
-				layoutSEOEntry.getOpenGraphTitleMap(),
-				_createServiceContext(
-					layoutSEOEntry, existingLayoutSEOEntry,
-					portletDataContext));
-		}
-	}
-
-	private ServiceContext _createServiceContext(
-			LayoutSEOEntry layoutSEOEntry,
-			LayoutSEOEntry existingLayoutSEOEntry,
-			PortletDataContext portletDataContext)
-		throws Exception {
-
 		ServiceContext serviceContext = portletDataContext.createServiceContext(
 			layoutSEOEntry);
-
-		DDMStructure ddmStructure = _getDDMStructure(
-			portletDataContext.getCompanyId());
-
-		Element layoutSEOEntryElement = portletDataContext.getImportDataElement(
-			layoutSEOEntry);
-
-		Element structureFieldsElement =
-			(Element)layoutSEOEntryElement.selectSingleNode("structure-fields");
-
-		String serializedDDMFormValues = portletDataContext.getZipEntryAsString(
-			structureFieldsElement.attributeValue("ddm-form-values-path"));
-
-		serviceContext.setAttribute(
-			ddmStructure.getStructureId() + "ddmFormValues",
-			serializedDDMFormValues);
 
 		if (portletDataContext.isDataStrategyMirror() &&
 			(existingLayoutSEOEntry == null)) {
@@ -214,7 +147,80 @@ public class LayoutSEOEntryStagedModelDataHandler
 			serviceContext.setUuid(layoutSEOEntry.getUuid());
 		}
 
-		return serviceContext;
+		if (existingLayoutSEOEntry == null) {
+			Layout layout = _layoutLocalService.getLayout(
+				portletDataContext.getPlid());
+
+			existingLayoutSEOEntry =
+				_layoutSEOEntryLocalService.updateLayoutSEOEntry(
+					layoutSEOEntry.getUserId(), layout.getGroupId(),
+					layout.isPrivateLayout(), layout.getLayoutId(),
+					layoutSEOEntry.isCanonicalURLEnabled(),
+					layoutSEOEntry.getCanonicalURLMap(),
+					layoutSEOEntry.isOpenGraphDescriptionEnabled(),
+					layoutSEOEntry.getOpenGraphDescriptionMap(),
+					layoutSEOEntry.getOpenGraphImageAltMap(),
+					openGraphImageFileEntryId,
+					layoutSEOEntry.isOpenGraphTitleEnabled(),
+					layoutSEOEntry.getOpenGraphTitleMap(), serviceContext);
+		}
+		else {
+			existingLayoutSEOEntry =
+				_layoutSEOEntryLocalService.updateLayoutSEOEntry(
+					existingLayoutSEOEntry.getUserId(),
+					portletDataContext.getScopeGroupId(),
+					layoutSEOEntry.isPrivateLayout(),
+					existingLayoutSEOEntry.getLayoutId(),
+					layoutSEOEntry.isCanonicalURLEnabled(),
+					layoutSEOEntry.getCanonicalURLMap(),
+					layoutSEOEntry.isOpenGraphDescriptionEnabled(),
+					layoutSEOEntry.getOpenGraphDescriptionMap(),
+					layoutSEOEntry.getOpenGraphImageAltMap(),
+					openGraphImageFileEntryId,
+					layoutSEOEntry.isOpenGraphTitleEnabled(),
+					layoutSEOEntry.getOpenGraphTitleMap(), serviceContext);
+		}
+
+		_addLayoutSEOEntryCustomMetaTags(
+			existingLayoutSEOEntry,
+			portletDataContext.getImportDataElement(layoutSEOEntry));
+	}
+
+	private void _addLayoutSEOEntryCustomMetaTags(
+			LayoutSEOEntry layoutSEOEntry, Element layoutSEOEntryElement)
+		throws Exception {
+
+		_layoutSEOEntryCustomMetaTagLocalService.
+			deleteLayoutSEOEntryCustomMetaTags(
+				layoutSEOEntry.getGroupId(),
+				layoutSEOEntry.getLayoutSEOEntryId());
+
+		for (Element customMetaTagElement :
+				layoutSEOEntryElement.elements("custom-meta-tag")) {
+
+			String property = customMetaTagElement.attributeValue("property");
+
+			if (Validator.isNull(property)) {
+				continue;
+			}
+
+			Map<Locale, String> contentMap = new HashMap<>();
+
+			for (Element contentElement : customMetaTagElement.elements()) {
+				contentMap.put(
+					LocaleUtil.fromLanguageId(
+						contentElement.attributeValue("language-id")),
+					contentElement.getText());
+			}
+
+			if (MapUtil.isNotEmpty(contentMap)) {
+				_layoutSEOEntryCustomMetaTagLocalService.
+					addLayoutSEOEntryCustomMetaTag(
+						layoutSEOEntry.getGroupId(),
+						layoutSEOEntry.getLayoutSEOEntryId(), property,
+						contentMap);
+			}
+		}
 	}
 
 	private FileEntry _fetchFileEntry(long fileEntryId) {
@@ -235,39 +241,18 @@ public class LayoutSEOEntryStagedModelDataHandler
 		}
 	}
 
-	private DDMStructure _getDDMStructure(long companyId) throws Exception {
-		Group companyGroup = _groupLocalService.getCompanyGroup(companyId);
-
-		return _ddmStructureLocalService.getStructure(
-			companyGroup.getGroupId(),
-			_classNameLocalService.getClassNameId(
-				LayoutSEOEntry.class.getName()),
-			"custom-meta-tags");
-	}
-
 	private static final Log _log = LogFactoryUtil.getLog(
 		LayoutSEOEntryStagedModelDataHandler.class);
-
-	@Reference
-	private ClassNameLocalService _classNameLocalService;
-
-	@Reference
-	private DDMStorageEngineManager _ddmStorageEngineManager;
-
-	@Reference
-	private DDMStructureLocalService _ddmStructureLocalService;
 
 	@Reference
 	private DLAppLocalService _dlAppLocalService;
 
 	@Reference
-	private GroupLocalService _groupLocalService;
-
-	@Reference(target = "(ddm.form.values.serializer.type=json)")
-	private DDMFormValuesSerializer _jsonDDMFormValuesSerializer;
+	private LayoutLocalService _layoutLocalService;
 
 	@Reference
-	private LayoutLocalService _layoutLocalService;
+	private LayoutSEOEntryCustomMetaTagLocalService
+		_layoutSEOEntryCustomMetaTagLocalService;
 
 	@Reference
 	private LayoutSEOEntryLocalService _layoutSEOEntryLocalService;
