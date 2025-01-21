@@ -7,6 +7,8 @@ package com.liferay.layout.seo.service.impl;
 
 import com.liferay.layout.seo.exception.NoSuchEntryException;
 import com.liferay.layout.seo.model.LayoutSEOEntry;
+import com.liferay.layout.seo.model.LayoutSEOEntryCustomMetaTag;
+import com.liferay.layout.seo.service.LayoutSEOEntryCustomMetaTagLocalService;
 import com.liferay.layout.seo.service.base.LayoutSEOEntryLocalServiceBaseImpl;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -37,34 +39,57 @@ public class LayoutSEOEntryLocalServiceImpl
 	@Override
 	public LayoutSEOEntry copyLayoutSEOEntry(
 			long userId, long groupId, boolean privateLayout,
-			long sourceLayoutId, boolean canonicalURLEnabled,
-			Map<Locale, String> canonicalURLMap, long copyDDMStorageId,
-			boolean openGraphDescriptionEnabled,
-			Map<Locale, String> openGraphDescriptionMap,
-			Map<Locale, String> openGraphImageAltMap,
-			long openGraphImageFileEntryId, boolean openGraphTitleEnabled,
-			Map<Locale, String> openGraphTitleMap,
+			long targetLayoutId, LayoutSEOEntry sourceLayoutSEOEntry,
 			ServiceContext serviceContext)
 		throws PortalException {
 
-		LayoutSEOEntry layoutSEOEntry = layoutSEOEntryPersistence.fetchByG_P_L(
-			groupId, privateLayout, sourceLayoutId);
+		LayoutSEOEntry targetLayoutSEOEntry =
+			layoutSEOEntryPersistence.fetchByG_P_L(
+				groupId, privateLayout, targetLayoutId);
 
-		if (layoutSEOEntry == null) {
-			return _addLayoutSEOEntry(
-				userId, groupId, privateLayout, sourceLayoutId,
-				canonicalURLEnabled, canonicalURLMap, copyDDMStorageId,
-				openGraphDescriptionEnabled, openGraphDescriptionMap,
-				openGraphImageAltMap, openGraphImageFileEntryId,
-				openGraphTitleEnabled, openGraphTitleMap, serviceContext);
+		if (targetLayoutSEOEntry == null) {
+			targetLayoutSEOEntry = _addLayoutSEOEntry(
+				userId, groupId, privateLayout, targetLayoutId,
+				sourceLayoutSEOEntry.isCanonicalURLEnabled(),
+				sourceLayoutSEOEntry.getCanonicalURLMap(),
+				sourceLayoutSEOEntry.isOpenGraphDescriptionEnabled(),
+				sourceLayoutSEOEntry.getOpenGraphDescriptionMap(),
+				sourceLayoutSEOEntry.getOpenGraphImageAltMap(),
+				sourceLayoutSEOEntry.getOpenGraphImageFileEntryId(),
+				sourceLayoutSEOEntry.isOpenGraphTitleEnabled(),
+				sourceLayoutSEOEntry.getOpenGraphTitleMap(), serviceContext);
+		}
+		else {
+			targetLayoutSEOEntry = updateLayoutSEOEntry(
+				userId, groupId, privateLayout, targetLayoutId,
+				sourceLayoutSEOEntry.isCanonicalURLEnabled(),
+				sourceLayoutSEOEntry.getCanonicalURLMap(),
+				sourceLayoutSEOEntry.isOpenGraphDescriptionEnabled(),
+				sourceLayoutSEOEntry.getOpenGraphDescriptionMap(),
+				sourceLayoutSEOEntry.getOpenGraphImageAltMap(),
+				sourceLayoutSEOEntry.getOpenGraphImageFileEntryId(),
+				sourceLayoutSEOEntry.isOpenGraphTitleEnabled(),
+				sourceLayoutSEOEntry.getOpenGraphTitleMap(), serviceContext);
 		}
 
-		return updateLayoutSEOEntry(
-			userId, groupId, privateLayout, sourceLayoutId, canonicalURLEnabled,
-			canonicalURLMap, openGraphDescriptionEnabled,
-			openGraphDescriptionMap, openGraphImageAltMap,
-			openGraphImageFileEntryId, openGraphTitleEnabled, openGraphTitleMap,
-			serviceContext);
+		List<LayoutSEOEntryCustomMetaTag> layoutSEOEntryCustomMetaTags =
+			_layoutSEOEntryCustomMetaTagLocalService.
+				getLayoutSEOEntryCustomMetaTags(
+					sourceLayoutSEOEntry.getGroupId(),
+					sourceLayoutSEOEntry.getLayoutSEOEntryId());
+
+		for (LayoutSEOEntryCustomMetaTag layoutSEOEntryCustomMetaTag :
+				layoutSEOEntryCustomMetaTags) {
+
+			_layoutSEOEntryCustomMetaTagLocalService.
+				addLayoutSEOEntryCustomMetaTag(
+					targetLayoutSEOEntry.getGroupId(),
+					targetLayoutSEOEntry.getLayoutSEOEntryId(),
+					layoutSEOEntryCustomMetaTag.getProperty(),
+					layoutSEOEntryCustomMetaTag.getContentMap());
+		}
+
+		return targetLayoutSEOEntry;
 	}
 
 	@Override
@@ -261,5 +286,9 @@ public class LayoutSEOEntryLocalServiceImpl
 
 	@Reference
 	private GroupLocalService _groupLocalService;
+
+	@Reference
+	private LayoutSEOEntryCustomMetaTagLocalService
+		_layoutSEOEntryCustomMetaTagLocalService;
 
 }
