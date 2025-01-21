@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
@@ -126,11 +127,21 @@ public class LayoutSEOEntryLocalServiceTest {
 
 	@Test
 	public void testDeleteLayoutSEOEntry() throws PortalException {
-		_layoutSEOEntryLocalService.updateLayoutSEOEntry(
-			TestPropsValues.getUserId(), _group.getGroupId(), false,
-			_layout.getLayoutId(), false,
-			Collections.singletonMap(LocaleUtil.US, "http://example.com"),
-			ServiceContextTestUtil.getServiceContext(_group.getGroupId()));
+		LayoutSEOEntry layoutSEOEntry =
+			_layoutSEOEntryLocalService.updateLayoutSEOEntry(
+				TestPropsValues.getUserId(), _group.getGroupId(), false,
+				_layout.getLayoutId(), false,
+				Collections.singletonMap(LocaleUtil.US, "http://example.com"),
+				ServiceContextTestUtil.getServiceContext(_group.getGroupId()));
+
+		_layoutSEOEntryCustomMetaTagLocalService.addLayoutSEOEntryCustomMetaTag(
+			_layout.getGroupId(), layoutSEOEntry.getLayoutSEOEntryId(),
+			"property1",
+			Collections.singletonMap(LocaleUtil.getSiteDefault(), "content1"));
+		_layoutSEOEntryCustomMetaTagLocalService.addLayoutSEOEntryCustomMetaTag(
+			_layout.getGroupId(), layoutSEOEntry.getLayoutSEOEntryId(),
+			"property2",
+			Collections.singletonMap(LocaleUtil.getSiteDefault(), "content2"));
 
 		_layoutSEOEntryLocalService.deleteLayoutSEOEntry(
 			_group.getGroupId(), false, _layout.getLayoutId());
@@ -138,6 +149,12 @@ public class LayoutSEOEntryLocalServiceTest {
 		Assert.assertNull(
 			_layoutSEOEntryLocalService.fetchLayoutSEOEntry(
 				_group.getGroupId(), false, _layout.getLayoutId()));
+		Assert.assertTrue(
+			ListUtil.isEmpty(
+				_layoutSEOEntryCustomMetaTagLocalService.
+					getLayoutSEOEntryCustomMetaTags(
+						layoutSEOEntry.getGroupId(),
+						layoutSEOEntry.getLayoutSEOEntryId())));
 	}
 
 	@Test
