@@ -228,6 +228,8 @@ public class FragmentEntryLinkManagerTest {
 		List<InfoField<?>> allInfoFields = ListUtil.filter(
 			infoForm.getAllInfoFields(), InfoField::isEditable);
 
+		Layout draftLayout = layout.fetchDraftLayout();
+
 		JSONObject jsonObject = ContentLayoutTestUtil.addFormToLayout(
 			false,
 			String.valueOf(
