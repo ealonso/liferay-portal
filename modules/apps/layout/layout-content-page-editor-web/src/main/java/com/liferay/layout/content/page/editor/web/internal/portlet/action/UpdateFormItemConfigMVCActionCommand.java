@@ -5,10 +5,16 @@
 
 package com.liferay.layout.content.page.editor.web.internal.portlet.action;
 
+import com.liferay.fragment.constants.FragmentEntryLinkConstants;
+import com.liferay.fragment.entry.processor.constants.FragmentEntryProcessorConstants;
 import com.liferay.fragment.listener.FragmentEntryLinkListener;
 import com.liferay.fragment.listener.FragmentEntryLinkListenerRegistry;
 import com.liferay.fragment.model.FragmentEntryLink;
+import com.liferay.fragment.processor.DefaultFragmentEntryProcessorContext;
+import com.liferay.fragment.processor.FragmentEntryProcessorContext;
+import com.liferay.fragment.processor.FragmentEntryProcessorRegistry;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
+import com.liferay.fragment.service.FragmentEntryLinkService;
 import com.liferay.fragment.util.configuration.FragmentConfigurationField;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorPortletKeys;
@@ -33,6 +39,7 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -327,6 +334,59 @@ public class UpdateFormItemConfigMVCActionCommand
 				layoutStructureItemChange.getRemovedLayoutStructureItems());
 		}
 
+		long stepperFragmentEntryLinkId = ParamUtil.getLong(
+			actionRequest, "stepperFragmentEntryLinkId");
+
+		FragmentEntryLink stepperFragmentEntryLink =
+			_fragmentEntryLinkLocalService.fetchFragmentEntryLink(
+				stepperFragmentEntryLinkId);
+
+		if (stepperFragmentEntryLink != null) {
+			JSONObject editableValuesJSONObject =
+				_fragmentEntryLinkManager.mergeEditableValuesJSONObject(
+					_jsonFactory.createJSONObject(
+						stepperFragmentEntryLink.getEditableValues()),
+					JSONUtil.put(
+						FragmentEntryProcessorConstants.
+							KEY_FREEMARKER_FRAGMENT_ENTRY_PROCESSOR,
+						JSONUtil.put(
+							"numberOfSteps",
+							formStyledLayoutStructureItem.getNumberOfSteps())));
+
+			stepperFragmentEntryLink =
+				_fragmentEntryLinkLocalService.updateFragmentEntryLink(
+					themeDisplay.getUserId(),
+					stepperFragmentEntryLink.getFragmentEntryLinkId(),
+					editableValuesJSONObject.toString());
+
+			FragmentEntryProcessorContext fragmentEntryProcessorContext =
+				new DefaultFragmentEntryProcessorContext(
+					_portal.getHttpServletRequest(actionRequest),
+					_portal.getHttpServletResponse(actionResponse),
+					FragmentEntryLinkConstants.EDIT,
+					LocaleUtil.getMostRelevantLocale());
+
+			String processedHTML =
+				_fragmentEntryProcessorRegistry.processFragmentEntryLinkHTML(
+					stepperFragmentEntryLink, fragmentEntryProcessorContext);
+
+			JSONObject newEditableValuesJSONObject =
+				_fragmentEntryLinkManager.mergeEditableValuesJSONObject(
+					_fragmentEntryProcessorRegistry.
+						getDefaultEditableValuesJSONObject(
+							processedHTML,
+							stepperFragmentEntryLink.getConfiguration()),
+					editableValuesJSONObject);
+
+			stepperFragmentEntryLink =
+				_fragmentEntryLinkService.updateFragmentEntryLink(
+					stepperFragmentEntryLink.getFragmentEntryLinkId(),
+					newEditableValuesJSONObject.toString());
+		}
+
+		FragmentEntryLink finalStepperFragmentEntryLink =
+			stepperFragmentEntryLink;
+
 		return jsonObject.put(
 			"addedFragmentEntryLinks", addedFragmentEntryLinksJSONObject
 		).put(
@@ -334,6 +394,22 @@ public class UpdateFormItemConfigMVCActionCommand
 			_jsonFactory.createJSONArray(
 				TransformUtil.transform(
 					addedLayoutStructureItems, LayoutStructureItem::getItemId))
+		).put(
+			"fragmentEntryLinks",
+			() -> {
+				if (finalStepperFragmentEntryLink == null) {
+					return null;
+				}
+
+				return JSONUtil.put(
+					String.valueOf(
+						finalStepperFragmentEntryLink.getFragmentEntryLinkId()),
+					_fragmentEntryLinkManager.getFragmentEntryLinkJSONObject(
+						finalStepperFragmentEntryLink,
+						_portal.getHttpServletRequest(actionRequest),
+						_portal.getHttpServletResponse(actionResponse),
+						layoutStructure));
+			}
 		).put(
 			"layoutData", updatedLayoutStructure.toJSONObject()
 		).put(
@@ -411,6 +487,12 @@ public class UpdateFormItemConfigMVCActionCommand
 
 	@Reference
 	private FragmentEntryLinkManager _fragmentEntryLinkManager;
+
+	@Reference
+	private FragmentEntryLinkService _fragmentEntryLinkService;
+
+	@Reference
+	private FragmentEntryProcessorRegistry _fragmentEntryProcessorRegistry;
 
 	@Reference
 	private JSONFactory _jsonFactory;

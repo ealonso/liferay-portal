@@ -5,8 +5,21 @@
 
 package com.liferay.layout.content.page.editor.web.internal.portlet.action;
 
+import com.liferay.fragment.constants.FragmentEntryLinkConstants;
+import com.liferay.fragment.entry.processor.constants.FragmentEntryProcessorConstants;
+import com.liferay.fragment.model.FragmentEntryLink;
+import com.liferay.fragment.processor.DefaultFragmentEntryProcessorContext;
+import com.liferay.fragment.processor.FragmentEntryProcessorContext;
+import com.liferay.fragment.processor.FragmentEntryProcessorRegistry;
+import com.liferay.fragment.service.FragmentEntryLinkLocalService;
+import com.liferay.fragment.service.FragmentEntryLinkService;
 import com.liferay.layout.content.page.editor.constants.ContentPageEditorPortletKeys;
+import com.liferay.layout.content.page.editor.web.internal.manager.FragmentEntryLinkManager;
 import com.liferay.layout.content.page.editor.web.internal.util.layout.structure.LayoutStructureUtil;
+import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
+import com.liferay.layout.page.template.service.LayoutPageTemplateStructureLocalService;
+import com.liferay.layout.util.structure.FormStyledLayoutStructureItem;
+import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.layout.util.structure.LayoutStructureItem;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactory;
@@ -14,7 +27,9 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.Arrays;
@@ -59,7 +74,93 @@ public class UndoFormItemConfigMVCActionCommand
 		long segmentsExperienceId = ParamUtil.getLong(
 			actionRequest, "segmentsExperienceId");
 
+		LayoutPageTemplateStructure layoutPageTemplateStructure =
+			_layoutPageTemplateStructureLocalService.
+				fetchLayoutPageTemplateStructure(
+					themeDisplay.getScopeGroupId(), themeDisplay.getPlid());
+
+		FormStyledLayoutStructureItem formStyledLayoutStructureItem =
+			(FormStyledLayoutStructureItem)LayoutStructure.of(
+				layoutPageTemplateStructure.getData(segmentsExperienceId)
+			).getLayoutStructureItem(
+				itemId
+			);
+
+		long stepperFragmentEntryLinkId = ParamUtil.getLong(
+			actionRequest, "stepperFragmentEntryLinkId");
+
+		FragmentEntryLink stepperFragmentEntryLink =
+			_fragmentEntryLinkLocalService.fetchFragmentEntryLink(
+				stepperFragmentEntryLinkId);
+
+		System.out.println(formStyledLayoutStructureItem.getNumberOfSteps());
+
+		if (stepperFragmentEntryLink != null) {
+			JSONObject editableValuesJSONObject =
+				_fragmentEntryLinkManager.mergeEditableValuesJSONObject(
+					_jsonFactory.createJSONObject(
+						stepperFragmentEntryLink.getEditableValues()),
+					JSONUtil.put(
+						FragmentEntryProcessorConstants.
+							KEY_FREEMARKER_FRAGMENT_ENTRY_PROCESSOR,
+						JSONUtil.put(
+							"numberOfSteps",
+							configJSONObject.getInt("numberOfSteps"))));
+
+			stepperFragmentEntryLink =
+				_fragmentEntryLinkLocalService.updateFragmentEntryLink(
+					themeDisplay.getUserId(),
+					stepperFragmentEntryLink.getFragmentEntryLinkId(),
+					editableValuesJSONObject.toString());
+
+			FragmentEntryProcessorContext fragmentEntryProcessorContext =
+				new DefaultFragmentEntryProcessorContext(
+					_portal.getHttpServletRequest(actionRequest),
+					_portal.getHttpServletResponse(actionResponse),
+					FragmentEntryLinkConstants.EDIT,
+					LocaleUtil.getMostRelevantLocale());
+
+			String processedHTML =
+				_fragmentEntryProcessorRegistry.processFragmentEntryLinkHTML(
+					stepperFragmentEntryLink, fragmentEntryProcessorContext);
+
+			JSONObject newEditableValuesJSONObject =
+				_fragmentEntryLinkManager.mergeEditableValuesJSONObject(
+					_fragmentEntryProcessorRegistry.
+						getDefaultEditableValuesJSONObject(
+							processedHTML,
+							stepperFragmentEntryLink.getConfiguration()),
+					editableValuesJSONObject);
+
+			stepperFragmentEntryLink =
+				_fragmentEntryLinkService.updateFragmentEntryLink(
+					stepperFragmentEntryLink.getFragmentEntryLinkId(),
+					newEditableValuesJSONObject.toString());
+		}
+
+		FragmentEntryLink finalStepperFragmentEntryLink =
+			stepperFragmentEntryLink;
+
 		return JSONUtil.put(
+			"fragmentEntryLinks",
+			() -> {
+				if (finalStepperFragmentEntryLink == null) {
+					return null;
+				}
+
+				LayoutStructure layoutStructure = LayoutStructure.of(
+					layoutPageTemplateStructure.getData(segmentsExperienceId));
+
+				return JSONUtil.put(
+					String.valueOf(
+						finalStepperFragmentEntryLink.getFragmentEntryLinkId()),
+					_fragmentEntryLinkManager.getFragmentEntryLinkJSONObject(
+						finalStepperFragmentEntryLink,
+						_portal.getHttpServletRequest(actionRequest),
+						_portal.getHttpServletResponse(actionResponse),
+						layoutStructure));
+			}
+		).put(
 			"layoutData",
 			LayoutStructureUtil.updateLayoutPageTemplateData(
 				themeDisplay.getScopeGroupId(), segmentsExperienceId,
@@ -86,10 +187,30 @@ public class UndoFormItemConfigMVCActionCommand
 						layoutStructure.unmarkLayoutStructureItemForDeletion(
 							addedItemId);
 					}
-				}));
+				})
+		);
 	}
 
 	@Reference
+	private FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
+
+	@Reference
+	private FragmentEntryLinkManager _fragmentEntryLinkManager;
+
+	@Reference
+	private FragmentEntryLinkService _fragmentEntryLinkService;
+
+	@Reference
+	private FragmentEntryProcessorRegistry _fragmentEntryProcessorRegistry;
+
+	@Reference
 	private JSONFactory _jsonFactory;
+
+	@Reference
+	private LayoutPageTemplateStructureLocalService
+		_layoutPageTemplateStructureLocalService;
+
+	@Reference
+	private Portal _portal;
 
 }
