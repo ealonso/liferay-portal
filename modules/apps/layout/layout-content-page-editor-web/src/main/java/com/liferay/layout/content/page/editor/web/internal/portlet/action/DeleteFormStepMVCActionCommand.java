@@ -164,6 +164,8 @@ public class DeleteFormStepMVCActionCommand
 				}
 
 				return JSONUtil.put(
+					String.valueOf(
+						finalStepperFragmentEntryLink.getFragmentEntryLinkId()),
 					_fragmentEntryLinkManager.getFragmentEntryLinkJSONObject(
 						finalStepperFragmentEntryLink,
 						_portal.getHttpServletRequest(actionRequest),
