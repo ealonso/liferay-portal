@@ -81,7 +81,7 @@ public class FormItemManager {
 		LayoutStructure layoutStructure, int numberOfSteps) {
 
 		LayoutStructureItem formStepContainerStyledLayoutStructureItem =
-			_findFormStepContainerStyledLayoutStructureItem(
+			findFormStepContainerStyledLayoutStructureItem(
 				formStyledLayoutStructureItem, layoutStructure);
 
 		LayoutStructureItemChanges layoutStructureItemChanges =
@@ -290,7 +290,7 @@ public class FormItemManager {
 		LayoutStructure layoutStructure, Locale locale) {
 
 		LayoutStructureItem formStepContainerStyledLayoutStructureItem =
-			_findFormStepContainerStyledLayoutStructureItem(
+			findFormStepContainerStyledLayoutStructureItem(
 				formStyledLayoutStructureItem, layoutStructure);
 
 		if (formStepContainerStyledLayoutStructureItem == null) {
@@ -386,6 +386,26 @@ public class FormItemManager {
 		}
 	}
 
+	public LayoutStructureItem findFormStepContainerStyledLayoutStructureItem(
+		FormStyledLayoutStructureItem formStyledLayoutStructureItem,
+		LayoutStructure layoutStructure) {
+
+		for (String childrenItemId :
+				formStyledLayoutStructureItem.getChildrenItemIds()) {
+
+			LayoutStructureItem layoutStructureItem =
+				layoutStructure.getLayoutStructureItem(childrenItemId);
+
+			if (layoutStructureItem instanceof
+					FormStepContainerStyledLayoutStructureItem) {
+
+				return layoutStructureItem;
+			}
+		}
+
+		return null;
+	}
+
 	public LayoutStructureItemChanges removeFormStepLayoutStructureItem(
 		FormStyledLayoutStructureItem formStyledLayoutStructureItem,
 		String itemId, LayoutStructure layoutStructure,
@@ -409,7 +429,7 @@ public class FormItemManager {
 		}
 
 		LayoutStructureItem formStepContainerStyledLayoutStructureItem =
-			_findFormStepContainerStyledLayoutStructureItem(
+			findFormStepContainerStyledLayoutStructureItem(
 				formStyledLayoutStructureItem, layoutStructure);
 
 		if (formStepContainerStyledLayoutStructureItem == null) {
@@ -473,7 +493,7 @@ public class FormItemManager {
 		LayoutStructure layoutStructure, int numberOfSteps) {
 
 		LayoutStructureItem formStepContainerStyledLayoutStructureItem =
-			_findFormStepContainerStyledLayoutStructureItem(
+			findFormStepContainerStyledLayoutStructureItem(
 				formStyledLayoutStructureItem, layoutStructure);
 
 		LayoutStructureItemChanges layoutStructureItemChanges =
@@ -688,7 +708,7 @@ public class FormItemManager {
 		}
 
 		LayoutStructureItem layoutStructureItem =
-			_findFormStepContainerStyledLayoutStructureItem(
+			findFormStepContainerStyledLayoutStructureItem(
 				formStyledLayoutStructureItem, layoutStructure);
 
 		if (layoutStructureItem == null) {
@@ -709,26 +729,6 @@ public class FormItemManager {
 		}
 
 		return fragmentEntryLink;
-	}
-
-	private LayoutStructureItem _findFormStepContainerStyledLayoutStructureItem(
-		FormStyledLayoutStructureItem formStyledLayoutStructureItem,
-		LayoutStructure layoutStructure) {
-
-		for (String childrenItemId :
-				formStyledLayoutStructureItem.getChildrenItemIds()) {
-
-			LayoutStructureItem layoutStructureItem =
-				layoutStructure.getLayoutStructureItem(childrenItemId);
-
-			if (layoutStructureItem instanceof
-					FormStepContainerStyledLayoutStructureItem) {
-
-				return layoutStructureItem;
-			}
-		}
-
-		return null;
 	}
 
 	private FragmentEntry _getFragmentEntry(
