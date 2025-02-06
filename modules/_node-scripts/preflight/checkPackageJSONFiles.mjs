@@ -417,6 +417,7 @@ const ALLOWED_NAMED_SCOPE_EXCEPTIONS = [
 	'sharing-taglib',
 	'sharing-web',
 	'site-admin-web',
+	'site-cms-site-initializer',
 	'site-membership-web',
 	'site-navigation-admin-web',
 	'site-navigation-item-selector-web',
