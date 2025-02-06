@@ -1,5 +1,15 @@
+@import 'cadmin-variables';
+
+$structureFieldsWidth: 448px;
+
 .structure-builder {
 	&__wrapper {
 		height: calc(100vh - (var(--control-menu-container-height)));
+	}
+
+	&__structure-fields {
+		border-radius: 8px;
+		background-color: $cadmin-light-l1;
+		width: $structureFieldsWidth;
 	}
 }
