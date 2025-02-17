@@ -7,8 +7,10 @@ package com.liferay.segments.service.impl;
 
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.SystemEventConstants;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
@@ -117,8 +119,21 @@ public class SegmentsExperimentRelLocalServiceImpl
 		// Segments experience
 
 		if (!segmentsExperimentRel.isActive()) {
+			SegmentsExperience segmentsExperience =
+				_segmentsExperienceLocalService.fetchSegmentsExperience(
+					segmentsExperimentRel.getSegmentsExperienceId());
+
+			Layout draftLayout = _layoutLocalService.fetchDraftLayout(
+				segmentsExperience.getPlid());
+
 			_segmentsExperienceLocalService.deleteSegmentsExperience(
-				segmentsExperimentRel.getSegmentsExperienceId());
+				_segmentsExperienceLocalService.fetchSegmentsExperience(
+					segmentsExperience.getGroupId(),
+					segmentsExperience.getSegmentsExperienceKey(),
+					draftLayout.getPlid()));
+
+			_segmentsExperienceLocalService.deleteSegmentsExperience(
+				segmentsExperience);
 		}
 
 		return segmentsExperimentRel;
@@ -263,6 +278,9 @@ public class SegmentsExperimentRelLocalServiceImpl
 			throw new LockedSegmentsExperimentException(segmentsExperimentId);
 		}
 	}
+
+	@Reference
+	private LayoutLocalService _layoutLocalService;
 
 	@Reference
 	private SegmentsExperienceLocalService _segmentsExperienceLocalService;
