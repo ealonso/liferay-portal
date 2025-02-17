@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.model.SystemEventConstants;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.UserNotificationDeliveryConstants;
 import com.liferay.portal.kernel.notifications.UserNotificationManagerUtil;
+import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.ResourceLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
@@ -207,16 +208,32 @@ public class SegmentsExperimentLocalServiceImpl
 	public SegmentsExperiment fetchSegmentsExperiment(
 		long groupId, long segmentsExperienceId, long plid) {
 
+		Layout layout = _layoutLocalService.fetchLayout(plid);
+
+		if (layout.isDraftLayout()) {
+			layout = _layoutLocalService.fetchLayout(layout.getClassPK());
+		}
+
+		SegmentsExperience segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				segmentsExperienceId);
+
+		segmentsExperience =
+			_segmentsExperienceLocalService.fetchSegmentsExperience(
+				segmentsExperience.getGroupId(),
+				segmentsExperience.getSegmentsExperienceKey(),
+				layout.getPlid());
+
 		for (SegmentsExperimentRel segmentsExperimentRel :
 				_segmentsExperimentRelPersistence.findBySegmentsExperienceId(
-					segmentsExperienceId)) {
+					segmentsExperience.getSegmentsExperienceId())) {
 
 			SegmentsExperiment segmentsExperiment =
 				segmentsExperimentPersistence.fetchByPrimaryKey(
 					segmentsExperimentRel.getSegmentsExperimentId());
 
 			if ((segmentsExperiment.getGroupId() == groupId) &&
-				(segmentsExperiment.getPlid() == plid)) {
+				(segmentsExperiment.getPlid() == layout.getPlid())) {
 
 				return segmentsExperiment;
 			}
@@ -694,6 +711,9 @@ public class SegmentsExperimentLocalServiceImpl
 			throw new SegmentsExperimentTypeException();
 		}
 	}
+
+	@Reference
+	private LayoutLocalService _layoutLocalService;
 
 	@Reference
 	private Portal _portal;
