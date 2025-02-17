@@ -356,12 +356,10 @@ public class SegmentsExperimentProductNavigationControlMenuEntry
 		long segmentsExperienceId = _getSelectedSegmentsExperienceId(
 			httpServletRequest);
 
-		Layout layout = themeDisplay.getLayout();
-
 		SegmentsExperiment segmentsExperiment =
 			_segmentsExperimentService.fetchSegmentsExperiment(
 				themeDisplay.getScopeGroupId(), segmentsExperienceId,
-				layout.getPlid());
+				themeDisplay.getPlid());
 
 		if (segmentsExperiment != null) {
 			return segmentsExperiment.getSegmentsExperienceId();
