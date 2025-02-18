@@ -224,6 +224,10 @@ public class SegmentsExperimentLocalServiceImpl
 				segmentsExperience.getSegmentsExperienceKey(),
 				layout.getPlid());
 
+		if (segmentsExperience == null) {
+			return null;
+		}
+
 		for (SegmentsExperimentRel segmentsExperimentRel :
 				_segmentsExperimentRelPersistence.findBySegmentsExperienceId(
 					segmentsExperience.getSegmentsExperienceId())) {
