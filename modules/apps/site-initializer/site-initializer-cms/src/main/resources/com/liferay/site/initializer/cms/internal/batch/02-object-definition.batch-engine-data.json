@@ -13,6 +13,7 @@
 	},
 	"items": [
 		{
+			"className": "com.liferay.object.model.ObjectDefinition#Z7P5",
 			"defaultLanguageId": "en_US",
 			"enableCategorization": true,
 			"enableComments": true,
@@ -113,6 +114,7 @@
 			"titleObjectFieldName": "title"
 		},
 		{
+			"className": "com.liferay.object.model.ObjectDefinition#H4T4",
 			"defaultLanguageId": "en_US",
 			"enableCategorization": true,
 			"enableComments": true,
@@ -191,6 +193,7 @@
 			"titleObjectFieldName": "title"
 		},
 		{
+			"className": "com.liferay.object.model.ObjectDefinition#Y8H4",
 			"defaultLanguageId": "en_US",
 			"enableCategorization": true,
 			"enableComments": true,
@@ -329,6 +332,7 @@
 			"titleObjectFieldName": "title"
 		},
 		{
+			"className": "com.liferay.object.model.ObjectDefinition#S1T1",
 			"defaultLanguageId": "en_US",
 			"enableCategorization": true,
 			"enableComments": true,
@@ -386,6 +390,7 @@
 			"titleObjectFieldName": "title"
 		},
 		{
+			"className": "com.liferay.object.model.ObjectDefinition#H6H2",
 			"defaultLanguageId": "en_US",
 			"enableCategorization": true,
 			"enableComments": true,
