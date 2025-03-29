@@ -893,19 +893,13 @@ public class EditInfoItemStrutsActionTest {
 				ObjectFieldConstants.DB_TYPE_STRING,
 				RandomTestUtil.randomString(), "myRichText", false));
 
-		boolean enabledLocalization = false;
-
-		if (FeatureFlagManagerUtil.isEnabled(
-				TestPropsValues.getCompanyId(), "LPD-21926")) {
-
-			enabledLocalization = true;
-		}
-
 		ObjectDefinition objectDefinition =
 			_objectDefinitionLocalService.addCustomObjectDefinition(
 				_user.getUserId(), 0, null, false,
-				enableFriendlyURLCustomization, true, enabledLocalization, true,
-				false,
+				enableFriendlyURLCustomization, true,
+				FeatureFlagManagerUtil.isEnabled(
+					TestPropsValues.getCompanyId(), "LPD-21926"),
+				true, false,
 				LocalizedMapUtil.getLocalizedMap(RandomTestUtil.randomString()),
 				ObjectDefinitionTestUtil.getRandomName(), null,
 				"control_panel.sites",

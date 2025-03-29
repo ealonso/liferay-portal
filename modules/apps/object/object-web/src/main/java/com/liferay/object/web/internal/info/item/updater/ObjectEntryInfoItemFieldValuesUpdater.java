@@ -59,19 +59,17 @@ public class ObjectEntryInfoItemFieldValuesUpdater
 	@Override
 	public ObjectEntry updateFromInfoItemFieldValues(
 			ObjectEntry objectEntry, InfoItemFieldValues infoItemFieldValues,
-			int status)
+			int statusInt)
 		throws InfoFormException {
-
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
-
-		ThemeDisplay themeDisplay = serviceContext.getThemeDisplay();
 
 		ObjectEntryManager objectEntryManager =
 			_objectEntryManagerRegistry.getObjectEntryManager(
 				_objectDefinition.getStorageType());
 
-		int objectEntryStatus = status;
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		ThemeDisplay themeDisplay = serviceContext.getThemeDisplay();
 
 		Map<String, Object> curProperties = ObjectEntryUtil.toProperties(
 			infoItemFieldValues);
@@ -99,7 +97,7 @@ public class ObjectEntryInfoItemFieldValuesUpdater
 							setStatus(
 								() -> new Status() {
 									{
-										setCode(() -> objectEntryStatus);
+										setCode(() -> statusInt);
 									}
 								});
 							setTaxonomyCategoryIds(

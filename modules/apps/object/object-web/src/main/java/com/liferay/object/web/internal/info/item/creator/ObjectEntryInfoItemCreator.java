@@ -50,7 +50,8 @@ public class ObjectEntryInfoItemCreator
 
 	@Override
 	public ObjectEntry createFromInfoItemFieldValues(
-			long groupId, InfoItemFieldValues infoItemFieldValues, int status)
+			long groupId, InfoItemFieldValues infoItemFieldValues,
+			int statusInt)
 		throws InfoFormException {
 
 		try {
@@ -62,8 +63,6 @@ public class ObjectEntryInfoItemCreator
 				ServiceContextThreadLocal.getServiceContext();
 
 			ThemeDisplay themeDisplay = serviceContext.getThemeDisplay();
-
-			int objectEntryStatus = status;
 
 			Map<String, Object> curProperties = ObjectEntryUtil.toProperties(
 				infoItemFieldValues);
@@ -88,7 +87,7 @@ public class ObjectEntryInfoItemCreator
 							setStatus(
 								() -> new Status() {
 									{
-										setCode(() -> objectEntryStatus);
+										setCode(() -> statusInt);
 									}
 								});
 							setTaxonomyCategoryIds(

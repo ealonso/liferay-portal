@@ -124,7 +124,7 @@ public class SystemObjectEntryInfoItemFieldValuesProvider
 
 			return InfoItemFieldValues.builder(
 			).infoFieldValues(
-				_getInfoFieldValues(themeDisplay, systemObjectEntry)
+				_getInfoFieldValues(systemObjectEntry, themeDisplay)
 			).infoFieldValues(
 				_displayPageInfoItemFieldSetProvider.getInfoFieldValues(
 					infoItemReference, StringPool.BLANK,
@@ -145,7 +145,7 @@ public class SystemObjectEntryInfoItemFieldValuesProvider
 		}
 	}
 
-	private InfoLocalizedValue<?> _getFriendlyURLValue(
+	private InfoLocalizedValue<?> _getFriendlyURLInfoLocalizedValue(
 		SystemObjectEntry systemObjectEntry) {
 
 		try {
@@ -172,28 +172,29 @@ public class SystemObjectEntryInfoItemFieldValuesProvider
 	}
 
 	private List<InfoFieldValue<Object>> _getInfoFieldValues(
-			ThemeDisplay themeDisplay, SystemObjectEntry systemObjectEntry)
+			SystemObjectEntry systemObjectEntry, ThemeDisplay themeDisplay)
 		throws Exception {
 
-		List<InfoFieldValue<Object>> objectEntryFieldValues = new ArrayList<>();
+		List<InfoFieldValue<Object>> infoFieldValues = new ArrayList<>();
 
 		if (FeatureFlagManagerUtil.isEnabled(
 				_objectDefinition.getCompanyId(), "LPD-21926")) {
 
-			objectEntryFieldValues.add(
+			infoFieldValues.add(
 				new InfoFieldValue<>(
 					ObjectEntryInfoItemFields.getFriendlyURLInfoField(
 						_objectDefinition),
-					() -> _getFriendlyURLValue(systemObjectEntry)));
+					() -> _getFriendlyURLInfoLocalizedValue(
+						systemObjectEntry)));
 		}
 
 		Map<String, Object> values = systemObjectEntry.getValues();
 
 		if (MapUtil.isEmpty(values)) {
-			return objectEntryFieldValues;
+			return infoFieldValues;
 		}
 
-		objectEntryFieldValues.add(
+		infoFieldValues.add(
 			new InfoFieldValue<>(
 				ObjectEntryInfoItemFields.objectEntryIdInfoField,
 				GetterUtil.getLong(values.get("id"))));
@@ -209,23 +210,23 @@ public class SystemObjectEntryInfoItemFieldValuesProvider
 		Map<String, Object> baseModelAttributes =
 			baseModel.getModelAttributes();
 
-		objectEntryFieldValues.add(
+		infoFieldValues.add(
 			new InfoFieldValue<>(
 				ObjectEntryInfoItemFields.authorInfoField,
 				baseModelAttributes.get("userName")));
-		objectEntryFieldValues.add(
+		infoFieldValues.add(
 			new InfoFieldValue<>(
 				ObjectEntryInfoItemFields.createDateInfoField,
 				baseModelAttributes.get("createDate")));
-		objectEntryFieldValues.add(
+		infoFieldValues.add(
 			new InfoFieldValue<>(
 				ObjectEntryInfoItemFields.externalReferenceCodeInfoField,
 				baseModelAttributes.get("externalReferenceCode")));
-		objectEntryFieldValues.add(
+		infoFieldValues.add(
 			new InfoFieldValue<>(
 				ObjectEntryInfoItemFields.modifiedDateInfoField,
 				baseModelAttributes.get("modifiedDate")));
-		objectEntryFieldValues.add(
+		infoFieldValues.add(
 			new InfoFieldValue<>(
 				ObjectEntryInfoItemFields.statusInfoField,
 				WorkflowConstants.getStatusLabel(
@@ -247,7 +248,7 @@ public class SystemObjectEntryInfoItemFieldValuesProvider
 					values));
 		}
 
-		objectEntryFieldValues.addAll(
+		infoFieldValues.addAll(
 			ObjectEntryInfoItemValuesProviderUtil.getInfoFieldValues(
 				_dlAppLocalService, _dlURLHelper, _listTypeEntryLocalService,
 				_objectActionLocalService, _objectDefinition,
@@ -259,7 +260,7 @@ public class SystemObjectEntryInfoItemFieldValuesProvider
 				_objectRelationshipLocalService, _objectScopeProviderRegistry,
 				themeDisplay, values));
 
-		return objectEntryFieldValues;
+		return infoFieldValues;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(

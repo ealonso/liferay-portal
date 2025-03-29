@@ -128,7 +128,7 @@ public class ObjectEntryInfoItemFieldValuesProvider
 		}
 	}
 
-	private InfoLocalizedValue<?> _getFriendlyURLValue(
+	private InfoLocalizedValue<?> _getFriendlyURLInfoFieldValue(
 		ObjectEntry objectEntry) {
 
 		try {
@@ -238,7 +238,7 @@ public class ObjectEntryInfoItemFieldValuesProvider
 				new InfoFieldValue<>(
 					ObjectEntryInfoItemFields.getFriendlyURLInfoField(
 						_objectDefinition),
-					() -> _getFriendlyURLValue(objectEntry)));
+					() -> _getFriendlyURLInfoFieldValue(objectEntry)));
 		}
 
 		return objectEntryFieldValues;
