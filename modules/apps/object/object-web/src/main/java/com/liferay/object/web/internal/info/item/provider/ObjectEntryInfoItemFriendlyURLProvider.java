@@ -11,6 +11,7 @@ import com.liferay.friendly.url.service.FriendlyURLEntryLocalService;
 import com.liferay.friendly.url.util.comparator.FriendlyURLEntryLocalizationComparator;
 import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.model.ObjectEntry;
+import com.liferay.object.service.ObjectDefinitionLocalService;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -31,23 +32,32 @@ public class ObjectEntryInfoItemFriendlyURLProvider
 
 	public ObjectEntryInfoItemFriendlyURLProvider(
 		FriendlyURLEntryLocalService friendlyURLEntryLocalService,
-		ObjectDefinition objectDefinition, Portal portal) {
+		ObjectDefinitionLocalService objectDefinitionLocalService,
+		Portal portal) {
 
 		_friendlyURLEntryLocalService = friendlyURLEntryLocalService;
-		_objectDefinition = objectDefinition;
+		_objectDefinitionLocalService = objectDefinitionLocalService;
 		_portal = portal;
 	}
 
 	@Override
 	public String getFriendlyURL(ObjectEntry objectEntry, String languageId) {
+		ObjectDefinition objectDefinition =
+			_objectDefinitionLocalService.fetchObjectDefinition(
+				objectEntry.getObjectDefinitionId());
+
+		if (objectDefinition == null) {
+			return String.valueOf(objectEntry.getObjectEntryId());
+		}
+
 		String urlTitle = objectEntry.getURLTitle(
 			LocaleUtil.fromLanguageId(languageId));
 
 		if (Validator.isNotNull(urlTitle)) {
-			return _objectDefinition.getName() + StringPool.SLASH + urlTitle;
+			return objectDefinition.getName() + StringPool.SLASH + urlTitle;
 		}
 
-		if (!_objectDefinition.isDefaultStorageType()) {
+		if (!objectDefinition.isDefaultStorageType()) {
 			return objectEntry.getExternalReferenceCode();
 		}
 
@@ -58,11 +68,19 @@ public class ObjectEntryInfoItemFriendlyURLProvider
 	public List<FriendlyURLEntryLocalization> getFriendlyURLEntryLocalizations(
 		ObjectEntry objectEntry, String languageId) {
 
+		ObjectDefinition objectDefinition =
+			_objectDefinitionLocalService.fetchObjectDefinition(
+				objectEntry.getObjectDefinitionId());
+
+		if (objectDefinition == null) {
+			return Collections.emptyList();
+		}
+
 		try {
 			return _friendlyURLEntryLocalService.
 				getFriendlyURLEntryLocalizations(
 					objectEntry.getNonzeroGroupId(),
-					_portal.getClassNameId(_objectDefinition.getClassName()),
+					_portal.getClassNameId(objectDefinition.getClassName()),
 					objectEntry.getObjectEntryId(), languageId,
 					QueryUtil.ALL_POS, QueryUtil.ALL_POS,
 					FriendlyURLEntryLocalizationComparator.getInstance(false));
@@ -80,7 +98,7 @@ public class ObjectEntryInfoItemFriendlyURLProvider
 		ObjectEntryInfoItemFriendlyURLProvider.class);
 
 	private final FriendlyURLEntryLocalService _friendlyURLEntryLocalService;
-	private final ObjectDefinition _objectDefinition;
+	private final ObjectDefinitionLocalService _objectDefinitionLocalService;
 	private final Portal _portal;
 
 }

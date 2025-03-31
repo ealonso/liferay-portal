@@ -221,7 +221,8 @@ public class ObjectDefinitionDeployerImpl implements ObjectDefinitionDeployer {
 
 		InfoItemFriendlyURLProvider infoItemFriendlyURLProvider =
 			new ObjectEntryInfoItemFriendlyURLProvider(
-				_friendlyURLEntryLocalService, objectDefinition, _portal);
+				_friendlyURLEntryLocalService, _objectDefinitionLocalService,
+				_portal);
 
 		PortletResourcePermission portletResourcePermission =
 			_getPortletResourcePermission(_getResourceName(objectDefinition));
