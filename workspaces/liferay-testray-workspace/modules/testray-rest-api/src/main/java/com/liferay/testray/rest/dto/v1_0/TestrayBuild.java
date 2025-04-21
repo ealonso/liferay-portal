@@ -413,6 +413,47 @@ public class TestrayBuild implements Serializable {
 	private Supplier<Integer> _caseResultUntestedSupplier;
 
 	@Schema
+	public String getCpuUseTime() {
+		if (_cpuUseTimeSupplier != null) {
+			cpuUseTime = _cpuUseTimeSupplier.get();
+
+			_cpuUseTimeSupplier = null;
+		}
+
+		return cpuUseTime;
+	}
+
+	public void setCpuUseTime(String cpuUseTime) {
+		this.cpuUseTime = cpuUseTime;
+
+		_cpuUseTimeSupplier = null;
+	}
+
+	@JsonIgnore
+	public void setCpuUseTime(
+		UnsafeSupplier<String, Exception> cpuUseTimeUnsafeSupplier) {
+
+		_cpuUseTimeSupplier = () -> {
+			try {
+				return cpuUseTimeUnsafeSupplier.get();
+			}
+			catch (RuntimeException runtimeException) {
+				throw runtimeException;
+			}
+			catch (Exception exception) {
+				throw new RuntimeException(exception);
+			}
+		};
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String cpuUseTime;
+
+	@JsonIgnore
+	private Supplier<String> _cpuUseTimeSupplier;
+
+	@Schema
 	public String getDateArchived() {
 		if (_dateArchivedSupplier != null) {
 			dateArchived = _dateArchivedSupplier.get();
@@ -1090,6 +1131,22 @@ public class TestrayBuild implements Serializable {
 			sb.append("\"caseResultUntested\": ");
 
 			sb.append(caseResultUntested);
+		}
+
+		String cpuUseTime = getCpuUseTime();
+
+		if (cpuUseTime != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"cpuUseTime\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(cpuUseTime));
+
+			sb.append("\"");
 		}
 
 		String dateArchived = getDateArchived();
