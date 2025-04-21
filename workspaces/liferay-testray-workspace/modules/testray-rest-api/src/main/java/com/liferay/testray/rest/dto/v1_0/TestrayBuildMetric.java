@@ -87,6 +87,48 @@ public class TestrayBuildMetric implements Serializable {
 	private Supplier<Boolean> _testrayBuildArchivedSupplier;
 
 	@Schema
+	public String getTestrayBuildCPUUseTime() {
+		if (_testrayBuildCPUUseTimeSupplier != null) {
+			testrayBuildCPUUseTime = _testrayBuildCPUUseTimeSupplier.get();
+
+			_testrayBuildCPUUseTimeSupplier = null;
+		}
+
+		return testrayBuildCPUUseTime;
+	}
+
+	public void setTestrayBuildCPUUseTime(String testrayBuildCPUUseTime) {
+		this.testrayBuildCPUUseTime = testrayBuildCPUUseTime;
+
+		_testrayBuildCPUUseTimeSupplier = null;
+	}
+
+	@JsonIgnore
+	public void setTestrayBuildCPUUseTime(
+		UnsafeSupplier<String, Exception>
+			testrayBuildCPUUseTimeUnsafeSupplier) {
+
+		_testrayBuildCPUUseTimeSupplier = () -> {
+			try {
+				return testrayBuildCPUUseTimeUnsafeSupplier.get();
+			}
+			catch (RuntimeException runtimeException) {
+				throw runtimeException;
+			}
+			catch (Exception exception) {
+				throw new RuntimeException(exception);
+			}
+		};
+	}
+
+	@GraphQLField
+	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
+	protected String testrayBuildCPUUseTime;
+
+	@JsonIgnore
+	private Supplier<String> _testrayBuildCPUUseTimeSupplier;
+
+	@Schema
 	public String getTestrayBuildDueDate() {
 		if (_testrayBuildDueDateSupplier != null) {
 			testrayBuildDueDate = _testrayBuildDueDateSupplier.get();
@@ -502,6 +544,22 @@ public class TestrayBuildMetric implements Serializable {
 			sb.append("\"testrayBuildArchived\": ");
 
 			sb.append(testrayBuildArchived);
+		}
+
+		String testrayBuildCPUUseTime = getTestrayBuildCPUUseTime();
+
+		if (testrayBuildCPUUseTime != null) {
+			if (sb.length() > 1) {
+				sb.append(", ");
+			}
+
+			sb.append("\"testrayBuildCPUUseTime\": ");
+
+			sb.append("\"");
+
+			sb.append(_escape(testrayBuildCPUUseTime));
+
+			sb.append("\"");
 		}
 
 		String testrayBuildDueDate = getTestrayBuildDueDate();
