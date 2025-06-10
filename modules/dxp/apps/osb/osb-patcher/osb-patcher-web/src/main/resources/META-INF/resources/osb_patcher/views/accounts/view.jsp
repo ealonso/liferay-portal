@@ -520,10 +520,14 @@ long patcherProductVersionId = ParamUtil.getLong(request, "patcherProductVersion
 	Liferay.provide(
 		window,
 		'<portlet:namespace />productVersionOnChange',
-		function(productVersionId) {
+		function (productVersionId) {
 			var namespace = '<portlet:namespace />';
 
-			window.location.href = Liferay.Patcher.updateProductVersionId('<%= viewPatcherAccountURL %>', productVersionId, namespace);
+			window.location.href = Liferay.Patcher.updateProductVersionId(
+				'<%= viewPatcherAccountURL %>',
+				productVersionId,
+				namespace
+			);
 		},
 		['aui-base']
 	);
@@ -531,7 +535,7 @@ long patcherProductVersionId = ParamUtil.getLong(request, "patcherProductVersion
 	Liferay.provide(
 		window,
 		'<portlet:namespace />confirm',
-		function(message, url) {
+		function (message, url) {
 			if (confirm(message)) {
 				window.location.href = url;
 			}
