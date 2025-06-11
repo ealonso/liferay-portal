@@ -49,7 +49,9 @@ PatcherAccountsDisplayContext patcherAccountsDisplayContext = new PatcherAccount
 		keyProperty="patcherAccountId"
 		modelVar="patcherAccount"
 	>
-		<liferay-ui:search-container-column-text>
+		<liferay-ui:search-container-column-text
+			colspan="<%= 2 %>"
+		>
 			<h5>
 				<portlet:renderURL var="viewPatcherAccountURL">
 					<portlet:param name="mvcRenderCommandName" value="/patcher/view_accounts" />
@@ -63,14 +65,14 @@ PatcherAccountsDisplayContext patcherAccountsDisplayContext = new PatcherAccount
 
 			<c:set value="<%= PatcherProductVersionUtil.getPatcherProductVersions(patcherAccount) %>" var="patcherProductVersions" />
 
-			<table class="account-table">
+			<table class="account-table table table-autofit table-list table-nowrap">
 
 				<%
 				for (PatcherProductVersion patcherProductVersion : PatcherProductVersionUtil.getPatcherProductVersions(patcherAccount)) {
 				%>
 
 					<tr>
-						<td class="slim">
+						<td>
 							<portlet:renderURL var="viewPatcherAccountPatcherProductVersionURL">
 								<portlet:param name="mvcRenderCommandName" value="/patcher/view_accounts" />
 								<portlet:param name="patcherBuildAccountEntryCode" value="<%= patcherAccount.getAccountEntryCode() %>" />
@@ -86,7 +88,7 @@ PatcherAccountsDisplayContext patcherAccountsDisplayContext = new PatcherAccount
 						PatcherBuild patcherBuild = PatcherBuildUtil.fetchLastModifiedPatcherBuild(patcherAccount.getPatcherAccountId(), patcherProductVersion.getPatcherProductVersionId());
 						%>
 
-						<td class="slim">
+						<td>
 
 							<%
 							PatcherProjectVersion curPatcherProjectVersion = PatcherProjectVersionLocalServiceUtil.fetchPatcherProjectVersion(patcherBuild.getPatcherProjectVersionId());
@@ -94,7 +96,7 @@ PatcherAccountsDisplayContext patcherAccountsDisplayContext = new PatcherAccount
 
 							<%= curPatcherProjectVersion.getName() %>
 						</td>
-						<td class="wide">
+						<td class="table-cell-expand">
 
 							<%
 							List<String> patcherFixPackNames = PatcherFixPackUtil.getPatcherFixPackNames(patcherBuild.getName());
@@ -123,7 +125,7 @@ PatcherAccountsDisplayContext patcherAccountsDisplayContext = new PatcherAccount
 								</c:otherwise>
 							</c:choose>
 						</td>
-						<td class="slim">
+						<td>
 							<span class="relative-date">
 								<fmt:formatDate
 									pattern="yyyy-MM-dd HH:mm:ss z"
@@ -140,10 +142,10 @@ PatcherAccountsDisplayContext patcherAccountsDisplayContext = new PatcherAccount
 									String fileName = patcherBuild.getFileName();
 									%>
 
-									<span class="passed"><liferay-ui:message key="<%= WorkflowConstants.getStatusLabel(patcherBuild.getStatus()) %>" /></span> (<clay:link href='<%= fileName.contains("/liferay-dxp-") ? "https://releases-cdn.liferay.com/dxp/hotfix" : patcherConfiguration.patcherBuildDownloadURL() + "/" + fileName %>' label="download" target="_blank" />)
+									<span class="text-success"><liferay-ui:message key="<%= WorkflowConstants.getStatusLabel(patcherBuild.getStatus()) %>" /></span> (<clay:link href='<%= fileName.contains("/liferay-dxp-") ? "https://releases-cdn.liferay.com/dxp/hotfix" : patcherConfiguration.patcherBuildDownloadURL() + "/" + fileName %>' label="download" target="_blank" />)
 								</c:when>
 								<c:when test="<%= (patcherBuild.getStatus() == WorkflowConstants.STATUS_BUILD_FAILED) || (patcherBuild.getStatus() == WorkflowConstants.STATUS_BUILD_FAILED_MERGING_ONLY) %>">
-									<span class="failed"><liferay-ui:message key="<%= WorkflowConstants.getStatusLabel(patcherBuild.getStatus()) %>" /></span>
+									<span class="text-danger"><liferay-ui:message key="<%= WorkflowConstants.getStatusLabel(patcherBuild.getStatus()) %>" /></span>
 
 									<%
 									for (Map<String, String> jenkinsResults : JenkinsUtil.getJenkinsResults(patcherBuild)) {
@@ -167,10 +169,10 @@ PatcherAccountsDisplayContext patcherAccountsDisplayContext = new PatcherAccount
 							String qaStatusCSSClass = StringPool.BLANK;
 
 							if (PatcherBuildUtil.isTestingPassed(patcherBuild)) {
-								qaStatusCSSClass = "passed";
+								qaStatusCSSClass = "text-success";
 							}
 							else if (PatcherBuildUtil.isTestingFailed(patcherBuild)) {
-								qaStatusCSSClass = "failed";
+								qaStatusCSSClass = "text-danger";
 							}
 							%>
 

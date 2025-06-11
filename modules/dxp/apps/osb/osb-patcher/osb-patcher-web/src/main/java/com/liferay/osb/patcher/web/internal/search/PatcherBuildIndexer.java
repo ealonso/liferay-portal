@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.search.IndexWriterHelper;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.Summary;
+import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.search.generic.BooleanQueryImpl;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -57,19 +58,17 @@ public class PatcherBuildIndexer extends BaseIndexer<PatcherBuild> {
 	}
 
 	@Override
-	public void postProcessContextQuery(
-			BooleanQuery contextQuery, SearchContext searchContext)
+	public void postProcessContextBooleanFilter(
+			BooleanFilter contextBooleanFilter, SearchContext searchContext)
 		throws Exception {
 
 		BooleanQuery booleanQuery = new BooleanQueryImpl();
-
-		BooleanClauseOccur booleanClauseOccur = BooleanClauseOccur.MUST;
 
 		long patcherProductVersionId = GetterUtil.getLong(
 			searchContext.getAttribute("patcherProductVersionId"));
 
 		if (patcherProductVersionId > 0) {
-			contextQuery.addRequiredTerm(
+			contextBooleanFilter.addRequiredTerm(
 				"patcherProductVersionId", patcherProductVersionId);
 		}
 
@@ -80,13 +79,14 @@ public class PatcherBuildIndexer extends BaseIndexer<PatcherBuild> {
 		if (GetterUtil.getBoolean(
 				searchContext.getAttribute("advancedSearch"))) {
 
-			contextQuery.addRequiredTerm("childBuild", false);
+			contextBooleanFilter.addRequiredTerm("childBuild", false);
 
 			if (patcherConfiguration.patcherScanningEnabled()) {
-				contextQuery.addRequiredTerm("latestSupportTicketBuild", true);
+				contextBooleanFilter.addRequiredTerm(
+					"latestSupportTicketBuild", true);
 			}
 			else {
-				contextQuery.addRequiredTerm("latestKeyBuild", true);
+				contextBooleanFilter.addRequiredTerm("latestKeyBuild", true);
 			}
 
 			setBooleanQuery(booleanQuery, searchContext);
@@ -104,13 +104,14 @@ public class PatcherBuildIndexer extends BaseIndexer<PatcherBuild> {
 		else if (GetterUtil.getBoolean(
 					searchContext.getAttribute("buildsIndexSearch"))) {
 
-			contextQuery.addRequiredTerm("childBuild", false);
+			contextBooleanFilter.addRequiredTerm("childBuild", false);
 
 			if (patcherConfiguration.patcherScanningEnabled()) {
-				contextQuery.addRequiredTerm("latestSupportTicketBuild", true);
+				contextBooleanFilter.addRequiredTerm(
+					"latestSupportTicketBuild", true);
 			}
 			else {
-				contextQuery.addRequiredTerm("latestKeyBuild", true);
+				contextBooleanFilter.addRequiredTerm("latestKeyBuild", true);
 			}
 
 			booleanQuery.addExactTerm(
@@ -142,45 +143,45 @@ public class PatcherBuildIndexer extends BaseIndexer<PatcherBuild> {
 			booleanQuery.addExactTerm(
 				"type", PatcherBuildConstants.TYPE_FIX_PACK);
 
-			booleanClauseOccur = BooleanClauseOccur.MUST_NOT;
+			// BooleanClauseOccur booleanClauseOccur =
+			// BooleanClauseOccur.MUST_NOT;
+
 		}
 		else if (GetterUtil.getBoolean(
 					searchContext.getAttribute("viewMostRecent"))) {
 
-			contextQuery.addRequiredTerm("childBuild", false);
+			contextBooleanFilter.addRequiredTerm("childBuild", false);
 
 			booleanQuery.addExactTerm(
 				"type", PatcherBuildConstants.TYPE_FIX_PACK);
 
-			booleanClauseOccur = BooleanClauseOccur.MUST_NOT;
+			contextBooleanFilter.addTerm(
+				"type", String.valueOf(PatcherBuildConstants.TYPE_FIX_PACK),
+				BooleanClauseOccur.MUST_NOT);
 		}
 		else {
-			contextQuery.addRequiredTerm("childBuild", false);
+			contextBooleanFilter.addRequiredTerm("childBuild", false);
 
 			if (patcherConfiguration.patcherScanningEnabled()) {
-				contextQuery.addRequiredTerm("latestSupportTicketBuild", true);
+				contextBooleanFilter.addRequiredTerm(
+					"latestSupportTicketBuild", true);
 			}
 			else {
-				contextQuery.addRequiredTerm("latestKeyBuild", true);
+				contextBooleanFilter.addRequiredTerm("latestKeyBuild", true);
 			}
 
 			String patcherBuildAccountEntryCode = GetterUtil.getString(
 				searchContext.getAttribute("patcherBuildAccountEntryCode"));
 
 			if (Validator.isNotNull(patcherBuildAccountEntryCode)) {
-				contextQuery.addRequiredTerm(
+				contextBooleanFilter.addRequiredTerm(
 					"patcherBuildAccountEntryCode",
 					patcherBuildAccountEntryCode);
 			}
 
-			booleanQuery.addExactTerm(
-				"type", PatcherBuildConstants.TYPE_FIX_PACK);
-
-			booleanClauseOccur = BooleanClauseOccur.MUST_NOT;
-		}
-
-		if (booleanQuery.hasClauses()) {
-			contextQuery.add(booleanQuery, booleanClauseOccur);
+			contextBooleanFilter.addTerm(
+				"type", String.valueOf(PatcherBuildConstants.TYPE_FIX_PACK),
+				BooleanClauseOccur.MUST_NOT);
 		}
 	}
 
