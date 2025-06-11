@@ -7,7 +7,7 @@
 		"react": "18.2.0"
 	},
 	"main": "js/index.js",
-	"name": "osb-patcher-web",
+	"name": "@liferay/osb-patcher-web",
 	"scripts": {
 		"build": "node-scripts build",
 		"checkFormat": "node-scripts format --check",
