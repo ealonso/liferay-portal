@@ -123,7 +123,13 @@
 		<liferay-ui:search-container-column-text
 			align="right"
 		>
-			<liferay-ui:icon-menu>
+			<liferay-ui:icon-menu
+				direction="left-side"
+				icon="<%= StringPool.BLANK %>"
+				markupView="lexicon"
+				message="<%= StringPool.BLANK %>"
+				showWhenSingleIcon="<%= true %>"
+			>
 				<c:if test="<%= (patcherFix.status == WorkflowConstants.STATUS_FIX_FAILED) || (patcherFix.status == WorkflowConstants.STATUS_FIX_CONFLICT) %>">
 					<portlet:renderURL var="editPatcherFixURL">
 						<portlet:param name="mvcRenderCommandName" value="/patcher/edit_fixes" />
