@@ -270,7 +270,7 @@ SearchContainer<PatcherFix> patcherFixSearchContainer = patcherViewFixesDisplayC
 				href="<%= PatcherFixUtil.getPatcherFixGitHubURL(patcherFixKeyVersion.getPatcherFixId()) %>"
 				name="git-hash"
 				target="_blank"
-				value="<%= patcherFixKeyVersion.getGitHash() %>"
+				value="<%= com.liferay.portal.kernel.util.StringUtil.shorten(patcherFixKeyVersion.getGitHash(), 10) %>"
 			/>
 
 			<liferay-ui:search-container-column-text

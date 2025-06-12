@@ -133,7 +133,7 @@ List<PatcherBuild> patcherBuilds = PatcherBuildLocalServiceUtil.getPatcherFixPat
 			href="<%= PatcherFixUtil.getPatcherFixGitHubURL(patcherBuild.getPatcherFixId()) %>"
 			name="git-hash"
 			target="_blank"
-			value="<%= curPatcherFix.getGitHash() %>"
+			value="<%= com.liferay.portal.kernel.util.StringUtil.shorten(curPatcherFix.getGitHash(), 10) %>"
 		/>
 
 		<liferay-ui:search-container-column-text

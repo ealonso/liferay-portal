@@ -85,7 +85,7 @@
 			href="<%= PatcherFixUtil.getPatcherFixGitHubURL(patcherFix.getPatcherFixId()) %>"
 			name="git-hash"
 			target="_blank"
-			value="<%= fn:substring(patcherFix.gitHash, 0, 10) %>"
+			value="<%= com.liferay.portal.kernel.util.StringUtil.shorten(patcherFix.getGitHash(), 10) %>"
 		/>
 
 		<liferay-ui:search-container-column-text

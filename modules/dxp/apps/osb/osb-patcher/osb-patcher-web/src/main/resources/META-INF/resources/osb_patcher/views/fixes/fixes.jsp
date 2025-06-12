@@ -94,7 +94,7 @@ List<PatcherFix> patcherFixes = PatcherFixUtil.getParentPatcherFixes(childPatche
 			href="<%= PatcherFixUtil.getPatcherFixGitHubURL(patcherFix.getPatcherFixId()) %>"
 			name="git-hash"
 			target="_blank"
-			value="<%= patcherFix.getGitHash() %>"
+			value="<%= com.liferay.portal.kernel.util.StringUtil.shorten(patcherFix.getGitHash(), 10) %>"
 		/>
 
 		<liferay-ui:search-container-column-text
