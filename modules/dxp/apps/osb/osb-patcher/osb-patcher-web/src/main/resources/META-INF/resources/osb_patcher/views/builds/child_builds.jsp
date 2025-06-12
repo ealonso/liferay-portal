@@ -53,7 +53,7 @@ List<PatcherBuild> childPatcherBuilds = PatcherBuildRelUtil.getChildPatcherBuild
 				cssClass="clean-link"
 				href="javascript:void(0);"
 				label="<%= String.valueOf(childPatcherBuild.getPatcherBuildId()) %>"
-				onClick='<%= liferayPortletResponse.getNamespace() + "navigateWindow(" + viewPatcherBuildURL + "); " %>'
+				onClick='<%= liferayPortletResponse.getNamespace() + "navigateWindow('" + viewPatcherBuildURL + "'); " %>'
 			/>
 		</liferay-ui:search-container-column-text>
 

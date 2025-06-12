@@ -51,7 +51,7 @@ List<PatcherFix> patcherFixes = PatcherFixUtil.getParentPatcherFixes(childPatche
 				<clay:button
 					displayType="link"
 					icon="warning"
-					onClick='<%= liferayPortletResponse.getNamespace() + "navigateWindow(" + viewPatcherFixURL + "); " %>'
+					onClick='<%= liferayPortletResponse.getNamespace() + "navigateWindow('" + viewPatcherFixURL + "'); " %>'
 					title='<%= LanguageUtil.get(request, "this-fix-is-obsolete") %>'
 				/>
 			</c:if>
@@ -64,7 +64,7 @@ List<PatcherFix> patcherFixes = PatcherFixUtil.getParentPatcherFixes(childPatche
 				cssClass="clean-link"
 				href="javascript:void(0);"
 				label="<%= String.valueOf(patcherFix.getPatcherFixId()) %>"
-				onClick='<%= liferayPortletResponse.getNamespace() + "navigateWindow(" + viewPatcherFixURL + "); " %>'
+				onClick='<%= liferayPortletResponse.getNamespace() + "navigateWindow('" + viewPatcherFixURL + "'); " %>'
 			/>
 		</liferay-ui:search-container-column-text>
 

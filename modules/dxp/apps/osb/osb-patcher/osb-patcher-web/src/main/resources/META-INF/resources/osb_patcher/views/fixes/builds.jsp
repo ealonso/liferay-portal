@@ -53,7 +53,7 @@ List<PatcherBuild> patcherBuilds = PatcherBuildLocalServiceUtil.getPatcherFixPat
 						<liferay-ui:icon
 							image="../common/activate"
 							message="this-build-is-obsolete"
-							onClick='<%= liferayPortletResponse.getNamespace() + "navigateWindow(" + viewPatcherBuildPatcherFixesURL + "); " %>'
+							onClick='<%= liferayPortletResponse.getNamespace() + "navigateWindow('" + viewPatcherBuildPatcherFixesURL + "'); " %>'
 							url="javascript:void(0);"
 						/>
 					</c:when>
@@ -84,7 +84,7 @@ List<PatcherBuild> patcherBuilds = PatcherBuildLocalServiceUtil.getPatcherFixPat
 			<clay:button
 				displayType="link"
 				icon="warning"
-				onClick='<%= liferayPortletResponse.getNamespace() + "navigateWindow(" + viewPatcherBuildURL + "); " %>'
+				onClick='<%= liferayPortletResponse.getNamespace() + "navigateWindow('" + viewPatcherBuildURL + "'); " %>'
 				title="<%= String.valueOf(patcherBuild.getPatcherBuildId()) %>"
 			/>
 		</liferay-ui:search-container-column-text>

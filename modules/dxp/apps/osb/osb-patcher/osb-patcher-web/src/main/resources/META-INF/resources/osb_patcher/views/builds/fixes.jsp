@@ -43,7 +43,7 @@
 				<liferay-ui:icon
 					image="../common/activate"
 					message="this-fix-is-obsolete"
-					onClick='<%= liferayPortletResponse.getNamespace() + "navigateWindow(" + viewPatcherFixURL + ")" %>'
+					onClick='<%= liferayPortletResponse.getNamespace() + "navigateWindow('" + viewPatcherFixURL + "')" %>'
 					url="javascript:void(0);"
 				/>
 			</c:if>
