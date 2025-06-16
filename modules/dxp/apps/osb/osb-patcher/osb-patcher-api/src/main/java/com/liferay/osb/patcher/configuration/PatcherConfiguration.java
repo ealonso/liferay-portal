@@ -21,28 +21,37 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 )
 public interface PatcherConfiguration {
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(deflt = "https://github.com/liferay", required = false)
 	public String githubURL();
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(
+		deflt = "osb.accountentry/get-account-entry-by-code", required = false
+	)
 	public String helpCenterGetAccountApiEndpoint();
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(
+		deflt = "osbcustomer.ticketattachment/add-ticket-attachment",
+		required = false
+	)
 	public String helpCenterTicketAttachmentApiEndpoint();
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(deflt = "/osb/zendesk/ticket", required = false)
 	public String helpCenterTokenTicketDir();
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(
+		deflt = "https://help.liferay.com/hc/en-us/requests", required = false
+	)
 	public String helpCenterURL();
 
 	@Meta.AD(deflt = "", required = false)
 	public String helpCenterFileRepoId();
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(deflt = "https://lesa-files-uat.us.liferay.com", required = false)
 	public String helpCenterFileRepoURL();
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(
+		deflt = "https://customer-uat.liferay.com/api/jsonws", required = false
+	)
 	public String helpCenterJsonwsURL();
 
 	@Meta.AD(deflt = "", required = false)
@@ -54,7 +63,10 @@ public interface PatcherConfiguration {
 	@Meta.AD(deflt = "", required = false)
 	public String hotfixMountPath();
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(
+		deflt = "https://liferay.atlassian.net/wiki/spaces/SUPPORT/pages/2117700185/Why+does+Patcher+modify+the+ticket+list+automatically",
+		required = false
+	)
 	public String infoModifyTicketsListURL();
 
 	@Meta.AD(deflt = "", required = false)
@@ -75,19 +87,25 @@ public interface PatcherConfiguration {
 	@Meta.AD(deflt = "", required = false)
 	public String jenkinsURL();
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(deflt = "false", required = false)
 	public boolean jenkinsLoadBalancerEnabled();
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(deflt = "https://liferay.atlassian.net/browse", required = false)
 	public String jiraURL();
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(
+		deflt = "https://www.liferay.com/group/customer/support/-/support/ticket",
+		required = false
+	)
 	public String lesaURL();
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(
+		deflt = "http://www.liferay.com/web/${liferay:screenName}/profile",
+		required = false
+	)
 	public String liferayUsersProfileURL();
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(deflt = "liferay,liferaysecurity,patchertest", required = false)
 	public String[] patcherAccountWhitelist();
 
 	@Meta.AD(deflt = "", required = false)
@@ -96,13 +114,13 @@ public interface PatcherConfiguration {
 	@Meta.AD(deflt = "", required = false)
 	public String patcherBuildDownloadURL();
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(deflt = "fix-pack-fix-", required = false)
 	public String patcherGitTagPrefix();
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(deflt = "true", required = false)
 	public boolean patcherJenkinsRequestsEnabled();
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(deflt = "liferay-portal-ee", required = false)
 	public String patcherLiferayPortalRepository();
 
 	@Meta.AD(deflt = "", required = false)
@@ -114,34 +132,37 @@ public interface PatcherConfiguration {
 	@Meta.AD(deflt = "", required = false)
 	public String patcherPubsubSubscriptionId();
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(deflt = "fix", required = false)
 	public String patcherSharedRequestAddFixPatcherType();
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(deflt = "build", required = false)
 	public String patcherSharedRequestBuildPatchPatcherType();
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(deflt = "false", required = false)
 	public boolean patcherScanningEnabled();
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(deflt = "/build/jenkins", required = false)
 	public String patcherStatusBuildJenkinsPath();
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(deflt = "/build/jenkins/test", required = false)
 	public String patcherStatusBuildJenkinsTestPath();
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(deflt = "/build", required = false)
 	public String patcherStatusBuildPath();
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(deflt = "/fix", required = false)
 	public String patcherStatusFixPath();
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(deflt = "C:/osbPatcherStatus", required = false)
 	public String patcherStatusPath();
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(deflt = "true", required = false)
 	public boolean patcherTestsEnabled();
 
-	@Meta.AD(deflt = "", required = false)
+	@Meta.AD(
+		deflt = "https://liferay.atlassian.net/wiki/spaces/SUPPORT/pages/1956577726/Patcher+Troubleshooting+Guide",
+		required = false
+	)
 	public String troubleshootingURL();
 
 }
