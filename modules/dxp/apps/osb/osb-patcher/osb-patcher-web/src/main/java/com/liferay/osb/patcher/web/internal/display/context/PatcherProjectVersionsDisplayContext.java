@@ -136,8 +136,7 @@ public class PatcherProjectVersionsDisplayContext {
 			"patcherProductVersionId", getPatcherProductVersionId());
 		searchContext.setEnd(patcherProjectVersionSearchContainer.getEnd());
 		searchContext.setGroupIds(null);
-		searchContext.setSorts(
-			new Sort(Field.MODIFIED_DATE, Sort.LONG_TYPE, true));
+		searchContext.setSorts(new Sort("name_sortable", false));
 		searchContext.setStart(patcherProjectVersionSearchContainer.getStart());
 
 		Hits hits = indexer.search(searchContext);
