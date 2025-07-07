@@ -51,7 +51,8 @@ List<PatcherBuild> patcherBuilds = PatcherBuildLocalServiceUtil.getPatcherFixPat
 						</portlet:renderURL>
 
 						<liferay-ui:icon
-							image="../common/activate"
+							icon="warning-full"
+							markupView="lexicon"
 							message="this-build-is-obsolete"
 							onClick='<%= liferayPortletResponse.getNamespace() + "navigateWindow('" + viewPatcherBuildPatcherFixesURL + "'); " %>'
 							url="javascript:void(0);"
@@ -59,7 +60,8 @@ List<PatcherBuild> patcherBuilds = PatcherBuildLocalServiceUtil.getPatcherFixPat
 					</c:when>
 					<c:otherwise>
 						<liferay-ui:icon
-							image="../common/activate"
+							icon="warning-full"
+							markupView="lexicon"
 							message="this-build-is-obsolete"
 						/>
 					</c:otherwise>
@@ -67,7 +69,8 @@ List<PatcherBuild> patcherBuilds = PatcherBuildLocalServiceUtil.getPatcherFixPat
 			</c:if>
 
 			<liferay-ui:icon
-				image='<%= PatcherFixUtil.containsPatcherFixWorkaround(patcherBuild.getPatcherBuildId()) ? "../api/exception" : StringPool.BLANK %>'
+				icon='<%= PatcherFixUtil.containsPatcherFixWorkaround(patcherBuild.getPatcherBuildId()) ? "warning-full" : StringPool.BLANK %>'
+				markupView="lexicon"
 				message="this-build-contains-workaround-fixes"
 			/>
 		</liferay-ui:search-container-column-text>
@@ -193,7 +196,7 @@ List<PatcherBuild> patcherBuilds = PatcherBuildLocalServiceUtil.getPatcherFixPat
 					</portlet:actionURL>
 
 					<liferay-ui:icon
-						image="post"
+						markupView="lexicon"
 						message="build"
 						method="get"
 						url="<%= buildPatcherBuildURL %>"
@@ -207,7 +210,7 @@ List<PatcherBuild> patcherBuilds = PatcherBuildLocalServiceUtil.getPatcherFixPat
 					</portlet:actionURL>
 
 					<liferay-ui:icon
-						image="post"
+						markupView="lexicon"
 						message="test"
 						method="get"
 						url="<%= testPatcherBuildURL %>"
@@ -219,14 +222,15 @@ List<PatcherBuild> patcherBuilds = PatcherBuildLocalServiceUtil.getPatcherFixPat
 					</portlet:actionURL>
 
 					<liferay-ui:icon
-						image="post"
+						markupView="lexicon"
 						message="smoke-test"
 						method="get"
 						url="<%= smokeTestPatcherBuildURL %>"
 					/>
 
 					<liferay-ui:icon
-						image="download"
+						icon="download"
+						markupView="lexicon"
 						url="<%= hotfixURL %>"
 					/>
 				</c:if>

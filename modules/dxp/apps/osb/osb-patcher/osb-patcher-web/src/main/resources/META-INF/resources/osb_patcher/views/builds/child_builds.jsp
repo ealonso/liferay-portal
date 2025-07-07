@@ -134,7 +134,8 @@ List<PatcherBuild> childPatcherBuilds = PatcherBuildRelUtil.getChildPatcherBuild
 
 				<c:if test="<%= PatcherPermission.contains(permissionChecker, childPatcherBuild, PatcherActionKeys.FIXES, childPatcherBuild.getUserId()) %>">
 					<liferay-ui:icon
-						image="view"
+						icon="view"
+						markupView="lexicon"
 						message="view-fixes"
 						method="get"
 						url="<%= viewPatcherBuildPatcherFixesURL %>"

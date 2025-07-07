@@ -191,7 +191,8 @@ String fileName = patcherBuild.getFileName();
 
 		<aui:field-wrapper>
 			<liferay-ui:icon
-				image="../api/exception"
+				icon="warning-full"
+				markupView="lexicon"
 				message=""
 			/>
 
@@ -279,7 +280,8 @@ PatcherAccount patcherAccount = PatcherAccountLocalServiceUtil.getPatcherAccount
 			</portlet:renderURL>
 
 			<liferay-ui:icon
-				image="edit"
+				icon="pencil"
+				markupView="lexicon"
 				message="use-as-build-template"
 				method="get"
 				url="<%= createPatcherBuildTemplateURL %>"
@@ -293,7 +295,8 @@ PatcherAccount patcherAccount = PatcherAccountLocalServiceUtil.getPatcherAccount
 			</portlet:renderURL>
 
 			<liferay-ui:icon
-				image="edit"
+				icon="pencil"
+				markupView="lexicon"
 				message="edit-engineer-comments"
 				method="get"
 				onClick='<%= liferayPortletResponse.getNamespace() + "handleClick('" + UnicodeLanguageUtil.format(request, "edit-engineer-comments-for-build-id-x", patcherBuild.getPatcherBuildId()) + "', '" + editPatcherBuildCommentsFieldURL + "');" %>'
@@ -308,7 +311,8 @@ PatcherAccount patcherAccount = PatcherAccountLocalServiceUtil.getPatcherAccount
 			</portlet:renderURL>
 
 			<liferay-ui:icon
-				image="edit"
+				icon="pencil"
+				markupView="lexicon"
 				message="edit-qa-status"
 				method="get"
 				onClick='<%= liferayPortletResponse.getNamespace() + "handleClick('" + UnicodeLanguageUtil.format(request, "edit-qa-status-for-build-id-x", patcherBuild.getPatcherBuildId()) + "', '" + editPatcherBuildQAFieldsURL + "');" %>'
@@ -323,7 +327,7 @@ PatcherAccount patcherAccount = PatcherAccountLocalServiceUtil.getPatcherAccount
 			</portlet:actionURL>
 
 			<liferay-ui:icon
-				image="post"
+				markupView="lexicon"
 				message="build"
 				method="get"
 				url="<%= buildPatcherBuildURL %>"
@@ -338,7 +342,7 @@ PatcherAccount patcherAccount = PatcherAccountLocalServiceUtil.getPatcherAccount
 			</portlet:actionURL>
 
 			<liferay-ui:icon
-				image="post"
+				markupView="lexicon"
 				message="test"
 				method="get"
 				url="<%= testPatcherBuildURL %>"
@@ -351,7 +355,7 @@ PatcherAccount patcherAccount = PatcherAccountLocalServiceUtil.getPatcherAccount
 			</portlet:actionURL>
 
 			<liferay-ui:icon
-				image="post"
+				markupView="lexicon"
 				message="smoke-test"
 				method="get"
 				url="<%= smokeTestPatcherBuildURL %>"
@@ -375,7 +379,7 @@ PatcherAccount patcherAccount = PatcherAccountLocalServiceUtil.getPatcherAccount
 			</portlet:actionURL>
 
 			<liferay-ui:icon
-				image="post"
+				markupView="lexicon"
 				message="ready-for-release"
 				method="get"
 				onClick='<%= liferayPortletResponse.getNamespace() + "confirm('" + LanguageUtil.get(request, releaseConfirmMessageKey) + "', '" + releasePatcherBuildURL + "');" %>'
@@ -400,7 +404,7 @@ PatcherAccount patcherAccount = PatcherAccountLocalServiceUtil.getPatcherAccount
 			</portlet:actionURL>
 
 			<liferay-ui:icon
-				image="post"
+				markupView="lexicon"
 				message="release-manually"
 				method="get"
 				onClick='<%= liferayPortletResponse.getNamespace() + "confirm('" + LanguageUtil.get(request, releaseConfirmMessageKey) + "', '" + releasePatcherBuildURL + "');" %>'
@@ -415,7 +419,7 @@ PatcherAccount patcherAccount = PatcherAccountLocalServiceUtil.getPatcherAccount
 			</portlet:actionURL>
 
 			<liferay-ui:icon
-				image="post"
+				markupView="lexicon"
 				message="release-to-help-center"
 				method="get"
 				onClick='<%= liferayPortletResponse.getNamespace() + "confirm('" + LanguageUtil.get(request, releaseConfirmMessageKey) + "', '" + releasePatcherBuildURL + "');" %>'

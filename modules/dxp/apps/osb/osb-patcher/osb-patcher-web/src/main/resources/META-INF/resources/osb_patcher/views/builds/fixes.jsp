@@ -71,7 +71,8 @@ else if (patcherFixes.size() > 1) {
 		<liferay-ui:search-container-column-text>
 			<c:if test="<%= patcherFix.isObsolete() %>">
 				<liferay-ui:icon
-					image="../common/activate"
+					icon="warning-full"
+					markupView="lexicon"
 					message="this-fix-is-obsolete"
 					onClick='<%= liferayPortletResponse.getNamespace() + "navigateWindow('" + viewPatcherFixURL + "')" %>'
 					url="javascript:void(0);"
@@ -168,7 +169,9 @@ else if (patcherFixes.size() > 1) {
 					</portlet:renderURL>
 
 					<liferay-ui:icon
-						image="edit"
+						icon="pencil"
+						markupView="lexicon"
+						message="edit"
 						method="get"
 						url="<%= editPatcherFixURL %>"
 					/>
@@ -181,7 +184,8 @@ else if (patcherFixes.size() > 1) {
 					</portlet:actionURL>
 
 					<liferay-ui:icon
-						image="../api/method"
+						icon="times-circle"
+						markupView="lexicon"
 						message="exclude"
 						url="<%= excludePatcherFixURL %>"
 					/>

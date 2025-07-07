@@ -187,7 +187,9 @@ PatcherFixesDisplayContext patcherFixesDisplayContext = new PatcherFixesDisplayC
 					</portlet:renderURL>
 
 					<liferay-ui:icon
-						image="edit"
+						icon="pencil"
+						markupView="lexicon"
+						message="edit"
 						method="get"
 						url="<%= editPatcherFixURL %>"
 					/>
@@ -195,7 +197,8 @@ PatcherFixesDisplayContext patcherFixesDisplayContext = new PatcherFixesDisplayC
 
 				<c:if test="<%= PatcherPermission.contains(permissionChecker, patcherFix, PatcherActionKeys.EDIT_COMMENTS_FIELD, patcherFix.getUserId()) %>">
 					<liferay-ui:icon
-						image="edit"
+						icon="pencil"
+						markupView="lexicon"
 						message="edit-engineer-comments"
 						method="get"
 						onClick='<%= liferayPortletResponse.getNamespace() + "handleClick('" + UnicodeLanguageUtil.get(request, "edit-engineer-comments") + "', '" + editPatcherFixCommentsFieldURL + "');" %>'
@@ -210,7 +213,8 @@ PatcherFixesDisplayContext patcherFixesDisplayContext = new PatcherFixesDisplayC
 					</portlet:renderURL>
 
 					<liferay-ui:icon
-						image="edit"
+						icon="pencil"
+						markupView="lexicon"
 						message="edit-fix-packs"
 						onClick='<%= liferayPortletResponse.getNamespace() + "handleClick('" + UnicodeLanguageUtil.get(request, "edit-fix-packs") + "', '" + editPatcherFixFixPackFieldsURL + "');" %>'
 						url="javascript:void(0);"
@@ -224,7 +228,8 @@ PatcherFixesDisplayContext patcherFixesDisplayContext = new PatcherFixesDisplayC
 					</portlet:renderURL>
 
 					<liferay-ui:icon
-						image="view"
+						icon="view"
+						markupView="lexicon"
 						message="view-builds"
 						onClick='<%= liferayPortletResponse.getNamespace() + "handleClick('" + UnicodeLanguageUtil.format(request, "view-builds-for-fix-id-x", patcherFix.getPatcherFixId()) + "', '" + viewPatcherFixPatcherBuildsURL + "');" %>'
 						url="javascript:void(0);"
@@ -238,7 +243,9 @@ PatcherFixesDisplayContext patcherFixesDisplayContext = new PatcherFixesDisplayC
 					</portlet:renderURL>
 
 					<liferay-ui:icon
-						image="view"
+						icon="view"
+						label="<%= true %>"
+						markupView="lexicon"
 						message="view-fixes"
 						onClick='<%= liferayPortletResponse.getNamespace() + "handleClick('" + UnicodeLanguageUtil.format(request, "view-fixes-for-fix-id-x", patcherFix.getPatcherFixId()) + "', '" + viewPatcherFixesPopUpURL + "');" %>'
 						url="javascript:void(0);"
@@ -252,7 +259,9 @@ PatcherFixesDisplayContext patcherFixesDisplayContext = new PatcherFixesDisplayC
 					</portlet:actionURL>
 
 					<liferay-ui:icon
-						image="../api/method"
+						icon="times-circle"
+						label="<%= true %>"
+						markupView="lexicon"
 						message="exclude"
 						url="<%= excludePatcherFixURL %>"
 					/>

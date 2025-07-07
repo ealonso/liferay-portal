@@ -156,21 +156,24 @@ long patcherProductVersionId = ParamUtil.getLong(request, "patcherProductVersion
 			cssClass="osb-patcher-search-container-column-text-icon"
 		>
 			<liferay-ui:icon
-				image='<%= PatcherBuildUtil.isObsolete(patcherBuild.getPatcherBuildId()) ? "../common/activate" : StringPool.BLANK %>'
+				icon='<%= PatcherBuildUtil.isObsolete(patcherBuild.getPatcherBuildId()) ? "warning-full" : StringPool.BLANK %>'
+				markupView="lexicon"
 				message="this-build-is-obsolete"
 				onClick='<%= liferayPortletResponse.getNamespace() + "handleClick('" + UnicodeLanguageUtil.format(request, "view-fixes-for-build-id-x", patcherBuild.getPatcherBuildId()) + "', '" + viewPatcherBuildPatcherFixesURL + "');" %>'
 				url='<%= hasPermissions ? "javascript:void(0);" : StringPool.BLANK %>'
 			/>
 
 			<liferay-ui:icon
-				image='<%= PatcherFixUtil.containsPatcherFixWorkaround(patcherBuild.getPatcherBuildId()) ? "../api/exception" : StringPool.BLANK %>'
+				icon='<%= PatcherFixUtil.containsPatcherFixWorkaround(patcherBuild.getPatcherBuildId()) ? "warning-full" : StringPool.BLANK %>'
+				markupView="lexicon"
 				message="this-build-contains-workaround-fixes"
 				onClick='<%= liferayPortletResponse.getNamespace() + "handleClick('" + UnicodeLanguageUtil.format(request, "view-fixes-for-build-id-x", patcherBuild.getPatcherBuildId()) + "', '" + viewPatcherBuildPatcherFixesURL + "');" %>'
 				url='<%= hasPermissions ? "javascript:void(0);" : StringPool.BLANK %>'
 			/>
 
 			<liferay-ui:icon
-				image='<%= PatcherFixUtil.containsPatcherFixComment(patcherBuild.getPatcherBuildId()) ? "../common/message" : StringPool.BLANK %>'
+				icon='<%= PatcherFixUtil.containsPatcherFixComment(patcherBuild.getPatcherBuildId()) ? "comments" : StringPool.BLANK %>'
+				markupView="lexicon"
 				message="this-build-contains-fixes-with-comments"
 				onClick='<%= liferayPortletResponse.getNamespace() + "handleClick('" + UnicodeLanguageUtil.format(request, "view-fixes-for-build-id-x", patcherBuild.getPatcherBuildId()) + "', '" + viewPatcherBuildPatcherFixesURL + "');" %>'
 				url='<%= hasPermissions ? "javascript:void(0);" : StringPool.BLANK %>'
@@ -337,7 +340,9 @@ long patcherProductVersionId = ParamUtil.getLong(request, "patcherProductVersion
 					</portlet:renderURL>
 
 					<liferay-ui:icon
-						image="edit"
+						icon="pencil"
+						markupView="lexicon"
+						message="edit"
 						method="get"
 						url="<%= editPatcherBuildURL %>"
 					/>
@@ -351,7 +356,8 @@ long patcherProductVersionId = ParamUtil.getLong(request, "patcherProductVersion
 					</portlet:renderURL>
 
 					<liferay-ui:icon
-						image="edit"
+						icon="pencil"
+						markupView="lexicon"
 						message="use-as-build-template"
 						method="get"
 						url="<%= createPatcherBuildTemplateURL %>"
@@ -360,7 +366,8 @@ long patcherProductVersionId = ParamUtil.getLong(request, "patcherProductVersion
 
 				<c:if test="<%= PatcherPermission.contains(permissionChecker, patcherBuild, PatcherActionKeys.EDIT_COMMENTS_FIELD, patcherBuild.getUserId()) && (patcherBuild.getType() != PatcherBuildConstants.TYPE_FIX_PACK) %>">
 					<liferay-ui:icon
-						image="edit"
+						icon="pencil"
+						markupView="lexicon"
 						message="edit-engineer-comments"
 						method="get"
 						url="<%= editPatcherBuildCommentsFieldURL %>"
@@ -369,7 +376,8 @@ long patcherProductVersionId = ParamUtil.getLong(request, "patcherProductVersion
 
 				<c:if test="<%= PatcherPermission.contains(permissionChecker, patcherBuild, PatcherActionKeys.EDIT_QA_FIELDS, patcherBuild.getUserId()) && (patcherBuild.getType() != PatcherBuildConstants.TYPE_FIX_PACK) %>">
 					<liferay-ui:icon
-						image="edit"
+						icon="pencil"
+						markupView="lexicon"
 						message="edit-qa-status"
 						method="get"
 						url="<%= editPatcherBuildQAFieldsURL %>"
@@ -383,7 +391,7 @@ long patcherProductVersionId = ParamUtil.getLong(request, "patcherProductVersion
 					</portlet:actionURL>
 
 					<liferay-ui:icon
-						image="post"
+						markupView="lexicon"
 						message="build"
 						method="get"
 						url="<%= buildPatcherBuildURL %>"
@@ -398,7 +406,7 @@ long patcherProductVersionId = ParamUtil.getLong(request, "patcherProductVersion
 					</portlet:actionURL>
 
 					<liferay-ui:icon
-						image="post"
+						markupView="lexicon"
 						message="test"
 						method="get"
 						url="<%= testPatcherBuildURL %>"
@@ -411,7 +419,7 @@ long patcherProductVersionId = ParamUtil.getLong(request, "patcherProductVersion
 					</portlet:actionURL>
 
 					<liferay-ui:icon
-						image="post"
+						markupView="lexicon"
 						message="smoke-test"
 						method="get"
 						url="<%= smokeTestPatcherBuildURL %>"
@@ -435,7 +443,7 @@ long patcherProductVersionId = ParamUtil.getLong(request, "patcherProductVersion
 					</portlet:actionURL>
 
 					<liferay-ui:icon
-						image="post"
+						markupView="lexicon"
 						message="ready-for-release"
 						method="get"
 						onClick='<%= liferayPortletResponse.getNamespace() + "confirm('" + LanguageUtil.get(request, releaseConfirmMessageKey) + "', '" + releasePatcherBuildURL + "');" %>'
@@ -460,7 +468,7 @@ long patcherProductVersionId = ParamUtil.getLong(request, "patcherProductVersion
 					</portlet:actionURL>
 
 					<liferay-ui:icon
-						image="post"
+						markupView="lexicon"
 						message="release-manually"
 						method="get"
 						onClick='<%= liferayPortletResponse.getNamespace() + "confirm('" + LanguageUtil.get(request, releaseConfirmMessageKey) + "', '" + releasePatcherBuildURL + "');" %>'
@@ -475,7 +483,7 @@ long patcherProductVersionId = ParamUtil.getLong(request, "patcherProductVersion
 					</portlet:actionURL>
 
 					<liferay-ui:icon
-						image="post"
+						markupView="lexicon"
 						message="release-to-help-center"
 						method="get"
 						onClick='<%= liferayPortletResponse.getNamespace() + "confirm('" + LanguageUtil.get(request, releaseConfirmMessageKey) + "', '" + releasePatcherBuildURL + "');" %>'
@@ -485,7 +493,8 @@ long patcherProductVersionId = ParamUtil.getLong(request, "patcherProductVersion
 
 				<c:if test="<%= PatcherPermission.contains(permissionChecker, patcherBuild, PatcherActionKeys.FIXES, patcherBuild.getUserId()) && !PatcherBuildRelUtil.hasChildPatcherBuilds(patcherBuild) %>">
 					<liferay-ui:icon
-						image="view"
+						icon="view"
+						markupView="lexicon"
 						message="view-fixes"
 						method="get"
 						url="<%= viewPatcherBuildPatcherFixesURL %>"
@@ -499,7 +508,8 @@ long patcherProductVersionId = ParamUtil.getLong(request, "patcherProductVersion
 					</portlet:renderURL>
 
 					<liferay-ui:icon
-						image="view"
+						icon="view"
+						markupView="lexicon"
 						message="view-child-builds"
 						method="get"
 						onClick='<%= liferayPortletResponse.getNamespace() + "handleClick('" + UnicodeLanguageUtil.format(request, "view-child-builds-for-build-id-x", patcherBuild.getPatcherBuildId()) + "', '" + viewChildPatcherBuildsURL + "');" %>'

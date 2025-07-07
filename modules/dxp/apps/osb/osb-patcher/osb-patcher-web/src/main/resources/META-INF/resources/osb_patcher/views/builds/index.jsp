@@ -144,21 +144,24 @@ PatcherBuildsDisplayContext patcherBuildsDisplayContext = new PatcherBuildsDispl
 			cssClass="osb-patcher-search-container-column-text-icon"
 		>
 			<liferay-ui:icon
-				image='<%= PatcherBuildUtil.isObsolete(patcherBuild.getPatcherBuildId()) ? "../common/activate" : StringPool.BLANK %>'
+				icon='<%= PatcherBuildUtil.isObsolete(patcherBuild.getPatcherBuildId()) ? "warning-full" : StringPool.BLANK %>'
+				markupView="lexicon"
 				message="this-build-is-obsolete"
 				onClick='<%= hasPermissions ? liferayPortletResponse.getNamespace() + "handleClick('" + UnicodeLanguageUtil.format(request, "view-fixes-for-build-id-x", patcherBuild.getPatcherBuildId()) + "', '" + viewPatcherBuildPatcherFixesURL + "');" : StringPool.BLANK %>'
 				url='<%= hasPermissions ? "javascript:void(0);" : StringPool.BLANK %>'
 			/>
 
 			<liferay-ui:icon
-				image='<%= PatcherFixUtil.containsPatcherFixWorkaround(patcherBuild.getPatcherBuildId()) ? "../api/exception" : StringPool.BLANK %>'
+				icon='<%= PatcherFixUtil.containsPatcherFixWorkaround(patcherBuild.getPatcherBuildId()) ? "warning-full" : StringPool.BLANK %>'
+				markupView="lexicon"
 				message="this-build-contains-workaround-fixes"
 				onClick='<%= hasPermissions ? liferayPortletResponse.getNamespace() + "handleClick('" + UnicodeLanguageUtil.format(request, "view-fixes-for-build-id-x", patcherBuild.getPatcherBuildId()) + "', '" + viewPatcherBuildPatcherFixesURL + "');" : StringPool.BLANK %>'
 				url='<%= hasPermissions ? "javascript:void(0);" : StringPool.BLANK %>'
 			/>
 
 			<liferay-ui:icon
-				image='<%= PatcherFixUtil.containsPatcherFixComment(patcherBuild.getPatcherBuildId()) ? "../common/message" : StringPool.BLANK %>'
+				icon='<%= PatcherFixUtil.containsPatcherFixComment(patcherBuild.getPatcherBuildId()) ? "comments" : StringPool.BLANK %>'
+				markupView="lexicon"
 				message="this-build-contains-fixes-with-comments"
 				onClick='<%= hasPermissions ? liferayPortletResponse.getNamespace() + "handleClick('" + UnicodeLanguageUtil.format(request, "view-fixes-for-build-id-x", patcherBuild.getPatcherBuildId()) + "', '" + viewPatcherBuildPatcherFixesURL + "');" : StringPool.BLANK %>'
 				url='<%= hasPermissions ? "javascript:void(0);" : StringPool.BLANK %>'
@@ -323,124 +326,11 @@ PatcherBuildsDisplayContext patcherBuildsDisplayContext = new PatcherBuildsDispl
 		<liferay-ui:search-container-column-text
 			align="right"
 		>
-			<liferay-ui:icon-menu
-				direction="left-side"
-				icon="<%= StringPool.BLANK %>"
-				markupView="lexicon"
-				message="<%= StringPool.BLANK %>"
-				showWhenSingleIcon="<%= true %>"
-			>
-				<c:if test="<%= PatcherPermission.contains(permissionChecker, patcherBuild, PatcherActionKeys.EDIT, patcherBuild.getUserId()) && PatcherBuildUtil.isLatestPatcherBuild(patcherBuild) && (patcherBuild.getType() != PatcherBuildConstants.TYPE_FIX_PACK) %>">
-					<portlet:renderURL var="editPatcherBuildURL">
-						<portlet:param name="mvcRenderCommandName" value="/patcher/edit_builds" />
-						<portlet:param name="patcherBuildId" value="<%= String.valueOf(patcherBuild.getPatcherBuildId()) %>" />
-					</portlet:renderURL>
-
-					<liferay-ui:icon
-						image="edit"
-						method="get"
-						url="<%= editPatcherBuildURL %>"
-					/>
-				</c:if>
-
-				<c:if test="<%= PatcherPermission.contains(permissionChecker, patcherBuild, PatcherActionKeys.EDIT, patcherBuild.getUserId()) && PatcherBuildUtil.isLatestPatcherBuild(patcherBuild) && (patcherBuild.getType() != PatcherBuildConstants.TYPE_FIX_PACK) %>">
-					<portlet:renderURL var="createPatcherBuildTemplateURL">
-						<portlet:param name="mvcRenderCommandName" value="/patcher/add_builds" />
-						<portlet:param name="templatePatcherBuildId" value="<%= String.valueOf(patcherBuild.getPatcherBuildId()) %>" />
-					</portlet:renderURL>
-
-					<liferay-ui:icon
-						image="edit"
-						message="use-as-build-template"
-						method="get"
-						url="<%= createPatcherBuildTemplateURL %>"
-					/>
-				</c:if>
-
-				<c:if test="<%= PatcherPermission.contains(permissionChecker, patcherBuild, PatcherActionKeys.EDIT_COMMENTS_FIELD, patcherBuild.getUserId()) && (patcherBuild.getType() != PatcherBuildConstants.TYPE_FIX_PACK) %>">
-					<liferay-ui:icon
-						image="edit"
-						message="edit-engineer-comments"
-						method="get"
-						url="<%= editPatcherBuildCommentsFieldURL %>"
-					/>
-				</c:if>
-
-				<c:if test="<%= PatcherPermission.contains(permissionChecker, patcherBuild, PatcherActionKeys.EDIT_QA_FIELDS, patcherBuild.getUserId()) && (patcherBuild.getType() != PatcherBuildConstants.TYPE_FIX_PACK) %>">
-					<liferay-ui:icon
-						image="edit"
-						message="edit-qa-status"
-						method="get"
-						url="<%= editPatcherBuildQAFieldsURL %>"
-					/>
-				</c:if>
-
-				<c:if test="<%= PatcherPermission.contains(permissionChecker, patcherBuild, PatcherActionKeys.SEND_REQUEST, patcherBuild.getUserId()) && JenkinsUtil.isValidJenkinsSetup() && JenkinsUtil.isValidSendDistJenkinsRequest(patcherBuild) && (patcherBuild.getType() != PatcherBuildConstants.TYPE_FIX_PACK) %>">
-					<portlet:actionURL name="/patcher/build_builds" var="buildPatcherBuildURL">
-						<portlet:param name="patcherBuildId" value="<%= String.valueOf(patcherBuild.getPatcherBuildId()) %>" />
-						<portlet:param name="redirect" value="<%= currentURL %>" />
-					</portlet:actionURL>
-
-					<liferay-ui:icon
-						image="post"
-						message="build"
-						method="get"
-						url="<%= buildPatcherBuildURL %>"
-					/>
-				</c:if>
-
-				<c:if test="<%= patcherBuild.getStatus() == WorkflowConstants.STATUS_BUILD_COMPLETE %>">
-					<portlet:actionURL name="/patcher/test_builds" var="testPatcherBuildURL">
-						<portlet:param name="patcherBuildId" value="<%= String.valueOf(patcherBuild.getPatcherBuildId()) %>" />
-						<portlet:param name="status" value="<%= String.valueOf(WorkflowConstants.STATUS_BUILD_QA_AUTOMATION_STARTED) %>" />
-						<portlet:param name="redirect" value="<%= currentURL %>" />
-					</portlet:actionURL>
-
-					<liferay-ui:icon
-						image="post"
-						message="test"
-						method="get"
-						url="<%= testPatcherBuildURL %>"
-					/>
-
-					<portlet:actionURL name="/patcher/test_builds" var="smokeTestPatcherBuildURL">
-						<portlet:param name="patcherBuildId" value="<%= String.valueOf(patcherBuild.getPatcherBuildId()) %>" />
-						<portlet:param name="status" value="<%= String.valueOf(WorkflowConstants.STATUS_BUILD_QA_AUTOMATION_STARTED_SMOKE_ONLY) %>" />
-						<portlet:param name="redirect" value="<%= currentURL %>" />
-					</portlet:actionURL>
-
-					<liferay-ui:icon
-						image="post"
-						message="smoke-test"
-						method="get"
-						url="<%= smokeTestPatcherBuildURL %>"
-					/>
-				</c:if>
-
-				<c:if test="<%= PatcherPermission.contains(permissionChecker, patcherBuild, PatcherActionKeys.FIXES, patcherBuild.getUserId()) && !PatcherBuildRelUtil.hasChildPatcherBuilds(patcherBuild) %>">
-					<liferay-ui:icon
-						image="view"
-						message="view-fixes"
-						method="get"
-						url="<%= viewPatcherBuildPatcherFixesURL %>"
-					/>
-				</c:if>
-
-				<c:if test="<%= PatcherPermission.contains(permissionChecker, patcherBuild, PatcherActionKeys.CHILD_BUILDS, patcherBuild.getUserId()) && PatcherBuildRelUtil.hasChildPatcherBuilds(patcherBuild) %>">
-					<portlet:renderURL var="viewChildPatcherBuildsURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-						<portlet:param name="mvcRenderCommandName" value="/patcher/view_child_builds_builds" />
-						<portlet:param name="patcherBuildId" value="<%= String.valueOf(patcherBuild.getPatcherBuildId()) %>" />
-					</portlet:renderURL>
-
-					<liferay-ui:icon
-						image="view"
-						message="view-child-builds"
-						method="get"
-						onClick='<%= liferayPortletResponse.getNamespace() + "handleClick('" + UnicodeLanguageUtil.format(request, "view-child-builds-for-build-id-x", patcherBuild.getPatcherBuildId()) + "', '" + viewChildPatcherBuildsURL + "')" %>'
-						url="javascript:void(0);"
-					/>
-				</c:if>
-			</liferay-ui:icon-menu>
+			<clay:dropdown-actions
+				aria-label='<%= LanguageUtil.get(request, "show-actions") %>'
+				dropdownItems="<%= patcherBuildsDisplayContext.getDropdownItems(patcherBuild) %>"
+				propsTransformer="{BuildsDropdownDefaultPropsTransformer} from osb-patcher-web"
+			/>
 		</liferay-ui:search-container-column-text>
 	</liferay-ui:search-container-row>
 

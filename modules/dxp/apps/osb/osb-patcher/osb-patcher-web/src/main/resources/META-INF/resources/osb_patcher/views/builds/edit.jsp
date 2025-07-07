@@ -31,7 +31,8 @@ patcherBuildTickets.retainAll(cumulativeFixedIssues);
 <c:if test="<%= !patcherBuildTickets.isEmpty() %>">
 	<aui:field-wrapper>
 		<liferay-ui:icon
-			image="../api/exception"
+			icon="warning-full"
+			markupView="lexicon"
 			message=""
 		/>
 
