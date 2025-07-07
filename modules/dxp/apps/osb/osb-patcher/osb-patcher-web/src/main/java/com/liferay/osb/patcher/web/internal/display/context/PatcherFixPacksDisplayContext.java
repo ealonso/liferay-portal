@@ -131,6 +131,11 @@ public class PatcherFixPacksDisplayContext {
 		SearchContext searchContext = SearchContextFactory.getInstance(
 			_httpServletRequest);
 
+		searchContext.setAttribute(
+			"patcherFixComponentIdFilter", _getPatcherFixComponentId());
+		searchContext.setAttribute(
+			"patcherProjectVersionIdFilter", _getPatcherProjectVersionId());
+		searchContext.setAttribute("statusFilter", _getStatus());
 		searchContext.setEnd(patcherPatcherFixPackSearchContainer.getEnd());
 		searchContext.setGroupIds(null);
 		searchContext.setSorts(
