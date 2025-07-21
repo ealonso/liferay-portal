@@ -112,7 +112,7 @@ public class PatcherBuildUtil {
 
 				if (Validator.isNull(mainPatcherFix.getGitHash())) {
 					PatcherFixLocalServiceUtil.updateStatus(
-						mainPatcherFix.getPatcherFixId(),
+						user.getUserId(), mainPatcherFix.getPatcherFixId(),
 						WorkflowConstants.STATUS_FIX_ADDING);
 
 					int patcherBuildStatus =
@@ -974,8 +974,8 @@ public class PatcherBuildUtil {
 		}
 
 		patcherBuild = PatcherBuildLocalServiceUtil.updatePatcherBuild(
-			patcherBuild.getPatcherBuildId(), fileName, qaStatus, sourceName,
-			status);
+			user.getUserId(), patcherBuild.getPatcherBuildId(), fileName,
+			qaStatus, sourceName, status);
 
 		workflowParentPatcherBuild(user, patcherBuild);
 
@@ -1093,7 +1093,8 @@ public class PatcherBuildUtil {
 			}
 		}
 
-		PatcherBuildLocalServiceUtil.updateQaStatus(patcherBuildId, qaStatus);
+		PatcherBuildLocalServiceUtil.updateQaStatus(
+			user.getUserId(), patcherBuildId, qaStatus);
 	}
 
 	public static Map<Long, List<Long>> rebaseOtherProjectVersionPatcherFixes(
@@ -1383,7 +1384,7 @@ public class PatcherBuildUtil {
 
 		List<BaseModel<?>> sendToJenkinsBaseModels =
 			workflowRelatedPatcherBuildsToPendingStatus(
-				parentPatcherBuild, mergeOnly);
+				user, parentPatcherBuild, mergeOnly);
 
 		for (BaseModel<?> sendToJenkinsBaseModel : sendToJenkinsBaseModels) {
 			long status = WorkflowConstants.STATUS_ANY;
@@ -1589,8 +1590,9 @@ public class PatcherBuildUtil {
 				}
 
 				mainPatcherFix = PatcherFixLocalServiceUtil.updatePatcherFix(
-					mainPatcherFix.getPatcherFixId(), StringPool.BLANK,
-					StringPool.BLANK, WorkflowConstants.STATUS_FIX_ADDING);
+					user.getUserId(), mainPatcherFix.getPatcherFixId(),
+					StringPool.BLANK, StringPool.BLANK,
+					WorkflowConstants.STATUS_FIX_ADDING);
 			}
 			else {
 				mainPatcherFix = PatcherFixLocalServiceUtil.addPatcherFix(
@@ -1732,7 +1734,7 @@ public class PatcherBuildUtil {
 		}
 		else if (status == WorkflowConstants.STATUS_BUILD_COMPLETE) {
 			parentPatcherBuild = PatcherBuildLocalServiceUtil.updateQaStatus(
-				parentPatcherBuild.getPatcherBuildId(),
+				user.getUserId(), parentPatcherBuild.getPatcherBuildId(),
 				workflowCompletedPatcherBuildQAStatus(parentPatcherBuild));
 
 			sendTestJenkinsRequest(user, parentPatcherBuild);
@@ -1740,7 +1742,7 @@ public class PatcherBuildUtil {
 	}
 
 	public static List<PatcherFix> workflowPatcherBuildIncompleteFixesToPending(
-			PatcherBuild patcherBuild)
+			User user, PatcherBuild patcherBuild)
 		throws Exception {
 
 		List<PatcherFix> pendingPatcherFixes = new ArrayList<>();
@@ -1769,7 +1771,8 @@ public class PatcherBuildUtil {
 				}
 
 				incompletePatcherFix = PatcherFixLocalServiceUtil.updateStatus(
-					incompletePatcherFix.getPatcherFixId(), status);
+					user.getUserId(), incompletePatcherFix.getPatcherFixId(),
+					status);
 			}
 
 			pendingPatcherFixes.add(incompletePatcherFix);
@@ -1780,7 +1783,7 @@ public class PatcherBuildUtil {
 
 	public static List<BaseModel<?>>
 			workflowRelatedPatcherBuildsToPendingStatus(
-				PatcherBuild parentPatcherBuild, boolean mergeOnly)
+				User user, PatcherBuild parentPatcherBuild, boolean mergeOnly)
 		throws Exception {
 
 		List<BaseModel<?>> sendToJenkinsBaseModels = new ArrayList<>();
@@ -1796,7 +1799,8 @@ public class PatcherBuildUtil {
 
 		for (PatcherBuild patcherBuild : patcherBuilds) {
 			List<PatcherFix> pendingPatcherFixes =
-				workflowPatcherBuildIncompleteFixesToPending(patcherBuild);
+				workflowPatcherBuildIncompleteFixesToPending(
+					user, patcherBuild);
 
 			sendToJenkinsBaseModels.addAll(pendingPatcherFixes);
 
@@ -2043,7 +2047,8 @@ public class PatcherBuildUtil {
 				OSBPatcherServletOutcome.STATUS_SUCCESS) {
 
 			PatcherFixLocalServiceUtil.updatePatcherFix(
-				patcherBuild.getPatcherFixId(), osbPatcherServletOutcomeResult,
+				user.getUserId(), patcherBuild.getPatcherFixId(),
+				osbPatcherServletOutcomeResult,
 				WorkflowConstants.STATUS_FIX_COMPLETE);
 
 			updatePatcherBuildStatusMergeComplete(user, patcherBuild);
@@ -2120,7 +2125,7 @@ public class PatcherBuildUtil {
 			}
 
 			PatcherFixLocalServiceUtil.updateStatus(
-				patcherBuild.getPatcherFixId(),
+				user.getUserId(), patcherBuild.getPatcherFixId(),
 				WorkflowConstants.STATUS_FIX_CONFLICT);
 
 			if ((patcherBuild.getStatus() ==
@@ -2144,7 +2149,7 @@ public class PatcherBuildUtil {
 		}
 		else {
 			PatcherFixLocalServiceUtil.updateStatus(
-				patcherBuild.getPatcherFixId(),
+				user.getUserId(), patcherBuild.getPatcherFixId(),
 				WorkflowConstants.STATUS_FIX_FAILED);
 
 			patcherBuild = PatcherBuildLocalServiceUtil.updateStatus(
