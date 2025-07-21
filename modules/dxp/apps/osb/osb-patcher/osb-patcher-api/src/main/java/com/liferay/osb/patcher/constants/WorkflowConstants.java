@@ -130,6 +130,8 @@ public class WorkflowConstants
 
 	public static final String LABEL_FIX_REBASING = "rebasing";
 
+	public static final String LABEL_TIMEOUT = "timeout";
+
 	public static final int STATUS_BUILD_COMPILING = 202;
 
 	public static final int STATUS_BUILD_COMPLETE = 200;
