@@ -614,20 +614,21 @@ public class PatcherBuildLocalServiceUtil {
 	}
 
 	public static PatcherBuild updatePatcherBuild(
-			long patcherBuildId, int qaStatus, String supportTicket, int type)
+			long userId, long patcherBuildId, int qaStatus,
+			String supportTicket, int type)
 		throws PortalException {
 
 		return getService().updatePatcherBuild(
-			patcherBuildId, qaStatus, supportTicket, type);
+			userId, patcherBuildId, qaStatus, supportTicket, type);
 	}
 
 	public static PatcherBuild updatePatcherBuild(
-			long patcherBuildId, String fileName, int qaStatus,
+			long userId, long patcherBuildId, String fileName, int qaStatus,
 			String sourceName, int status)
 		throws PortalException {
 
 		return getService().updatePatcherBuild(
-			patcherBuildId, fileName, qaStatus, sourceName, status);
+			userId, patcherBuildId, fileName, qaStatus, sourceName, status);
 	}
 
 	/**
@@ -652,17 +653,18 @@ public class PatcherBuildLocalServiceUtil {
 	}
 
 	public static PatcherBuild updateQaFields(
-			long patcherBuildId, String qaComments, int qaStatus)
+			long userId, long patcherBuildId, String qaComments, int qaStatus)
 		throws PortalException {
 
 		return getService().updateQaFields(
-			patcherBuildId, qaComments, qaStatus);
+			userId, patcherBuildId, qaComments, qaStatus);
 	}
 
-	public static PatcherBuild updateQaStatus(long patcherBuildId, int qaStatus)
+	public static PatcherBuild updateQaStatus(
+			long userId, long patcherBuildId, int qaStatus)
 		throws PortalException {
 
-		return getService().updateQaStatus(patcherBuildId, qaStatus);
+		return getService().updateQaStatus(userId, patcherBuildId, qaStatus);
 	}
 
 	public static PatcherBuild updateRequestKey(

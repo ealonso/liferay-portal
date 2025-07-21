@@ -748,21 +748,22 @@ public class PatcherBuildLocalServiceWrapper
 
 	@Override
 	public com.liferay.osb.patcher.model.PatcherBuild updatePatcherBuild(
-			long patcherBuildId, int qaStatus, String supportTicket, int type)
+			long userId, long patcherBuildId, int qaStatus,
+			String supportTicket, int type)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _patcherBuildLocalService.updatePatcherBuild(
-			patcherBuildId, qaStatus, supportTicket, type);
+			userId, patcherBuildId, qaStatus, supportTicket, type);
 	}
 
 	@Override
 	public com.liferay.osb.patcher.model.PatcherBuild updatePatcherBuild(
-			long patcherBuildId, String fileName, int qaStatus,
+			long userId, long patcherBuildId, String fileName, int qaStatus,
 			String sourceName, int status)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _patcherBuildLocalService.updatePatcherBuild(
-			patcherBuildId, fileName, qaStatus, sourceName, status);
+			userId, patcherBuildId, fileName, qaStatus, sourceName, status);
 	}
 
 	/**
@@ -793,20 +794,20 @@ public class PatcherBuildLocalServiceWrapper
 
 	@Override
 	public com.liferay.osb.patcher.model.PatcherBuild updateQaFields(
-			long patcherBuildId, String qaComments, int qaStatus)
+			long userId, long patcherBuildId, String qaComments, int qaStatus)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _patcherBuildLocalService.updateQaFields(
-			patcherBuildId, qaComments, qaStatus);
+			userId, patcherBuildId, qaComments, qaStatus);
 	}
 
 	@Override
 	public com.liferay.osb.patcher.model.PatcherBuild updateQaStatus(
-			long patcherBuildId, int qaStatus)
+			long userId, long patcherBuildId, int qaStatus)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _patcherBuildLocalService.updateQaStatus(
-			patcherBuildId, qaStatus);
+			userId, patcherBuildId, qaStatus);
 	}
 
 	@Override

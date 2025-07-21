@@ -440,12 +440,13 @@ public interface PatcherBuildLocalService
 
 	@Indexable(type = IndexableType.REINDEX)
 	public PatcherBuild updatePatcherBuild(
-			long patcherBuildId, int qaStatus, String supportTicket, int type)
+			long userId, long patcherBuildId, int qaStatus,
+			String supportTicket, int type)
 		throws PortalException;
 
 	@Indexable(type = IndexableType.REINDEX)
 	public PatcherBuild updatePatcherBuild(
-			long patcherBuildId, String fileName, int qaStatus,
+			long userId, long patcherBuildId, String fileName, int qaStatus,
 			String sourceName, int status)
 		throws PortalException;
 
@@ -469,11 +470,12 @@ public interface PatcherBuildLocalService
 
 	@Indexable(type = IndexableType.REINDEX)
 	public PatcherBuild updateQaFields(
-			long patcherBuildId, String qaComments, int qaStatus)
+			long userId, long patcherBuildId, String qaComments, int qaStatus)
 		throws PortalException;
 
 	@Indexable(type = IndexableType.REINDEX)
-	public PatcherBuild updateQaStatus(long patcherBuildId, int qaStatus)
+	public PatcherBuild updateQaStatus(
+			long userId, long patcherBuildId, int qaStatus)
 		throws PortalException;
 
 	@Indexable(type = IndexableType.REINDEX)
