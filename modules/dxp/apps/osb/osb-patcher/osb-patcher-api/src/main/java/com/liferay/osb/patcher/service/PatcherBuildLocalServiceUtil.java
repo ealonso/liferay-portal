@@ -674,10 +674,11 @@ public class PatcherBuildLocalServiceUtil {
 		return getService().updateRequestKey(patcherBuildId, requestKey);
 	}
 
-	public static PatcherBuild updateStatus(long patcherBuildId, int status)
+	public static PatcherBuild updateStatus(
+			long userId, long patcherBuildId, int status)
 		throws PortalException {
 
-		return getService().updateStatus(patcherBuildId, status);
+		return getService().updateStatus(userId, patcherBuildId, status);
 	}
 
 	public static PatcherBuildLocalService getService() {

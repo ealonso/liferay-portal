@@ -483,7 +483,8 @@ public interface PatcherBuildLocalService
 		throws PortalException;
 
 	@Indexable(type = IndexableType.REINDEX)
-	public PatcherBuild updateStatus(long patcherBuildId, int status)
+	public PatcherBuild updateStatus(
+			long userId, long patcherBuildId, int status)
 		throws PortalException;
 
 }

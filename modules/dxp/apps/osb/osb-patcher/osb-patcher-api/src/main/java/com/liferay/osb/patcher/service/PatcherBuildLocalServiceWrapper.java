@@ -821,10 +821,11 @@ public class PatcherBuildLocalServiceWrapper
 
 	@Override
 	public com.liferay.osb.patcher.model.PatcherBuild updateStatus(
-			long patcherBuildId, int status)
+			long userId, long patcherBuildId, int status)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
-		return _patcherBuildLocalService.updateStatus(patcherBuildId, status);
+		return _patcherBuildLocalService.updateStatus(
+			userId, patcherBuildId, status);
 	}
 
 	@Override
