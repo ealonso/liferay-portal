@@ -54,8 +54,8 @@ import java.util.Map;
 public class EmailUtil {
 
 	public static void sendEmail(
-			long companyId, String emailAddress, String message,
-			String subject, Map<String, String> contextAttributes)
+			long companyId, String emailAddress, String message, String subject,
+			Map<String, String> contextAttributes)
 		throws Exception {
 
 		if (Validator.isNull(emailAddress) ||
@@ -164,8 +164,7 @@ public class EmailUtil {
 			BaseModel<?> baseModel, User user)
 		throws Exception {
 
-		sendPatcherEmail(
-			baseModel, WorkflowConstants.LABEL_TIMEOUT, user);
+		sendPatcherEmail(baseModel, WorkflowConstants.LABEL_TIMEOUT, user);
 	}
 
 	protected static String getDownloadHotfixURL(PatcherBuild patcherBuild)
@@ -366,8 +365,7 @@ public class EmailUtil {
 		return StringPool.BLANK;
 	}
 
-	private static String _getDisplayURL(
-			String controllerPath, long classPK)
+	private static String _getDisplayURL(String controllerPath, long classPK)
 		throws Exception {
 
 		String layoutFriendlyURL = StringPool.BLANK;
