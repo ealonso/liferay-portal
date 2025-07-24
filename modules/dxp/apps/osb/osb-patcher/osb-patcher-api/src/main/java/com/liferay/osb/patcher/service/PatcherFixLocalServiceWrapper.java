@@ -749,10 +749,12 @@ public class PatcherFixLocalServiceWrapper
 	 *
 	 * @param patcherFix the patcher fix
 	 * @return the patcher fix that was updated
+	 * @throws Exception
 	 */
 	@Override
 	public com.liferay.osb.patcher.model.PatcherFix updatePatcherFix(
-		com.liferay.osb.patcher.model.PatcherFix patcherFix) {
+			com.liferay.osb.patcher.model.PatcherFix patcherFix)
+		throws Exception {
 
 		return _patcherFixLocalService.updatePatcherFix(patcherFix);
 	}

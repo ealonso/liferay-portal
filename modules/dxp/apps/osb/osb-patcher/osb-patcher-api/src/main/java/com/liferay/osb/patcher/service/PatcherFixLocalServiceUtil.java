@@ -627,8 +627,11 @@ public class PatcherFixLocalServiceUtil {
 	 *
 	 * @param patcherFix the patcher fix
 	 * @return the patcher fix that was updated
+	 * @throws Exception
 	 */
-	public static PatcherFix updatePatcherFix(PatcherFix patcherFix) {
+	public static PatcherFix updatePatcherFix(PatcherFix patcherFix)
+		throws Exception {
+
 		return getService().updatePatcherFix(patcherFix);
 	}
 

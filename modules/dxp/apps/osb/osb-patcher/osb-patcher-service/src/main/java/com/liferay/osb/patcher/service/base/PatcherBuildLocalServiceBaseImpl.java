@@ -369,10 +369,13 @@ public abstract class PatcherBuildLocalServiceBaseImpl
 	 *
 	 * @param patcherBuild the patcher build
 	 * @return the patcher build that was updated
+	 * @throws Exception
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
-	public PatcherBuild updatePatcherBuild(PatcherBuild patcherBuild) {
+	public PatcherBuild updatePatcherBuild(PatcherBuild patcherBuild)
+		throws Exception {
+
 		return patcherBuildPersistence.update(patcherBuild);
 	}
 

@@ -452,9 +452,10 @@ public interface PatcherFixLocalService
 	 *
 	 * @param patcherFix the patcher fix
 	 * @return the patcher fix that was updated
+	 * @throws Exception
 	 */
 	@Indexable(type = IndexableType.REINDEX)
-	public PatcherFix updatePatcherFix(PatcherFix patcherFix);
+	public PatcherFix updatePatcherFix(PatcherFix patcherFix) throws Exception;
 
 	@Indexable(type = IndexableType.REINDEX)
 	public PatcherFix updateRequestKey(long patcherFixId, String requestKey)

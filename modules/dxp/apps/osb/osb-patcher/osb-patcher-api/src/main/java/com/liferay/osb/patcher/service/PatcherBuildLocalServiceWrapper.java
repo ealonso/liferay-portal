@@ -750,7 +750,7 @@ public class PatcherBuildLocalServiceWrapper
 	public com.liferay.osb.patcher.model.PatcherBuild updatePatcherBuild(
 			long userId, long patcherBuildId, int qaStatus,
 			String supportTicket, int type)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		throws Exception {
 
 		return _patcherBuildLocalService.updatePatcherBuild(
 			userId, patcherBuildId, qaStatus, supportTicket, type);
@@ -760,7 +760,7 @@ public class PatcherBuildLocalServiceWrapper
 	public com.liferay.osb.patcher.model.PatcherBuild updatePatcherBuild(
 			long userId, long patcherBuildId, String fileName, int qaStatus,
 			String sourceName, int status)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		throws Exception {
 
 		return _patcherBuildLocalService.updatePatcherBuild(
 			userId, patcherBuildId, fileName, qaStatus, sourceName, status);
@@ -775,10 +775,12 @@ public class PatcherBuildLocalServiceWrapper
 	 *
 	 * @param patcherBuild the patcher build
 	 * @return the patcher build that was updated
+	 * @throws Exception
 	 */
 	@Override
 	public com.liferay.osb.patcher.model.PatcherBuild updatePatcherBuild(
-		com.liferay.osb.patcher.model.PatcherBuild patcherBuild) {
+			com.liferay.osb.patcher.model.PatcherBuild patcherBuild)
+		throws Exception {
 
 		return _patcherBuildLocalService.updatePatcherBuild(patcherBuild);
 	}
@@ -795,7 +797,7 @@ public class PatcherBuildLocalServiceWrapper
 	@Override
 	public com.liferay.osb.patcher.model.PatcherBuild updateQaFields(
 			long userId, long patcherBuildId, String qaComments, int qaStatus)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		throws Exception {
 
 		return _patcherBuildLocalService.updateQaFields(
 			userId, patcherBuildId, qaComments, qaStatus);
@@ -804,7 +806,7 @@ public class PatcherBuildLocalServiceWrapper
 	@Override
 	public com.liferay.osb.patcher.model.PatcherBuild updateQaStatus(
 			long userId, long patcherBuildId, int qaStatus)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		throws Exception {
 
 		return _patcherBuildLocalService.updateQaStatus(
 			userId, patcherBuildId, qaStatus);
@@ -822,7 +824,7 @@ public class PatcherBuildLocalServiceWrapper
 	@Override
 	public com.liferay.osb.patcher.model.PatcherBuild updateStatus(
 			long userId, long patcherBuildId, int status)
-		throws com.liferay.portal.kernel.exception.PortalException {
+		throws Exception {
 
 		return _patcherBuildLocalService.updateStatus(
 			userId, patcherBuildId, status);

@@ -442,13 +442,13 @@ public interface PatcherBuildLocalService
 	public PatcherBuild updatePatcherBuild(
 			long userId, long patcherBuildId, int qaStatus,
 			String supportTicket, int type)
-		throws PortalException;
+		throws Exception;
 
 	@Indexable(type = IndexableType.REINDEX)
 	public PatcherBuild updatePatcherBuild(
 			long userId, long patcherBuildId, String fileName, int qaStatus,
 			String sourceName, int status)
-		throws PortalException;
+		throws Exception;
 
 	/**
 	 * Updates the patcher build in the database or adds it if it does not yet exist. Also notifies the appropriate model listeners.
@@ -459,9 +459,11 @@ public interface PatcherBuildLocalService
 	 *
 	 * @param patcherBuild the patcher build
 	 * @return the patcher build that was updated
+	 * @throws Exception
 	 */
 	@Indexable(type = IndexableType.REINDEX)
-	public PatcherBuild updatePatcherBuild(PatcherBuild patcherBuild);
+	public PatcherBuild updatePatcherBuild(PatcherBuild patcherBuild)
+		throws Exception;
 
 	@Indexable(type = IndexableType.REINDEX)
 	public PatcherBuild updatePatcherFixId(
@@ -471,12 +473,12 @@ public interface PatcherBuildLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public PatcherBuild updateQaFields(
 			long userId, long patcherBuildId, String qaComments, int qaStatus)
-		throws PortalException;
+		throws Exception;
 
 	@Indexable(type = IndexableType.REINDEX)
 	public PatcherBuild updateQaStatus(
 			long userId, long patcherBuildId, int qaStatus)
-		throws PortalException;
+		throws Exception;
 
 	@Indexable(type = IndexableType.REINDEX)
 	public PatcherBuild updateRequestKey(long patcherBuildId, String requestKey)
@@ -485,6 +487,6 @@ public interface PatcherBuildLocalService
 	@Indexable(type = IndexableType.REINDEX)
 	public PatcherBuild updateStatus(
 			long userId, long patcherBuildId, int status)
-		throws PortalException;
+		throws Exception;
 
 }

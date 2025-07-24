@@ -616,7 +616,7 @@ public class PatcherBuildLocalServiceUtil {
 	public static PatcherBuild updatePatcherBuild(
 			long userId, long patcherBuildId, int qaStatus,
 			String supportTicket, int type)
-		throws PortalException {
+		throws Exception {
 
 		return getService().updatePatcherBuild(
 			userId, patcherBuildId, qaStatus, supportTicket, type);
@@ -625,7 +625,7 @@ public class PatcherBuildLocalServiceUtil {
 	public static PatcherBuild updatePatcherBuild(
 			long userId, long patcherBuildId, String fileName, int qaStatus,
 			String sourceName, int status)
-		throws PortalException {
+		throws Exception {
 
 		return getService().updatePatcherBuild(
 			userId, patcherBuildId, fileName, qaStatus, sourceName, status);
@@ -640,8 +640,11 @@ public class PatcherBuildLocalServiceUtil {
 	 *
 	 * @param patcherBuild the patcher build
 	 * @return the patcher build that was updated
+	 * @throws Exception
 	 */
-	public static PatcherBuild updatePatcherBuild(PatcherBuild patcherBuild) {
+	public static PatcherBuild updatePatcherBuild(PatcherBuild patcherBuild)
+		throws Exception {
+
 		return getService().updatePatcherBuild(patcherBuild);
 	}
 
@@ -654,7 +657,7 @@ public class PatcherBuildLocalServiceUtil {
 
 	public static PatcherBuild updateQaFields(
 			long userId, long patcherBuildId, String qaComments, int qaStatus)
-		throws PortalException {
+		throws Exception {
 
 		return getService().updateQaFields(
 			userId, patcherBuildId, qaComments, qaStatus);
@@ -662,7 +665,7 @@ public class PatcherBuildLocalServiceUtil {
 
 	public static PatcherBuild updateQaStatus(
 			long userId, long patcherBuildId, int qaStatus)
-		throws PortalException {
+		throws Exception {
 
 		return getService().updateQaStatus(userId, patcherBuildId, qaStatus);
 	}
@@ -676,7 +679,7 @@ public class PatcherBuildLocalServiceUtil {
 
 	public static PatcherBuild updateStatus(
 			long userId, long patcherBuildId, int status)
-		throws PortalException {
+		throws Exception {
 
 		return getService().updateStatus(userId, patcherBuildId, status);
 	}
