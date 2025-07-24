@@ -1,4 +1,7 @@
 Bundle-Name: Liferay OSB Patcher Web
 Bundle-SymbolicName: com.liferay.osb.patcher.web
 Bundle-Version: 1.0.0
+Provide-Capability:\
+	liferay.language.resources;\
+		resource.bundle.base.name="content.Language"
 Web-ContextPath: /osb-patcher-web
