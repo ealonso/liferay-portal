@@ -368,8 +368,6 @@ public class EmailUtil {
 	private static String _getDisplayURL(String controllerPath, long classPK)
 		throws Exception {
 
-		String layoutFriendlyURL = StringPool.BLANK;
-
 		ThemeDisplay themeDisplay = null;
 
 		ServiceContext serviceContext =
@@ -382,6 +380,8 @@ public class EmailUtil {
 		if (themeDisplay == null) {
 			return StringPool.BLANK;
 		}
+
+		String layoutFriendlyURL = StringPool.BLANK;
 
 		Layout layout = themeDisplay.getLayout();
 
