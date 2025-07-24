@@ -594,7 +594,7 @@ public class PatcherFixLocalServiceUtil {
 
 	public static PatcherFix updatePatcherFix(
 			long userId, long patcherFixId, String gitHash, int status)
-		throws PortalException {
+		throws Exception {
 
 		return getService().updatePatcherFix(
 			userId, patcherFixId, gitHash, status);
@@ -603,7 +603,7 @@ public class PatcherFixLocalServiceUtil {
 	public static PatcherFix updatePatcherFix(
 			long userId, long patcherFixId, String gitHash,
 			String jenkinsResults, int status)
-		throws PortalException {
+		throws Exception {
 
 		return getService().updatePatcherFix(
 			userId, patcherFixId, gitHash, jenkinsResults, status);
@@ -641,7 +641,7 @@ public class PatcherFixLocalServiceUtil {
 
 	public static PatcherFix updateStatus(
 			long userId, long patcherFixId, int status)
-		throws PortalException {
+		throws Exception {
 
 		return getService().updateStatus(userId, patcherFixId, status);
 	}
