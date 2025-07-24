@@ -124,7 +124,8 @@ public class PatcherBuildUtil {
 					}
 
 					patcherBuild = PatcherBuildLocalServiceUtil.updateStatus(
-						patcherBuild.getPatcherBuildId(), patcherBuildStatus);
+						user.getUserId(), patcherBuild.getPatcherBuildId(),
+						patcherBuildStatus);
 
 					workflowParentPatcherBuild(user, patcherBuild);
 
@@ -1706,7 +1707,7 @@ public class PatcherBuildUtil {
 			parentPatcherBuild, isMergeOnly(parentPatcherBuild));
 
 		parentPatcherBuild = PatcherBuildLocalServiceUtil.updateStatus(
-			parentPatcherBuild.getPatcherBuildId(), status);
+			user.getUserId(), parentPatcherBuild.getPatcherBuildId(), status);
 
 		long patcherFixId = parentPatcherBuild.getPatcherFixId();
 
@@ -1815,7 +1816,7 @@ public class PatcherBuildUtil {
 			}
 
 			patcherBuild = PatcherBuildLocalServiceUtil.updateStatus(
-				patcherBuild.getPatcherBuildId(), status);
+				user.getUserId(), patcherBuild.getPatcherBuildId(), status);
 
 			if (patcherBuild.isChildBuild() ||
 				!PatcherBuildRelUtil.hasChildPatcherBuilds(patcherBuild)) {
@@ -2134,14 +2135,14 @@ public class PatcherBuildUtil {
 					WorkflowConstants.STATUS_BUILD_CONFLICT_MERGING_ONLY)) {
 
 				patcherBuild = PatcherBuildLocalServiceUtil.updateStatus(
-					patcherBuild.getPatcherBuildId(),
+					user.getUserId(), patcherBuild.getPatcherBuildId(),
 					WorkflowConstants.STATUS_BUILD_CONFLICT_MERGING_ONLY);
 
 				workflowParentPatcherBuild(user, patcherBuild);
 			}
 			else {
 				patcherBuild = PatcherBuildLocalServiceUtil.updateStatus(
-					patcherBuild.getPatcherBuildId(),
+					user.getUserId(), patcherBuild.getPatcherBuildId(),
 					WorkflowConstants.STATUS_BUILD_CONFLICT);
 
 				workflowParentPatcherBuild(user, patcherBuild);
@@ -2153,7 +2154,7 @@ public class PatcherBuildUtil {
 				WorkflowConstants.STATUS_FIX_FAILED);
 
 			patcherBuild = PatcherBuildLocalServiceUtil.updateStatus(
-				patcherBuild.getPatcherBuildId(),
+				user.getUserId(), patcherBuild.getPatcherBuildId(),
 				WorkflowConstants.STATUS_BUILD_FAILED);
 
 			workflowParentPatcherBuild(user, patcherBuild);
@@ -2172,14 +2173,14 @@ public class PatcherBuildUtil {
 
 		if (isMergeOnly(patcherBuild)) {
 			patcherBuild = PatcherBuildLocalServiceUtil.updateStatus(
-				patcherBuild.getPatcherBuildId(),
+				user.getUserId(), patcherBuild.getPatcherBuildId(),
 				WorkflowConstants.STATUS_BUILD_CONFLICT_MERGING_ONLY);
 
 			workflowParentPatcherBuild(user, patcherBuild);
 		}
 		else {
 			patcherBuild = PatcherBuildLocalServiceUtil.updateStatus(
-				patcherBuild.getPatcherBuildId(),
+				user.getUserId(), patcherBuild.getPatcherBuildId(),
 				WorkflowConstants.STATUS_BUILD_COMPILING);
 
 			workflowParentPatcherBuild(user, patcherBuild);
