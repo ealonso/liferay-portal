@@ -120,14 +120,6 @@ public class PoshiContext {
 		sb.append(query);
 		sb.append(") AND (ignored == null)");
 
-		PoshiProperties poshiProperties = PoshiProperties.getPoshiProperties();
-
-		if (Validator.isNotNull(poshiProperties.testRunEnvironment)) {
-			sb.append(" AND (test.run.environment == \"");
-			sb.append(poshiProperties.testRunEnvironment);
-			sb.append("\" OR test.run.environment == null)");
-		}
-
 		query = sb.toString();
 
 		List<String> classCommandNames = new ArrayList<>();
@@ -382,7 +374,6 @@ public class PoshiContext {
 		poshiPropertyNames.add("property.group");
 		poshiPropertyNames.add("test.class.method.name");
 		poshiPropertyNames.add("test.class.name");
-		poshiPropertyNames.add("test.run.environment");
 
 		PoshiProperties poshiProperties = PoshiProperties.getPoshiProperties();
 

@@ -141,8 +141,6 @@ definition {
 
 	@priority = 4
 	test CanViewBasicAndBlueprintSuggestionsTogether {
-		property test.run.environment = "EE";
-
 		JSONWebcontent.addWebContent(
 			content = "WC WebContent Content",
 			description = "WC WebContent Description",
@@ -714,8 +712,6 @@ definition {
 
 	@priority = 5
 	test ViewBlueprintSuggestionsAcrossDifferentScopes {
-		property test.run.environment = "EE";
-
 		JSONWebcontent.addWebContent(
 			content = "WC WebContent Content",
 			description = "WC WebContent Description",

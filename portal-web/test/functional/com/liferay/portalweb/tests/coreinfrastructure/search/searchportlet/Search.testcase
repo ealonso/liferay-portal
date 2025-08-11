@@ -637,7 +637,6 @@ definition {
 	@priority = 4
 	test CannotViewTermsOfUseWhenEnterpriseSearchIsDisabled {
 		property custom.properties = "enterprise.product.enterprise.search.enabled=false${line.separator}enterprise.product.notification.enabled=true${line.separator}feature.flag.LPD-35013=true";
-		property test.run.environment = "EE";
 
 		AssertElementNotPresent(locator1 = "Modal#MODAL");
 
@@ -712,7 +711,6 @@ definition {
 	test CanViewTermsOfUseWhenEnterpriseSearchIsEnabled {
 		property custom.properties = "enterprise.product.notification.enabled=true${line.separator}feature.flag.LPD-35013=true";
 		property test.liferay.virtual.instance = "false";
-		property test.run.environment = "EE";
 		property test.run.type = "single";
 
 		SelectFrame(value1 = "relative=top");
@@ -769,7 +767,6 @@ definition {
 		property portal.suite.search.engine = "disable";
 		property portal.upstream = "false";
 		property test.liferay.virtual.instance = "false";
-		property test.run.environment = "EE";
 		property test.run.type = "single";
 
 		SystemSettings.openToConfigInSystemSettings(portletId = "com.liferay.portal.search.configuration.DefaultKeywordQueryConfiguration");

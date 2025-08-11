@@ -99,7 +99,6 @@ definition {
 		property portal.upstream = "true";
 		property portal.version = "7.2.10";
 		property test.assert.warning.exceptions = "true";
-		property test.run.environment = "EE";
 
 		ValidateSmokeUpgrade.viewUpgrade();
 
@@ -132,7 +131,6 @@ definition {
 		property portal.smoke.upgrades = "true";
 		property portal.version = "7.3.10";
 		property test.assert.warning.exceptions = "true";
-		property test.run.environment = "EE";
 
 		ValidateSmokeUpgrade.viewUpgrade();
 
@@ -166,7 +164,6 @@ definition {
 		property portal.smoke.upgrades = "true";
 		property portal.version = "7.4.13";
 		property test.assert.warning.exceptions = "true";
-		property test.run.environment = "EE";
 
 		ValidateSmokeUpgrade.viewUpgrade();
 

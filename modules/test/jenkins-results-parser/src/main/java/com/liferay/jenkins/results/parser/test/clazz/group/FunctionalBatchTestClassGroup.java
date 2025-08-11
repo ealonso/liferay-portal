@@ -66,14 +66,6 @@ public class FunctionalBatchTestClassGroup extends BatchTestClassGroup {
 		sb.append(getTestBatchRunPropertyQuery());
 		sb.append(") AND (ignored == null)");
 
-		String testRunEnvironment = PropsUtil.get("test.run.environment");
-
-		if (!JenkinsResultsParserUtil.isNullOrEmpty(testRunEnvironment)) {
-			sb.append(" AND (test.run.environment == \"");
-			sb.append(testRunEnvironment);
-			sb.append("\" OR test.run.environment == null)");
-		}
-
 		jsonObject.put("pql_query", sb.toString());
 
 		jsonObject.put("target_duration", getTargetAxisDuration());

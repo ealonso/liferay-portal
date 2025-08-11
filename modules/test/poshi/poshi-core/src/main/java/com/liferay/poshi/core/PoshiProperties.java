@@ -182,8 +182,6 @@ public class PoshiProperties extends Properties {
 	public static final String TEST_RETRY_COMMAND_WAIT_TIME =
 		"test.retry.command.wait.time";
 
-	public static final String TEST_RUN_ENVIRONMENT = "test.run.environment";
-
 	public static final String TEST_RUN_LOCALLY = "test.run.locally";
 
 	public static final String TEST_RUN_THREAD_POOL_SIZE =
@@ -432,7 +430,6 @@ public class PoshiProperties extends Properties {
 		TEST_POSHI_WARNINGS_FILE_NAME);
 	public int testRetryCommandWaitTime = GetterUtil.getInteger(
 		getProperty(TEST_RETRY_COMMAND_WAIT_TIME));
-	public String testRunEnvironment = getProperty(TEST_RUN_ENVIRONMENT);
 	public boolean testRunLocally = GetterUtil.getBoolean(
 		getProperty(TEST_RUN_LOCALLY));
 	public int testRunThreadPoolSize = GetterUtil.getInteger(

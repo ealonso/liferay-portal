@@ -259,11 +259,6 @@ primarily for Testray.
 Sets the time (in seconds) to wait before retrying element retrieval when
 elements have turned stale.
 
-### test.run.environment
-
-Sets a string to store the run environment. Generally, public or private
-environments are denoted by the *CE* or *EE* values, respectively.
-
 ### test.run.locally
 
 Sets a boolean for whether Poshi log frontend resources are used locally or

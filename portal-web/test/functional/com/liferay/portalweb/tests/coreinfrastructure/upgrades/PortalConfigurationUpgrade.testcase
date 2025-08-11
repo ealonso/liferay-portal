@@ -140,7 +140,6 @@ definition {
 		property portal.acceptance = "true";
 		property portal.stable = "false";
 		property portal.version = "7.4.13";
-		property test.run.environment = "EE";
 
 		ValidateInstanceSettingsUpgrade.viewInstanceSettings();
 

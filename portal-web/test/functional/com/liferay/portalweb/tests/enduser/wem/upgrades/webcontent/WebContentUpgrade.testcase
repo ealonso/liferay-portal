@@ -362,7 +362,6 @@ definition {
 		property data.archive.type = "data-archive-web-content-with-image";
 		property database.types = "db2,mariadb,mysql,oracle,postgresql";
 		property portal.version = "7.0.10.6";
-		property test.run.environment = "EE";
 
 		Navigator.openURL();
 
@@ -431,7 +430,6 @@ definition {
 		property data.archive.type = "data-archive-web-content-with-predefined-value-in-web-content-field";
 		property database.types = "db2,mariadb,mysql,oracle,postgresql,sqlserver";
 		property portal.version = "7.1.10.3";
-		property test.run.environment = "EE";
 
 		ValidateWebContentUpgrade.viewWebContentWithPredefinedValueInWebContentField();
 	}
@@ -442,7 +440,6 @@ definition {
 		property data.archive.type = "data-archive-web-content-with-predefined-value-in-web-content-field";
 		property database.types = "db2,mariadb,mysql,oracle,postgresql,sqlserver";
 		property portal.version = "7.2.10.1";
-		property test.run.environment = "EE";
 
 		ValidateWebContentUpgrade.viewWebContentWithPredefinedValueInWebContentField();
 	}
@@ -453,7 +450,6 @@ definition {
 		property data.archive.type = "data-archive-web-content-with-predefined-value-in-web-content-field";
 		property database.types = "db2,mariadb,mysql,oracle,postgresql,sqlserver";
 		property portal.version = "7.3.10.1";
-		property test.run.environment = "EE";
 
 		ValidateWebContentUpgrade.viewWebContentWithPredefinedValueInWebContentField();
 	}
@@ -464,7 +460,6 @@ definition {
 		property data.archive.type = "data-archive-web-content-with-predefined-value-in-web-content-field";
 		property database.types = "db2,mariadb,mysql,oracle,postgresql,sqlserver";
 		property portal.version = "7.0.10.14";
-		property test.run.environment = "EE";
 
 		ValidateWebContentUpgrade.viewWebContentWithPredefinedValueInWebContentField();
 	}

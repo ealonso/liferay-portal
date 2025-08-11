@@ -422,7 +422,6 @@ definition {
 	@priority = 5
 	test CanDisplayRelatedDiagramsWithDiagramCardListItemStyle {
 		property portal.acceptance = "true";
-		property test.run.environment = "EE";
 
 		task ("Given a diagram product is created and 2 products are pinned to it") {
 			CommerceJSONProductsAPI._addCommerceProduct(
@@ -1077,7 +1076,6 @@ definition {
 	@priority = 5
 	test CanMapRelatedDiagramsToCollectionDisplayFragment {
 		property portal.acceptance = "true";
-		property test.run.environment = "EE";
 
 		task ("Given a diagram product is created and 2 products are pinned to it") {
 			CommerceJSONProductsAPI._addCommerceProduct(

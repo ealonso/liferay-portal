@@ -6213,8 +6213,6 @@ definition {
 	@description = "LPS-135649 - Verify that pending and completed Object entries disappears from Workflow Metrics page when they are deleted"
 	@priority = 4
 	test ObjectEntriesDisappearsWorkflowMetricsWhenDeleted {
-		property test.run.environment = "EE";
-
 		ObjectAdmin.addObjectViaAPI(
 			labelName = "Custom Object 146",
 			objectName = "CustomObject146",
@@ -6462,8 +6460,6 @@ definition {
 	@description = "LPS-139005 - Verify that the Object entries with workflow are displayed again on the Workflow Metrics page when reactivated"
 	@priority = 4
 	test ObjectEntriesReappearsWorkflowMetricsWhenReactivated {
-		property test.run.environment = "EE";
-
 		ObjectAdmin.addObjectViaAPI(
 			labelName = "Custom Object 147",
 			objectName = "CustomObject147",

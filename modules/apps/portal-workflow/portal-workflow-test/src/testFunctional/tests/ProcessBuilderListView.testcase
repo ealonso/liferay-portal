@@ -331,7 +331,6 @@ definition {
 	@priority = 4
 	test CanSelectEditOptionForNonPublishedProcess {
 		property test.liferay.virtual.instance = "false";
-		property test.run.environment = "EE";
 		property test.run.type = "single";
 
 		Workflow.openWorkflowListView();
@@ -357,7 +356,6 @@ definition {
 	@priority = 4
 	test CanSelectPermissionsOption {
 		property test.liferay.virtual.instance = "false";
-		property test.run.environment = "EE";
 		property test.run.type = "single";
 
 		Workflow.openWorkflowListView();
@@ -369,7 +367,6 @@ definition {
 	@priority = 4
 	test CanSelectPermissionsOptionForNonPublishedProcess {
 		property test.liferay.virtual.instance = "false";
-		property test.run.environment = "EE";
 		property test.run.type = "single";
 
 		Workflow.openWorkflowListView();
@@ -382,8 +379,6 @@ definition {
 	@description = "Verify that the user can select View option in the kebab menu for a particular row"
 	@priority = 4
 	test CanSelectViewOption {
-		property test.run.environment = "EE";
-
 		Workflow.openWorkflowListView();
 
 		Workflow.viewWorkflowDefinition(workflowDefinitionTitle = "Single Approver");
@@ -412,8 +407,6 @@ definition {
 	@ignore = "true"
 	@priority = 3
 	test CanViewNonPublishedProcess {
-		property test.run.environment = "EE";
-
 		Workflow.openWorkflowListView();
 
 		Workflow.unpublishWorkflowDefinition(workflowDefinitionTitle = "Single Approver");

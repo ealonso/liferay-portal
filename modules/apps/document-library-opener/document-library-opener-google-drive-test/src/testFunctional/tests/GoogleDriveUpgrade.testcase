@@ -25,7 +25,6 @@ definition {
 	test ViewGoogleDriveArchive72101 {
 		property data.archive.type = "data-archive-googledrive";
 		property portal.version = "7.2.10.1";
-		property test.run.environment = "EE";
 
 		ValidateOnlineEditingUpgrade.viewAndEditGoogleDriveDocuments();
 
@@ -37,7 +36,6 @@ definition {
 	test ViewGoogleDriveArchive73101 {
 		property data.archive.type = "data-archive-googledrive";
 		property portal.version = "7.3.10.1";
-		property test.run.environment = "EE";
 
 		ValidateOnlineEditingUpgrade.viewAndEditGoogleDriveDocuments();
 

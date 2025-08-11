@@ -8,7 +8,6 @@ definition {
 	property portal.release = "false";
 	property portal.upstream = "false";
 	property remote.elasticsearch.enabled = "true";
-	property test.run.environment = "EE";
 	property testray.main.component.name = "Clustering";
 
 	tearDown {

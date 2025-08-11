@@ -297,7 +297,6 @@ definition {
 	@priority = 4
 	test CanProductCardFragmentShowDiagramCard {
 		property portal.acceptance = "false";
-		property test.run.environment = "EE";
 
 		task ("Given a Diagram type product is created") {
 			CommerceJSONProductsAPI._addCommerceProduct(

@@ -25,7 +25,6 @@ definition {
 		property portal.release = "false";
 		property portal.upstream = "quarantine";
 		property portal.version = "7.4.13";
-		property test.run.environment = "EE";
 
 		task ("Assert custom remote app is present after upgrade") {
 			ValidateClientExtensionsUpgrade.assertRemoteAppEntry(
@@ -59,7 +58,6 @@ definition {
 		property portal.release = "false";
 		property portal.upstream = "quarantine";
 		property portal.version = "7.3.10.1";
-		property test.run.environment = "EE";
 
 		var remoteAppName = "Test Remote App";
 		var remoteAppType = "IFrame";

@@ -43,7 +43,6 @@ definition {
 	test RemoveOrphanedPortletPreferences7310 {
 		property data.archive.type = "data-archive-publications-with-orphaned-portlet-preferences";
 		property portal.version = "7.3.10";
-		property test.run.environment = "EE";
 
 		PublicationsNavigator.openPublicationsAdmin();
 
@@ -76,7 +75,6 @@ definition {
 		property data.archive.type = "data-archive-publications";
 		property database.types = "mariadb,mysql,oracle,postgresql,sqlserver";
 		property portal.version = "7.3.10";
-		property test.run.environment = "EE";
 
 		ValidatePublicationsUpgrade.viewAdminRoleName();
 	}
@@ -86,7 +84,6 @@ definition {
 		property data.archive.type = "data-archive-publications";
 		property database.types = "mariadb,mysql,oracle,postgresql,sqlserver";
 		property portal.version = "7.4.13";
-		property test.run.environment = "EE";
 
 		ValidatePublicationsUpgrade.viewAdminRoleName();
 	}
@@ -96,7 +93,6 @@ definition {
 		property data.archive.type = "data-archive-publications";
 		property database.types = "mariadb,mysql,oracle,postgresql,sqlserver";
 		property portal.version = "7.3.10.1";
-		property test.run.environment = "EE";
 
 		ValidatePublicationsUpgrade.viewAdminRoleName();
 	}
@@ -120,7 +116,6 @@ definition {
 		property data.archive.type = "data-archive-publications";
 		property database.types = "mariadb,mysql,oracle,postgresql,sqlserver";
 		property portal.version = "7.4.13";
-		property test.run.environment = "EE";
 
 		PublicationsNavigator.openPublicationsAdmin();
 
@@ -136,7 +131,6 @@ definition {
 		property database.auto.upgrade.enabled = "true";
 		property database.types = "mariadb,mysql,oracle,postgresql,sqlserver";
 		property portal.version = "7.4.13";
-		property test.run.environment = "EE";
 
 		PublicationsNavigator.openPublicationsAdmin();
 
@@ -151,7 +145,6 @@ definition {
 		property data.archive.type = "data-archive-publications-with-unrelated-previews-generated";
 		property database.types = "db2,mariadb,mysql";
 		property portal.version = "7.3.10";
-		property test.run.environment = "EE";
 
 		ValidatePublicationsUpgrade.viewNoUnrelatedPreviews();
 	}
@@ -179,7 +172,6 @@ definition {
 		property data.archive.type = "data-archive-publications";
 		property database.types = "mariadb,mysql,oracle,postgresql,sqlserver";
 		property portal.version = "7.3.10";
-		property test.run.environment = "EE";
 
 		ValidatePublicationsUpgrade.viewPublicationsUserRolePermissions();
 	}
@@ -189,7 +181,6 @@ definition {
 		property data.archive.type = "data-archive-publications";
 		property database.types = "mariadb,mysql,oracle,postgresql,sqlserver";
 		property portal.version = "7.4.13";
-		property test.run.environment = "EE";
 
 		ValidatePublicationsUpgrade.viewPublicationsUserRolePermissions();
 	}
@@ -199,7 +190,6 @@ definition {
 		property data.archive.type = "data-archive-publications";
 		property database.types = "mariadb,mysql,oracle,postgresql,sqlserver";
 		property portal.version = "7.3.10.1";
-		property test.run.environment = "EE";
 
 		ValidatePublicationsUpgrade.viewPublicationsUserRolePermissions();
 	}
@@ -210,7 +200,6 @@ definition {
 		property osgi.module.configuration.file.names = "com.liferay.change.tracking.configuration.CTSettingsConfiguration.config";
 		property osgi.module.configurations = "enabled=B\"true\"";
 		property portal.version = "7.4.13.u63";
-		property test.run.environment = "EE";
 
 		PublicationsTemplate.viewPublicationTemplate(templateName = "Template Name");
 
