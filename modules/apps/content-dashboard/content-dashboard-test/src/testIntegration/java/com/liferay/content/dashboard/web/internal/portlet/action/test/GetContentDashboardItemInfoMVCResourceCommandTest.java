@@ -45,6 +45,7 @@ import com.liferay.portal.kernel.portlet.bridges.mvc.MVCResourceCommand;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.servlet.PortletServlet;
+import com.liferay.portal.kernel.test.TestInfo;
 import com.liferay.portal.kernel.test.portlet.MockLiferayPortletRenderResponse;
 import com.liferay.portal.kernel.test.portlet.MockLiferayPortletURL;
 import com.liferay.portal.kernel.test.portlet.MockLiferayResourceRequest;
@@ -314,6 +315,7 @@ public class GetContentDashboardItemInfoMVCResourceCommandTest {
 	}
 
 	@Test
+	@TestInfo("LPS-144732")
 	public void testServeResourceWithoutUser() throws Exception {
 		JSONObject jsonObject = _serveResource(
 			_createContentDashboardFileItem());
