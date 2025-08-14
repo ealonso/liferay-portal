@@ -268,7 +268,6 @@ definition {
 	@description = "This is a test for LPS-98063. It checks that a user can search for document by synonyms."
 	@priority = 4
 	test CanSearchForDocumentBySynonyms {
-
 		JSONDocument.addFileWithUploadedFile(
 			dmDocumentTitle = "apple",
 			groupName = "Guest",
