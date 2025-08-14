@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
+import com.liferay.portal.kernel.test.TestInfo;
 import com.liferay.portal.kernel.test.portlet.MockLiferayPortletRenderRequest;
 import com.liferay.portal.kernel.test.portlet.MockLiferayPortletRenderResponse;
 import com.liferay.portal.kernel.test.portlet.MockLiferayPortletURL;
@@ -72,6 +73,7 @@ public class ContentDashboardFileExtensionItemSelectorViewTest {
 	}
 
 	@Test
+	@TestInfo("LPS-133354")
 	public void testGetData() throws Exception {
 		_addFileEntry(_group, "java");
 		_addFileEntry(_group, "liferay");

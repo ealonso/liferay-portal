@@ -14,12 +14,68 @@ import getRandomString from "../../../utils/getRandomString";
 import {
 	clickAndExpectToBeVisible
 } from "../../../utils/clickAndExpectToBeVisible";
+import {featureFlagsTest} from "../../../fixtures/featureFlagsTest";
+import {createReadStream} from "fs";
+import path from "node:path";
 
 export const test = mergeTests(
 	apiHelpersTest,
 	contentDashboardPagesTest,
+	featureFlagsTest({
+		'LPS-178052': {enabled: true},
+	}),
 	isolatedSiteTest,
 	loginTest()
+);
+
+test('Given The Extension filter modal When the user selects one or more extensions Then the number of file extensions preselected will be shown as a text with the format [number] Subtypes selected',
+	{
+		tag: '@LPS-133354',
+	},
+	async ({
+	   apiHelpers,
+	   contentDashboardPage,
+	   page,
+	   site,
+   }) => {
+
+		const document1 = await apiHelpers.headlessDelivery.postDocument(
+			site.id,
+			createReadStream(
+				path.join(__dirname, '/dependencies/attachment.docx')
+			)
+		);
+
+		const document2 = await apiHelpers.headlessDelivery.postDocument(
+			site.id,
+			createReadStream(
+				path.join(__dirname, '/dependencies/attachment.jpeg')
+			)
+		);
+
+		const document3 = await apiHelpers.headlessDelivery.postDocument(
+			site.id,
+			createReadStream(
+				path.join(__dirname, '/dependencies/attachment.txt')
+			)
+		);
+
+		await contentDashboardPage.goto(site.friendlyUrlPath);
+
+		await contentDashboardPage.openFilterDropdown();
+
+		/*
+		task ("Navigate to the content Dashboard and filter by file extension") {
+			ContentDashboard.filterByExtension(extensionNameList = "mp3,Image,Text");
+		}
+
+		task ("Check if extension is present") {
+			AssertTextEquals(
+				locator1 = "ManagementBar#SEARCH_RESULT_SUMMARY",
+				value1 = "10 Results Found With Filters");
+		}
+		 */
+	}
 );
 
 test('Validate if the user can open de Info side panel of a web content',
@@ -32,8 +88,6 @@ test('Validate if the user can open de Info side panel of a web content',
 		page,
 		site,
 	}) => {
-		await contentDashboardPage.goto(site.friendlyUrlPath);
-
 		const basicWebContentTitle = getRandomString();
 
 		await apiHelpers.headlessDelivery.postStructuredContent({
@@ -43,6 +97,8 @@ test('Validate if the user can open de Info side panel of a web content',
 			title: basicWebContentTitle,
 		});
 
+		await contentDashboardPage.goto(site.friendlyUrlPath);
+
 		await clickAndExpectToBeVisible({
 			autoClick: true,
 			target: page.getByRole('menuitem', {name: 'Info'}),
@@ -51,7 +107,9 @@ test('Validate if the user can open de Info side panel of a web content',
 				.getByLabel('More actions'),
 		});
 
+		const infoPanel = page.getByLabel('Info Panel', {exact: true});
+
 		await expect(
-			page.getByRole('heading', {name: basicWebContentTitle})
-		).toBeVisible();
+			infoPanel.locator('.sidebar-header')
+		).toContainText(basicWebContentTitle);
 });
