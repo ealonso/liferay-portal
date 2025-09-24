@@ -54,7 +54,6 @@ import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
-import com.liferay.portal.kernel.security.auth.GuestOrUserUtil;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.GroupLocalService;
@@ -760,7 +759,8 @@ public class LayoutPageTemplateEntryLocalServiceImpl
 
 	@Override
 	public LayoutPageTemplateEntry updateLayoutPageTemplateEntry(
-			long layoutPageTemplateEntryId, long classNameId, long classTypeId)
+			long userId, long layoutPageTemplateEntryId, long classNameId,
+			long classTypeId)
 		throws PortalException {
 
 		LayoutPageTemplateEntry layoutPageTemplateEntry =
@@ -771,8 +771,7 @@ public class LayoutPageTemplateEntryLocalServiceImpl
 			layoutPageTemplateEntry.getPlid());
 
 		if ((draftLayout != null) &&
-			!draftLayout.isUnlocked(
-				Constants.EDIT, GuestOrUserUtil.getUserId())) {
+			!draftLayout.isUnlocked(Constants.EDIT, userId)) {
 
 			throw new LockedLayoutException();
 		}
