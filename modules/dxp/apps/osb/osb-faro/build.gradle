@@ -2,11 +2,10 @@ import com.bmuschko.gradle.docker.tasks.container.DockerCreateContainer
 import com.bmuschko.gradle.docker.tasks.container.DockerRemoveContainer
 import com.bmuschko.gradle.docker.tasks.container.DockerStartContainer
 import com.bmuschko.gradle.docker.tasks.container.DockerStopContainer
-import com.bmuschko.gradle.docker.tasks.container.extras.DockerWaitHealthyContainer
 
 buildscript {
 	dependencies {
-		classpath group: "com.bmuschko", name: "gradle-docker-plugin", version: "6.7.0"
+		classpath group: "com.bmuschko", name: "gradle-docker-plugin", version: "9.4.0"
 		classpath group: "com.liferay", name: "com.liferay.gradle.plugins.app.docker", version: "1.0.17"
 	}
 
@@ -37,7 +36,6 @@ apply plugin: "com.liferay.app.docker"
 apply plugin: "com.liferay.root.defaults.plugin"
 
 task buildNexusCredentials(type: Exec)
-task checkDocker(type: DockerWaitHealthyContainer)
 task copyDatabaseConnector(type: Copy)
 task copyDockerResources(type: Copy)
 task createDocker(type: DockerCreateContainer)
@@ -69,12 +67,6 @@ buildNexusCredentials {
 
 	onlyIf {
 		faroEnvironmentName.equals("local") && (System.getProperty("liferay.ci") != "true")
-	}
-}
-
-checkDocker {
-	targetContainerId {
-		dockerContainerId
 	}
 }
 
@@ -167,10 +159,6 @@ removeDocker {
 }
 
 startDocker {
-	finalizedBy {
-		checkDocker
-	}
-
 	targetContainerId {
 		dockerContainerId
 	}

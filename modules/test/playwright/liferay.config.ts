@@ -8,13 +8,13 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 dotenv.config({override: true, path: '.env.local'});
 
-const baseUrl = process.env.PORTAL_URL || 'http://localhost:8080';
+const baseUrl = process.env.PORTAL_URL || 'http://localhost:18080';
 
 const liferayConfig = {
 	environment: {
 		baseUrl,
 		password: process.env.LIFERAY_USER_PASSWORD || 'test',
-		port: new URL(baseUrl).port || '8080',
+		port: new URL(baseUrl).port || '18080',
 	},
 };
 
