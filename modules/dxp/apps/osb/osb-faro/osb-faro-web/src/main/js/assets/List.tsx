@@ -1,26 +1,23 @@
 import * as breadcrumbs from 'shared/util/breadcrumbs';
 import BasePage from 'shared/components/base-page';
 import Card from 'shared/components/Card';
-import ClayLink from '@clayui/link';
-import React, {useState} from 'react';
+import FaroConstants from 'shared/util/constants';
+import React, {useMemo, useState} from 'react';
+import {columns, pagination} from 'shared/util/frontend-data-set';
 import {DropdownRangeKey} from 'shared/components/dropdown-range-key/DropdownRangeKey';
-import {pagination} from 'shared/util/frontend-data-set';
+import {pickBy} from 'lodash';
 import {RangeSelectors} from 'shared/types';
-import {Routes, toRoute} from 'shared/util/router';
-import {toThousands} from 'shared/util/numbers';
+import {removeUriQueryParam, setUriQueryValues} from 'shared/util/router';
 import {useChannelContext} from 'shared/context/channel';
 import {useFrontendDataSet} from 'shared/hooks/useFrontendDataSet';
-import {useParams} from 'react-router-dom';
+import {useHistory, useParams} from 'react-router-dom';
 import {useQueryRangeSelectors} from 'shared/hooks/useQueryRangeSelectors';
 
-const mapRoutes = {
-	blog: Routes.ASSETS_BLOGS_OVERVIEW,
-	document: Routes.ASSETS_DOCUMENTS_AND_MEDIA_OVERVIEW,
-	form: Routes.ASSETS_FORMS_OVERVIEW,
-	webContent: Routes.ASSETS_WEB_CONTENT_OVERVIEW
-};
+const {cur: DEFAULT_CUR} = FaroConstants.pagination;
 
 const List = () => {
+	const history = useHistory();
+
 	const {selectedChannel} = useChannelContext();
 	const {channelId, groupId} = useParams();
 	const initialRangeSelectors = useQueryRangeSelectors();
@@ -31,15 +28,51 @@ const List = () => {
 
 	const FrontendDataSet = useFrontendDataSet();
 
-	let apiURL = `/o/faro/contacts/${groupId}/asset-summary?channelId=${channelId}&rangeKey=${rangeSelectors.rangeKey}`;
+	let queryParams = `channelId=${channelId}&rangeKey=${rangeSelectors.rangeKey}`;
 
 	if (rangeSelectors.rangeEnd) {
-		apiURL += `&rangeEnd=${rangeSelectors.rangeEnd}`;
+		queryParams += `&rangeEnd=${rangeSelectors.rangeEnd}`;
 	}
 
 	if (rangeSelectors.rangeStart) {
-		apiURL += `&rangeStart=${rangeSelectors.rangeStart}`;
+		queryParams += `&rangeStart=${rangeSelectors.rangeStart}`;
 	}
+
+	const filters = useMemo(
+		() => [
+			{
+				apiURL: `/o/faro/contacts/${groupId}/asset-summary-types?${queryParams}`,
+				entityFieldType: 'string',
+				id: 'assetType',
+				itemKey: 'name',
+				itemLabel: 'name',
+				label: Liferay.Language.get('type'),
+				multiple: true,
+				type: 'selection'
+			},
+			{
+				apiURL: `/o/faro/contacts/${groupId}/asset-summary-tags?${queryParams}`,
+				entityFieldType: 'string',
+				id: 'assetTags',
+				itemKey: 'name',
+				itemLabel: 'name',
+				label: Liferay.Language.get('tags'),
+				multiple: true,
+				type: 'selection'
+			},
+			{
+				apiURL: `/o/faro/contacts/${groupId}/asset-summary-categories?${queryParams}`,
+				entityFieldType: 'string',
+				id: 'assetCategories',
+				itemKey: 'name',
+				itemLabel: 'name',
+				label: Liferay.Language.get('categories'),
+				multiple: true,
+				type: 'selection'
+			}
+		],
+		[channelId, groupId, rangeSelectors.rangeKey]
+	);
 
 	return (
 		<BasePage documentTitle={Liferay.Language.get('assets')}>
@@ -62,7 +95,23 @@ const List = () => {
 				<div className='d-flex justify-content-end w-100'>
 					<DropdownRangeKey
 						legacy={false}
-						onRangeSelectorChange={setRangeSelectors}
+						onRangeSelectorChange={rangeSelectors => {
+							history.push(
+								setUriQueryValues(
+									pickBy({
+										page: DEFAULT_CUR,
+										...rangeSelectors
+									}),
+									removeUriQueryParam(
+										window.location.href,
+										'rangeEnd',
+										'rangeStart'
+									)
+								)
+							);
+
+							setRangeSelectors(rangeSelectors);
+						}}
 						rangeSelectors={rangeSelectors}
 					/>
 				</div>
@@ -72,51 +121,23 @@ const List = () => {
 				<Card>
 					{FrontendDataSet && (
 						<FrontendDataSet
-							apiURL={apiURL}
+							apiURL={`/o/faro/contacts/${groupId}/asset-summary?${queryParams}`}
+							// Trick to turn off dirty the URL with paramas.
+
 							configInURLBehavior='off'
 							customDataRenderers={{
-								assetMetricRenderer: ({value}) => (
-									<span>{toThousands(value.value)}</span>
-								),
-								assetTitleRenderer: ({itemData, value}) => {
-									const assetTitle = value || itemData.id;
-									const route =
-										mapRoutes?.[itemData.assetType] ??
-										Routes.ASSETS_OBJECT_ENTRY_OVERVIEW;
-
-									return (
-										<ClayLink
-											href={toRoute(route, {
-												assetId: itemData.id,
-												channelId,
-												groupId,
-												touchpoint: 'Any',
-												...(assetTitle && {
-													title: encodeURIComponent(
-														assetTitle
-													)
-												})
-											})}
-											style={{color: '#000'}}
-										>
-											{value || itemData.id}
-										</ClayLink>
-									);
-								}
+								assetMetricRenderer:
+									columns.assetMetricRenderer,
+								assetTitleRenderer: columns.assetTitleRenderer({
+									channelId,
+									groupId
+								})
 							}}
-							filters={[
-								{
-									apiURL: `/o/faro/contacts/${groupId}/asset-summary-types?channelId=${channelId}&rangeKey=${rangeSelectors.rangeKey}`,
-									entityFieldType: 'string',
-									id: 'assetType',
-									itemKey: 'name',
-									itemLabel: 'name',
-									label: Liferay.Language.get('type'),
-									multiple: true,
-									type: 'selection'
-								}
-							]}
+							filters={filters}
 							id='assetTable'
+							// Trick to restart FDS every time the rangeSelectors changes.
+
+							key={Object.values(rangeSelectors).join()}
 							pagination={pagination}
 							showPagination
 							views={[
@@ -174,10 +195,7 @@ const List = () => {
 											}
 										]
 									},
-									thumbnail: 'table',
-									visibleFieldNames: {
-										downloadsMetric: false
-									}
+									thumbnail: 'table'
 								}
 							]}
 						/>
