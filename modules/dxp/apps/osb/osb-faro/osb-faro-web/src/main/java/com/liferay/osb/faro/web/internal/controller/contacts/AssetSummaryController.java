@@ -49,7 +49,7 @@ public class AssetSummaryController extends BaseFaroController {
 			faroProjectLocalService.getFaroProjectByGroupId(groupId);
 
 		Results<AssetSummary> results = contactsEngineClient.getAssetSummaries(
-			faroProject, channelId, filterString, search, rangeKey, page - 1,
+			faroProject, channelId, filterString, search, rangeKey, page,
 			pageSize, sort);
 
 		Function<AssetSummary, AssetSummaryDisplay> function =
