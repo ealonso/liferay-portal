@@ -443,15 +443,6 @@ public abstract class BaseMockContactsEngineClientImpl
 	}
 
 	@Override
-	public Results<AssetSummaryCategory> getAssetSummaryCategories(
-		FaroProject faroProject, long channelId, String rangeEnd, int rangeKey,
-		String rangeStart, int cur, int delta) {
-
-		return contactsEngineClient.getAssetSummaryCategories(
-			faroProject, channelId, rangeEnd, rangeKey, rangeStart, cur, delta);
-	}
-
-	@Override
 	public DataSource getAvailableTokenDataSource(FaroProject faroProject) {
 		return contactsEngineClient.getAvailableTokenDataSource(faroProject);
 	}
