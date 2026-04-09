@@ -29,6 +29,7 @@ global.AUI = () => ({
 });
 
 global.Liferay = {
+	FeatureFlags: {},
 	Language: {
 		get: lang
 	}
