@@ -122,11 +122,11 @@ describe('UsageOverview', () => {
 		).toBeInTheDocument();
 
 		expect(
-			getByText('104,000 known individuals are available.')
+			getByText('104.000 known individuals are available.')
 		).toBeInTheDocument();
 
 		expect(
-			getByText('1,000 of 105,000 - 1% known individuals were used.')
+			getByText('1000 of 105.000 - 1% known individuals were used.')
 		).toBeInTheDocument();
 	});
 
@@ -148,7 +148,7 @@ describe('UsageOverview', () => {
 		);
 
 		expect(
-			getByText('115,000 of 105,000 - 100% known individuals were used.')
+			getByText('115.000 of 105.000 - 100% known individuals were used.')
 		).toBeInTheDocument();
 	});
 
@@ -170,7 +170,7 @@ describe('UsageOverview', () => {
 		);
 
 		expect(
-			getByText('8,000,000 of 7,000,000 - 100% page views were used.')
+			getByText('8.000.000 of 7.000.000 - 100% page views were used.')
 		).toBeInTheDocument();
 	});
 
@@ -223,11 +223,11 @@ describe('UsageOverview', () => {
 		).toBeInTheDocument();
 
 		expect(
-			getByText('111,123 of 7,000,000 - 1.6% page views were used.')
+			getByText('111.123 of 7.000.000 - 1.6% page views were used.')
 		).toBeInTheDocument();
 
 		expect(
-			getByText('6,888,877 page views are available.')
+			getByText('6.888.877 page views are available.')
 		).toBeInTheDocument();
 	});
 

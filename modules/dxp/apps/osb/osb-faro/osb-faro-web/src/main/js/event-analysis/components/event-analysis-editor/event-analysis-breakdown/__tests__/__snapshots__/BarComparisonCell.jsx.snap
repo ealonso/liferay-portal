@@ -53,7 +53,7 @@ exports[`BarComparisonCell render 1`] = `
                 class="info-wrapper align-items-center d-flex justify-content-between"
               >
                 <span>
-                  3,367
+                  3367
                 </span>
               </div>
             </div>
@@ -118,7 +118,7 @@ exports[`BarComparisonCell render two tables when comparing segment and event 1`
                 class="info-wrapper align-items-center d-flex justify-content-between"
               >
                 <span>
-                  1,717
+                  1717
                 </span>
               </div>
             </div>
@@ -148,7 +148,7 @@ exports[`BarComparisonCell render two tables when comparing segment and event 1`
                 class="info-wrapper align-items-center d-flex justify-content-between"
               >
                 <span>
-                  1,650
+                  1650
                 </span>
               </div>
             </div>

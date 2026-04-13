@@ -122,7 +122,7 @@ exports[`AssetAppearsOnCard should render 1`] = `
               <td
                 class="table-column-text-end"
               >
-                113,948
+                113.948
               </td>
             </tr>
             <tr
@@ -170,7 +170,7 @@ exports[`AssetAppearsOnCard should render 1`] = `
               <td
                 class="table-column-text-end"
               >
-                912,285
+                912.285
               </td>
             </tr>
             <tr
@@ -218,7 +218,7 @@ exports[`AssetAppearsOnCard should render 1`] = `
               <td
                 class="table-column-text-end"
               >
-                431,627
+                431.627
               </td>
             </tr>
             <tr
@@ -266,7 +266,7 @@ exports[`AssetAppearsOnCard should render 1`] = `
               <td
                 class="table-column-text-end"
               >
-                273,970
+                273.970
               </td>
             </tr>
             <tr
@@ -314,7 +314,7 @@ exports[`AssetAppearsOnCard should render 1`] = `
               <td
                 class="table-column-text-end"
               >
-                95,519
+                95.519
               </td>
             </tr>
           </tbody>

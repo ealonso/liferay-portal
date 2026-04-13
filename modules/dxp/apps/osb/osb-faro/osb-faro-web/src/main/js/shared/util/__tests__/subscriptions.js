@@ -32,8 +32,8 @@ describe('subscriptions', () => {
 			);
 
 			expect(planAddOns).toEqual({
-				individuals: '10,000',
-				pageViews: '5,000,000'
+				individuals: '10.000',
+				pageViews: '5.000.000'
 			});
 		});
 

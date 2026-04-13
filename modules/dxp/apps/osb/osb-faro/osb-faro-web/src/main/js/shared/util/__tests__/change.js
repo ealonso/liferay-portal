@@ -10,7 +10,7 @@ describe('change', () => {
 		it.each`
 			change  | expected
 			${0}    | ${0}
-			${1230} | ${'+1,230'}
+			${1230} | ${'+1230'}
 			${-987} | ${'-987'}
 		`('should format $change to $expected', ({change, expected}) => {
 			expect(formatChange(change)).toBe(expected);

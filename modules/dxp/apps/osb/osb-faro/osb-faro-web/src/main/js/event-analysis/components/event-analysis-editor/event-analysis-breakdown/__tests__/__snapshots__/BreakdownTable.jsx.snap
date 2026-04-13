@@ -156,7 +156,7 @@ exports[`BreakdownTable render 1`] = `
                               class="info-wrapper align-items-center d-flex justify-content-between"
                             >
                               <span>
-                                3,367
+                                3367
                               </span>
                             </div>
                           </div>
@@ -186,7 +186,7 @@ exports[`BreakdownTable render 1`] = `
                               class="info-wrapper align-items-center d-flex justify-content-between"
                             >
                               <span>
-                                5,033
+                                5033
                               </span>
                             </div>
                           </div>
@@ -365,7 +365,7 @@ exports[`BreakdownTable render with single event 1`] = `
                     class="info-wrapper align-items-center d-flex justify-content-between"
                   >
                     <span>
-                      3,367
+                      3367
                     </span>
                   </div>
                 </div>
@@ -395,7 +395,7 @@ exports[`BreakdownTable render with single event 1`] = `
                     class="info-wrapper align-items-center d-flex justify-content-between"
                   >
                     <span>
-                      5,033
+                      5033
                     </span>
                   </div>
                 </div>
