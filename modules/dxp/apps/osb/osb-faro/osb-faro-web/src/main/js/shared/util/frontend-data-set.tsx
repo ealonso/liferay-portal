@@ -1,6 +1,6 @@
 import FaroConstants from 'shared/util/constants';
-import React, {useEffect, useState} from 'react';
 import Label from '@clayui/label';
+import React, {useEffect, useState} from 'react';
 
 const {cur, delta, deltaValues} = FaroConstants.pagination;
 
