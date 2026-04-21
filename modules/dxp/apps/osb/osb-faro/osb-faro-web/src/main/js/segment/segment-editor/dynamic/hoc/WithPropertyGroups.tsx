@@ -147,7 +147,7 @@ const mapResultToProps = (
 		])
 	});
 
-	const propertyGroupsIList = List(
+	let propertyGroupsIList = List(
 		[
 			new PropertyGroup({
 				label: Liferay.Language.get('events'),
@@ -225,7 +225,9 @@ const mapResultToProps = (
 	);
 
 	if (type === SegmentTypes.Batch) {
-		propertyGroupsIList.push(organizationPropertyGroup);
+		propertyGroupsIList = propertyGroupsIList.push(
+			organizationPropertyGroup
+		);
 	}
 
 	return {
