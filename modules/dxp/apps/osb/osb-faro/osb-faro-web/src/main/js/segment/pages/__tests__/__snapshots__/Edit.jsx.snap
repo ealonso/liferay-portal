@@ -159,53 +159,6 @@ exports[`Edit should render 1`] = `
                       <div
                         class="btn-group-item"
                       >
-                        <label
-                          class="toggle-switch toggle-switch-root include-anonymous"
-                          for="includeAnonymousUsers"
-                        >
-                          <input
-                            class="toggle-switch-check"
-                            data-testid="toggle-switch-input"
-                            id="includeAnonymousUsers"
-                            name="includeAnonymousUsers"
-                            type="checkbox"
-                            value="false"
-                          />
-                          <span
-                            aria-hidden="true"
-                            class="toggle-switch-bar"
-                          >
-                            <span
-                              class="toggle-switch-handle"
-                              data-label-off="Include Anonymous"
-                              data-label-on="Include Anonymous"
-                            />
-                          </span>
-                        </label>
-                      </div>
-                      <div
-                        class="btn-group-item"
-                      >
-                        <span
-                          class="info-popover-root include-anon-help-icon"
-                        >
-                          <svg
-                            class="lexicon-icon lexicon-icon-question-circle-full icon-root"
-                            role="presentation"
-                          >
-                            <use
-                              href="#question-circle-full"
-                            />
-                          </svg>
-                        </span>
-                      </div>
-                    </div>
-                    <div
-                      class="btn-group"
-                    >
-                      <div
-                        class="btn-group-item"
-                      >
                         <button
                           aria-label="View Members"
                           class="button-root preview-criteria btn btn-outline-borderless btn-sm btn-outline-secondary"
