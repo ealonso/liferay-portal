@@ -25,7 +25,7 @@ import {
 import {
 	addSegmentField,
 	addStaticMember,
-	createDynamicSegment,
+	createBatchSegment,
 	createStaticSegment,
 	deleteSegment,
 	saveSegment,
@@ -356,7 +356,7 @@ test(
 );
 
 test(
-	'Check that the Dynamic Segment does not continue to appear in the audience card after the segment is deleted',
+	'Check that the Batch Segment does not continue to appear in the audience card after the segment is deleted',
 	{
 		tag: '@LPD-27586',
 	},
@@ -440,13 +440,13 @@ test(
 			});
 		});
 
-		const dynamicSegmentName = 'Test Dynamic Segment';
+		const firstBatchSegmentName = 'Test Batch Segment 1';
 
-		await test.step('Create dynamic segment', async () => {
-			await createDynamicSegment(page);
+		await test.step('Create first Batch segment', async () => {
+			await createBatchSegment(page);
 
 			await addSegmentField({
-				criterionName: 'email',
+				criterionName: 'Email Address',
 				criterionType: 'Individual',
 				page,
 			});
@@ -459,7 +459,7 @@ test(
 
 			await setSegmentName({
 				page,
-				segmentName: dynamicSegmentName,
+				segmentName: firstBatchSegmentName,
 			});
 
 			await saveSegment(page);
@@ -472,19 +472,26 @@ test(
 			});
 		});
 
-		const staticSegmentName = 'Test Static Segment';
+		const secondBatchSegmentName = 'Test Batch Segment 2';
 
-		await test.step('Create static segment', async () => {
-			await createStaticSegment(page);
+		await test.step('Create second Batch segment', async () => {
+			await createBatchSegment(page);
+
+			await addSegmentField({
+				criterionName: 'Email Address',
+				criterionType: 'Individual',
+				page,
+			});
+
+			await selectOperator({
+				operator: 'is known',
+				operatorField: SegmentConditions.criteriaCondition,
+				page,
+			});
 
 			await setSegmentName({
 				page,
-				segmentName: staticSegmentName,
-			});
-
-			await addStaticMember({
-				memberNames: individualName,
-				page,
+				segmentName: secondBatchSegmentName,
 			});
 
 			await saveSegment(page);
@@ -517,7 +524,7 @@ test(
 			});
 		});
 
-		const segmentsName = [dynamicSegmentName, staticSegmentName];
+		const segmentsName = [firstBatchSegmentName, secondBatchSegmentName];
 
 		await test.step('Check that the created segment appears on the Audience card', async () => {
 			for (const itemName of segmentsName) {
@@ -553,12 +560,12 @@ test(
 		await test.step('Delete the segments', async () => {
 			await deleteSegment({
 				page,
-				segmentName: dynamicSegmentName,
+				segmentName: firstBatchSegmentName,
 			});
 
 			await deleteSegment({
 				page,
-				segmentName: staticSegmentName,
+				segmentName: secondBatchSegmentName,
 			});
 		});
 
