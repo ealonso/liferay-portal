@@ -15,6 +15,7 @@ AssetFullContentDisplayContext assetFullContentDisplayContext = new AssetFullCon
 
 <liferay-journal:journal-article-display
 	articleDisplay="<%= assetFullContentDisplayContext.getJournalArticleDisplay() %>"
+	dataAnalyticsTrackingEnabled='<%= GetterUtil.getBoolean(request.getAttribute("dataAnalyticsTrackingEnabled"), true) %>'
 	paginationURL="<%= assetFullContentDisplayContext.getPaginationURL() %>"
 />
 

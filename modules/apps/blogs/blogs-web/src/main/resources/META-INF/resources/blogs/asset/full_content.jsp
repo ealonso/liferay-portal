@@ -16,15 +16,15 @@
 <liferay-util:dynamic-include key="com.liferay.blogs.web#/blogs/asset/full_content.jsp#pre" />
 
 <%
+boolean dataAnalyticsTrackingEnabled = GetterUtil.getBoolean(request.getAttribute("dataAnalyticsTrackingEnabled"), true);
+
 BlogsEntry entry = (BlogsEntry)request.getAttribute(WebKeys.BLOGS_ENTRY);
 
 String entryTitle = BlogsEntryUtil.getDisplayTitle(resourceBundle, entry);
-
-boolean hasAnalyticsAttributes = GetterUtil.getBoolean(request.getAttribute(AssetAnalyticsAttributesProvider.HAS_ANALYTICS_ATTRIBUTES));
 %>
 
 <div class="portlet-blogs">
-	<div class="widget-mode-simple" <%= hasAnalyticsAttributes ? StringPool.BLANK : String.format("data-analytics-asset-id=\"%s\" data-analytics-asset-title=\"%s\" data-analytics-asset-type=\"blog\"", String.valueOf(entry.getEntryId()), HtmlUtil.escapeAttribute(entryTitle)) %>>
+	<div class="widget-mode-simple" <%= dataAnalyticsTrackingEnabled ? String.format("data-analytics-asset-id=\"%s\" data-analytics-asset-title=\"%s\" data-analytics-asset-type=\"blog\"", String.valueOf(entry.getEntryId()), HtmlUtil.escapeAttribute(entryTitle)) : "" %>>
 		<div class="widget-mode-simple-entry">
 			<div class="widget-content" id="<portlet:namespace /><%= entry.getEntryId() %>">
 				<liferay-util:include page="/blogs/entry_cover_image_caption.jsp" servletContext="<%= application %>">

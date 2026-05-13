@@ -96,6 +96,10 @@ public class AssetDisplayTag extends IncludeTag {
 		return _viewURL;
 	}
 
+	public boolean isDataAnalyticsTrackingEnabled() {
+		return _dataAnalyticsTrackingEnabled;
+	}
+
 	public boolean isShowComments() {
 		return _showComments;
 	}
@@ -132,6 +136,12 @@ public class AssetDisplayTag extends IncludeTag {
 
 	public void setClassPK(long classPK) {
 		_classPK = classPK;
+	}
+
+	public void setDataAnalyticsTrackingEnabled(
+		boolean dataAnalyticsTrackingEnabled) {
+
+		_dataAnalyticsTrackingEnabled = dataAnalyticsTrackingEnabled;
 	}
 
 	@Override
@@ -174,6 +184,7 @@ public class AssetDisplayTag extends IncludeTag {
 		_assetRendererFactory = null;
 		_className = null;
 		_classPK = 0;
+		_dataAnalyticsTrackingEnabled = true;
 		_page = null;
 		_renderer = null;
 		_showComments = false;
@@ -258,6 +269,10 @@ public class AssetDisplayTag extends IncludeTag {
 
 		httpServletRequest.setAttribute(WebKeys.ASSET_ENTRY_VIEW_URL, _viewURL);
 
+		httpServletRequest.setAttribute(
+			"dataAnalyticsTrackingEnabled",
+			String.valueOf(_dataAnalyticsTrackingEnabled));
+
 		addParam("showComments", String.valueOf(_showComments));
 		addParam("showExtraInfo", String.valueOf(_showExtraInfo));
 		addParam("showHeader", String.valueOf(_showHeader));
@@ -271,6 +286,7 @@ public class AssetDisplayTag extends IncludeTag {
 	private AssetRendererFactory<?> _assetRendererFactory;
 	private String _className;
 	private long _classPK;
+	private boolean _dataAnalyticsTrackingEnabled = true;
 	private String _page;
 	private Renderer _renderer;
 	private boolean _showComments;

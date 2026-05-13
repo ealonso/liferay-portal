@@ -50,9 +50,6 @@ public class AssetAnalyticsAttributesProvider {
 
 	public static final String FIELD_TITLE = "title";
 
-	public static final String HAS_ANALYTICS_ATTRIBUTES =
-		"HAS_ANALYTICS_ATTRIBUTES";
-
 	public AssetAnalyticsAttributesProvider(
 		AssetEntry assetEntry, AssetRenderer<?> assetRenderer, Locale locale,
 		boolean shouldTrack) {

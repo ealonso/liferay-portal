@@ -21,10 +21,6 @@ AssetAnalyticsAttributesProvider assetAnalyticsAttributesProvider = null;
 
 boolean addWidgetAnalyticsWrappers = dataAnalyticsTrackingEnabled && Objects.equals(viewMode, Constants.VIEW);
 
-boolean hasAnalyticsAttributes = GetterUtil.getBoolean(request.getAttribute(AssetAnalyticsAttributesProvider.HAS_ANALYTICS_ATTRIBUTES));
-
-boolean addContentAnalyticsWrapper = addWidgetAnalyticsWrappers && !hasAnalyticsAttributes;
-
 if ((articleDisplay != null) && addWidgetAnalyticsWrappers) {
 	AssetEntry assetEntry = AssetEntryLocalServiceUtil.fetchEntry(JournalArticle.class.getName(), articleDisplay.getResourcePrimKey());
 
@@ -59,7 +55,7 @@ if ((articleDisplay != null) && addWidgetAnalyticsWrappers) {
 		</div>
 	</c:when>
 	<c:otherwise>
-		<div class="journal-content-article <%= Validator.isNotNull(wrapperCssClass) ? wrapperCssClass : StringPool.BLANK %>" <%= (dataAnalyticsTrackingEnabled && !hasAnalyticsAttributes) ? String.format("data-analytics-asset-id=\"%s\" data-analytics-asset-title=\"%s\" data-analytics-asset-type=\"web-content\" data-analytics-external-reference-code=\"%s\" data-analytics-web-content-resource-pk=\"%s\"", articleDisplay.getArticleId(), HtmlUtil.escapeAttribute(articleDisplay.getTitle()), articleDisplay.getExternalReferenceCode(), articleDisplay.getResourcePrimKey()) : "" %>>
+		<div class="journal-content-article <%= Validator.isNotNull(wrapperCssClass) ? wrapperCssClass : StringPool.BLANK %>" <%= dataAnalyticsTrackingEnabled ? String.format("data-analytics-asset-id=\"%s\" data-analytics-asset-title=\"%s\" data-analytics-asset-type=\"web-content\" data-analytics-external-reference-code=\"%s\" data-analytics-web-content-resource-pk=\"%s\"", articleDisplay.getArticleId(), HtmlUtil.escapeAttribute(articleDisplay.getTitle()), articleDisplay.getExternalReferenceCode(), articleDisplay.getResourcePrimKey()) : "" %>>
 			<c:if test='<%= GetterUtil.getBoolean((String)request.getAttribute("liferay-journal:journal-article:showTitle")) %>'>
 				<clay:row>
 					<clay:col>
@@ -80,7 +76,7 @@ if ((articleDisplay != null) && addWidgetAnalyticsWrappers) {
 			</c:if>
 
 			<c:choose>
-				<c:when test="<%= addContentAnalyticsWrapper %>">
+				<c:when test="<%= addWidgetAnalyticsWrappers %>">
 					<div <%= assetAnalyticsAttributesProvider.buildAttributes(AssetAnalyticsAttributesProvider.ACTION_VIEW, AssetAnalyticsAttributesProvider.FIELD_CONTENT) %>>
 						<%= articleDisplay.getContent() %>
 					</div>

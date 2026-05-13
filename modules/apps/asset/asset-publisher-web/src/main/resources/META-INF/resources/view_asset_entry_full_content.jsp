@@ -191,27 +191,13 @@ AssetAnalyticsAttributesProvider assetAnalyticsAttributesProvider = new AssetAna
 	</c:if>
 
 	<div class="asset-content mb-3" <%= assetAnalyticsAttributesProvider.buildAttributes(AssetAnalyticsAttributesProvider.ACTION_VIEW, AssetAnalyticsAttributesProvider.FIELD_CONTENT) %>>
-
-		<%
-		request.setAttribute(AssetAnalyticsAttributesProvider.HAS_ANALYTICS_ATTRIBUTES, Boolean.TRUE);
-
-		try {
-		%>
-
-			<liferay-asset:asset-display
-				assetEntry="<%= assetEntry %>"
-				assetRenderer="<%= assetRenderer %>"
-				assetRendererFactory="<%= assetRendererFactory %>"
-				showExtraInfo="<%= assetPublisherDisplayContext.isShowExtraInfo() %>"
-			/>
-
-		<%
-		}
-		finally {
-			request.removeAttribute(AssetAnalyticsAttributesProvider.HAS_ANALYTICS_ATTRIBUTES);
-		}
-		%>
-
+		<liferay-asset:asset-display
+			assetEntry="<%= assetEntry %>"
+			assetRenderer="<%= assetRenderer %>"
+			assetRendererFactory="<%= assetRendererFactory %>"
+			dataAnalyticsTrackingEnabled="<%= false %>"
+			showExtraInfo="<%= assetPublisherDisplayContext.isShowExtraInfo() %>"
+		/>
 	</div>
 
 	<c:if test="<%= assetPublisherDisplayContext.isShowCategories() %>">
