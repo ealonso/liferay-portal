@@ -14,7 +14,7 @@ dependencies {
 	compileInclude group: "org.springframework", name: "spring-context", version: "5.3.39"
 	compileInclude group: "org.springframework", name: "spring-core", version: "5.3.39"
 	compileInclude group: "org.springframework", name: "spring-web", version: "5.3.39"
-	compileInclude group: "org.springframework.boot", name: "spring-boot", version: "2.7.18"
+	compileInclude group: "org.springframework.boot", name: "spring-boot", version: "3.5.14"
 	compileInclude group: "org.springframework.hateoas", name: "spring-hateoas", version: "1.5.6"
 	compileOnly group: "com.liferay.portal", name: "com.liferay.portal.kernel", version: "default"
 	compileOnly group: "org.osgi", name: "org.osgi.service.component.annotations", version: "1.4.0"
