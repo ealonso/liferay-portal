@@ -1036,14 +1036,21 @@ public class ProjectController extends BaseFaroController {
 				FaroPropsValues.FARO_DEFAULT_WE_DEPLOY_KEY);
 		}
 
-		String weDeployKey =
-			contactsEngineClient.addProject(faroProject) + ".lfr.cloud";
+		try {
+			String weDeployKey =
+				contactsEngineClient.addProject(faroProject) + ".lfr.cloud";
 
-		faroProject.setWeDeployKey(weDeployKey);
+			faroProject.setWeDeployKey(weDeployKey);
 
-		if (!Objects.equals(corpProjectUuid, FaroPropsValues.FARO_PROJECT_ID)) {
-			_provisioningClient.addProductConsumption(
-				corpProjectUuid, faroProject.getGroupId());
+			if (!Objects.equals(
+					corpProjectUuid, FaroPropsValues.FARO_PROJECT_ID)) {
+
+				_provisioningClient.addProductConsumption(
+					corpProjectUuid, faroProject.getGroupId());
+			}
+		}
+		catch (Exception exception) {
+			_log.error(exception);
 		}
 
 		return _faroProjectLocalService.updateFaroProject(faroProject);
