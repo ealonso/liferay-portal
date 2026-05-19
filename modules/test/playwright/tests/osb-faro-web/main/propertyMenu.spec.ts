@@ -6,84 +6,104 @@
 import {expect, mergeTests} from '@playwright/test';
 
 import {apiHelpersTest} from '../../../fixtures/apiHelpersTest';
+import {isolatedChannelTest} from '../../../fixtures/isolatedChannelTest';
 import {loginAnalyticsCloudTest} from '../../../fixtures/loginAnalyticsCloudTest';
 import {loginTest} from '../../../fixtures/loginTest';
+import {getHeader} from '../../../helpers/ApiHelpers';
 import {clickAndExpectToBeVisible} from '../../../utils/clickAndExpectToBeVisible';
 import getRandomString from '../../../utils/getRandomString';
 import {faroConfig} from './faro.config';
-import {ACPage, navigateToACSettingsViaURL} from './utils/navigation';
-import {signInAC, signOutAC} from './utils/portal';
-import {
-	createProperty,
-	deleteProperty,
-	switchProperty,
-} from './utils/properties';
 
-const test = mergeTests(apiHelpersTest, loginAnalyticsCloudTest(), loginTest());
+const test = mergeTests(
+	apiHelpersTest,
+	isolatedChannelTest,
+	loginAnalyticsCloudTest(),
+	loginTest()
+);
 
 test(
-	'Property menu reflects creation, persists across relogin, and reflects deletion',
+	'Property menu reflects the last selected property across relogin and its deletion',
 	{tag: ['@LRAC-8972', '@LRAC-8974']},
-	async ({apiHelpers, page}) => {
-		const projects = await apiHelpers.jsonWebServicesOSBFaro.getProjects();
-
-		const project = projects.find(({name}) => name === 'FARO-DEV-liferay');
-
+	async ({apiHelpers, page, project}) => {
 		const propertyName = `Test Property ${getRandomString()}`;
 
-		// Create a new property
-
-		await navigateToACSettingsViaURL({
-			acPage: ACPage.propertiesPage,
-			page,
-			projectID: project.groupId,
-		});
-
-		await createProperty({page, propertyName});
-
-		// Switch to the new property via the sidebar menu
-
-		await page.goto(
-			`${faroConfig.environment.baseUrl}/workspace/${project.groupId}`
+		const property = await apiHelpers.jsonWebServicesOSBFaro.createChannel(
+			propertyName,
+			project.groupId
 		);
 
-		await switchProperty({page, propertyName});
+		try {
+			const workspaceUrl = `${faroConfig.environment.baseUrl}/workspace/${project.groupId}`;
 
-		// Sign out and back in, assert the last selected property persists
+			await page.goto(workspaceUrl);
 
-		await signOutAC(page);
+			// Switch to the new property via the sidebar menu
 
-		await signInAC(page);
+			await page.locator('button.channels-menu').click();
 
-		await page.goto(
-			`${faroConfig.environment.baseUrl}/workspace/${project.groupId}`
-		);
-
-		await expect(
-			page.locator('button.channels-menu .channels-menu-label')
-		).toHaveText(propertyName);
-
-		// Delete the property and assert it is removed from the sidebar menu
-
-		await navigateToACSettingsViaURL({
-			acPage: ACPage.propertiesPage,
-			page,
-			projectID: project.groupId,
-		});
-
-		await deleteProperty({page, propertyName});
-
-		await page.goto(
-			`${faroConfig.environment.baseUrl}/workspace/${project.groupId}`
-		);
-
-		await page.locator('button.channels-menu').click();
-
-		await expect(
-			page
+			await page
 				.locator('.channels-menu-dropdown-body')
 				.getByRole('link', {name: propertyName})
-		).not.toBeVisible();
+				.click();
+
+			// Sign out and back in, assert the last selected property persists
+
+			await page.locator('button.user-menu').click();
+
+			await page.getByRole('link', {name: 'Sign Out'}).click();
+
+			await page.goto(faroConfig.environment.baseUrl);
+
+			await expect
+				.poll(async () => {
+					const response = await page.request.post(
+						`${faroConfig.environment.baseUrl}/c/portal/login`,
+						{
+							data: new URLSearchParams({
+								login: faroConfig.user.login,
+								password: faroConfig.user.password,
+								rememberMe: 'true',
+							}).toString(),
+							headers: await getHeader(
+								page,
+								'application/x-www-form-urlencoded'
+							),
+						}
+					);
+
+					return response.status();
+				})
+				.toBe(200);
+
+			await page.goto(workspaceUrl);
+
+			await expect(
+				page.locator('button.channels-menu .channels-menu-label')
+			).toHaveText(propertyName);
+
+			// Delete the property and assert the sidebar menu no longer lists it
+
+			await apiHelpers.jsonWebServicesOSBFaro.deleteChannel(
+				`[${property.id}]`,
+				project.groupId
+			);
+
+			await page.goto(workspaceUrl);
+
+			await page.locator('button.channels-menu').click();
+
+			await expect(
+				page
+					.locator('.channels-menu-dropdown-body')
+					.getByRole('link', {name: propertyName})
+			).not.toBeVisible();
+		}
+		finally {
+			await apiHelpers.jsonWebServicesOSBFaro.deleteChannel(
+				`[${property.id}]`,
+				project.groupId
+			);
+		}
 	}
 );
 
