@@ -79,6 +79,8 @@ Import-Package:\
 	!io.smallrye.*,\
 	\
 	!io.undertow.*,\
+		\
+	!jakarta.jms.*,\
 	\
 	!javax.annotation.*,\
 	\
@@ -195,6 +197,7 @@ Import-Package:\
 	!org.springframework.xml.transform.*,\
 	\
 	!org.synchronoss.cloud.nio.*,\
+	
 	\
 	!org.xnio.*,\
 	\
