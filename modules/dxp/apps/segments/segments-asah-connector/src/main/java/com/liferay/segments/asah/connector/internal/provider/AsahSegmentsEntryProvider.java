@@ -73,8 +73,8 @@ public class AsahSegmentsEntryProvider implements SegmentsEntryProvider {
 
 	@Override
 	public int getSegmentsEntryClassPKsCount(
-				long segmentsEntryId, boolean memberLookup)
-			throws PortalException {
+			long segmentsEntryId, boolean memberLookup)
+		throws PortalException {
 
 		return getSegmentsEntryClassPKsCount(segmentsEntryId);
 	}
