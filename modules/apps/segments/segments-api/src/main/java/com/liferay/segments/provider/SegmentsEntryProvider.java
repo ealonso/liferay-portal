@@ -33,6 +33,10 @@ public interface SegmentsEntryProvider {
 			long segmentsEntryId, int start, int end)
 		throws PortalException;
 
+	public long[] getSegmentsEntryClassPKs(
+			long segmentsEntryId, int start, int end, boolean memberLookup)
+		throws PortalException;
+
 	/**
 	 * Returns the number of entities related to the segment.
 	 *
@@ -41,6 +45,10 @@ public interface SegmentsEntryProvider {
 	 * @throws PortalException if a portal exception occurred
 	 */
 	public int getSegmentsEntryClassPKsCount(long segmentsEntryId)
+		throws PortalException;
+
+	public int getSegmentsEntryClassPKsCount(
+			long segmentsEntryId, boolean memberLookup)
 		throws PortalException;
 
 	/**
