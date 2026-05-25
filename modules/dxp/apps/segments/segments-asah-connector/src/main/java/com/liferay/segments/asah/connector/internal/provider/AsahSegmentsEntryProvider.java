@@ -56,11 +56,27 @@ public class AsahSegmentsEntryProvider implements SegmentsEntryProvider {
 	}
 
 	@Override
+	public long[] getSegmentsEntryClassPKs(
+			long segmentsEntryId, int start, int end, boolean memberLookup)
+		throws PortalException {
+
+		return getSegmentsEntryClassPKs(segmentsEntryId, start, end);
+	}
+
+	@Override
 	public int getSegmentsEntryClassPKsCount(long segmentsEntryId)
 		throws PortalException {
 
 		return _segmentsEntryRelLocalService.getSegmentsEntryRelsCount(
 			segmentsEntryId);
+	}
+
+	@Override
+	public int getSegmentsEntryClassPKsCount(
+				long segmentsEntryId, boolean memberLookup)
+			throws PortalException {
+
+		return getSegmentsEntryClassPKsCount(segmentsEntryId);
 	}
 
 	@Override
