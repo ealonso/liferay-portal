@@ -10,6 +10,7 @@ import {featureFlagsTest} from '../../../fixtures/featureFlagsTest';
 import {isolatedChannelTest} from '../../../fixtures/isolatedChannelTest';
 import {loginAnalyticsCloudTest} from '../../../fixtures/loginAnalyticsCloudTest';
 import {loginTest} from '../../../fixtures/loginTest';
+import {clickAndExpectToBeVisible} from '../../../utils/clickAndExpectToBeVisible';
 import getRandomString from '../../../utils/getRandomString';
 import {ACPage, navigateToACSettingsViaURL} from './utils/navigation';
 
@@ -22,6 +23,23 @@ const test = mergeTests(
 	loginAnalyticsCloudTest(),
 	loginTest()
 );
+
+// Event definitions are stored per workspace, not per channel, so they survive
+// the isolatedChannelTest teardown and accumulate across runs. Track every
+// seeded name and delete it in afterEach to keep the Custom Events list
+// deterministic for the 100-event-limit assertion.
+
+let seededEventDefinitionNames: string[] = [];
+
+test.afterEach(async ({apiHelpers}) => {
+	if (seededEventDefinitionNames.length) {
+		await apiHelpers.jsonWebServicesOSBAsah
+			.deleteEventDefinitions(seededEventDefinitionNames)
+			.catch(() => {});
+	}
+
+	seededEventDefinitionNames = [];
+});
 
 async function seedCustomEvents({
 	apiHelpers,
@@ -39,7 +57,7 @@ async function seedCustomEvents({
 		(_, index) => `${prefix}-${index + 1}`
 	);
 
-	const date = new Date();
+	seededEventDefinitionNames.push(...eventNames);
 
 	await apiHelpers.jsonWebServicesOSBAsah.createEventDefinition(
 		eventNames.map((name) => ({
@@ -49,6 +67,8 @@ async function seedCustomEvents({
 			type: 'CUSTOM',
 		}))
 	);
+
+	const date = new Date();
 
 	await apiHelpers.jsonWebServicesOSBAsah.createEvents(
 		eventNames.map((name) => ({
@@ -70,7 +90,6 @@ test(
 	{
 		tag: '@LRAC-10360',
 	},
-
 	async ({analyticsChannel: channel, apiHelpers, page, project}) => {
 		const prefix = 'blockSort' + getRandomString();
 
@@ -89,7 +108,7 @@ test(
 
 		for (const name of eventNames) {
 			await expect(
-				page.getByRole('cell', {exact: true, name})
+				page.getByRole('cell', {exact: true, name}).first()
 			).toBeVisible();
 		}
 
@@ -112,7 +131,7 @@ test(
 
 			for (const name of eventNames) {
 				await expect(
-					page.getByRole('cell', {exact: true, name})
+					page.getByRole('cell', {exact: true, name}).first()
 				).toBeVisible();
 			}
 		}
@@ -124,16 +143,16 @@ test(
 	{
 		tag: '@LRAC-10164',
 	},
-
 	async ({analyticsChannel: channel, apiHelpers, page, project}) => {
-		test.setTimeout(180000);
-
 		const prefix = 'limit' + getRandomString();
+
+		// Seed 102 so two events overflow the 100-event allow-list limit and are
+		// auto-blocked, leaving exactly 100 on the Custom Events list.
 
 		await seedCustomEvents({
 			apiHelpers,
 			channelId: channel.id,
-			count: 101,
+			count: 102,
 			prefix,
 		});
 
@@ -147,10 +166,11 @@ test(
 			page.getByText('Showing 1 to 20 of 100 entries.')
 		).toBeVisible();
 
-		await page.getByRole('button', {name: 'View Block List'}).click();
-
-		await expect(
-			page.getByRole('cell', {exact: true, name: `${prefix}-101`})
-		).toBeVisible();
+		await clickAndExpectToBeVisible({
+			target: page
+				.getByRole('cell', {exact: true, name: `${prefix}-102`})
+				.first(),
+			trigger: page.getByRole('button', {name: 'Block List'}),
+		});
 	}
 );
