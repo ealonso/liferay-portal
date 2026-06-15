@@ -36,7 +36,7 @@ export async function fetchAccountTopAssets({
 }: IFetchAccountTopAssets): Promise<{items: ITopAsset[]}> {
 	return sendRequest({
 		data: {
-			accountId,
+			accountIds: accountId,
 			channelId,
 			pageSize: 5,
 			selectedMetric,

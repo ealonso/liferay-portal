@@ -22,7 +22,7 @@ export function fetchAccountTopTags({
 }) {
 	return sendRequest({
 		data: {
-			accountId,
+			accountIds: accountId,
 			channelId,
 			pageSize: 5,
 			selectedMetric,

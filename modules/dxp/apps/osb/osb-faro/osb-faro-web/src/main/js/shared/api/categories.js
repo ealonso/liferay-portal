@@ -23,7 +23,7 @@ export function fetchAccountTopCategories({
 }) {
 	return sendRequest({
 		data: {
-			accountId,
+			accountIds: accountId,
 			channelId,
 			pageSize: 5,
 			selectedMetric,
