@@ -19,6 +19,8 @@ import jakarta.ws.rs.Produces;
 import jakarta.ws.rs.QueryParam;
 import jakarta.ws.rs.core.MediaType;
 
+import java.util.List;
+
 import org.osgi.service.component.annotations.Component;
 
 /**
@@ -33,7 +35,7 @@ public class AssetSummaryTagFaroController extends BaseFaroController {
 	public FaroFDSResultsDisplay<AssetSummaryTag>
 			getAssetSummaryTagsFaroFDSResultsDisplay(
 				@PathParam("groupId") long groupId,
-				@QueryParam("accountId") String accountId,
+				@QueryParam("accountIds") List<String> accountIds,
 				@QueryParam("channelId") long channelId,
 				@QueryParam("keywords") String keywords,
 				@QueryParam("page") int page,
@@ -49,7 +51,7 @@ public class AssetSummaryTagFaroController extends BaseFaroController {
 		return new FaroFDSResultsDisplay<>(
 			contactsEngineClient.getAssetSummaryTags(
 				faroProjectLocalService.getFaroProjectByGroupId(groupId),
-				accountId, channelId, keywords, rangeEnd, rangeKey, rangeStart,
+				accountIds, channelId, keywords, rangeEnd, rangeKey, rangeStart,
 				selectedMetric, sortString, page, pageSize),
 			AssetSummaryTagDisplay::new, page, pageSize);
 	}

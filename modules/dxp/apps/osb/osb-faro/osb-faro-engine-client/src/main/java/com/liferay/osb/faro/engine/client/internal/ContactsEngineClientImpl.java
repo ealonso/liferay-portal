@@ -1210,15 +1210,15 @@ public class ContactsEngineClientImpl
 
 	@Override
 	public Results<AssetSummary> getAssetSummaries(
-		FaroProject faroProject, String accountId, long channelId,
+		FaroProject faroProject, List<String> accountIds, long channelId,
 		String filterString, String keywords, String objectType, int rangeKey,
 		String selectedMetric, int cur, int delta, String sortString) {
 
 		Map<String, Object> uriVariables = getUriVariables(
 			faroProject, cur, delta, null);
 
-		if (Validator.isNotNull(accountId)) {
-			uriVariables.put("accountId", accountId);
+		if ((accountIds != null) && !accountIds.isEmpty()) {
+			uriVariables.put("accountIds", accountIds);
 		}
 
 		uriVariables.put("channelId", channelId);
@@ -1257,7 +1257,7 @@ public class ContactsEngineClientImpl
 
 	@Override
 	public Results<AssetSummaryCategory> getAssetSummaryCategories(
-		FaroProject faroProject, String accountId, long channelId,
+		FaroProject faroProject, List<String> accountIds, long channelId,
 		String keywords, String rangeEnd, int rangeKey, String rangeStart,
 		String selectedMetric, String sort, String vocabularyId, int cur,
 		int delta) {
@@ -1265,8 +1265,8 @@ public class ContactsEngineClientImpl
 		Map<String, Object> uriVariables = getUriVariables(
 			faroProject, cur, delta, null);
 
-		if (Validator.isNotNull(accountId)) {
-			uriVariables.put("accountId", accountId);
+		if ((accountIds != null) && !accountIds.isEmpty()) {
+			uriVariables.put("accountIds", accountIds);
 		}
 
 		uriVariables.put("channelId", channelId);
@@ -1338,15 +1338,15 @@ public class ContactsEngineClientImpl
 
 	@Override
 	public Results<AssetSummaryTag> getAssetSummaryTags(
-		FaroProject faroProject, String accountId, long channelId,
+		FaroProject faroProject, List<String> accountIds, long channelId,
 		String keywords, String rangeEnd, int rangeKey, String rangeStart,
 		String selectedMetric, String sort, int cur, int delta) {
 
 		Map<String, Object> uriVariables = getUriVariables(
 			faroProject, cur, delta, null);
 
-		if (Validator.isNotNull(accountId)) {
-			uriVariables.put("accountId", accountId);
+		if ((accountIds != null) && !accountIds.isEmpty()) {
+			uriVariables.put("accountIds", accountIds);
 		}
 
 		uriVariables.put("channelId", channelId);

@@ -272,12 +272,12 @@ public interface ContactsEngineClient {
 		String assetType, int cur, int delta, List<OrderByField> orderByFields);
 
 	public Results<AssetSummary> getAssetSummaries(
-		FaroProject faroProject, String accountId, long channelId,
+		FaroProject faroProject, List<String> accountIds, long channelId,
 		String filterString, String keywords, String objectType, int rangeKey,
 		String selectedMetric, int cur, int delta, String sortString);
 
 	public Results<AssetSummaryCategory> getAssetSummaryCategories(
-		FaroProject faroProject, String accountId, long channelId,
+		FaroProject faroProject, List<String> accountIds, long channelId,
 		String keywords, String rangeEnd, int rangeKey, String rangeStart,
 		String selectedMetric, String sort, String vocabularyId, int cur,
 		int delta);
@@ -287,7 +287,7 @@ public interface ContactsEngineClient {
 		String rangeStart, int cur, int delta);
 
 	public Results<AssetSummaryTag> getAssetSummaryTags(
-		FaroProject faroProject, String accountId, long channelId,
+		FaroProject faroProject, List<String> accountIds, long channelId,
 		String keywords, String rangeEnd, int rangeKey, String rangeStart,
 		String selectedMetric, String sort, int cur, int delta);
 
