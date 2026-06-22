@@ -48,6 +48,7 @@ import com.liferay.osb.faro.web.internal.controller.BaseFaroController;
 import com.liferay.osb.faro.web.internal.controller.FaroController;
 import com.liferay.osb.faro.web.internal.exception.FaroException;
 import com.liferay.osb.faro.web.internal.exception.FaroValidationException;
+import com.liferay.osb.faro.web.internal.helper.ContactsCSVHelper;
 import com.liferay.osb.faro.web.internal.model.display.FaroResultsDisplay;
 import com.liferay.osb.faro.web.internal.model.display.contacts.ChannelDataSourceDisplay;
 import com.liferay.osb.faro.web.internal.model.display.contacts.DXPGroupDisplay;
@@ -61,7 +62,6 @@ import com.liferay.osb.faro.web.internal.model.display.contacts.FieldValuesDispl
 import com.liferay.osb.faro.web.internal.model.display.contacts.LiferaySyncCountsDisplay;
 import com.liferay.osb.faro.web.internal.param.FaroParam;
 import com.liferay.osb.faro.web.internal.search.FaroSearchContext;
-import com.liferay.osb.faro.web.internal.util.ContactsCSVHelper;
 import com.liferay.osb.faro.web.internal.util.FieldMappingUtil;
 import com.liferay.osb.faro.web.internal.util.OAuthUtil;
 import com.liferay.petra.function.transform.TransformUtil;
