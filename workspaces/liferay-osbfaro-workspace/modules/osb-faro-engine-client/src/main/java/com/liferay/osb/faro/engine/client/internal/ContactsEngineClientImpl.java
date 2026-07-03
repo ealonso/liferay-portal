@@ -1265,7 +1265,7 @@ public class ContactsEngineClientImpl
 			faroProject, cur, delta, null);
 
 		if (Validator.isNotNull(accountId)) {
-			uriVariables.put("accountId", accountId);
+			uriVariables.put("accountIds", Arrays.asList(accountId));
 		}
 
 		uriVariables.put("channelId", channelId);
@@ -1345,7 +1345,7 @@ public class ContactsEngineClientImpl
 			faroProject, cur, delta, null);
 
 		if (Validator.isNotNull(accountId)) {
-			uriVariables.put("accountId", accountId);
+			uriVariables.put("accountIds", Arrays.asList(accountId));
 		}
 
 		uriVariables.put("channelId", channelId);
