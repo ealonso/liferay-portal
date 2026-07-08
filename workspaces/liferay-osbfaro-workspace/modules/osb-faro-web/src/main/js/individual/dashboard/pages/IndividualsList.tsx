@@ -15,6 +15,7 @@ import {
 	PROFILE_TYPE,
 } from 'shared/util/pagination';
 import {
+	AccountTypes,
 	Conjunctions,
 	ProfileTypes,
 	RelationalOperators,
@@ -110,6 +111,20 @@ const DEFAULT_FILTER_BY_OPTIONS: FilterOptionType[] = [
 			},
 		],
 	},
+	{
+		key: 'accountTypes',
+		label: Liferay.Language.get('account-type'),
+		values: [
+			{
+				label: Liferay.Language.get('known-accounts'),
+				value: AccountTypes.KNOWN,
+			},
+			{
+				label: Liferay.Language.get('unknown-accounts'),
+				value: AccountTypes.UNKNOWN,
+			},
+		],
+	},
 ];
 
 function transformCountriesInQueryString(countries: string[]) {
@@ -175,6 +190,8 @@ const IndividualsList: React.FC = () => {
 	const rangeKey = activeUsersValue ? parseInt(activeUsersValue) : null;
 
 	const selectedFilters = {
+		accountTypes:
+			paginationParams.filterBy.get('accountTypes')?.toArray() || [],
 		filter: transformCountriesInQueryString(
 			paginationParams.filterBy.get('countries')?.toArray()
 		),
@@ -236,6 +253,9 @@ const IndividualsList: React.FC = () => {
 						]}
 						dataSourceFn={API.individuals.search}
 						dataSourceParams={{
+							accountTypes: selectedFilters.accountTypes.length
+								? selectedFilters.accountTypes
+								: undefined,
 							channelId,
 							filter: selectedFilters.filter,
 							groupId,

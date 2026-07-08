@@ -53,6 +53,11 @@ export enum ProfileTypes {
 	KNOWN = 'KNOWN',
 }
 
+export enum AccountTypes {
+	KNOWN = 'KNOWN',
+	UNKNOWN = 'UNKNOWN',
+}
+
 /**
  * Constants for date formatting
  */
