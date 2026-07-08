@@ -2477,9 +2477,9 @@ public class ContactsEngineClientImpl
 
 	@Override
 	public Results<Individual> getIndividuals(
-		FaroProject faroProject, String accountId, String activityStatus,
-		String channelId, String dataSourceId, List<String> fields,
-		String filterString, boolean includeAnonymousUsers,
+		FaroProject faroProject, String accountId, List<String> accountTypes,
+		String activityStatus, String channelId, String dataSourceId,
+		List<String> fields, String filterString, boolean includeAnonymousUsers,
 		String individualSegmentId, String interestName,
 		String notIndividualSegmentId, List<String> profileTypes, String query,
 		String rangeEnd, Integer rangeKey, String rangeStart, int cur,
@@ -2491,6 +2491,11 @@ public class ContactsEngineClientImpl
 
 		if (Validator.isNotNull(accountId)) {
 			uriVariables.put("accountId", accountId);
+		}
+
+		if (accountTypes != null) {
+			uriVariables.put(
+				"accountTypes", String.join(StringPool.COMMA, accountTypes));
 		}
 
 		if (Validator.isNotNull(activityStatus)) {

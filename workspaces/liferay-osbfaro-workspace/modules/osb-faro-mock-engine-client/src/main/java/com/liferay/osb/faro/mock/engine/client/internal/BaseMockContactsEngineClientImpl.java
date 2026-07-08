@@ -945,19 +945,20 @@ public abstract class BaseMockContactsEngineClientImpl
 
 	@Override
 	public Results<Individual> getIndividuals(
-		FaroProject faroProject, String accountId, String activityStatus,
-		String channelId, String dataSourceId, List<String> fields,
-		String filterString, boolean includeAnonymousUsers,
+		FaroProject faroProject, String accountId, List<String> accountTypes,
+		String activityStatus, String channelId, String dataSourceId,
+		List<String> fields, String filterString, boolean includeAnonymousUsers,
 		String individualSegmentId, String interestName,
 		String notIndividualSegmentId, List<String> profileTypes, String query,
 		String rangeEnd, Integer rangeKey, String rangeStart, int cur,
 		int delta, List<OrderByField> orderByFields) {
 
 		return contactsEngineClient.getIndividuals(
-			faroProject, accountId, activityStatus, channelId, dataSourceId,
-			fields, filterString, includeAnonymousUsers, individualSegmentId,
-			interestName, notIndividualSegmentId, profileTypes, query, rangeEnd,
-			rangeKey, rangeStart, cur, delta, orderByFields);
+			faroProject, accountId, accountTypes, activityStatus, channelId,
+			dataSourceId, fields, filterString, includeAnonymousUsers,
+			individualSegmentId, interestName, notIndividualSegmentId,
+			profileTypes, query, rangeEnd, rangeKey, rangeStart, cur, delta,
+			orderByFields);
 	}
 
 	@Override
