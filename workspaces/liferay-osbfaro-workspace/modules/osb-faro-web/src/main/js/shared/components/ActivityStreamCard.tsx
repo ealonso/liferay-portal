@@ -14,7 +14,7 @@ import {isNil} from 'lodash';
 import {mapListResultsToProps} from 'shared/util/mappers';
 import {sub} from 'shared/util/lang';
 import {Text} from '@clayui/core';
-import {toRounded} from 'shared/util/numbers';
+import {toRounded, toThousands} from 'shared/util/numbers';
 import {TrendClassification} from 'segment/types';
 import {withEmpty} from 'cerebro-shared/hocs/utils';
 import {withError, withLoading, WrapSafeResults} from 'shared/hoc/util';
@@ -146,7 +146,11 @@ const ActivityStreamCard: React.FC<IActivityStreamCardProps> = ({
 												Liferay.Language.get(
 													'x-activities'
 												),
-												[trendSummary.value]
+												[
+													toThousands(
+														trendSummary.value
+													),
+												]
 											)}
 										</Text>
 									</div>
@@ -188,7 +192,7 @@ const ActivityStreamCard: React.FC<IActivityStreamCardProps> = ({
 														Math.abs(
 															trendSummary.percentage
 														),
-														2
+														1
 													)}%`}
 												</span>,
 											],
