@@ -915,7 +915,8 @@ public class ContactsEngineClientImpl
 	@Override
 	public Results<AssetSummary> getAssetSummaries(
 		FaroProject faroProject, long channelId, String filterString,
-		String keywords, int rangeKey, int cur, int delta, String sort) {
+		String keywords, String rangeEnd, int rangeKey, String rangeStart,
+		int cur, int delta, String sort) {
 
 		Map<String, Object> uriVariables = getUriVariables(
 			faroProject, cur, delta, null);
@@ -927,7 +928,15 @@ public class ContactsEngineClientImpl
 		}
 
 		uriVariables.put("keywords", keywords);
-		uriVariables.put("rangeKey", rangeKey);
+
+		if ((rangeEnd != null) && (rangeStart != null)) {
+			uriVariables.put("rangeEnd", rangeEnd);
+			uriVariables.put("rangeStart", rangeStart);
+		}
+		else {
+			uriVariables.put("rangeKey", rangeKey);
+		}
+
 		uriVariables.put(
 			"sort",
 			Arrays.asList(

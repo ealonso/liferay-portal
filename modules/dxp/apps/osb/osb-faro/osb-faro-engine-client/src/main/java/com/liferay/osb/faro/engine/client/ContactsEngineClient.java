@@ -212,7 +212,8 @@ public interface ContactsEngineClient {
 
 	public Results<AssetSummary> getAssetSummaries(
 		FaroProject faroProject, long channelId, String filterString,
-		String keywords, int rangeKey, int cur, int delta, String sort);
+		String keywords, String rangeEnd, int rangeKey, String rangeStart,
+		int cur, int delta, String sort);
 
 	public Results<AssetSummaryCategory> getAssetSummaryCategories(
 		FaroProject faroProject, long channelId, String rangeEnd, int rangeKey,

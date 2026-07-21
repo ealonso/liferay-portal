@@ -409,11 +409,12 @@ public abstract class BaseMockContactsEngineClientImpl
 
 	public Results<AssetSummary> getAssetSummaries(
 		FaroProject faroProject, long channelId, String filterString,
-		String keywords, int rangeKey, int cur, int delta, String sort) {
+		String keywords, String rangeEnd, int rangeKey, String rangeStart,
+		int cur, int delta, String sort) {
 
 		return contactsEngineClient.getAssetSummaries(
-			faroProject, channelId, filterString, keywords, rangeKey, cur,
-			delta, sort);
+			faroProject, channelId, filterString, keywords, rangeEnd, rangeKey,
+			rangeStart, cur, delta, sort);
 	}
 
 	@Override
