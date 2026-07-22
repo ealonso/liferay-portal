@@ -36,7 +36,7 @@ public class UserBulkReindexer implements BulkReindexer {
 	public void reindex(long companyId, Collection<Long> classPKs) {
 		int size = classPKs.size();
 
-		if (size <= DBManagerUtil.getDBMaxParameters()) {
+		if (size <= DBManagerUtil.getDBInMaxParameters()) {
 			_reindex(companyId, classPKs);
 
 			return;
@@ -45,13 +45,13 @@ public class UserBulkReindexer implements BulkReindexer {
 		List<Long> classPKsList = ListUtil.fromCollection(classPKs);
 
 		int start = 0;
-		int end = DBManagerUtil.getDBMaxParameters();
+		int end = DBManagerUtil.getDBInMaxParameters();
 
 		while (start < size) {
 			_reindex(companyId, ListUtil.subList(classPKsList, start, end));
 
-			end += DBManagerUtil.getDBMaxParameters();
-			start += DBManagerUtil.getDBMaxParameters();
+			end += DBManagerUtil.getDBInMaxParameters();
+			start += DBManagerUtil.getDBInMaxParameters();
 		}
 	}
 
