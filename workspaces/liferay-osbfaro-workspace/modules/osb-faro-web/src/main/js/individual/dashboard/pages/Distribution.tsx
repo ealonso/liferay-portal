@@ -85,9 +85,9 @@ export const IndividualsDistribution: React.FC<
 			/>
 
 			<StatesRenderer.Success>
-				<div className="individuals-dashboard-distribution-root container-fluid">
+				<div className="individuals-dashboard-distribution-root">
 					<div className="row">
-						<div className="col-xl-12">
+						<div className="col">
 							<Distribution
 								contextOptions={[CONTEXT_OPTIONS[0]]}
 								distributionsKey={

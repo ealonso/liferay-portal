@@ -47,7 +47,7 @@ const LifecycleSettingsForm: React.FC<ILifecycleSettingsFormProps> = ({
 			submitLabel={submitLabel}
 		/>
 
-		<div className="justify-self-center d-inline-block mt-5 mx-auto">
+		<div className="mt-5 mx-5">
 			<Card>
 				<Card.Body>
 					<Card.Title>

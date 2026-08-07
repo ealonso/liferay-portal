@@ -8,9 +8,9 @@ import {fetchDistribution} from 'shared/actions/distributions';
 import {Sizes} from 'shared/util/constants';
 
 const SegmentDistribution = ({segment, ...otherProps}) => (
-	<div className='segment-distribution-root container-fluid'>
+	<div className='segment-distribution-root'>
 		<div className='row'>
-			<div className='col-xl-12'>
+			<div className='col'>
 				<Distribution
 					distributionsKey={segment.id}
 					knownIndividualCount={segment.knownIndividualCount}
