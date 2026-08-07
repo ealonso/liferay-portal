@@ -31,7 +31,7 @@ const CreateItemSimilarity: React.FC<ICreateItemSimilarityProps> = ({
 			pageTitle={Liferay.Language.get('new-item-similarity-model')}
 		>
 			<div className="row">
-				<div className="col-xl-8">
+				<div className="col">
 					<RecommendationStepCard
 						cancelHref={toRoute(Routes.SETTINGS_RECOMMENDATIONS, {
 							groupId,

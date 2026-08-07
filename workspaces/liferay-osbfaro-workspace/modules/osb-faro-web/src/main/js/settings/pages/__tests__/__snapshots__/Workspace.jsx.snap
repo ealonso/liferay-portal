@@ -321,7 +321,7 @@ exports[`Workspace Settting should render 1`] = `
           </div>
           <div>
             <div
-              class="add-workspace-form-root add-workspace-root col-lg-7 pl-0"
+              class="add-workspace-form-root add-workspace-root"
             >
               <div
                 class="sheet"

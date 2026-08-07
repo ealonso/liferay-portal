@@ -95,7 +95,7 @@ export const Workspace: React.FC<IWorkspaceProps> = ({
 			pageTitle={Liferay.Language.get('workspace-settings')}
 		>
 			<AddWorkspaceForm
-				className="add-workspace-root col-lg-7 pl-0"
+				className="add-workspace-root"
 				disabled={!currentUser.isAdmin()}
 				editing
 				emailAddressDomains={emailAddressDomains}

@@ -412,9 +412,7 @@ exports[`AccessTokenList should render 1`] = `
             />
           </div>
           <div>
-            <div
-              class="col-xl-8 pl-0"
-            >
+            <div>
               <div
                 class="card card-root"
               >

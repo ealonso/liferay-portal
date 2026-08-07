@@ -99,7 +99,7 @@ const TokenList: React.FC<
 	);
 
 	return (
-		<div className="col-xl-8 pl-0">
+		<div>
 			{!!tokens.length && !hasActiveToken && !onCloseAlert && (
 				<Alerts
 					iconSymbol="warning-full"

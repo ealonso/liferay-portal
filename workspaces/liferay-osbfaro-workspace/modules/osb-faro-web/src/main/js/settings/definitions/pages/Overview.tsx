@@ -111,7 +111,7 @@ export const Overview: React.FC<IOverviewProps> = ({groupId}) => (
 		pageTitle={Liferay.Language.get('definitions')}
 	>
 		<div className="row">
-			<div className="col-xl-8">
+			<div className="col">
 				<Card>
 					<ClayList>
 						{items(DEVELOPER_MODE)

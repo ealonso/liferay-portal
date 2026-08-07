@@ -35,7 +35,7 @@ const Edit: React.FC<IEditProps> = ({job, router}) => {
 			pageTitle={name}
 		>
 			<div className="row">
-				<div className="col-xl-8">
+				<div className="col">
 					<RecommendationStepCard
 						cancelHref={toRoute(
 							Routes.SETTINGS_RECOMMENDATION_MODEL_VIEW,

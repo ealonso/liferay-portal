@@ -193,7 +193,7 @@ export const Overview: React.FC<IOverviewProps> = ({close, groupId, open}) => {
 			pageTitle={Liferay.Language.get('data-control-&-privacy')}
 		>
 			<div className="row">
-				<div className="col-xl-8">
+				<div className="col">
 					<Card>
 						<Card.Body>
 							<div className="container">

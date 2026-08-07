@@ -6,7 +6,7 @@ exports[`View should render 1`] = `
     class="row"
   >
     <div
-      class="col-xl-8"
+      class="col"
     >
       <div
         class="settings-root"

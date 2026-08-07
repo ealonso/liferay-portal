@@ -82,7 +82,7 @@ const View: React.FC<IViewProps> = ({addAlert, close, history, job, open}) => {
 
 	return (
 		<div className="row">
-			<div className="col-xl-8">
+			<div className="col">
 				<BasePage
 					breadcrumbItems={[
 						getRecommendations({groupId}),
