@@ -25,7 +25,7 @@ FaroAdminDisplayContext faroAdminDisplayContext = new FaroAdminDisplayContext(re
 		<liferay-util:include page="" servletContext="<%= application %>" />
 	</liferay-frontend:sidebar-panel>
 
-	<div class="container-fluid container-fluid-max-xl sidenav-content">
+	<div class="container-fluid sidenav-content">
 		<aui:form name="fm">
 			<liferay-ui:search-container
 				id="faro_admin"
