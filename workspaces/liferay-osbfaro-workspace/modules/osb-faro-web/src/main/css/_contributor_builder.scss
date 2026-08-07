@@ -82,19 +82,6 @@
 					position: relative;
 				}
 			}
-
-			@media (min-width: $maxPageWidth) {
-				.contributor-container .container-fluid {
-					padding-right: calc(
-						#{$criteriaSidebarWidth} - ((100% - #{$maxPageWidth}) /
-									2)
-					);
-
-					.content-wrapper {
-						padding-right: 32px;
-					}
-				}
-			}
 		}
 
 		.criteria-builder-section-sidebar {

@@ -26,14 +26,3 @@
 		display: none;
 	}
 }
-
-@media (max-width: $maxPageWidth + $sidebarOpenWidth) {
-	body.open .segments-root {
-		.contributor-builder-root.editing
-			.criteria-builder-section-main
-			.contributor-container
-			.container-fluid {
-			padding-right: $criteriaSidebarWidth;
-		}
-	}
-}

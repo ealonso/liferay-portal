@@ -346,7 +346,7 @@ class SegmentEditor extends React.Component<ISegmentEditorProps> {
 
 										<div className="criteria-builder-section-main">
 											<div className="contributor-container">
-												<div className="container-fluid container-fluid-max-xl">
+												<div className="container-fluid">
 													<div className="content-wrapper">
 														<div className="segment-erc">
 															<Form.Group autoFit>

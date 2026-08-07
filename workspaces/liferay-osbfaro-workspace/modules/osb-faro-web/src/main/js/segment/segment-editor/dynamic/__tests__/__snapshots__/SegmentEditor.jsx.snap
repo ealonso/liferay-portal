@@ -198,7 +198,7 @@ exports[`SegmentEditor should render 1`] = `
             class="contributor-container"
           >
             <div
-              class="container-fluid container-fluid-max-xl"
+              class="container-fluid"
             >
               <div
                 class="content-wrapper"
