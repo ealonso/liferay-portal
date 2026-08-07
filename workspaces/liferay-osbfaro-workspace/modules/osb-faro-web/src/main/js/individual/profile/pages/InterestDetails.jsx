@@ -113,6 +113,7 @@ export default class InterestDetails extends React.Component {
 					<Card.Header>
 						<ClayNavigationBar
 							className='page-subnav'
+							fluidSize={false}
 							triggerLabel='label'
 						>
 							{this.getNavigationItems().map(

@@ -327,7 +327,7 @@ exports[`UserRoutes should render 1`] = `
                 class="page-subnav mx-4 my-3 navbar navbar-collapse-relative navbar-expand-md navbar-underline navigation-bar navigation-bar-light"
               >
                 <div
-                  class="container-fluid container-fluid-max-xl"
+                  class="container-fluid"
                 >
                   <button
                     aria-expanded="false"
@@ -354,7 +354,7 @@ exports[`UserRoutes should render 1`] = `
                     class="navbar-collapse collapse"
                   >
                     <div
-                      class="container-fluid container-fluid-max-xl"
+                      class="container-fluid"
                     >
                       <ul
                         class="navbar-nav"

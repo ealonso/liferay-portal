@@ -219,6 +219,7 @@ const BaseInterestDetails: React.FC<IBaseInterestDetailsProps> = ({
 				<Card.Header>
 					<ClayNavigationBar
 						className="page-subnav"
+						fluidSize={false}
 						key="subnav"
 						triggerLabel="label"
 					>

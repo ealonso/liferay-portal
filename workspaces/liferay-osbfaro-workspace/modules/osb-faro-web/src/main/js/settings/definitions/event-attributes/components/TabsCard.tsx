@@ -49,6 +49,7 @@ const TabsCard: React.FC<ITabsCardProps> = ({groupId}) => {
 		<Card key="cardContainer" pageDisplay>
 			<ClayNavigationBar
 				className="page-subnav mx-4 my-3"
+				fluidSize={false}
 				triggerLabel={activeLabel}
 			>
 				{NAV_ITEMS.map(({label, route}) => (

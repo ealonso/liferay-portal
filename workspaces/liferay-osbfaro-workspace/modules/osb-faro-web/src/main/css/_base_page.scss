@@ -15,8 +15,6 @@
 
 	.header-container,
 	.page-container {
-		margin: 0 auto;
-		max-width: $maxPageWidth + ($pagePadding * 2);
 		min-width: $minPageWidthContent;
 		padding: 0 $pagePadding;
 		position: relative;

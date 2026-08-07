@@ -33,6 +33,7 @@ export const VariantCard = ({
 					{Liferay.Language.get('variant-report')}
 				</Card.Title>
 				<ClayNavigationBar
+					fluidSize={false}
 					triggerLabel={
 						variantView === VariantView.Medians
 							? Liferay.Language.get('medians')

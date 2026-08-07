@@ -46,7 +46,7 @@ const NavBar: React.FC<INavBarProps> = ({
 
 	return (
 		<div className="row">
-			<ClayNavigationBar triggerLabel={activeLabel}>
+			<ClayNavigationBar fluidSize={false} triggerLabel={activeLabel}>
 				{items.map(({deprecated, label, route}) => (
 					<ClayNavigationBar.Item
 						active={matchedRoute === route}

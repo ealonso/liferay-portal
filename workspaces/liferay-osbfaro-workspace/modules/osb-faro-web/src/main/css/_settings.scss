@@ -38,8 +38,6 @@
 	}
 
 	.section-main {
-		margin: 0 auto;
-		max-width: $maxPageWidth + ($pagePadding * 2);
 		min-width: $minPageWidthContent;
 		padding: 0 $pagePadding;
 		width: 100%;

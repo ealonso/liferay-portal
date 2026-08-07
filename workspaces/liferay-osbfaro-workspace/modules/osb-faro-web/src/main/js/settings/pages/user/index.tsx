@@ -80,6 +80,7 @@ export const User = ({className}: {className?: string}) => {
 				{currentUser.isAdmin() && (
 					<ClayNavigationBar
 						className="page-subnav mx-4 my-3"
+						fluidSize={false}
 						triggerLabel={activeTriggerLabel}
 					>
 						{NAV_ITEMS.map(({label, route}) => (

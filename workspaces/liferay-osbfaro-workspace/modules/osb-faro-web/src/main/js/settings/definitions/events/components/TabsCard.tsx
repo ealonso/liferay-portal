@@ -47,7 +47,11 @@ const TabsCard: React.FC<ITabsCardProps> = ({groupId}) => {
 
 	return (
 		<Card key="cardContainer" pageDisplay>
-			<ClayNavigationBar className="my-3" triggerLabel={activeLabel}>
+			<ClayNavigationBar
+				className="my-3"
+				fluidSize={false}
+				triggerLabel={activeLabel}
+			>
 				{NAV_ITEMS.map(({label, route}) => (
 					<ClayNavigationBar.Item
 						active={matchedRoute === route}
