@@ -78,7 +78,6 @@ const AccountProfileRoutes = () => {
 			documentTitle={`${accountName} - ${Liferay.Language.get(
 				'account'
 			)}`}
-			fluid
 		>
 			<BasePage.Header
 				breadcrumbs={[

@@ -266,7 +266,6 @@ const Actions: React.FC<IActionsProps> = ({actions = []}) => (
 
 interface IHeaderProps extends React.HTMLAttributes<HTMLDivElement> {
 	breadcrumbs: IBreadcrumbArgs[];
-	fluid?: boolean;
 	groupId: string;
 }
 
@@ -276,30 +275,8 @@ const Header: React.FC<IHeaderProps> & {
 	Actions: typeof Actions;
 	Section: typeof Section;
 	TitleSection: typeof TitleSection;
-} = ({breadcrumbs, children, fluid, groupId}) => {
+} = ({breadcrumbs, children, groupId}) => {
 	const notificationResponse = useNotificationsAPI(groupId);
-
-	if (fluid) {
-		return (
-			<header className="header-root">
-				<div className="mx-5">
-					{breadcrumbs && (
-						<Row>
-							<Breadcrumbs items={breadcrumbs} />
-						</Row>
-					)}
-
-					{children}
-				</div>
-
-				<NotificationAlertList
-					{...notificationResponse}
-					groupId={groupId}
-					stripe
-				/>
-			</header>
-		);
-	}
 
 	return (
 		<header className="header-root">

@@ -14,7 +14,7 @@ const SubHeader: React.FC<ISubHeaderProps> = ({
 	if (fluid) {
 		return (
 			<div className={getCN('sub-header-root', className)}>
-				<div className="mx-5">{children}</div>
+				<div className="header-container">{children}</div>
 			</div>
 		);
 	}

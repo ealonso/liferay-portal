@@ -361,7 +361,6 @@ const List = () => {
 						label: selectedChannel?.name,
 					}),
 				]}
-				fluid
 				groupId={groupId!}
 			>
 				<BasePage.Header.TitleSection
