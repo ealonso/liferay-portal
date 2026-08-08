@@ -53,7 +53,7 @@
 			bottom: 0;
 			height: 40px;
 			margin: auto;
-			padding: 0 48px;
+			padding: 0 $pagePadding;
 			position: absolute;
 			right: 0;
 			top: 0;
@@ -101,13 +101,14 @@
 
 	.fluid-body-root {
 		display: flex;
+		padding: 0 $pagePadding;
 
 		&.sidebar-opened .card-root {
-			max-width: calc(100% - 488px - 1rem);
+			max-width: calc(100% - 488px);
 		}
 
 		.card-root {
-			margin: 1rem;
+			margin: 1rem 0;
 			width: 100%;
 		}
 
