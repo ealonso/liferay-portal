@@ -14,9 +14,7 @@
 		<suppress checks="JavaReferenceAnnotationsCheck" files=".*/com/liferay/osb/faro/rest/internal/dto/v1_0/converter/IndividualDTOConverter\.java" />
 		<suppress checks="JavaReferenceAnnotationsCheck" files=".*/com/liferay/osb/faro/rest/internal/resource/v1_0/.*ResourceImpl\.java" />
 		<suppress checks="JavaReferenceAnnotationsCheck" files=".*/com/liferay/osb/faro/web/internal/activator/OAuth2AuthorizationExpandoPortalInstanceLifecycleListener\.java" />
-		<suppress checks="JavaReferenceAnnotationsCheck" files=".*/com/liferay/osb/faro/web/internal/card/template/ContactsCardTemplateManagerHelper\.java" />
 		<suppress checks="JavaUpgradeCreateTableCheck" files="osb-faro-service/.*" />
-		<suppress checks="JavaUpgradeMissingTestCheck" files="osb-faro-contacts-service/.*" />
 		<suppress checks="JavaUpgradeMissingTestCheck" files="osb-faro-service/.*" />
 
 		<suppress checks="JSONPackageJSONDependencyVersionCheck" files=".*" />
