@@ -784,17 +784,6 @@ public abstract class BaseMockContactsEngineClientImpl
 	}
 
 	@Override
-	public Results<Individual> getCoworkerIndividuals(
-		FaroProject faroProject, String individualId, String query,
-		List<String> fields, int cur, int delta,
-		List<OrderByField> orderByFields) {
-
-		return contactsEngineClient.getCoworkerIndividuals(
-			faroProject, individualId, query, fields, cur, delta,
-			orderByFields);
-	}
-
-	@Override
 	public DataSource getDataSource(FaroProject faroProject, String id)
 		throws FaroEngineClientException {
 
@@ -1331,17 +1320,6 @@ public abstract class BaseMockContactsEngineClientImpl
 
 		return contactsEngineClient.getSessionValues(
 			faroProject, channelId, fieldName, filterString, query, cur, delta);
-	}
-
-	@Override
-	public Results<Individual> getSimilarIndividuals(
-		FaroProject faroProject, String individualId, String query,
-		List<String> fields, int cur, int delta,
-		List<OrderByField> orderByFields) {
-
-		return contactsEngineClient.getSimilarIndividuals(
-			faroProject, individualId, query, fields, cur, delta,
-			orderByFields);
 	}
 
 	@Override
