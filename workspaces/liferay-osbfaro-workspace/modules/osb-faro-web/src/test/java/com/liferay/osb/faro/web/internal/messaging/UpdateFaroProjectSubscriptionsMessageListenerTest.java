@@ -76,10 +76,9 @@ public class UpdateFaroProjectSubscriptionsMessageListenerTest {
 		_receive(faroProject1, faroProject2);
 
 		Mockito.verify(
-			_faroProjectLocalService
+			_faroProjectLocalService, Mockito.never()
 		).updateState(
-			faroProject1.getFaroProjectId(),
-			FaroProjectConstants.STATE_UNAVAILABLE
+			Mockito.eq(faroProject1.getFaroProjectId()), Mockito.anyString()
 		);
 
 		Mockito.verify(

@@ -142,10 +142,20 @@ public class UpdateFaroProjectSubscriptionsMessageListener
 					exception);
 			}
 
-			try {
-				OSBAccountEntry osbAccountEntry = _getOSBAccountEntry(
-					faroProject);
+			OSBAccountEntry osbAccountEntry = null;
 
+			try {
+				osbAccountEntry = _getOSBAccountEntry(faroProject);
+			}
+			catch (Exception exception) {
+				_log.error(
+					"Unable to get the OSB account entry for " + faroProject,
+					exception);
+
+				continue;
+			}
+
+			try {
 				faroProject = _updateSalesforceAccountId(
 					faroProject, osbAccountEntry.getSalesforceAccountId());
 
