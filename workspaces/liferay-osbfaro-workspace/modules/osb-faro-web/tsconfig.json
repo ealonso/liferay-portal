@@ -10,9 +10,6 @@
 		"moduleResolution": "node",
 		"outDir": "build",
 		"paths": {
-			"@liferay/frontend-data-set-web": [
-				"../../../../../../../modules/apps/frontend-data-set/frontend-data-set-web/src/main/resources/META-INF/resources/index.ts"
-			],
 			"react": [
 				"../../../node_modules/@types/react/index"
 			],
