@@ -18,6 +18,7 @@ declare global {
 				orderDescending: string;
 			};
 			projectLocations: {[key: string]: string};
+			sectionRoute?: string;
 		};
 		hbspt: {
 			forms: {
