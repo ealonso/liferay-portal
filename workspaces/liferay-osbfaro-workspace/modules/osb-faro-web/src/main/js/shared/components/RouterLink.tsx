@@ -13,7 +13,11 @@ interface IRouterLinkProps
  */
 const RouterLink = React.forwardRef<HTMLAnchorElement, IRouterLinkProps>(
 	({children, externalLink = false, href, ...otherProps}, ref) => {
-		if (href?.startsWith('http') || externalLink) {
+		if (
+			href?.startsWith('http') ||
+			href?.startsWith('/web/') ||
+			externalLink
+		) {
 			return (
 				<a {...otherProps} href={href} ref={ref}>
 					{children}
