@@ -18,6 +18,7 @@ import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -38,6 +39,9 @@ import java.io.Writer;
  * @author Eudaldo Alonso
  */
 public abstract class BaseFragmentRenderer implements FragmentRenderer {
+
+	public static final String ENTRY =
+		BaseFragmentRenderer.class.getName() + "#ENTRY";
 
 	@Override
 	public void render(
@@ -85,7 +89,12 @@ public abstract class BaseFragmentRenderer implements FragmentRenderer {
 			_renderScriptTag(
 				httpServletRequest, httpServletResponse, null, null,
 				_getStaticResourceURL(
-					httpServletRequest, "/o/osb-faro-web/dist/main.js"),
+					httpServletRequest,
+					StringBundler.concat(
+						"/o/osb-faro-web/dist/",
+						GetterUtil.getString(
+							httpServletRequest.getAttribute(ENTRY), "main"),
+						".js")),
 				"module");
 			_renderScriptTag(
 				httpServletRequest, httpServletResponse, null,
