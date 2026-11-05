@@ -4,7 +4,7 @@ import ClayIcon from 'shared/components/Icon';
 import ClayLink from '@clayui/link';
 import getCN from 'classnames';
 import React from 'react';
-import {Link} from 'react-router-dom';
+import RouterLink from 'shared/components/RouterLink';
 
 interface IToolbarProps {
 	backURL: string;
@@ -86,15 +86,15 @@ const Toolbar: React.FC<IToolbarProps> & {
 } = ({backURL, children, className, title}) => (
 	<BaseToolbar className={getCN('base-edit-page-toolbar', className)}>
 		<BaseToolbar.Item>
-			<Link
+			<RouterLink
 				aria-label={Liferay.Language.get('back')}
 				className="btn btn-monospaced btn-outline-borderless btn-outline-secondary btn-sm rounded-lg"
 				data-tooltip-align="bottom"
+				href={backURL}
 				title={Liferay.Language.get('back')}
-				to={backURL}
 			>
 				<ClayIcon symbol="angle-left" />
-			</Link>
+			</RouterLink>
 		</BaseToolbar.Item>
 
 		<BaseToolbar.Item className="pl-0">

@@ -14,7 +14,7 @@ import {DEVELOPER_MODE} from 'shared/util/constants';
 import {IBreadcrumbArgs} from 'shared/util/breadcrumbs';
 import {matchPath, useLocation, useParams} from 'react-router-dom';
 import {PageActions} from 'shared/components/base-page/Header';
-import {Routes, toRoute} from 'shared/util/router';
+import {Routes, toRoute, toWorkspaceURL} from 'shared/util/router';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {User} from 'shared/util/records';
 import {useStore} from 'react-redux';
@@ -151,6 +151,9 @@ const SettingsBasePage: React.FC<ISettingsBasePageProps> = ({
 	const notificationResponse = useNotificationsAPI(groupId);
 
 	const store = useStore();
+	const friendlyURL = store
+		.getState()
+		.getIn(['projects', groupId, 'data', 'friendlyURL']);
 	const recommendationsEnabled = store
 		.getState()
 		.getIn(['projects', groupId, 'data', 'recommendationsEnabled'], false);
@@ -158,7 +161,7 @@ const SettingsBasePage: React.FC<ISettingsBasePageProps> = ({
 	return (
 		<div className="settings-root">
 			<BaseEditPage.Toolbar
-				backURL={toRoute(Routes.WORKSPACE_WITH_ID, {groupId})}
+				backURL={toWorkspaceURL({friendlyURL, groupId})}
 				className="mb-4"
 				title={Liferay.Language.get('settings')}
 			/>
