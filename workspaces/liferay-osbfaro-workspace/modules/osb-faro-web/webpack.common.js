@@ -226,6 +226,18 @@ const config = {
 			},
 		],
 	},
+	optimization: {
+		splitChunks: {
+			cacheGroups: {
+				shared: {
+					chunks: 'initial',
+					enforce: true,
+					minChunks: 2,
+					name: 'shared',
+				},
+			},
+		},
+	},
 	output: {
 		filename: '[name].js',
 		module: true,
