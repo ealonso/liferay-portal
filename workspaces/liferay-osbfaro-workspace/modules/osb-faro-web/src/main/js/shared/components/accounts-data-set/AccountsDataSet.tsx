@@ -119,15 +119,19 @@ const AccountsDataSet: React.FC<IAccountsDataSetProps> = ({
 					accountLifecycleStageRenderer: ({
 						value,
 					}: {
-						value: LifecycleStages;
+						value: string;
 					}) => (
 						<DataValue
-							format={(stage: LifecycleStages) =>
+							format={(stage: string) =>
 								columns.cmsLabelRenderer({
 									displayType:
-										lifecycleStagesLabelMap[stage]
-											.displayType,
-									label: lifecycleStagesLabelMap[stage].label,
+										lifecycleStagesLabelMap[
+											stage as LifecycleStages
+										]?.displayType ?? 'secondary',
+									label:
+										lifecycleStagesLabelMap[
+											stage as LifecycleStages
+										]?.label ?? stage,
 								})
 							}
 							value={value}
