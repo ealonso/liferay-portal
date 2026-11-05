@@ -9,10 +9,12 @@ import com.liferay.fragment.renderer.FragmentRenderer;
 import com.liferay.fragment.renderer.FragmentRendererContext;
 import com.liferay.osb.faro.constants.FaroChannelConstants;
 import com.liferay.osb.faro.engine.client.constants.LCPProjectConstants;
+import com.liferay.osb.faro.model.FaroChannel;
 import com.liferay.osb.faro.model.FaroProject;
 import com.liferay.osb.faro.provisioning.client.constants.FaroSubscriptionConstants;
 import com.liferay.osb.faro.util.FaroPropsValues;
 import com.liferay.osb.faro.web.internal.constants.FaroPaginationConstants;
+import com.liferay.osb.faro.web.internal.display.context.ChannelSelectorDisplayContext;
 import com.liferay.osb.faro.web.internal.util.JSONUtil;
 import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.petra.string.StringBundler;
@@ -25,7 +27,6 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.HtmlUtil;
-import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.URLCodec;
 import com.liferay.portal.kernel.util.Validator;
@@ -167,10 +168,13 @@ public abstract class BaseFragmentRenderer implements FragmentRenderer {
 				"/workspace/", group.getGroupId(), StringPool.SLASH, section);
 		}
 
-		String channelId = ParamUtil.getString(
-			httpServletRequest, "channelId");
+		ChannelSelectorDisplayContext channelSelectorDisplayContext =
+			new ChannelSelectorDisplayContext(httpServletRequest);
 
-		if (Validator.isNull(channelId)) {
+		FaroChannel faroChannel =
+			channelSelectorDisplayContext.getFaroChannel();
+
+		if (faroChannel == null) {
 			return "/workspace/" + group.getGroupId();
 		}
 
@@ -184,8 +188,8 @@ public abstract class BaseFragmentRenderer implements FragmentRenderer {
 		}
 
 		return StringBundler.concat(
-			"/workspace/", group.getGroupId(), StringPool.SLASH, channelId,
-			section);
+			"/workspace/", group.getGroupId(), StringPool.SLASH,
+			faroChannel.getChannelId(), section);
 	}
 
 	private String _getStaticResourceURL(

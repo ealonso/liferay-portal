@@ -8,13 +8,21 @@ package com.liferay.osb.faro.web.internal.display.context;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
 import com.liferay.osb.faro.model.FaroChannel;
+import com.liferay.osb.faro.model.FaroPreferences;
 import com.liferay.osb.faro.service.FaroChannelLocalServiceUtil;
+import com.liferay.osb.faro.service.FaroPreferencesLocalServiceUtil;
+import com.liferay.osb.faro.web.internal.model.preferences.WorkspacePreferences;
+import com.liferay.osb.faro.web.internal.util.JSONUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HttpComponentsUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.SessionClicks;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -70,8 +78,42 @@ public class ChannelSelectorDisplayContext {
 			return null;
 		}
 
+		String sessionClicksKey =
+			"com.liferay.osb.faro.web_selectedChannelId_" +
+				_themeDisplay.getScopeGroupId();
+
 		String channelId = ParamUtil.getString(
 			_httpServletRequest, "channelId");
+
+		if (Validator.isNotNull(channelId)) {
+			SessionClicks.put(_httpServletRequest, sessionClicksKey, channelId);
+		}
+		else {
+			channelId = SessionClicks.get(
+				_httpServletRequest, sessionClicksKey, null);
+		}
+
+		if (Validator.isNull(channelId)) {
+			FaroPreferences faroPreferences =
+				FaroPreferencesLocalServiceUtil.fetchFaroPreferences(
+					_themeDisplay.getScopeGroupId(), _themeDisplay.getUserId());
+
+			if (faroPreferences != null) {
+				try {
+					WorkspacePreferences workspacePreferences =
+						JSONUtil.readValue(
+							faroPreferences.getPreferences(),
+							WorkspacePreferences.class);
+
+					channelId = workspacePreferences.getDefaultChannelId();
+				}
+				catch (Exception exception) {
+					if (_log.isDebugEnabled()) {
+						_log.debug(exception);
+					}
+				}
+			}
+		}
 
 		FaroChannel faroChannel = FaroChannelLocalServiceUtil.fetchFaroChannel(
 			channelId, _themeDisplay.getScopeGroupId());
@@ -113,6 +155,9 @@ public class ChannelSelectorDisplayContext {
 
 		return _faroChannels;
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		ChannelSelectorDisplayContext.class);
 
 	private FaroChannel _faroChannel;
 	private String _faroChannelId;
