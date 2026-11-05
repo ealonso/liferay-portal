@@ -1,0 +1,9 @@
+{
+	"friendlyURL": "/workspaces",
+	"hidden": true,
+	"name": "Workspaces",
+	"priority": 1,
+	"private": false,
+	"system": false,
+	"type": "Content"
+}
