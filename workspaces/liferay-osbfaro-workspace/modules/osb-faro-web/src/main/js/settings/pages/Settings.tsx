@@ -3,7 +3,12 @@ import ErrorPage from 'shared/pages/ErrorPage';
 import Loading from 'shared/components/Loading';
 import ProjectGate from 'shared/components/workspaces/ProjectGate';
 import React, {Fragment, lazy, Suspense} from 'react';
-import {Route, Routes as RouterRoutes, useParams} from 'react-router-dom';
+import {
+	Navigate,
+	Route,
+	Routes as RouterRoutes,
+	useParams,
+} from 'react-router-dom';
 import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
 import {useOnboardingModal} from 'shared/hooks/useOnboardingModal';
 import {useStore} from 'react-redux';
@@ -142,6 +147,11 @@ export const Settings = () => {
 		<>
 			<Suspense fallback={<Loading />}>
 				<RouterRoutes>
+					<Route
+						element={<Navigate replace to="data-source" />}
+						index
+					/>
+
 					<Route
 						element={<BundleRouter data={DataSourceList} />}
 						path="data-source"
