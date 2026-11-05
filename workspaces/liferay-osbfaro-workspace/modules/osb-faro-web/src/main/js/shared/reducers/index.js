@@ -10,7 +10,6 @@ import normalizer from './normalizer';
 import preferences from './preferences';
 import projects from './projects';
 import segments from './segments';
-import sidebar from './sidebar';
 import store from './store';
 import users from './users';
 import {combineReducers} from 'redux-immutable';
@@ -31,7 +30,6 @@ export default composeReducers(
 		preferences,
 		projects,
 		segments,
-		sidebar,
 		users,
 	})
 );

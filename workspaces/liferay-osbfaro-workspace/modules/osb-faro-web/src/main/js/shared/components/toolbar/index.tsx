@@ -5,13 +5,11 @@ import ClayDropDown, {Align} from '@clayui/drop-down';
 import ClayIcon from 'shared/components/Icon';
 import ClaySticker from '@clayui/sticker';
 import React, {useRef, useState} from 'react';
-import {collapseSidebar} from 'shared/actions/sidebar';
 import {getLanguageLabel} from 'shared/util/locale';
 import {getInitials} from 'shared/util/util';
 import {Link} from 'react-router-dom';
 import {Routes, toRoute} from 'shared/util/router';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
-import {useDispatch, useSelector} from 'react-redux';
 import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
 
 interface IToolbarProps {
@@ -21,12 +19,6 @@ interface IToolbarProps {
 
 const Toolbar: React.FC<IToolbarProps> = ({className, groupId}) => {
 	const currentUser = useCurrentUser();
-
-	const collapsed = useSelector<any, boolean>((state) =>
-		state.getIn(['sidebar', String(currentUser.id), 'collapsed'], false)
-	);
-
-	const dispatch = useDispatch();
 
 	const [active, setActive] = useState(false);
 
@@ -38,34 +30,6 @@ const Toolbar: React.FC<IToolbarProps> = ({className, groupId}) => {
 
 	return (
 		<BaseToolbar className={className}>
-			<BaseToolbar.Item>
-				<ClayButton
-					aria-label={Liferay.Language.get('menu')}
-					borderless
-					data-tooltip-align="bottom"
-					displayType="secondary"
-					monospaced
-					onClick={() =>
-						dispatch(
-							collapseSidebar({
-								collapsed: !collapsed,
-								currentUserId: currentUser.id,
-							})
-						)
-					}
-					size="sm"
-					title={Liferay.Language.get('menu')}
-				>
-					<ClayIcon
-						symbol={
-							collapsed
-								? 'product-menu-closed'
-								: 'product-menu-open'
-						}
-					/>
-				</ClayButton>
-			</BaseToolbar.Item>
-
 			<BaseToolbar.Item className="mt-1">
 				<ClayIcon
 					className="icon-root text-6"
