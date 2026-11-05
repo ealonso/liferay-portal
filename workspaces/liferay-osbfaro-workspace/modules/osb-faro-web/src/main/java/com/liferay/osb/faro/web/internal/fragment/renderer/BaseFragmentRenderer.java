@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.URLCodec;
 import com.liferay.portal.kernel.util.Validator;
@@ -118,6 +119,9 @@ public abstract class BaseFragmentRenderer implements FragmentRenderer {
 			HttpServletRequest httpServletRequest, ThemeDisplay themeDisplay)
 		throws Exception {
 
+		String sectionRoute = _getSectionRoute(
+			httpServletRequest, themeDisplay);
+
 		return JSONUtil.writeValueAsString(
 			HashMapBuilder.<String, Object>put(
 				"channelPermissionTypes",
@@ -126,11 +130,13 @@ public abstract class BaseFragmentRenderer implements FragmentRenderer {
 				"faroURL", FaroPropsValues.FARO_URL
 			).put(
 				"initialRoute",
-				_getInitialRoute(httpServletRequest, themeDisplay)
+				_getInitialRoute(httpServletRequest, sectionRoute)
 			).put(
 				"pagination", FaroPaginationConstants.getConstants()
 			).put(
 				"projectLocations", LCPProjectConstants.getLocations()
+			).put(
+				"sectionRoute", sectionRoute
 			).put(
 				"subscriptionPlans",
 				FaroSubscriptionConstants.getFaroSubscriptionPlans()
@@ -138,6 +144,25 @@ public abstract class BaseFragmentRenderer implements FragmentRenderer {
 	}
 
 	private String _getInitialRoute(
+		HttpServletRequest httpServletRequest, String sectionRoute) {
+
+		if (sectionRoute == null) {
+			return null;
+		}
+
+		String path = ParamUtil.getString(httpServletRequest, "path");
+
+		if (!path.startsWith(StringPool.SLASH) ||
+			path.contains(StringPool.DOUBLE_PERIOD) ||
+			path.contains(StringPool.DOUBLE_SLASH)) {
+
+			return sectionRoute;
+		}
+
+		return sectionRoute + path;
+	}
+
+	private String _getSectionRoute(
 			HttpServletRequest httpServletRequest, ThemeDisplay themeDisplay)
 		throws Exception {
 
