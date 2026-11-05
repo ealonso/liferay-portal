@@ -17,7 +17,9 @@ const groupIdRegex = /^\/workspace\/([a-z0-9._-]+)/;
 const fetchWithGroupId = (uri, options) => {
 	const currentUri = new URL(window.location.href);
 	const {operationName} = JSON.parse(options.body);
-	const matches = currentUri.pathname.match(groupIdRegex);
+	const matches = (
+		window.faroConstants.initialRoute || currentUri.pathname
+	).match(groupIdRegex);
 
 	if (matches !== null && matches.length > 1) {
 		const groupId = matches[1];

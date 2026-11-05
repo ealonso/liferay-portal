@@ -3,7 +3,11 @@ import ErrorPage from 'shared/pages/ErrorPage';
 import Loading from 'shared/components/Loading';
 import React, {lazy} from 'react';
 import RootLayout from './RootLayout';
-import {createBrowserRouter, RouteObject} from 'react-router-dom';
+import {
+	createBrowserRouter,
+	createMemoryRouter,
+	RouteObject,
+} from 'react-router-dom';
 import {ENABLE_ADD_TRIAL_WORKSPACE} from 'shared/util/constants';
 
 const AddWorkspace = lazy(
@@ -81,4 +85,8 @@ export function getRoutes(): RouteObject[] {
 	];
 }
 
-export const router = createBrowserRouter(getRoutes());
+const {initialRoute} = window.faroConstants;
+
+export const router = initialRoute
+	? createMemoryRouter(getRoutes(), {initialEntries: [initialRoute]})
+	: createBrowserRouter(getRoutes());

@@ -9,20 +9,26 @@ import com.liferay.fragment.renderer.FragmentRenderer;
 import com.liferay.fragment.renderer.FragmentRendererContext;
 import com.liferay.osb.faro.constants.FaroChannelConstants;
 import com.liferay.osb.faro.engine.client.constants.LCPProjectConstants;
+import com.liferay.osb.faro.model.FaroProject;
 import com.liferay.osb.faro.provisioning.client.constants.FaroSubscriptionConstants;
 import com.liferay.osb.faro.util.FaroPropsValues;
 import com.liferay.osb.faro.web.internal.constants.FaroPaginationConstants;
 import com.liferay.osb.faro.web.internal.util.JSONUtil;
 import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.petra.string.StringBundler;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.URLCodec;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.taglib.aui.LinkTag;
 import com.liferay.taglib.aui.ScriptTag;
@@ -34,6 +40,8 @@ import jakarta.servlet.jsp.JspException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
+
+import java.util.Objects;
 
 /**
  * @author Eudaldo Alonso
@@ -81,8 +89,9 @@ public abstract class BaseFragmentRenderer implements FragmentRenderer {
 
 			_renderScriptTag(
 				httpServletRequest, httpServletResponse, "inline",
-				"window.faroConstants = " + _getFaroConstants() + ";", null,
-				null);
+				"window.faroConstants = " +
+					_getFaroConstants(httpServletRequest, themeDisplay) + ";",
+				null, null);
 			_renderScriptTag(
 				httpServletRequest, httpServletResponse, null, null,
 				_getStaticResourceURL(
@@ -109,13 +118,19 @@ public abstract class BaseFragmentRenderer implements FragmentRenderer {
 		}
 	}
 
-	private String _getFaroConstants() throws Exception {
+	private String _getFaroConstants(
+			HttpServletRequest httpServletRequest, ThemeDisplay themeDisplay)
+		throws Exception {
+
 		return JSONUtil.writeValueAsString(
 			HashMapBuilder.<String, Object>put(
 				"channelPermissionTypes",
 				FaroChannelConstants.getPermissionTypes()
 			).put(
 				"faroURL", FaroPropsValues.FARO_URL
+			).put(
+				"initialRoute",
+				_getInitialRoute(httpServletRequest, themeDisplay)
 			).put(
 				"pagination", FaroPaginationConstants.getConstants()
 			).put(
@@ -124,6 +139,43 @@ public abstract class BaseFragmentRenderer implements FragmentRenderer {
 				"subscriptionPlans",
 				FaroSubscriptionConstants.getFaroSubscriptionPlans()
 			).build());
+	}
+
+	private String _getInitialRoute(
+			HttpServletRequest httpServletRequest, ThemeDisplay themeDisplay)
+		throws Exception {
+
+		Group group = themeDisplay.getScopeGroup();
+
+		if (!Objects.equals(
+				group.getClassName(), FaroProject.class.getName())) {
+
+			return null;
+		}
+
+		String channelId = ParamUtil.getString(
+			httpServletRequest, "channelId");
+
+		if (Validator.isNull(channelId)) {
+			return "/workspace/" + group.getGroupId();
+		}
+
+		String section = GetterUtil.getString(
+			httpServletRequest.getAttribute(
+				BaseSectionFragmentRenderer.SECTION));
+
+		if (Validator.isNull(section)) {
+			Layout layout = themeDisplay.getLayout();
+
+			section = layout.getFriendlyURL(themeDisplay.getLocale());
+		}
+		else {
+			section = StringPool.SLASH + section;
+		}
+
+		return StringBundler.concat(
+			"/workspace/", group.getGroupId(), StringPool.SLASH, channelId,
+			section);
 	}
 
 	private String _getStaticResourceURL(
