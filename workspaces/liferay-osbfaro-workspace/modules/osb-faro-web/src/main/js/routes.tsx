@@ -85,8 +85,32 @@ export function getRoutes(): RouteObject[] {
 	];
 }
 
-const {initialRoute} = window.faroConstants;
+const {initialRoute, sectionRoute} = window.faroConstants;
 
 export const router = initialRoute
 	? createMemoryRouter(getRoutes(), {initialEntries: [initialRoute]})
 	: createBrowserRouter(getRoutes());
+
+if (sectionRoute) {
+	router.subscribe(({location}) => {
+		if (
+			location.pathname !== sectionRoute &&
+			!location.pathname.startsWith(`${sectionRoute}/`)
+		) {
+			return;
+		}
+
+		const path = location.pathname.slice(sectionRoute.length);
+
+		const url = new URL(window.location.href);
+
+		if (path) {
+			url.searchParams.set('path', `${path}${location.search}`);
+		}
+		else {
+			url.searchParams.delete('path');
+		}
+
+		window.history.replaceState(window.history.state, '', url.toString());
+	});
+}
