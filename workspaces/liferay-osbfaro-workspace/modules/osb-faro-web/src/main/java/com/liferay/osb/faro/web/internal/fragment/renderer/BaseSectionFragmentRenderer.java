@@ -18,6 +18,9 @@ import java.util.Locale;
  */
 public abstract class BaseSectionFragmentRenderer extends BaseFragmentRenderer {
 
+	public static final String CHANNEL_SCOPED =
+		BaseSectionFragmentRenderer.class.getName() + "#CHANNEL_SCOPED";
+
 	public static final String SECTION =
 		BaseSectionFragmentRenderer.class.getName() + "#SECTION";
 
@@ -37,6 +40,7 @@ public abstract class BaseSectionFragmentRenderer extends BaseFragmentRenderer {
 		HttpServletRequest httpServletRequest,
 		HttpServletResponse httpServletResponse) {
 
+		httpServletRequest.setAttribute(CHANNEL_SCOPED, isChannelScoped());
 		httpServletRequest.setAttribute(SECTION, getSection());
 
 		try {
@@ -45,6 +49,7 @@ public abstract class BaseSectionFragmentRenderer extends BaseFragmentRenderer {
 				httpServletResponse);
 		}
 		finally {
+			httpServletRequest.removeAttribute(CHANNEL_SCOPED);
 			httpServletRequest.removeAttribute(SECTION);
 		}
 	}
@@ -52,5 +57,9 @@ public abstract class BaseSectionFragmentRenderer extends BaseFragmentRenderer {
 	protected abstract String getLabelKey();
 
 	protected abstract String getSection();
+
+	protected boolean isChannelScoped() {
+		return true;
+	}
 
 }

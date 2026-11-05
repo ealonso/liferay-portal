@@ -153,16 +153,26 @@ public abstract class BaseFragmentRenderer implements FragmentRenderer {
 			return null;
 		}
 
+		String section = GetterUtil.getString(
+			httpServletRequest.getAttribute(
+				BaseSectionFragmentRenderer.SECTION));
+
+		if (Validator.isNotNull(section) &&
+			!GetterUtil.getBoolean(
+				httpServletRequest.getAttribute(
+					BaseSectionFragmentRenderer.CHANNEL_SCOPED),
+				true)) {
+
+			return StringBundler.concat(
+				"/workspace/", group.getGroupId(), StringPool.SLASH, section);
+		}
+
 		String channelId = ParamUtil.getString(
 			httpServletRequest, "channelId");
 
 		if (Validator.isNull(channelId)) {
 			return "/workspace/" + group.getGroupId();
 		}
-
-		String section = GetterUtil.getString(
-			httpServletRequest.getAttribute(
-				BaseSectionFragmentRenderer.SECTION));
 
 		if (Validator.isNull(section)) {
 			Layout layout = themeDisplay.getLayout();
