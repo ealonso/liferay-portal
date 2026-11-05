@@ -8,6 +8,7 @@ declare global {
 		faroConstants: {
 			channelPermissionTypes: {[key: string]: ChannelPermissionTypes};
 			faroURL: string;
+			initialRoute?: string;
 			pagination: {
 				cur: number;
 				delta: number;
