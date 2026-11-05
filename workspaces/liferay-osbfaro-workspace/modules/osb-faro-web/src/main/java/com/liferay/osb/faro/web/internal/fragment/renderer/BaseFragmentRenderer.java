@@ -106,14 +106,6 @@ public abstract class BaseFragmentRenderer implements FragmentRenderer {
 							httpServletRequest.getAttribute(ENTRY), "main"),
 						".js")),
 				"module");
-			_renderScriptTag(
-				httpServletRequest, httpServletResponse, null,
-				StringBundler.concat(
-					"document.addEventListener('DOMContentLoaded', () => {",
-					"for (const id of ['liferayAUICSS', 'liferayThemeCSS']) {",
-					"const element = document.getElementById(id);",
-					"if (element) {element.disabled = true;}}});"),
-				null, null);
 		}
 		catch (Exception exception) {
 			_log.error(exception);
