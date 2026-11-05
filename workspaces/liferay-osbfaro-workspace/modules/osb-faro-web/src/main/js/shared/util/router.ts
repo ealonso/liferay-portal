@@ -386,6 +386,16 @@ export function toRoute(route: string, options?: {[key: string]: any}) {
 	return getCompiledRoute(route)(options || {});
 }
 
+export function toWorkspaceURL({
+	friendlyURL,
+	groupId,
+}: {
+	friendlyURL?: string;
+	groupId: number | string;
+}) {
+	return `/web${friendlyURL || `/workspace-${groupId}`}/sites`;
+}
+
 const ROUTE_TO_TYPE_MAP = {
 	[ACCOUNTS]: EntityTypes.Account,
 	[ASSETS]: EntityTypes.Asset,
