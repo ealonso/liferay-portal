@@ -1,5 +1,6 @@
+import {RangeKeyTimeRanges} from 'shared/util/constants';
 import {RangeSelectors} from 'shared/types';
-import {useQueryParams} from 'shared/hooks/useQueryParams';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 /**
  * Used to get undefined if there is no rangeKey on query
@@ -7,9 +8,11 @@ import {useQueryParams} from 'shared/hooks/useQueryParams';
  */
 
 export const useUnsafeQueryRangeSelectors = (): RangeSelectors | undefined => {
-	const {rangeEnd, rangeKey, rangeStart} = useQueryParams();
+	const {
+		params: {rangeEnd, rangeKey, rangeStart},
+	} = usePageConfig();
 
 	if (!rangeKey) return;
 
-	return {rangeEnd, rangeKey, rangeStart};
+	return {rangeEnd, rangeKey: rangeKey as RangeKeyTimeRanges, rangeStart};
 };

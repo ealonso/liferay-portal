@@ -5,10 +5,11 @@ import withPropertyGroups from 'segment/segment-editor/dynamic/hoc/WithPropertyG
 import {compose} from 'shared/hoc';
 import {get} from 'lodash';
 import {SegmentTypes} from 'shared/util/constants';
-import {useQueryParams} from 'shared/hooks/useQueryParams';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const DynamicSegmentEdit = props => {
-	const params = useQueryParams();
+	const {params} = usePageConfig();
+
 	const {id, propertyGroupsIList, segment} = props;
 
 	// Default to a batch segment when neither an existing segment nor the URL

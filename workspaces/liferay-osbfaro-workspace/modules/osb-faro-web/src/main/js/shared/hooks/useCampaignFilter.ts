@@ -1,6 +1,6 @@
 import {setUriQueryValues} from 'shared/util/url';
+import {usePageConfig} from 'shared/context/pageConfig';
 import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
-import {useQueryParams} from 'shared/hooks/useQueryParams';
 
 type Campaign = {
 	id: string;
@@ -20,7 +20,10 @@ interface ICampaignFilter {
  */
 
 export const useCampaignFilter = (): ICampaignFilter => {
-	const {campaignId, campaignName} = useQueryParams();
+	const {
+		params: {campaignId, campaignName},
+	} = usePageConfig();
+
 	const history = useHistoryAdapter();
 
 	return {

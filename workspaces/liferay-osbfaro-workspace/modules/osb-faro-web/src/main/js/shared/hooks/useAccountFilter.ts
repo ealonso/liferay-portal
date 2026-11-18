@@ -1,7 +1,7 @@
 import {pickBy} from 'lodash';
 import {setUriQueryValues} from 'shared/util/url';
+import {usePageConfig} from 'shared/context/pageConfig';
 import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
-import {useQueryParams} from 'shared/hooks/useQueryParams';
 
 type Account = {
 	id: string;
@@ -22,7 +22,10 @@ interface IAccountFilter {
  */
 
 export const useAccountFilter = (): IAccountFilter => {
-	const {accountId, accountName} = useQueryParams();
+	const {
+		params: {accountId, accountName},
+	} = usePageConfig();
+
 	const history = useHistoryAdapter();
 
 	return {
