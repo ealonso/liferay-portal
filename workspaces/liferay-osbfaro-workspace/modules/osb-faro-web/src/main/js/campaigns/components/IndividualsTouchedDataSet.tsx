@@ -8,8 +8,8 @@ import {
 } from 'shared/components/FrontendDataSet';
 import {getVisitorType} from 'contacts/pages/account/components/IndividualsDataSet';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes} from 'shared/util/router';
 import {useRangeQueryValues} from 'shared/hooks/useRangeQueryValues';
+import {config} from 'shared/util/config';
 
 interface IIndividualsTouchedDataSetProps {
 	campaignId: string;
@@ -78,11 +78,9 @@ const IndividualsTouchedDataSet: React.FC<IIndividualsTouchedDataSetProps> = ({
 					value: string;
 				}) =>
 					columns.nameAndLinkRenderer({
-						channelId,
-						groupId,
 						itemData,
 						queryValues: routeRangeParams,
-						route: Routes.CONTACTS_INDIVIDUAL,
+						url: config.individualURL,
 						value,
 					}),
 				lastActiveRenderer: ({value}: {value: string}) =>

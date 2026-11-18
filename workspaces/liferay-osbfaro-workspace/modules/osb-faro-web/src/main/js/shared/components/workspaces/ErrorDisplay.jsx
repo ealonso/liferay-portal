@@ -2,7 +2,6 @@ import getCN from 'classnames';
 import React from 'react';
 import StepList from './StepList';
 import WorkspacesBasePage from './BasePage';
-import {Link} from 'react-router-dom';
 import {ProjectStates} from 'shared/util/constants';
 import {PropTypes} from 'prop-types';
 
@@ -66,9 +65,9 @@ const STEP_LIST_MAP = {
 				'check-customer-portal-to-see-your-active-liferay-subscriptions'
 			),
 			// TODO: this would ideally not be a static link
-			<Link key='LEARN_MORE' to='https://www.liferay.com/products/dxp'>
+			<a key='LEARN_MORE' href='https://www.liferay.com/products/dxp'>
 				{Liferay.Language.get('learn-more-about-liferay-dxp')}
-			</Link>
+			</a>
 		]
 	}
 };

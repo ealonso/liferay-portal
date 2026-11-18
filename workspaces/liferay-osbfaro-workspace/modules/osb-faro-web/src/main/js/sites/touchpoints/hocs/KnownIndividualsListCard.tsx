@@ -14,8 +14,8 @@ import {createOrderIOMap, NAME, VIEWS_METRIC} from 'shared/util/pagination';
 import {graphql} from '@apollo/client/react/hoc';
 import {metricsListColumns} from 'shared/util/table-columns';
 import {RangeSelectors} from 'shared/types';
-import {Routes} from 'shared/util/router';
 import {Sizes} from 'shared/util/constants';
+import {config} from 'shared/util/config';
 
 const withData = () =>
 	graphql(
@@ -50,16 +50,8 @@ const TableWithData = withBaseResults(withData, {
 		symbol: 'ac_satellite',
 	},
 	emptyTitle: Liferay.Language.get('no-visitors-data-was-found'),
-	getColumns: ({
-		router: {
-			params: {channelId, groupId},
-		},
-	}: any) => [
-		metricsListColumns.getNameEmail({
-			channelId,
-			groupId,
-			route: Routes.CONTACTS_INDIVIDUAL,
-		}),
+	getColumns: () => [
+		metricsListColumns.getNameEmail({url: config.individualURL}),
 	],
 	legacyDropdownRangeKey: false,
 	rowIdentifier: 'id',

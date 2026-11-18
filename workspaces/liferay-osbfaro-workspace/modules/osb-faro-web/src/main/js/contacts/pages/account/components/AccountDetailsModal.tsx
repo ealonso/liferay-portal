@@ -3,10 +3,9 @@ import ClayModal, {useModal} from '@clayui/modal';
 import Loading from 'shared/components/Loading';
 import React from 'react';
 import {columns, FrontendDataSet} from 'shared/components/FrontendDataSet';
-import {Routes} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
-import {useParams} from 'react-router-dom';
 import {useRequest} from 'shared/hooks/useRequest';
+import {config} from 'shared/util/config';
 
 const FDS_ID = 'account-details-attributes-dataset';
 
@@ -30,10 +29,7 @@ const AccountDetailsModal: React.FC<IAccountDetailsModalProps> = ({
 	accountName,
 	onClose,
 }) => {
-	const {channelId = '', groupId = ''} = useParams<{
-		channelId: string;
-		groupId: string;
-	}>();
+	const {channelId = '', groupId = ''} = config;
 	const {observer} = useModal({onClose});
 
 	const {data, loading} = useRequest({
@@ -81,12 +77,10 @@ const AccountDetailsModal: React.FC<IAccountDetailsModalProps> = ({
 								value: string;
 							}) =>
 								columns.nameAndLinkRenderer({
-									channelId,
-									groupId,
 									itemData: {
 										id: itemData.dataSourceId ?? '',
 									},
-									route: Routes.SETTINGS_DATA_SOURCE,
+									url: config.dataSourceURL,
 									value,
 								}),
 							lastModifiedRenderer: ({value}: {value: string}) =>

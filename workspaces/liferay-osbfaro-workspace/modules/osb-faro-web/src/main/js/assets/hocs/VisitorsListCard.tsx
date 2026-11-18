@@ -21,8 +21,8 @@ import {getAssetListQueries} from './assetListQueries';
 import {graphql} from '@apollo/client/react/hoc';
 import {memoize} from 'lodash';
 import {RangeSelectors} from 'shared/types';
-import {Routes} from 'shared/util/router';
 import {Sizes} from 'shared/util/constants';
+import {config} from 'shared/util/config';
 
 const TABS = [
 	{
@@ -70,15 +70,9 @@ export const getVisitorsListCard = memoize((graphQLType: string) => {
 			symbol: 'ac_satellite',
 		},
 		emptyTitle: Liferay.Language.get('no-accounts-were-found'),
-		getColumns: ({
-			router: {
-				params: {channelId, groupId},
-			},
-		}: {
-			router: {params: {channelId: string; groupId: string}};
-		}) => [
+		getColumns: () => [
 			{
-				...accountsListColumns.getName({channelId, groupId}),
+				...accountsListColumns.getName(),
 				sortable: false,
 			},
 		],
@@ -111,18 +105,8 @@ export const getVisitorsListCard = memoize((graphQLType: string) => {
 			symbol: 'ac_satellite',
 		},
 		emptyTitle: Liferay.Language.get('no-individuals-were-found'),
-		getColumns: ({
-			router: {
-				params: {channelId, groupId},
-			},
-		}: {
-			router: {params: {channelId: string; groupId: string}};
-		}) => [
-			metricsListColumns.getNameEmail({
-				channelId,
-				groupId,
-				route: Routes.CONTACTS_INDIVIDUAL,
-			}),
+		getColumns: () => [
+			metricsListColumns.getNameEmail({url: config.individualURL}),
 
 			{
 				accessor: 'accountName',

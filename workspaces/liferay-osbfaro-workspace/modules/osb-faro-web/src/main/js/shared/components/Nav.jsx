@@ -4,7 +4,6 @@ import getCN from 'classnames';
 import omitDefinedProps from 'shared/util/omitDefinedProps';
 import React from 'react';
 import {addContext, isIn} from 'shared/util/clay';
-import {Link} from 'react-router-dom';
 import {PropTypes} from 'prop-types';
 import {Stack} from 'immutable';
 export const CONTEXT = 'nav';
@@ -51,17 +50,17 @@ class Item extends React.Component {
 
 		if (href) {
 			content = (
-				<Link
+				<a
 					className={getCN('nav-link', className, {
 						active,
 						disabled
 					})}
 					onClick={this.handleItemClick}
 					role='tab'
-					to={href}
+					href={href}
 				>
 					{children}
-				</Link>
+				</a>
 			);
 		}
 

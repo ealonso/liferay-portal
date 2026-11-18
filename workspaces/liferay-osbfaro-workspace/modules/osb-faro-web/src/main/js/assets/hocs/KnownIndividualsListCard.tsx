@@ -15,8 +15,8 @@ import {graphql} from '@apollo/client/react/hoc';
 import {memoize} from 'lodash';
 import {metricsListColumns} from 'shared/util/table-columns';
 import {RangeSelectors} from 'shared/types';
-import {Routes} from 'shared/util/router';
 import {Sizes} from 'shared/util/constants';
+import {config} from 'shared/util/config';
 
 /**
  * Built once per asset type and cached: the Apollo and pagination HOCs below
@@ -60,18 +60,8 @@ export const getKnownIndividualsListCard = memoize((graphQLType: string) => {
 			symbol: 'ac_satellite',
 		},
 		emptyTitle: Liferay.Language.get('no-individuals-were-found'),
-		getColumns: ({
-			router: {
-				params: {channelId, groupId},
-			},
-		}: {
-			router: {params: {channelId: string; groupId: string}};
-		}) => [
-			metricsListColumns.getNameEmail({
-				channelId,
-				groupId,
-				route: Routes.CONTACTS_INDIVIDUAL,
-			}),
+		getColumns: () => [
+			metricsListColumns.getNameEmail({url: config.individualURL}),
 		],
 		legacyDropdownRangeKey: false,
 		rowIdentifier: 'id',

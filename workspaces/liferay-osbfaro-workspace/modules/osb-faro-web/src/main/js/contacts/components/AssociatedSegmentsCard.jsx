@@ -85,7 +85,7 @@ export default class AssociatedSegmentsCard extends React.Component {
 
 	renderList() {
 		const {
-			props: {channelId, groupId, noResultsRenderer},
+			props: {noResultsRenderer},
 			state: {error, items, loading, searchValue}
 		} = this;
 
@@ -116,9 +116,7 @@ export default class AssociatedSegmentsCard extends React.Component {
 			return noResultsRenderer();
 		}
 
-		return (
-			<EntityList channelId={channelId} groupId={groupId} items={items} />
-		);
+		return <EntityList items={items} />;
 	}
 
 	render() {

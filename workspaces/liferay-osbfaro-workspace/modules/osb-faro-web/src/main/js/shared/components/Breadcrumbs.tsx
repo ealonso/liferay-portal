@@ -4,8 +4,6 @@ import ClayIcon from 'shared/components/Icon';
 import getCN from 'classnames';
 import React from 'react';
 import {IBreadcrumbArgs} from 'shared/util/breadcrumbs';
-import {Link} from 'react-router-dom';
-import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
 
 interface IBreadcrumbProps {
 	bufferSize?: number;
@@ -37,9 +35,9 @@ const BreadcrumbItem: React.FC<IBreadcrumbItemProps> = ({
 		}
 		else if (href) {
 			return (
-				<Link className={contentClasses} to={href}>
+				<a className={contentClasses} href={href}>
 					{children}
-				</Link>
+				</a>
 			);
 		}
 		else {
@@ -64,7 +62,6 @@ const Breadcrumb: React.FC<IBreadcrumbProps> = ({
 	items,
 	onClick,
 }) => {
-	const history = useHistoryAdapter();
 	const totalItems = items.length;
 
 	let shownItems = items;
@@ -100,7 +97,7 @@ const Breadcrumb: React.FC<IBreadcrumbProps> = ({
 					{items.map(({href, label}, i) => (
 						<ClayDropDown.Item
 							key={i}
-							onClick={() => href && history.push(href)}
+							onClick={() => href && window.location.assign(href)}
 						>
 							{label}
 						</ClayDropDown.Item>

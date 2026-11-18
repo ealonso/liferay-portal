@@ -3,9 +3,9 @@ import React from 'react';
 import withCurrentUser from './WithCurrentUser';
 import {compose} from 'redux';
 import {PropTypes} from 'prop-types';
-import {Routes, toRoute} from '../util/router';
 import {User} from '../util/records';
 import {UserRoleNames} from 'shared/util/constants';
+import {config} from 'shared/util/config';
 
 /**
  * Creates an HOC that renders a component only if the current user's role
@@ -40,7 +40,7 @@ const withPermission = roles =>
 						return (
 							<ErrorPage
 								className={className}
-								href={toRoute(Routes.BASE)}
+								href={config.workspacesURL}
 								message={Liferay.Language.get(
 									'you-do-not-have-permission-to-view-this-resource'
 								)}

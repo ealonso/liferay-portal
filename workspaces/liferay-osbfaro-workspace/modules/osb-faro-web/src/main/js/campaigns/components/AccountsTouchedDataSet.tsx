@@ -12,11 +12,11 @@ import {
 } from 'contacts/pages/account/utils/constants';
 import {pickBy} from 'lodash';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes} from 'shared/util/router';
 import {toThousands} from 'shared/util/numbers';
 import {useAccountFilter} from 'shared/hooks/useAccountFilter';
 import {useRangeQueryValues} from 'shared/hooks/useRangeQueryValues';
 import {ILifecycleDetail} from 'shared/api/lifecycle';
+import {config} from 'shared/util/config';
 
 interface IAccountsTouchedDataSetProps {
 	campaignId: string;
@@ -99,10 +99,8 @@ const AccountsTouchedDataSet: React.FC<IAccountsTouchedDataSetProps> = ({
 					value: string;
 				}) =>
 					columns.nameAndLinkRenderer({
-						channelId,
-						groupId,
 						itemData,
-						route: Routes.CONTACTS_ACCOUNT_OVERVIEW,
+						url: config.accountURL,
 						value,
 					}),
 

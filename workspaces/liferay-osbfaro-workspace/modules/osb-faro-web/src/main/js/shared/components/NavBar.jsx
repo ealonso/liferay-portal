@@ -2,7 +2,6 @@ import getCN from 'classnames';
 import omitDefinedProps from 'shared/util/omitDefinedProps';
 import React from 'react';
 import {addContext} from 'shared/util/clay';
-import {Link} from 'react-router-dom';
 import {PropTypes} from 'prop-types';
 import {Stack} from 'immutable';
 export const CONTEXT = 'navbar';
@@ -19,15 +18,15 @@ class Brand extends React.Component {
 
 		if (href) {
 			return (
-				<Link
+				<a
 					{...omitDefinedProps(otherProps, Brand.propTypes)}
 					className={`navbar-brand${
 						className ? ` ${className}` : ''
 					}`}
-					to={href}
+					href={href}
 				>
 					{children}
-				</Link>
+				</a>
 			);
 		} else {
 			return (

@@ -10,12 +10,12 @@ import Sticker from './Sticker';
 import TextTruncate from './TextTruncate';
 import {EntityTypes} from '../util/constants';
 import {getDataSourceLangKey} from 'shared/util/lang';
-import {getRouteName, Routes, toRoute} from 'shared/util/router';
 import {LIFERAY_SITE_TYPE} from 'shared/util/data-sources';
-import {Link} from 'react-router-dom';
 import {PropTypes} from 'prop-types';
 import {Set} from 'immutable';
 import {sub} from '../util/lang';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 class EntityListItem extends React.Component {
 	static propTypes = {
@@ -27,27 +27,21 @@ class EntityListItem extends React.Component {
 	};
 
 	getEntityUrl() {
-		const {
-			channelId,
-			groupId,
-			item: {id, type, url}
-		} = this.props;
+		const {id, type, url} = this.props.item;
 
 		switch (type) {
 			case LIFERAY_SITE_TYPE:
 				return url ? url : '#';
+			case EntityTypes.Account:
+				return setUriQueryValues({id}, config.accountURL);
 			case EntityTypes.DataSource:
-				return toRoute(Routes.SETTINGS_DATA_SOURCE, {
-					groupId,
-					id
-				});
+				return setUriQueryValues({id}, config.dataSourceURL);
+			case EntityTypes.Individual:
+				return setUriQueryValues({id}, config.individualURL);
+			case EntityTypes.IndividualsSegment:
+				return setUriQueryValues({id}, config.segmentURL);
 			default:
-				return toRoute(Routes.CONTACTS_ENTITY, {
-					channelId,
-					groupId,
-					id,
-					type: getRouteName(type)
-				});
+				return '#';
 		}
 	}
 
@@ -98,13 +92,13 @@ class EntityListItem extends React.Component {
 				<ListGroup.ItemField className='justify-content-center' expand>
 					<TextTruncate title={name}>
 						<strong>
-							<Link
+							<a
 								className='list-group-link'
 								onClick={this.handleLinkClick}
-								to={this.getEntityUrl()}
+								href={this.getEntityUrl()}
 							>
 								{name ? name : Liferay.Language.get('unknown')}
-							</Link>
+							</a>
 						</strong>
 					</TextTruncate>
 
@@ -127,10 +121,8 @@ class EntityList extends React.Component {
 
 	static propTypes = {
 		accentColor: PropTypes.string,
-		channelId: PropTypes.string,
 		disabledItemsISet: PropTypes.instanceOf(Set),
 		entityType: PropTypes.number,
-		groupId: PropTypes.string.isRequired,
 		header: PropTypes.string,
 		items: PropTypes.array,
 		loading: PropTypes.bool,
@@ -146,17 +138,7 @@ class EntityList extends React.Component {
 
 	@autobind
 	getItemRenderer() {
-		return ({item}) => {
-			const {channelId, groupId} = this.props;
-
-			return (
-				<EntityListItem
-					channelId={channelId}
-					groupId={groupId}
-					item={item}
-				/>
-			);
-		};
+		return ({item}) => <EntityListItem item={item} />;
 	}
 
 	render() {

@@ -18,8 +18,8 @@ import {buildViews} from './utils';
 import {IAccountLifecycleStage} from 'shared/api/lifecycle';
 import {ICatalogField} from 'shared/api/catalog';
 import {RangeKeyTimeRanges} from 'shared/util/constants';
-import {Routes} from 'shared/util/router';
 import {useLifecycleStageFilterItems} from 'shared/hooks/useLifecycleStageFilterItems';
+import {config} from 'shared/util/config';
 
 interface IAccountsDataSetProps {
 	accountLifecycleId?: string;
@@ -161,10 +161,8 @@ const AccountsDataSet: React.FC<IAccountsDataSetProps> = ({
 						value: string;
 					}) =>
 						columns.nameAndLinkRenderer({
-							channelId,
-							groupId,
 							itemData,
-							route: Routes.CONTACTS_ACCOUNT,
+							url: config.accountURL,
 							value,
 						}),
 					activitiesCountRenderer: columns.countRenderer,
