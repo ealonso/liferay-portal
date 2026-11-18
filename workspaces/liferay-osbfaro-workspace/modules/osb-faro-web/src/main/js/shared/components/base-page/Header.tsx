@@ -15,49 +15,24 @@ import NotificationAlertList, {
 import React, {useState} from 'react';
 import Row from './Row';
 import TextTruncate from 'shared/components/TextTruncate';
-import {setUriQueryValues} from 'shared/util/url';
-import {getMatchedRoute, toRoute} from 'shared/util/router';
 import {IBreadcrumbArgs} from 'shared/util/breadcrumbs';
-import {pickBy} from 'lodash';
+import {config} from 'shared/util/config';
 
-type NavBarItem = {
-	deprecated?: boolean;
-	exact: boolean;
-	label: string;
-	route: string;
-};
-
-interface INavBarProps extends React.HTMLAttributes<HTMLDivElement> {
-	items: NavBarItem[];
-	routeParams?: object;
-	routeQueries?: object;
-}
-
-const NavBar: React.FC<INavBarProps> = ({
-	items,
-	routeParams = {},
-	routeQueries = {},
-}) => {
-	const matchedRoute = getMatchedRoute(items);
+const NavBar: React.FC = () => {
+	const navigationItems = config.navigationItems ?? [];
 
 	const initialItem =
-		items.find((item) => item.route === matchedRoute) ?? items[0];
+		navigationItems.find(({active}) => active) ?? navigationItems[0];
 
-	const [activeLabel, setActiveLabel] = useState(initialItem.label);
+	const [activeLabel, setActiveLabel] = useState(initialItem?.label);
 
 	return (
 		<div className="row">
 			<ClayNavigationBar triggerLabel={activeLabel}>
-				{items.map(({deprecated, label, route}) => (
-					<ClayNavigationBar.Item
-						active={matchedRoute === route}
-						key={label}
-					>
+				{navigationItems.map(({active, deprecated, href, label}) => (
+					<ClayNavigationBar.Item active={active} key={label}>
 						<ClayLink
-							href={setUriQueryValues(
-								pickBy(routeQueries),
-								toRoute(route, routeParams)
-							)}
+							href={href}
 							onClick={() => setActiveLabel(label)}
 						>
 							{label}
