@@ -13,9 +13,10 @@ import {getSafeDecodedURIComponent, isBlank} from './util';
 import {AssetTypes, TimeIntervals} from 'shared/util/constants';
 import {PayloadLayout} from 'shared/util/payloadTables';
 import {RangeSelectors} from 'shared/types';
-import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
 import {UserSession, UserSessionEvent} from 'shared/queries/UserSessionQuery';
+import {Config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 export const CHART_ID = 'individualActivity';
 
@@ -258,6 +259,7 @@ export const ACTIVITY_PAYLOAD_LAYOUT: PayloadLayout = {
  * @returns {Array.<Object>} Array of objects for a vertical timeline.
  */
 export const formatEvents = (
+	config: Config,
 	events: UserSessionEvent[],
 	userAgent?: string,
 	context: EventDashboardContext = {}
@@ -303,21 +305,26 @@ export const formatEvents = (
 						...(campaignEntityId &&
 							channelId &&
 							groupId && {
-								campaignUrl: toRoute(Routes.CAMPAIGNS_DETAIL, {
-									channelId,
-									groupId,
-									id: campaignEntityId,
-								}),
+								campaignUrl: setUriQueryValues(
+									{
+										id: campaignEntityId,
+									},
+									config.campaignURL
+								),
 							}),
 					},
 				}),
 			},
 			...(campaign && {campaign}),
 			description: assetTitle || pageTitle,
-			descriptionUrl: getEventDashboardUrl(event, {
-				...context,
-				isWebhook,
-			}),
+			descriptionUrl: getEventDashboardUrl(
+				event,
+				{
+					...context,
+					isWebhook,
+				},
+				config
+			),
 			subtitle: !isWebhook
 				? getSafeDecodedURIComponent(canonicalUrl)
 				: undefined,
@@ -350,6 +357,7 @@ const getPageGroupKey = ({pageGroupId}: UserSessionEvent): string =>
  * arrive in.
  */
 export const groupEventsByPage = (
+	config: Config,
 	events: UserSessionEvent[],
 	userAgent?: string,
 	context: EventDashboardContext = {}
@@ -420,6 +428,7 @@ export const groupEventsByPage = (
 		// instead of calling getEventDashboardUrl a second time.
 
 		const formattedPageEvents = formatEvents(
+			config,
 			pageEvents,
 			userAgent,
 			context
@@ -461,7 +470,7 @@ export const groupEventsByPage = (
 		});
 	});
 
-	formatEvents(pagelessEvents, userAgent, context).forEach((item) =>
+	formatEvents(config, pagelessEvents, userAgent, context).forEach((item) =>
 		sortableItems.push({
 			item,
 			latestTime: item.time.valueOf(),
@@ -520,6 +529,7 @@ export const toDayKey = (
 		: formatUTCDate(datetime, DEFAULT_DATE_FORMAT);
 
 export const buildTouchIndividualUrls = (
+	config: Config,
 	campaignDays: Record<
 		string,
 		{campaigns: Array<{touches: Array<{individualId: string | null}>}>}
@@ -535,9 +545,11 @@ export const buildTouchIndividualUrls = (
 			campaigns.forEach(({touches}) =>
 				touches.forEach(({individualId}) => {
 					if (individualId) {
-						urls[individualId] = toRoute(
-							Routes.CONTACTS_INDIVIDUAL,
-							{channelId, groupId, id: individualId}
+						urls[individualId] = setUriQueryValues(
+							{
+								id: individualId,
+							},
+							config.individualURL
 						);
 					}
 				})
@@ -550,6 +562,7 @@ export const buildTouchIndividualUrls = (
 };
 
 export const buildCampaignUrls = (
+	config: Config,
 	campaignDays: Record<string, {campaigns: Array<{campaignId: string}>}> = {},
 	{channelId, groupId}: EventDashboardContext = {}
 ): Record<string, string> => {
@@ -560,11 +573,10 @@ export const buildCampaignUrls = (
 	return Object.values(campaignDays).reduce<Record<string, string>>(
 		(urls, {campaigns}) => {
 			campaigns.forEach(({campaignId}) => {
-				urls[campaignId] = toRoute(Routes.CAMPAIGNS_DETAIL, {
-					channelId,
-					groupId,
-					id: campaignId,
-				});
+				urls[campaignId] = setUriQueryValues(
+					{id: campaignId},
+					config.campaignURL
+				);
 			});
 
 			return urls;
@@ -671,6 +683,7 @@ export const groupSessionsByDay = <
  * subject — so a day holds its sessions directly.
  */
 export const formatSessions = (
+	config: Config,
 	sessions: UserSession[] = [],
 	context: EventDashboardContext = {}
 ): TimelineDay[] =>
@@ -689,6 +702,7 @@ export const formatSessions = (
 					device: session.deviceType,
 					endTime: session.completeDate,
 					nestedItems: groupEventsByPage(
+						config,
 						events,
 						session.userAgent,
 						context

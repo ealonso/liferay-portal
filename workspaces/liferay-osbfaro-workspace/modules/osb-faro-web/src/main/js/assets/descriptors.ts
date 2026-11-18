@@ -1,9 +1,8 @@
 import {AssetTypes} from 'shared/util/constants';
 import {CSVType} from 'shared/components/download-report/utils';
-import {isEmpty} from 'lodash';
 import {Name} from 'shared/components/audience-report/types';
+import {Config} from 'shared/util/config';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
 
 /**
  * Describes one asset type the dashboards cover.
@@ -101,14 +100,17 @@ export const getAssetDescriptorBySlug = (
 export const toAssetOverviewRoute = (
 	graphQLType: string,
 	routeParams: {[key: string]: any},
-	query: {[key: string]: any}
+	query: {[key: string]: any},
+	config: Config
 ) => {
 	const {slug} = getAssetDescriptorByGraphQLType(graphQLType);
 
-	const route = toRoute(Routes.ASSETS_DASHBOARD_OVERVIEW, {
-		...routeParams,
-		assetType: slug,
-	});
-
-	return !isEmpty(query) ? setUriQueryValues(query, route) : route;
+	return setUriQueryValues(
+		{
+			...query,
+			...routeParams,
+			assetType: slug,
+		},
+		config.assetURL
+	);
 };

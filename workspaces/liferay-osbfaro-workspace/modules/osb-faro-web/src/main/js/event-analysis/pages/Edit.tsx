@@ -12,10 +12,9 @@ import {
 	EventAnalysisVariables,
 } from '../queries/EventAnalysisQuery';
 import {normalizeRangeSelectors} from 'shared/util/util';
-import {Routes, toRoute} from 'shared/util/router';
 import {uniqueId} from 'lodash';
-import {useParams} from 'react-router-dom';
 import {useQuery} from '@apollo/client';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 function normalizeItems<T extends {id: string; __typename?: string}>(
 	data: T[]
@@ -49,14 +48,10 @@ interface FilterWithId extends Filter {
 
 const Edit: React.FC<React.HTMLAttributes<HTMLElement>> = () => {
 	const {
-		channelId,
-		groupId,
-		id: eventAnalysisId = '',
-	} = useParams<{
-		channelId: string;
-		groupId: string;
-		id: string;
-	}>();
+		eventsURL,
+		params: {id: eventAnalysisId = ''},
+	} = usePageConfig();
+
 	const {data, error, loading} = useQuery<
 		EventAnalysisData,
 		EventAnalysisVariables
@@ -111,10 +106,7 @@ const Edit: React.FC<React.HTMLAttributes<HTMLElement>> = () => {
 	if (error) {
 		return (
 			<ErrorPage
-				href={toRoute(Routes.EVENT_ANALYSIS, {
-					channelId,
-					groupId,
-				})}
+				href={eventsURL}
 				linkLabel={Liferay.Language.get('go-to-event-analysis')}
 				message={Liferay.Language.get(
 					'the-analysis-you-are-looking-for-does-not-exist'

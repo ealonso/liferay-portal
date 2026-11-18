@@ -13,27 +13,23 @@ import {
 import {DateCell} from 'shared/components/table/cell-components';
 import {getSafeDecodedURIComponent} from 'shared/util/util';
 import {getStatusColor, getStatusName} from 'experiments/util/experiments';
-import {getUrl} from 'shared/util/urls';
 import {isNil} from 'lodash';
-import {Link, useParams} from 'react-router-dom';
-import {Routes} from 'shared/util/router';
 import {TableDataCell} from 'shared/components/table/cell-components';
+import {usePageConfig} from 'shared/context/pageConfig';
+import {setUriQueryValues} from 'shared/util/url';
 
 const ExperimentListTitle = ({id, title, touchpoint}) => {
-	const {channelId, groupId} = useParams();
+	const {testURL} = usePageConfig();
 
-	const url = getUrl(Routes.TESTS_OVERVIEW, {
-		params: {channelId, groupId, id},
-		query: {},
-	});
+	const url = setUriQueryValues({id}, testURL);
 
 	return (
 		<td className="table-cell-expand">
-			<Link className="table-title" to={url}>
+			<a className="table-title" href={url}>
 				<TextTruncate title={title || touchpoint}>
 					<DataValue value={title} />
 				</TextTruncate>
-			</Link>
+			</a>
 		</td>
 	);
 };

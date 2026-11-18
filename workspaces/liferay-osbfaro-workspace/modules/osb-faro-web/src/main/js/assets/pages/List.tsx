@@ -24,39 +24,36 @@ import {InfoPanel} from 'assets/components/InfoPanel';
 import {pickBy} from 'lodash';
 import {RangeSelectors} from 'shared/types';
 import {removeUriQueryParam, setUriQueryValues} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
 import {toThousands} from 'shared/util/numbers';
 import {useChannelContext} from 'shared/context/channel';
-import {useLocation, useParams} from 'react-router-dom';
-import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
 import {useQueryRangeSelectors} from 'shared/hooks/useQueryRangeSelectors';
+import {Config} from 'shared/util/config';
 import {usePageConfig} from 'shared/context/pageConfig';
 
 const {cur: DEFAULT_CUR} = FaroConstants.pagination;
 
 const OBJECT_TYPES = Object.values(AssetObjectTypes);
 
-const getAssetURL = ({
-	accountId,
-	accountName,
-	channelId,
-	groupId,
-	itemData,
-	rangeSelectorParams,
-	segmentId,
-	segmentName,
-	value = '',
-}: {
-	accountId?: string | null;
-	accountName?: string | null;
-	channelId: string;
-	groupId: string;
-	itemData: any;
-	rangeSelectorParams: string;
-	segmentId?: string | null;
-	segmentName?: string | null;
-	value?: string;
-}) => {
+const getAssetURL = (
+	{
+		accountId,
+		accountName,
+		itemData,
+		rangeSelectorParams,
+		segmentId,
+		segmentName,
+		value = '',
+	}: {
+		accountId?: string | null;
+		accountName?: string | null;
+		itemData: any;
+		rangeSelectorParams: string;
+		segmentId?: string | null;
+		segmentName?: string | null;
+		value?: string;
+	},
+	config: Config
+) => {
 	const assetTitle = value || itemData.assetTitle || itemData.id;
 
 	const {slug} = getAssetDescriptorByRESTType(itemData.assetType);
@@ -79,19 +76,21 @@ const getAssetURL = ({
 		queryParams.set('segmentName', segmentName);
 	}
 
-	return `${toRoute(Routes.ASSETS_DASHBOARD_OVERVIEW, {
-		assetId: itemData.id,
-		assetType: slug,
-		channelId,
-		groupId,
-		touchpoint: 'Any',
-		...(itemData.assetType && {
-			type: itemData.assetType,
-		}),
-		...(assetTitle && {
-			title: assetTitle,
-		}),
-	})}?${queryParams.toString()}`;
+	return setUriQueryValues(
+		{
+			...Object.fromEntries(queryParams),
+			assetId: itemData.id,
+			assetType: slug,
+			touchpoint: 'Any',
+			...(itemData.assetType && {
+				type: itemData.assetType,
+			}),
+			...(assetTitle && {
+				title: assetTitle,
+			}),
+		},
+		config.assetURL
+	);
 };
 
 const columns = {
@@ -99,35 +98,35 @@ const columns = {
 		<span>{toThousands(value.value)}</span>
 	),
 	assetTitleRenderer:
-		({
-			accountId,
-			accountName,
-			channelId,
-			groupId,
-			rangeSelectorParams,
-			segmentId,
-			segmentName,
-		}: {
-			accountId?: string | null;
-			accountName?: string | null;
-			channelId: string;
-			groupId: string;
-			rangeSelectorParams: string;
-			segmentId?: string | null;
-			segmentName?: string | null;
-		}) =>
-		({itemData, value}: {itemData: any; value?: string}) => {
-			const URL = getAssetURL({
+		(
+			{
 				accountId,
 				accountName,
-				channelId,
-				groupId,
-				itemData,
 				rangeSelectorParams,
 				segmentId,
 				segmentName,
-				value,
-			});
+			}: {
+				accountId?: string | null;
+				accountName?: string | null;
+				rangeSelectorParams: string;
+				segmentId?: string | null;
+				segmentName?: string | null;
+			},
+			config: Config
+		) =>
+		({itemData, value}: {itemData: any; value?: string}) => {
+			const URL = getAssetURL(
+				{
+					accountId,
+					accountName,
+					itemData,
+					rangeSelectorParams,
+					segmentId,
+					segmentName,
+					value,
+				},
+				config
+			);
 
 			const mimeType = getMimeType({
 				assetType: itemData?.assetType,
@@ -211,23 +210,17 @@ const TABLE_FIELDS = [
 ];
 
 const List = () => {
-	const {ldpEnabled} = usePageConfig();
+	const config = usePageConfig();
 
-	const history = useHistoryAdapter();
-	const {search} = useLocation();
 	const {selectedChannel} = useChannelContext();
-	const {channelId, groupId} = useParams();
+	const {channelId, groupId, ldpEnabled, params: queryParams} = config;
 	const initialRangeSelectors = useQueryRangeSelectors();
 
-	const searchParams = new URLSearchParams(search);
-	const accountId = searchParams.get('accountId');
-	const accountName = searchParams.get('accountName');
-	const orderBy = searchParams.get('orderBy');
-	const segmentId = searchParams.get('segmentId');
-	const segmentName = searchParams.get('segmentName');
+	const {accountId, accountName, orderBy, segmentId, segmentName} =
+		queryParams;
 
 	const objectType = OBJECT_TYPES.find(
-		(value) => value === searchParams.get('objectType')
+		(value) => value === queryParams.objectType
 	);
 
 	const [rangeSelectors, setRangeSelectors] = useState<RangeSelectors>(
@@ -398,11 +391,14 @@ const List = () => {
 		<BasePage documentTitle={Liferay.Language.get('assets')}>
 			<BasePage.Header
 				breadcrumbs={[
-					breadcrumbs.getHome({
-						channelId: channelId!,
-						groupId: groupId!,
-						label: selectedChannel?.name,
-					}),
+					breadcrumbs.getHome(
+						{
+							channelId: channelId!,
+							groupId: groupId!,
+							label: selectedChannel?.name,
+						},
+						config
+					),
 				]}
 				fluid
 				groupId={groupId!}
@@ -418,7 +414,7 @@ const List = () => {
 						bordered
 						legacy={false}
 						onRangeSelectorChange={(rangeSelectors) => {
-							history.push(
+							Liferay.Util.navigate(
 								setUriQueryValues(
 									pickBy({
 										page: DEFAULT_CUR,
@@ -479,15 +475,17 @@ const List = () => {
 						apiURL={`/o/faro/contacts/${groupId}/asset-summary?channelId=${channelId}&${rangeSelectorParams}`}
 						customDataRenderers={{
 							assetMetricRenderer: columns.assetMetricRenderer,
-							assetTitleRenderer: columns.assetTitleRenderer({
-								accountId,
-								accountName,
-								channelId: channelId!,
-								groupId: groupId!,
-								rangeSelectorParams: linkRangeSelectorParams,
-								segmentId,
-								segmentName,
-							}),
+							assetTitleRenderer: columns.assetTitleRenderer(
+								{
+									accountId,
+									accountName,
+									rangeSelectorParams:
+										linkRangeSelectorParams,
+									segmentId,
+									segmentName,
+								},
+								config
+							),
 							assetTypeRenderer: columns.assetTypeRenderer,
 						}}
 
@@ -546,18 +544,19 @@ const List = () => {
 								icon: 'view',
 								label: Liferay.Language.get('view'),
 								onClick: ({itemData}: {itemData: any}) => {
-									history.push(
-										getAssetURL({
-											accountId,
-											accountName,
-											channelId: channelId!,
-											groupId: groupId!,
-											itemData,
-											rangeSelectorParams:
-												linkRangeSelectorParams,
-											segmentId,
-											segmentName,
-										})
+									Liferay.Util.navigate(
+										getAssetURL(
+											{
+												accountId,
+												accountName,
+												itemData,
+												rangeSelectorParams:
+													linkRangeSelectorParams,
+												segmentId,
+												segmentName,
+											},
+											config
+										)
 									);
 								},
 							},

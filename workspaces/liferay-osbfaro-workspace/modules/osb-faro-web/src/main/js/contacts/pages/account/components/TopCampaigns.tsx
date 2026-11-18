@@ -3,13 +3,12 @@ import ClayLink from '@clayui/link';
 import React from 'react';
 import {columns, FrontendDataSet} from 'shared/components/FrontendDataSet';
 import {DropdownRangeKey} from 'shared/components/dropdown-range-key/DropdownRangeKey';
+import {isString, pickBy} from 'lodash';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
-import {pickBy} from 'lodash';
 import {Text} from '@clayui/core';
-import {useParams} from 'react-router-dom';
 import {useRangeQueryValues} from 'shared/hooks/useRangeQueryValues';
 import {useRangeSelectorChange} from 'shared/hooks/useRangeSelectorChange';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 export interface IAccountCampaign {
 	campaignName: string;
@@ -23,7 +22,13 @@ interface ITopCampaignsProps {
 }
 
 const TopCampaigns: React.FC<ITopCampaignsProps> = ({accountName}) => {
-	const {channelId = '', groupId = '', id = ''} = useParams();
+	const {
+		campaignURL,
+		campaignsURL,
+		channelId = '',
+		groupId = '',
+		params: {id = ''},
+	} = usePageConfig();
 
 	const {apiRangeParams, rangeSelectors, routeRangeParams} =
 		useRangeQueryValues();
@@ -68,11 +73,9 @@ const TopCampaigns: React.FC<ITopCampaignsProps> = ({accountName}) => {
 								value: string;
 							}) =>
 								columns.nameAndLinkRenderer({
-									channelId,
-									groupId,
 									itemData,
 									queryValues: linkQueryValues,
-									route: Routes.CAMPAIGNS_DETAIL,
+									url: campaignURL,
 									value,
 								}),
 							countRenderer: columns.countRenderer,
@@ -150,8 +153,8 @@ const TopCampaigns: React.FC<ITopCampaignsProps> = ({accountName}) => {
 						className="button-root rounded-lg"
 						displayType="primary"
 						href={setUriQueryValues(
-							linkQueryValues,
-							toRoute(Routes.CAMPAIGNS, {channelId, groupId})
+							pickBy(linkQueryValues, isString),
+							campaignsURL
 						)}
 						small
 					>

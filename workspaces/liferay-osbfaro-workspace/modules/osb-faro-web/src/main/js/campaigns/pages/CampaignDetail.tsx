@@ -7,20 +7,26 @@ import MembershipsCard from '../components/MembershipsCard';
 import React, {useContext} from 'react';
 import {ChannelContext} from 'shared/context/channel';
 import {DropdownRangeKey} from 'shared/components/dropdown-range-key/DropdownRangeKey';
-import {pickBy} from 'lodash';
+import {isString, pickBy} from 'lodash';
 import {SectionHeader} from 'shared/components/SectionHeader';
 import {useAccountFilter} from 'shared/hooks/useAccountFilter';
-import {useParams} from 'react-router-dom';
 import {useRangeQueryValues} from 'shared/hooks/useRangeQueryValues';
 import {useRangeSelectorChange} from 'shared/hooks/useRangeSelectorChange';
 import {useRequest} from 'shared/hooks/useRequest';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const CampaignDetail: React.FC = () => {
+	const config = usePageConfig();
+
 	const {accountId, accountName, accountQueryValues, setAccount} =
 		useAccountFilter();
 	const {selectedChannel} = useContext(ChannelContext);
 
-	const {channelId, groupId, id} = useParams();
+	const {
+		channelId,
+		groupId,
+		params: {id},
+	} = config;
 
 	const {apiRangeParams, rangeSelectors} = useRangeQueryValues();
 
@@ -40,19 +46,26 @@ const CampaignDetail: React.FC = () => {
 		<BasePage documentTitle={title}>
 			<BasePage.Header
 				breadcrumbs={[
-					breadcrumbs.getHome({
-						channelId: channelId!,
-						groupId: groupId!,
-						label: selectedChannel?.name,
-					}),
-					breadcrumbs.getCampaigns({
-						channelId: channelId!,
-						groupId: groupId!,
-						queryValues: pickBy({
-							...rangeSelectors,
-							...accountQueryValues,
-						}),
-					}),
+					breadcrumbs.getHome(
+						{
+							channelId: channelId!,
+							groupId: groupId!,
+							label: selectedChannel?.name,
+						},
+						config
+					),
+					breadcrumbs.getCampaigns(
+						{
+							queryValues: pickBy(
+								{
+									...rangeSelectors,
+									...accountQueryValues,
+								},
+								isString
+							),
+						},
+						config
+					),
 					breadcrumbs.getEntityName({label: title}),
 				]}
 				groupId={groupId!}
