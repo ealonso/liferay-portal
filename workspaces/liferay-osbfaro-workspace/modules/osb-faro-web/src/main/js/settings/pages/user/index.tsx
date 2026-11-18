@@ -1,30 +1,30 @@
 import * as API from 'shared/api';
 import BasePage from 'settings/components/base-page/BasePage';
-import BundleRouter from 'route-middleware/BundleRouter';
 import Card from 'shared/components/Card';
 import ClayBadge from '@clayui/badge';
 import ClayLink from '@clayui/link';
 import ClayNavigationBar from '@clayui/navigation-bar';
-import ErrorPage from 'shared/pages/ErrorPage';
 import getCN from 'classnames';
 import Loading from 'shared/components/Loading';
-import React, {lazy, Suspense, useState} from 'react';
-import {getMatchedRoute, Routes, toRoute} from 'shared/util/router';
-import {Route, Routes as RouterRoutes, useParams} from 'react-router-dom';
+import React, {Suspense, useState} from 'react';
+import {User as UserRecord} from 'shared/util/records';
 import {UserStatuses} from 'shared/util/constants';
 import {usePageConfig} from 'shared/context/pageConfig';
 
-const UserList = lazy(
-	() => import(/* webpackChunkName: "UserManagement" */ './UserList')
-);
-const UserRequest = lazy(
-	() => import(/* webpackChunkName: "UserRequest" */ './UserRequest')
-);
+interface IUserContentArgs {
+	currentUser: UserRecord;
+	onSetUserRequest: (userRequest: number) => void;
+}
 
-export const User = ({className}: {className?: string}) => {
-	const {currentUser} = usePageConfig();
+interface IUserProps {
+	className?: string;
+	renderContent: (args: IUserContentArgs) => React.ReactNode;
+}
 
-	const {groupId = ''} = useParams<{groupId: string}>();
+export const User: React.FC<IUserProps> = ({className, renderContent}) => {
+	const config = usePageConfig();
+
+	const {currentUser, groupId = ''} = config;
 	const [userRequest, setUserRequest] = useState<number>(0);
 
 	const onSetUserRequest = (userRequest: number) =>
@@ -37,35 +37,13 @@ export const User = ({className}: {className?: string}) => {
 		})
 		.then(setUserRequest);
 
-	const NAV_ITEMS = [
-		{
-			exact: true,
-			label: Liferay.Language.get('manage-users'),
-			route: Routes.SETTINGS_USERS,
-		},
-		{
-			exact: true,
-			label: (
-				<>
-					{Liferay.Language.get('requests')}
-					{userRequest > 0 && (
-						<ClayBadge className="ml-2" label={userRequest} />
-					)}
-				</>
-			),
-			route: Routes.SETTINGS_USERS_REQUESTS,
-		},
-	];
-
-	const matchedRoute = getMatchedRoute(NAV_ITEMS);
+	const navigationItems = config.navigationItems ?? [];
 
 	const initialItem =
-		NAV_ITEMS.find((item) => item.route === matchedRoute) ?? NAV_ITEMS[0];
+		navigationItems.find(({active}) => active) ?? navigationItems[0];
 
-	const [activeTriggerLabel, setActiveTriggerLabel] = useState<string>(
-		initialItem.route === Routes.SETTINGS_USERS
-			? Liferay.Language.get('manage-users')
-			: Liferay.Language.get('requests')
+	const [activeTriggerLabel, setActiveTriggerLabel] = useState(
+		initialItem?.label
 	);
 
 	return (
@@ -83,26 +61,21 @@ export const User = ({className}: {className?: string}) => {
 						className="page-subnav mx-4 my-3"
 						triggerLabel={activeTriggerLabel}
 					>
-						{NAV_ITEMS.map(({label, route}) => (
-							<ClayNavigationBar.Item
-								active={matchedRoute === route}
-								key={route}
-							>
+						{navigationItems.map(({active, data, href, label}) => (
+							<ClayNavigationBar.Item active={active} key={label}>
 								<ClayLink
-									href={toRoute(route, {groupId})}
-									onClick={() => {
-										setActiveTriggerLabel(
-											route === Routes.SETTINGS_USERS
-												? Liferay.Language.get(
-														'manage-users'
-													)
-												: Liferay.Language.get(
-														'requests'
-													)
-										);
-									}}
+									href={href}
+									onClick={() => setActiveTriggerLabel(label)}
 								>
 									{label}
+
+									{data?.id === 'requests' &&
+										userRequest > 0 && (
+											<ClayBadge
+												className="ml-2"
+												label={userRequest}
+											/>
+										)}
 								</ClayLink>
 							</ClayNavigationBar.Item>
 						))}
@@ -110,29 +83,7 @@ export const User = ({className}: {className?: string}) => {
 				)}
 
 				<Suspense fallback={<Loading />}>
-					<RouterRoutes>
-						<Route
-							element={
-								<BundleRouter
-									componentProps={{currentUser}}
-									data={UserList}
-								/>
-							}
-							index
-						/>
-
-						<Route
-							element={
-								<BundleRouter
-									componentProps={{onSetUserRequest}}
-									data={UserRequest}
-								/>
-							}
-							path="requests"
-						/>
-
-						<Route element={<ErrorPage />} path="*" />
-					</RouterRoutes>
+					{renderContent({currentUser, onSetUserRequest})}
 				</Suspense>
 			</Card>
 		</BasePage>

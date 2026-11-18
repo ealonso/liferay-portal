@@ -42,17 +42,16 @@ import {LIMIT_REACHED_ALERT_ID} from './constants';
 import {NotificationSubtypes} from 'shared/util/records/Notification';
 import {OrderedMap} from 'immutable';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
 import {Sizes} from 'shared/util/constants';
 import {sub} from 'shared/util/lang';
 import {useModal} from '@clayui/modal';
 import {useMutation, useQuery} from '@apollo/client';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
-import {usePageConfig} from 'shared/context/pageConfig';
 import {
 	useSelectionContext,
 	withSelectionProvider,
 } from 'shared/context/selection';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const connector = connect(null, {addAlert, removeAlert});
 
@@ -60,16 +59,14 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface ICustomEventListProps extends PropsFromRedux {
 	groupId: string;
-	history: {push: (url: string) => void};
 }
 
 const CustomEventList: React.FC<ICustomEventListProps> = ({
 	addAlert,
 	groupId,
-	history,
 	removeAlert,
 }) => {
-	const {currentUser} = usePageConfig();
+	const config = usePageConfig();
 
 	const {selectedItems, selectionDispatch} = useSelectionContext();
 
@@ -140,6 +137,8 @@ const CustomEventList: React.FC<ICustomEventListProps> = ({
 	});
 
 	const notificationResponse = useNotificationsAPI(groupId);
+
+	const {currentUser, eventDefinitionsURL} = config;
 
 	const blockModal = useModal();
 	const hideModal = useModal();
@@ -251,7 +250,7 @@ const CustomEventList: React.FC<ICustomEventListProps> = ({
 
 				<CrossPageSelect
 					columns={[
-						eventListColumns.getName({groupId}),
+						eventListColumns.getName(config),
 						eventListColumns.displayName,
 						eventListColumns.description,
 						eventListColumns.hidden,
@@ -421,18 +420,18 @@ const CustomEventList: React.FC<ICustomEventListProps> = ({
 
 									const {field, sortOrder} = orderParams;
 
-									history.push(
+									Liferay.Util.navigate(
 										setUriQueryValues(
 											{
 												field,
 												page: updatedPage,
 												sortOrder,
 											},
-											toRoute(
-												Routes.SETTINGS_DEFINITIONS_EVENTS_CUSTOM,
+											setUriQueryValues(
 												{
-													groupId,
-												}
+													tab: 'custom',
+												},
+												eventDefinitionsURL
 											)
 										)
 									);

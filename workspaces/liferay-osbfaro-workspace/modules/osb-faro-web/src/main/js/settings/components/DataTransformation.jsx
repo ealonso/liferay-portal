@@ -20,8 +20,8 @@ import {fromJS, List, Map} from 'immutable';
 import {hasChanges} from 'shared/util/react';
 import {mapValues, noop, values} from 'lodash';
 import {PropTypes} from 'prop-types';
-import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
+import withPageConfig from 'shared/hoc/WithPageConfig';
 
 /**
  * Return number of unmapped fields, where unmapped is considered
@@ -487,7 +487,6 @@ export class DataTransformation extends React.Component {
 			props: {
 				cancelHref,
 				className,
-				groupId,
 				onPrevious,
 				submitMessage,
 				submitting,
@@ -521,7 +520,7 @@ export class DataTransformation extends React.Component {
 					<FormNavigation
 						cancelHref={
 							cancelHref ||
-							toRoute(Routes.SETTINGS_DATA_SOURCE_LIST, {groupId})
+							this.props.pageConfig.dataSourcesURL
 						}
 						enableNext={valid}
 						onNextStep={this.handleSubmit}
@@ -538,6 +537,7 @@ export class DataTransformation extends React.Component {
 }
 
 export default compose(
+	withPageConfig,
 	connect(null, {addAlert}),
 	hasRequest
 )(DataTransformation);

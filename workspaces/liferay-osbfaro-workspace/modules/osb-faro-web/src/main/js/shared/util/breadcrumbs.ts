@@ -1,6 +1,5 @@
-import {ACCOUNTS, SEGMENTS} from 'shared/util/constants';
+import {Config} from 'shared/util/config';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
 
 type IBasicRouteArgs = {
 	groupId: string;
@@ -35,94 +34,63 @@ export const getEntityName = ({
 /**
  * Home
  */
-export const getHome = ({
-	channelId,
-	groupId,
-	label,
-}: IBasicSidebarRouteArgs) => ({
-	href: toRoute(Routes.SITES, {channelId, groupId}),
+export const getHome = ({label}: IBasicSidebarRouteArgs, config: Config) => ({
+	href: config.sitesURL,
 	label: label ? label : Liferay.Language.get('home'),
 });
 
 /**
  * Entities
  */
-export const getAccounts = ({channelId, groupId}: IBasicSidebarRouteArgs) => ({
-	href: toRoute(Routes.CONTACTS_LIST_ENTITY, {
-		channelId,
-		groupId,
-		type: ACCOUNTS,
-	}),
+export const getAccounts = (config: Config) => ({
+	href: config.accountsURL,
 	label: Liferay.Language.get('accounts'),
 });
 
-export const getCampaigns = ({
-	channelId,
-	groupId,
-	queryValues,
-}: IBasicSidebarRouteArgs & {queryValues?: {[key: string]: any}}) => {
-	const href = toRoute(Routes.CAMPAIGNS, {channelId, groupId});
+export const getCampaigns = (
+	{
+		queryValues = {},
+	}: {
+		queryValues?: {[key: string]: number | string | undefined};
+	},
+	config: Config
+) => ({
+	href: setUriQueryValues(queryValues, config.campaignsURL),
+	label: Liferay.Language.get('campaigns'),
+});
 
-	return {
-		href: queryValues ? setUriQueryValues(queryValues, href) : href,
-		label: Liferay.Language.get('campaigns'),
-	};
-};
-
-export const getIndividuals = ({
-	LDPEnabled,
-	channelId,
-	groupId,
-}: IBasicSidebarRouteArgs & {LDPEnabled: boolean}) => ({
-	href: toRoute(
-		LDPEnabled
-			? Routes.CONTACTS_INDIVIDUALS
-			: Routes.CONTACTS_INDIVIDUALS_KNOWN_INDIVIDUALS,
-		{
-			channelId,
-			groupId,
-		}
-	),
+export const getIndividuals = (
+	{LDPEnabled}: {LDPEnabled: boolean},
+	config: Config
+) => ({
+	href: LDPEnabled ? config.individualsURL : config.knownIndividualsURL,
 	label: Liferay.Language.get('individuals'),
 });
 
-export const getLifecycles = ({
-	channelId,
-	groupId,
-}: IBasicSidebarRouteArgs) => ({
-	href: toRoute(Routes.LIFECYCLE, {channelId, groupId}),
+export const getLifecycles = (config: Config) => ({
+	href: config.lifecyclesURL,
 	label: Liferay.Language.get('lifecycles'),
 });
 
-export const getSegments = ({channelId, groupId}: IBasicSidebarRouteArgs) => ({
-	href: toRoute(Routes.CONTACTS_LIST_ENTITY, {
-		channelId,
-		groupId,
-		type: SEGMENTS,
-	}),
+export const getSegments = (href: string) => ({
+	href,
 	label: Liferay.Language.get('segments'),
 });
 
-export const getSites = ({channelId, groupId}: IBasicSidebarRouteArgs) => ({
-	href: toRoute(Routes.SITES, {
-		channelId,
-		groupId,
-	}),
+export const getSites = (config: Config) => ({
+	href: config.sitesURL,
 	label: Liferay.Language.get('sites'),
 	truncate: true,
 });
 
-export const getPages = ({channelId, groupId}: IBasicSidebarRouteArgs) => ({
-	href: toRoute(Routes.SITES_TOUCHPOINTS, {
-		channelId,
-		groupId,
-	}),
+export const getPages = (config: Config) => ({
+	href: config.pagesURL,
 	label: Liferay.Language.get('pages'),
 	truncate: true,
 });
 
-export const getTests = ({channelId, groupId}: IBasicSidebarRouteArgs) => ({
-	href: toRoute(Routes.TESTS, {channelId, groupId}),
+export const getTests = (config: Config) => ({
+	href: config.testsURL,
 	label: Liferay.Language.get('tests'),
 });
 
@@ -134,101 +102,77 @@ export const getTests = ({channelId, groupId}: IBasicSidebarRouteArgs) => ({
  * `query` carries the list's date range, account and segment back, so the
  * breadcrumb returns to the list as it was left.
  */
-export const getAssets = ({
-	channelId,
-	groupId,
-	query = {},
-}: IBasicSidebarRouteArgs & {query?: {[key: string]: unknown}}) => ({
-	href: setUriQueryValues(
-		query,
-		toRoute(Routes.ASSETS, {channelId, groupId})
-	),
+export const getAssets = (
+	{
+		query = {},
+	}: {
+		query?: {[key: string]: number | string | undefined};
+	},
+	config: Config
+) => ({
+	href: setUriQueryValues(query, config.assetsURL),
 	label: Liferay.Language.get('assets'),
 });
 
 /**
  * Settings
  */
-export const getChannels = ({groupId}: IBasicRouteArgs) => ({
-	href: toRoute(Routes.SETTINGS_CHANNELS, {groupId}),
+export const getChannels = (config: Config) => ({
+	href: config.propertiesURL,
 	label: Liferay.Language.get('properties'),
 });
 
-export const getChannelName = ({
-	active = false,
-	groupId,
-	id,
-	label,
-}: IBreadcrumbArgs) => ({
+export const getChannelName = (
+	{active = false, id, label}: IBreadcrumbArgs,
+	config: Config
+) => ({
 	active,
-	href:
-		groupId && id
-			? toRoute(Routes.SETTINGS_CHANNELS_VIEW, {
-					groupId,
-					id,
-				})
-			: null,
+	href: id ? setUriQueryValues({id}, config.propertyURL) : null,
 	label,
 	truncate: true,
 });
 
-export const getDataPrivacy = ({groupId}: IBasicRouteArgs) => ({
-	href: toRoute(Routes.SETTINGS_DATA_PRIVACY, {groupId}),
+export const getDataPrivacy = (config: Config) => ({
+	href: config.dataPrivacyURL,
 	label: Liferay.Language.get('data-control-&-privacy'),
 });
 
-export const getDataSources = ({groupId}: IBasicRouteArgs) => ({
-	href: toRoute(Routes.SETTINGS_DATA_SOURCE_LIST, {groupId}),
+export const getDataSources = (config: Config) => ({
+	href: config.dataSourcesURL,
 	label: Liferay.Language.get('data-sources'),
 });
 
-export const getDataSourceName = ({
-	active = false,
-	groupId,
-	id,
-	label,
-}: IBreadcrumbArgs) => ({
+export const getDataSourceName = (
+	{active = false, id, label}: IBreadcrumbArgs,
+	config: Config
+) => ({
 	active,
-	href:
-		groupId && id
-			? toRoute(Routes.SETTINGS_DATA_SOURCE, {
-					groupId,
-					id,
-				})
-			: null,
+	href: id ? setUriQueryValues({id}, config.dataSourceURL) : null,
 	label,
 	truncate: true,
 });
 
-export const getDefinitions = ({groupId}: IBasicRouteArgs) => ({
-	href: toRoute(Routes.SETTINGS_DEFINITIONS, {groupId}),
+export const getDefinitions = (config: Config) => ({
+	href: config.definitionsURL,
 	label: Liferay.Language.get('definitions'),
 });
 
-export const getRecommendations = ({groupId}: IBasicRouteArgs) => ({
-	href: toRoute(Routes.SETTINGS_RECOMMENDATIONS, {groupId}),
+export const getRecommendations = (config: Config) => ({
+	href: config.recommendationsURL,
 	label: Liferay.Language.get('recommendations'),
 });
 
-export const getEvents = ({groupId}: IBasicRouteArgs) => ({
-	href: toRoute(Routes.SETTINGS_DEFINITIONS_EVENTS_DEFAULT, {groupId}),
+export const getEvents = (config: Config) => ({
+	href: config.eventDefinitionsURL,
 	label: Liferay.Language.get('events'),
 });
 
-export const getEventAnalysis = ({
-	channelId,
-	groupId,
-}: IBasicSidebarRouteArgs) => ({
-	href: toRoute(Routes.EVENT_ANALYSIS, {
-		channelId,
-		groupId,
-	}),
+export const getEventAnalysis = (config: Config) => ({
+	href: config.eventsURL,
 	label: Liferay.Language.get('event-analysis'),
 });
 
-export const getEventAttributes = ({groupId}: IBasicRouteArgs) => ({
-	href: toRoute(Routes.SETTINGS_DEFINITIONS_EVENT_ATTRIBUTES_GLOBAL, {
-		groupId,
-	}),
+export const getEventAttributes = (config: Config) => ({
+	href: config.eventAttributesURL,
 	label: Liferay.Language.get('event-attributes'),
 });

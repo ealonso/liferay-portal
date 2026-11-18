@@ -26,7 +26,6 @@ import {Alert, IPaginationUnsorted} from 'shared/types';
 import {compose} from 'shared/hoc';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'shared/store';
-import {Routes, toRoute} from 'shared/util/router';
 import {SafeResults} from 'shared/hoc/util';
 import {sequence} from 'shared/util/promise';
 import {sub} from 'shared/util/lang';
@@ -50,6 +49,8 @@ export const ViewContainer: React.FC<Omit<IViewProps, 'channel'>> = ({
 	id,
 	...otherProps
 }) => {
+	const {propertiesURL} = usePageConfig();
+
 	const {data, error, loading, refetch} = useRequest({
 		dataSourceFn: API.channels.fetch,
 		variables: {
@@ -63,7 +64,7 @@ export const ViewContainer: React.FC<Omit<IViewProps, 'channel'>> = ({
 			data={data}
 			error={error}
 			errorProps={{
-				href: toRoute(Routes.SETTINGS_CHANNELS, {groupId}),
+				href: propertiesURL,
 				linkLabel: Liferay.Language.get('go-to-properties'),
 				message: Liferay.Language.get(
 					'the-property-you-are-looking-for-does-not-exist'
@@ -107,9 +108,6 @@ interface IViewProps
 		IPaginationUnsorted {
 	channel: Channel;
 	groupId: string;
-	history: {
-		push: (value: string) => void;
-	};
 	id: string;
 }
 
@@ -118,12 +116,13 @@ const View: React.FC<IViewProps> = ({
 	channel,
 	defaultChannelId,
 	groupId,
-	history,
 	id,
 	updateDefaultChannelId,
 	...otherProps
 }) => {
-	const {currentUser} = usePageConfig();
+	const config = usePageConfig();
+
+	const {currentUser, propertiesURL} = config;
 
 	const [name, setName] = useState(channel.name);
 	const [permissionType, setPermissionType] = useState(
@@ -163,11 +162,14 @@ const View: React.FC<IViewProps> = ({
 	return (
 		<BasePage
 			breadcrumbItems={[
-				breadcrumbs.getChannels({groupId}),
-				breadcrumbs.getChannelName({
-					active: true,
-					label: name,
-				}),
+				breadcrumbs.getChannels(config),
+				breadcrumbs.getChannelName(
+					{
+						active: true,
+						label: name,
+					},
+					config
+				),
 			]}
 			documentTitle={`${name} - ${Liferay.Language.get('properties')}`}
 		>
@@ -377,12 +379,7 @@ const View: React.FC<IViewProps> = ({
 
 								deleteModal.onOpenChange(false);
 
-								history.push(
-									toRoute(Routes.SETTINGS_CHANNELS, {
-										groupId,
-										id,
-									})
-								);
+								Liferay.Util.navigate(propertiesURL);
 
 								addAlert({
 									alertType: Alert.Types.Success,

@@ -9,10 +9,8 @@ import React from 'react';
 import StatesRenderer from 'shared/components/states-renderer/StatesRenderer';
 import URLConstants from 'shared/util/url-constants';
 import {FeatureName, useLimitReached} from 'shared/hooks/useLimitReached';
-import {Routes, toRoute} from 'shared/util/router';
 import {useChannelContext} from 'shared/context/channel';
 import {useDataSources} from 'shared/context/dataSources';
-import {useParams} from 'react-router-dom';
 import {useRequest} from 'shared/hooks/useRequest';
 import {usePageConfig} from 'shared/context/pageConfig';
 
@@ -20,11 +18,13 @@ const List = () => {
 	const config = usePageConfig();
 
 	const {selectedChannel} = useChannelContext();
-	const {channelId = '', groupId = ''} = useParams<{
-		channelId: string;
-		groupId: string;
-	}>();
-	const {currentUser} = config;
+	const {
+		channelId = '',
+		currentUser,
+		dataSourcesURL,
+		editEventAnalysisURL,
+		groupId = '',
+	} = config;
 
 	const {empty, error, loading} = useDataSources();
 
@@ -49,7 +49,7 @@ const List = () => {
 			disabled:
 				empty || error || usageLoading || usageError || hasLimitReached,
 			displayType: 'primary',
-			href: toRoute(Routes.EVENT_ANALYSIS_CREATE, {channelId, groupId}),
+			href: editEventAnalysisURL,
 			label: Liferay.Language.get('create-analysis'),
 		},
 	];
@@ -131,12 +131,7 @@ const List = () => {
 										button
 										className="button-root"
 										displayType="primary"
-										href={toRoute(
-											Routes.SETTINGS_DATA_SOURCE_LIST,
-											{
-												groupId,
-											}
-										)}
+										href={dataSourcesURL}
 									>
 										{Liferay.Language.get(
 											'connect-data-source'

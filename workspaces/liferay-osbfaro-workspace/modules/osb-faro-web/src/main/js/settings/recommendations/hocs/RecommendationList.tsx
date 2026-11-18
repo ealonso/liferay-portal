@@ -42,7 +42,6 @@ import {NameCell} from 'shared/components/table/cell-components';
 import {RECOMMENDATION_DELETE_MUTATION} from '../queries/RecommendationMutation';
 import {RootState} from 'shared/store';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
 import {useModal} from '@clayui/modal';
 import {useMutation, useQuery} from '@apollo/client';
@@ -69,20 +68,19 @@ const connector = connect(
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface IRecommendationListProps extends PropsFromRedux {
-	groupId: string;
-	history: {
-		push: (value: string) => void;
-	};
 	router: Router;
 }
 
 const RecommendationList: React.FC<IRecommendationListProps> = ({
 	addAlert,
-	groupId,
-	history,
 	timeZoneId,
 }: IRecommendationListProps) => {
-	const {currentUser} = usePageConfig();
+	const {
+		currentUser,
+		editRecommendationURL,
+		recommendationURL,
+		recommendationsURL,
+	} = usePageConfig();
 
 	const {selectedItems, selectionDispatch} = useSelectionContext();
 
@@ -149,7 +147,7 @@ const RecommendationList: React.FC<IRecommendationListProps> = ({
 
 				refetch?.();
 
-				history.push(
+				Liferay.Util.navigate(
 					setUriQueryValues(
 						{
 							field: NAME,
@@ -157,9 +155,7 @@ const RecommendationList: React.FC<IRecommendationListProps> = ({
 							page: defaultPage,
 							sortOrder: OrderByDirections.Descending,
 						},
-						toRoute(Routes.SETTINGS_RECOMMENDATIONS, {
-							groupId,
-						})
+						recommendationsURL
 					)
 				);
 			})
@@ -208,10 +204,7 @@ const RecommendationList: React.FC<IRecommendationListProps> = ({
 						<ClayLink
 							button
 							className="nav-btn"
-							href={toRoute(
-								Routes.SETTINGS_RECOMMENDATIONS_CREATE_ITEM_SIMILARITY_MODEL,
-								{groupId}
-							)}
+							href={editRecommendationURL}
 						>
 							{Liferay.Language.get('new-model')}
 						</ClayLink>
@@ -231,12 +224,9 @@ const RecommendationList: React.FC<IRecommendationListProps> = ({
 							cellRenderer: NameCell,
 							cellRendererProps: {
 								routeFn: ({data: {id}}: {data: {id: string}}) =>
-									toRoute(
-										Routes.SETTINGS_RECOMMENDATION_MODEL_VIEW,
-										{
-											groupId,
-											jobId: id,
-										}
+									setUriQueryValues(
+										{jobId: id},
+										recommendationURL
 									),
 							},
 							className: 'table-cell-expand',

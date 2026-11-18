@@ -12,13 +12,15 @@ import {getDefinitions, getEvents} from 'shared/util/breadcrumbs';
 import {SafeResults} from 'shared/hoc/util';
 import {useModal} from '@clayui/modal';
 import {useQuery} from '@apollo/client';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface IViewProps extends React.HTMLAttributes<HTMLElement> {
 	eventId: string;
-	groupId: string;
 }
 
-const View: React.FC<IViewProps> = ({eventId, groupId}) => {
+const View: React.FC<IViewProps> = ({eventId}) => {
+	const config = usePageConfig();
+
 	const result = useQuery<EventDefinitionData, EventDefinitionVariables>(
 		EVENT_DEFINITION_QUERY,
 		{
@@ -50,8 +52,8 @@ const View: React.FC<IViewProps> = ({eventId, groupId}) => {
 				}) => (
 					<BasePage
 						breadcrumbItems={[
-							getDefinitions({groupId}),
-							getEvents({groupId}),
+							getDefinitions(config),
+							getEvents(config),
 							{active: true, label: displayName || name},
 						]}
 						pageActions={viewEventPageActions}
@@ -65,7 +67,6 @@ const View: React.FC<IViewProps> = ({eventId, groupId}) => {
 						<EventDetailsCard
 							eventAttributes={eventAttributeDefinitions ?? []}
 							eventName={name}
-							groupId={groupId}
 						/>
 					</BasePage>
 				)}

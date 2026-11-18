@@ -14,7 +14,6 @@ import {applyTimeZone, formatRelativeTime} from 'shared/util/date';
 import {createOrderIOMap} from 'shared/util/pagination';
 import {getDefinitions} from 'shared/util/breadcrumbs';
 import {omit} from 'lodash';
-import {Routes, toRoute} from 'shared/util/router';
 import {Sizes} from 'shared/util/constants';
 import {sub} from 'shared/util/lang';
 import {useModal} from '@clayui/modal';
@@ -38,7 +37,9 @@ interface IIndividualAttributesProps extends React.HTMLAttributes<HTMLElement> {
 const IndividualAttributes: React.FC<IIndividualAttributesProps> = ({
 	groupId,
 }) => {
-	const {currentUser} = usePageConfig();
+	const config = usePageConfig();
+
+	const {currentUser, dataSourcesURL} = config;
 	const {timeZoneId} = useTimeZone();
 
 	const attributesModal = useModal();
@@ -79,7 +80,7 @@ const IndividualAttributes: React.FC<IIndividualAttributesProps> = ({
 	return (
 		<BasePage
 			breadcrumbItems={[
-				getDefinitions({groupId}),
+				getDefinitions(config),
 				{
 					active: true,
 					label: Liferay.Language.get('individual-attributes'),
@@ -153,12 +154,7 @@ const IndividualAttributes: React.FC<IIndividualAttributesProps> = ({
 											button
 											className="button-root"
 											displayType="primary"
-											href={toRoute(
-												Routes.SETTINGS_DATA_SOURCE_LIST,
-												{
-													groupId,
-												}
-											)}
+											href={dataSourcesURL}
 										>
 											{Liferay.Language.get(
 												'connect-data-source'

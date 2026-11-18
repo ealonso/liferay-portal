@@ -7,18 +7,19 @@ import {Attribute} from 'event-analysis/utils/types';
 import {attributeListColumns} from 'shared/util/table-columns';
 import {Column} from 'shared/components/table';
 import {Map, OrderedMap} from 'immutable';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface IEventDetailsCardProps {
 	eventAttributes: Attribute[];
 	eventName: string;
-	groupId: string;
 }
 
 const EventDetailsCard: React.FC<IEventDetailsCardProps> = ({
 	eventAttributes,
 	eventName,
-	groupId,
 }) => {
+	const config = usePageConfig();
+
 	const [codeLines, setCodeLines] = useState([
 		`Analytics.track('${eventName}', {`,
 		'});',
@@ -86,10 +87,7 @@ const EventDetailsCard: React.FC<IEventDetailsCardProps> = ({
 				className="mb-0"
 				columns={
 					[
-						attributeListColumns.getName({
-							channelId: 'channelId',
-							groupId,
-						}),
+						attributeListColumns.getName(config),
 						attributeListColumns.displayName,
 						attributeListColumns.description,
 						attributeListColumns.sampleValue,

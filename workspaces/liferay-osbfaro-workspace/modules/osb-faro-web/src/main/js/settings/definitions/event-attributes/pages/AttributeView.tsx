@@ -20,16 +20,15 @@ import {getSafeDisplayValue} from 'shared/util/util';
 import {SafeResults} from 'shared/hoc/util';
 import {useModal} from '@clayui/modal';
 import {useQuery} from '@apollo/client';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface IAttributeViewProps extends React.HTMLAttributes<HTMLElement> {
 	attributeId: string;
-	groupId: string;
 }
 
-const AttributeView: React.FC<IAttributeViewProps> = ({
-	attributeId,
-	groupId,
-}) => {
+const AttributeView: React.FC<IAttributeViewProps> = ({attributeId}) => {
+	const config = usePageConfig();
+
 	const result = useQuery<
 		EventAttributeDefinitionData,
 		EventAttributeDefinitionVariables
@@ -62,8 +61,8 @@ const AttributeView: React.FC<IAttributeViewProps> = ({
 				}) => (
 					<BasePage
 						breadcrumbItems={[
-							getDefinitions({groupId}),
-							getEventAttributes({groupId}),
+							getDefinitions(config),
+							getEventAttributes(config),
 							{active: true, label: name},
 						]}
 						pageActions={viewAttributePageActions}

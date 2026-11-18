@@ -3,9 +3,7 @@ import ClayLink from '@clayui/link';
 import EmptyState from '@clayui/empty-state';
 import React from 'react';
 import URLConstants from 'shared/util/url-constants';
-import {Routes, toRoute} from 'shared/util/router';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
-import {useParams} from 'react-router-dom';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface ICriteriaSidebarDataSourceEmptyStateProps {
 	description: string;
@@ -15,8 +13,7 @@ interface ICriteriaSidebarDataSourceEmptyStateProps {
 const CriteriaSidebarDataSourceEmptyState: React.FC<
 	ICriteriaSidebarDataSourceEmptyStateProps
 > = ({description, title}) => {
-	const {groupId} = useParams();
-	const currentUser = useCurrentUser();
+	const {currentUser, dataSourcesURL} = usePageConfig();
 
 	return (
 		<div className="align-items-center d-flex empty-message h-100 justify-content-center">
@@ -42,9 +39,7 @@ const CriteriaSidebarDataSourceEmptyState: React.FC<
 						button
 						className="button-root mt-3"
 						displayType="secondary"
-						href={toRoute(Routes.SETTINGS_DATA_SOURCE_LIST, {
-							groupId,
-						})}
+						href={dataSourcesURL}
 					>
 						{Liferay.Language.get('connect-data-source')}
 					</ClayLink>

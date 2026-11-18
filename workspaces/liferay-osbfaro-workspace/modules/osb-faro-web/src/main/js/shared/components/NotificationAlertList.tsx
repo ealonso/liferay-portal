@@ -10,8 +10,9 @@ import {
 	NotificationSubtypes,
 	NotificationTypes,
 } from 'shared/util/records/Notification';
-import {Routes, toRoute} from 'shared/util/router';
 import {useRequest} from 'shared/hooks/useRequest';
+import {setUriQueryValues} from 'shared/util/url';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -29,6 +30,7 @@ interface INotificationAlertListProps extends PropsFromRedux {
 }
 
 type NotificationStrategyParams = {
+	eventDefinitionsURL: string;
 	groupId: string;
 	modifiedTime: number;
 	notificationId: string;
@@ -58,7 +60,7 @@ const notificationStrategies = new Map<string, Function>([
 	[
 		NotificationSubtypes.BlockedEventsLimit,
 		({
-			groupId,
+			eventDefinitionsURL,
 			notificationId,
 			onClose,
 			stripe,
@@ -77,9 +79,11 @@ const notificationStrategies = new Map<string, Function>([
 
 					<ClayLink
 						className="button-root py-0"
-						href={toRoute(
-							Routes.SETTINGS_DEFINITIONS_EVENTS_BLOCK_LIST,
-							{groupId}
+						href={setUriQueryValues(
+							{
+								tab: 'block-list',
+							},
+							eventDefinitionsURL
 						)}
 						small
 					>
@@ -118,6 +122,8 @@ const NotificationAlertList: React.FC<INotificationAlertListProps> = ({
 	stripe = false,
 	subtypes = [NotificationSubtypes.TimeZoneChanged],
 }) => {
+	const {eventDefinitionsURL} = usePageConfig();
+
 	if (loading || !data?.length) return null;
 
 	const removeNotification = (notificationId: string) => {
@@ -152,6 +158,7 @@ const NotificationAlertList: React.FC<INotificationAlertListProps> = ({
 
 		if (transformer) {
 			return transformer({
+				eventDefinitionsURL,
 				groupId,
 				modifiedTime: Number(modifiedTime),
 				notificationId: id,

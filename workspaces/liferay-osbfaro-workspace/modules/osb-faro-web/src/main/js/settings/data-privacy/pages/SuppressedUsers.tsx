@@ -7,15 +7,15 @@ import {useTimeZone} from 'shared/hooks/useTimeZone';
 import {usePageConfig} from 'shared/context/pageConfig';
 
 export const SuppressedUsers = ({router}: {router: Router}) => {
-	const {currentUser} = usePageConfig();
-	const {timeZoneId} = useTimeZone();
+	const config = usePageConfig();
 
-	const groupId = router.params.groupId ?? '';
+	const {currentUser} = config;
+	const {timeZoneId} = useTimeZone();
 
 	return (
 		<BasePage
 			breadcrumbItems={[
-				getDataPrivacy({groupId}),
+				getDataPrivacy(config),
 				{
 					active: true,
 					label: Liferay.Language.get('suppressed-user-list'),

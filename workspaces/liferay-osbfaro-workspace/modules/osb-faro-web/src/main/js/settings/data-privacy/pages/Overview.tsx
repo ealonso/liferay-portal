@@ -22,11 +22,11 @@ import {
 } from 'shared/util/constants';
 import {get} from 'lodash';
 import {Option, Picker} from '@clayui/core';
-import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
 import {useModal} from '@clayui/modal';
 import {useMutation, useQuery} from '@apollo/client';
 import {usePageConfig} from 'shared/context/pageConfig';
+import {setUriQueryValues} from 'shared/util/url';
 
 let RETENTION_OPTIONS = [SEVEN_MONTHS, THIRTEEN_MONTHS];
 
@@ -73,7 +73,7 @@ interface IOverviewProps {
 }
 
 export const Overview: React.FC<IOverviewProps> = ({groupId}) => {
-	const {currentUser} = usePageConfig();
+	const {currentUser, dataPrivacyURL} = usePageConfig();
 
 	const [updatePreference] = useMutation(PreferenceMutation);
 
@@ -199,9 +199,11 @@ export const Overview: React.FC<IOverviewProps> = ({groupId}) => {
 												button
 												className="button-root mb-2"
 												displayType="secondary"
-												href={toRoute(
-													Routes.SETTINGS_DATA_PRIVACY_REQUEST_LOG,
-													{groupId}
+												href={setUriQueryValues(
+													{
+														view: 'request-log',
+													},
+													dataPrivacyURL
 												)}
 											>
 												{Liferay.Language.get('manage')}
@@ -243,9 +245,11 @@ export const Overview: React.FC<IOverviewProps> = ({groupId}) => {
 												button
 												className="button-root mb-2"
 												displayType="secondary"
-												href={toRoute(
-													Routes.SETTINGS_DATA_PRIVACY_SUPPRESSED_USERS,
-													{groupId}
+												href={setUriQueryValues(
+													{
+														view: 'suppressed-users',
+													},
+													dataPrivacyURL
 												)}
 											>
 												{Liferay.Language.get('manage')}

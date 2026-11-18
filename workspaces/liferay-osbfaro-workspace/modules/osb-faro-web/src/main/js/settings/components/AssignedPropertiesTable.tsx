@@ -14,13 +14,12 @@ import {createOrderIOMap, NAME} from 'shared/util/pagination';
 import {DataSourceStatuses, Sizes} from 'shared/util/constants';
 import {fetchChannelDatasources} from 'shared/api/data-source';
 import {getChannelsAutoSelectFilter} from 'shared/util/data-sources';
-import {Link, useParams} from 'react-router-dom';
-import {Routes, toRoute} from 'shared/util/router';
 import {Text} from '@clayui/core';
 import {useModal} from '@clayui/modal';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
 import {useRequest} from 'shared/hooks/useRequest';
 import {usePageConfig} from 'shared/context/pageConfig';
+import {setUriQueryValues} from 'shared/util/url';
 
 interface IChannel {
 	channelId: string;
@@ -44,12 +43,11 @@ const AssignedPropertiesTable = ({
 	loading: initialLoading = false,
 	updateDataSourceFn,
 }: IAssignedPropertiesTableProps) => {
-	const {currentUser} = usePageConfig();
+	const {currentUser, groupId, propertyURL} = usePageConfig();
 
 	const [loading, setLoading] = useState(initialLoading);
 
 	const selectChannelsModal = useModal();
-	const {groupId} = useParams();
 
 	const {delta, orderIOMap, page, query} = useQueryPagination({
 		initialOrderIOMap: createOrderIOMap(NAME),
@@ -211,9 +209,9 @@ const AssignedPropertiesTable = ({
 									key={data.channelId}
 								>
 									<div className="table-title text-truncate">
-										<Link to={hrefFormatter(data)}>
+										<a href={hrefFormatter(data)}>
 											<TextTruncate title={data.name} />
-										</Link>
+										</a>
 									</div>
 								</td>
 							),
@@ -223,10 +221,10 @@ const AssignedPropertiesTable = ({
 								}: {
 									channelId: string;
 								}) =>
-									toRoute(Routes.SETTINGS_CHANNELS_VIEW, {
-										groupId,
-										id: channelId,
-									}),
+									setUriQueryValues(
+										{id: channelId},
+										propertyURL
+									),
 							},
 							className: 'table-cell-expand',
 							label: Liferay.Language.get('property-name'),

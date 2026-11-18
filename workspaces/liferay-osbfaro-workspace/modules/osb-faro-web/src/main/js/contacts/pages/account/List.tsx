@@ -15,7 +15,6 @@ import {CATALOG_FIELDS_MAX_PAGE_SIZE} from 'shared/api/catalog';
 import {isNil} from 'lodash/fp';
 import {RangeKeyTimeRanges, Sizes} from 'shared/util/constants';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
 import {SectionHeader} from 'shared/components/SectionHeader';
 import {useCampaignFilter} from 'shared/hooks/useCampaignFilter';
 import {useChannelContext} from 'shared/context/channel';
@@ -30,7 +29,9 @@ interface IListProps {
 }
 
 const List: React.FC<IListProps> = ({channelId, groupId}) => {
-	const {currentUser} = usePageConfig();
+	const config = usePageConfig();
+
+	const {currentUser, dataSourcesURL} = config;
 
 	const {campaignId, campaignName, setCampaign} = useCampaignFilter();
 
@@ -107,12 +108,7 @@ const List: React.FC<IListProps> = ({channelId, groupId}) => {
 								button
 								className="button-root"
 								displayType="primary"
-								href={toRoute(
-									Routes.SETTINGS_DATA_SOURCE_LIST,
-									{
-										groupId,
-									}
-								)}
+								href={dataSourcesURL}
 							>
 								{Liferay.Language.get('connect-data-source')}
 							</Link>
@@ -141,11 +137,14 @@ const List: React.FC<IListProps> = ({channelId, groupId}) => {
 		<BasePage documentTitle={Liferay.Language.get('accounts')}>
 			<BasePage.Header
 				breadcrumbs={[
-					breadcrumbs.getHome({
-						channelId,
-						groupId,
-						label: selectedChannel && selectedChannel.name,
-					}),
+					breadcrumbs.getHome(
+						{
+							channelId,
+							groupId,
+							label: selectedChannel && selectedChannel.name,
+						},
+						config
+					),
 				]}
 				groupId={groupId}
 			>

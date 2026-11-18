@@ -21,10 +21,8 @@ import {connect, ConnectedProps} from 'react-redux';
 import {individualsListColumns} from 'shared/util/table-columns';
 import {isNil} from 'lodash';
 import {IndividualTypes} from 'segment/segment-editor/dynamic/utils/constants';
-import {Routes, toRoute} from 'shared/util/router';
 import {RangeKeyTimeRanges, Sizes} from 'shared/util/constants';
 import {useDataSources} from 'shared/context/dataSources';
-import {useParams} from 'react-router-dom';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
 import {User} from 'shared/util/records';
 import {useRequest} from 'shared/hooks/useRequest';
@@ -43,9 +41,9 @@ interface IKnownIndividualsProps
 }
 
 const KnownIndividuals: React.FC<IKnownIndividualsProps> = () => {
-	const {currentUser} = usePageConfig();
+	const config = usePageConfig();
 
-	const {channelId, groupId} = useParams();
+	const {channelId, currentUser, dataSourcesURL, groupId} = config;
 
 	const {delta, orderIOMap, page, query} = useQueryPagination({
 		initialOrderIOMap: createOrderIOMap(NAME),
@@ -71,9 +69,7 @@ const KnownIndividuals: React.FC<IKnownIndividualsProps> = () => {
 				button
 				className="button-root"
 				displayType="primary"
-				href={toRoute(Routes.SETTINGS_DATA_SOURCE_LIST, {
-					groupId,
-				})}
+				href={dataSourcesURL}
 			>
 				{Liferay.Language.get('connect-data-source')}
 			</ClayLink>
@@ -136,12 +132,7 @@ const KnownIndividuals: React.FC<IKnownIndividualsProps> = () => {
 									button
 									className="button-root"
 									displayType="primary"
-									href={toRoute(
-										Routes.SETTINGS_DATA_SOURCE_LIST,
-										{
-											groupId,
-										}
-									)}
+									href={dataSourcesURL}
 								>
 									{Liferay.Language.get(
 										'connect-data-source'
@@ -208,12 +199,7 @@ const KnownIndividuals: React.FC<IKnownIndividualsProps> = () => {
 									button
 									className="button-root"
 									displayType="primary"
-									href={toRoute(
-										Routes.SETTINGS_DATA_SOURCE_LIST,
-										{
-											groupId,
-										}
-									)}
+									href={dataSourcesURL}
 								>
 									{Liferay.Language.get(
 										'connect-data-source'
@@ -233,10 +219,7 @@ const KnownIndividuals: React.FC<IKnownIndividualsProps> = () => {
 						<Card pageDisplay>
 							<CrossPageSelect
 								columns={[
-									individualsListColumns.getNameEmail({
-										channelId,
-										groupId,
-									}),
+									individualsListColumns.getNameEmail(config),
 									individualsListColumns.jobTitle,
 									individualsListColumns.activitiesCount,
 									individualsListColumns.getLastActivityDate(

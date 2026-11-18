@@ -9,9 +9,10 @@ import {
 } from 'shared/util/constants';
 import {DataSource} from 'shared/util/records';
 import {Map as ImmutableMap, List} from 'immutable';
-import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
 import {toPromise} from 'shared/components/form';
+import {Config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 export const LIFERAY_SITE_TYPE = `${EntityTypes.DataSource}-site`;
 
@@ -133,24 +134,17 @@ export const STATUS_DISPLAY = {
 /**
  * @param {Object} props
  * @param {DataSource} props.dataSource - A DataSource record.
- * @param {string} props.groupId
  * @returns {string} - Returns a route to the data source authorization page if not valid.
  */
-export function dataSourceRedirectFn({
-	dataSource,
-	groupId,
-}: {
-	dataSource: DataSource;
-	groupId: string;
-}) {
+export function dataSourceRedirectFn(
+	{dataSource}: {dataSource: DataSource},
+	config: Config
+) {
 	if (isDataSourceValid(dataSource.state)) {
 		return null;
 	}
 	else {
-		return toRoute(Routes.SETTINGS_DATA_SOURCE, {
-			groupId,
-			id: dataSource.id,
-		});
+		return setUriQueryValues({id: dataSource.id}, config.dataSourceURL);
 	}
 }
 

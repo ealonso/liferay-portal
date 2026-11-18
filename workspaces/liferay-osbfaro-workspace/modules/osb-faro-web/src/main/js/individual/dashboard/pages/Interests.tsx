@@ -4,15 +4,12 @@ import Interests from '../hocs/Interests';
 import React from 'react';
 import StatesRenderer from 'shared/components/states-renderer/StatesRenderer';
 import URLConstants from 'shared/util/url-constants';
-import {Routes, toRoute} from 'shared/util/router';
 import {useDataSources} from 'shared/context/dataSources';
-import {useParams} from 'react-router-dom';
 import {usePageConfig} from 'shared/context/pageConfig';
 
 const InterestsPage = () => {
-	const {currentUser} = usePageConfig();
+	const {currentUser, dataSourcesURL} = usePageConfig();
 
-	const {groupId} = useParams();
 	const authorized = currentUser.isAdmin();
 
 	const dataSourceStates = useDataSources();
@@ -47,12 +44,7 @@ const InterestsPage = () => {
 									button
 									className="button-root"
 									displayType="primary"
-									href={toRoute(
-										Routes.SETTINGS_DATA_SOURCE_LIST,
-										{
-											groupId,
-										}
-									)}
+									href={dataSourcesURL}
 								>
 									{Liferay.Language.get(
 										'connect-data-source'

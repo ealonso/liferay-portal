@@ -17,14 +17,12 @@ import {CSVType} from 'shared/components/download-report/utils';
 import {DownloadStaticCSVReport} from 'shared/components/download-report/DownloadStaticCSVReport';
 import {INTERVAL_KEY_MAP} from 'shared/util/time';
 import {isNil} from 'lodash';
-import {Routes, toRoute} from 'shared/util/router';
 import {SectionHeader} from 'shared/components/SectionHeader';
 import {Sizes} from 'shared/util/constants';
 import {sub} from 'shared/util/lang';
 import {toThousands} from 'shared/util/numbers';
 import {useCampaignFilter} from 'shared/hooks/useCampaignFilter';
 import {useDataSources} from 'shared/context/dataSources';
-import {useParams} from 'react-router-dom';
 import {useQuery} from '@apollo/client';
 import {useRequest} from 'shared/hooks/useRequest';
 import {usePageConfig} from 'shared/context/pageConfig';
@@ -32,7 +30,6 @@ import {usePageConfig} from 'shared/context/pageConfig';
 interface IIndividualsOverviewEmptyStateProps {
 	authorized: boolean;
 	data: {total?: number} | null;
-	groupId: string;
 	loading: boolean;
 }
 
@@ -52,7 +49,9 @@ const renderTrendLabel = (percentageNode: React.ReactNode) =>
 
 const IndividualsOverviewEmptyState: React.FC<
 	IIndividualsOverviewEmptyStateProps
-> = ({authorized, data, groupId, loading}) => {
+> = ({authorized, data, loading}) => {
+	const {dataSourcesURL} = usePageConfig();
+
 	if (loading) {
 		return <Loading key="LOADING" />;
 	}
@@ -109,9 +108,7 @@ const IndividualsOverviewEmptyState: React.FC<
 							button
 							className="button-root"
 							displayType="primary"
-							href={toRoute(Routes.SETTINGS_DATA_SOURCE_LIST, {
-								groupId,
-							})}
+							href={dataSourcesURL}
 						>
 							{Liferay.Language.get('connect-data-source')}
 						</ClayLink>
@@ -125,12 +122,7 @@ const IndividualsOverviewEmptyState: React.FC<
 };
 
 const IndividualsOverviewCDP = () => {
-	const {currentUser} = usePageConfig();
-
-	const {channelId = '', groupId = ''} = useParams<{
-		channelId: string;
-		groupId: string;
-	}>();
+	const {channelId = '', currentUser, groupId = ''} = usePageConfig();
 
 	const {campaignId, campaignName, setCampaign} = useCampaignFilter();
 
@@ -179,7 +171,6 @@ const IndividualsOverviewCDP = () => {
 				<IndividualsOverviewEmptyState
 					authorized={authorized}
 					data={dataSourceData}
-					groupId={groupId}
 					loading={dataSourceLoading}
 				/>
 

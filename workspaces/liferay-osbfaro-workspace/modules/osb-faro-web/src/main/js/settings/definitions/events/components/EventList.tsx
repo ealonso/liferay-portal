@@ -43,12 +43,10 @@ const connector = connect(null, {addAlert});
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-interface IEventListProps extends PropsFromRedux {
-	groupId: string;
-}
+interface IEventListProps extends PropsFromRedux {}
 
-const EventList: React.FC<IEventListProps> = ({addAlert, groupId}) => {
-	const {currentUser} = usePageConfig();
+const EventList: React.FC<IEventListProps> = ({addAlert}) => {
+	const config = usePageConfig();
 
 	const {selectedItems, selectionDispatch} = useSelectionContext();
 
@@ -111,6 +109,8 @@ const EventList: React.FC<IEventListProps> = ({addAlert, groupId}) => {
 			}
 		},
 	});
+
+	const {currentUser} = config;
 
 	const hideModal = useModal();
 
@@ -197,7 +197,7 @@ const EventList: React.FC<IEventListProps> = ({addAlert, groupId}) => {
 		<>
 			<CrossPageSelect
 				columns={[
-					eventListColumns.getName({groupId}),
+					eventListColumns.getName(config),
 					eventListColumns.displayName,
 					eventListColumns.description,
 					eventListColumns.hidden,
