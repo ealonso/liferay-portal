@@ -11,10 +11,10 @@ import {
 	mapCardPropsToOptions
 } from 'contacts/hoc/mappers/interests-query';
 import {graphql} from '@apollo/client/react/hoc';
-import {setUriQueryValue} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
+import {setUriQueryValue, setUriQueryValues} from 'shared/util/url';
 import {ReportContainer} from 'shared/components/download-report/DownloadPDFReport';
 import {withTableData} from 'shared/hoc';
+import {config} from 'shared/util/config';
 
 const withData = () =>
 	graphql(getInterestsQuery(CompositionTypes.SegmentInterests), {
@@ -41,20 +41,18 @@ const TableWithData = withTableData(withData, {
 		</>
 	),
 	emptyTitle: Liferay.Language.get('no-interests-were-found'),
-	getColumns: ({channelId, groupId, id, maxCount, totalCount}) => [
+	getColumns: ({id, maxCount, totalCount}) => [
 		compositionListColumns.getName({
 			label: Liferay.Language.get('topic'),
 			maxWidth: 200,
 			routeFn: ({data: {name}}) =>
 				name &&
 				setUriQueryValue(
-					toRoute(Routes.CONTACTS_SEGMENT_INTEREST_DETAILS, {
-						channelId,
-						groupId,
+					setUriQueryValues({
 						id,
 						interestId: name,
 						tabId: PAGES
-					}),
+					}, config.segmentInterestURL),
 					'active',
 					true
 				),
@@ -96,11 +94,7 @@ const InterestsCard = ({channelId, groupId, id}) => (
 				className='button-root'
 				decoration='none'
 				displayType='secondary'
-				href={toRoute(Routes.CONTACTS_SEGMENT_INTERESTS, {
-					channelId,
-					groupId,
-					id
-				})}
+				href={setUriQueryValues({id}, config.segmentInterestsURL)}
 				small
 			>
 				{Liferay.Language.get('view-all-interests')}

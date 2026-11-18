@@ -6,10 +6,11 @@ import React from 'react';
 import {isNil} from 'lodash';
 import {mapGrowthHistory} from 'shared/hoc/mappers/segment';
 import {ReportContainer} from 'shared/components/download-report/DownloadPDFReport';
-import {Routes, toRoute} from 'shared/util/router';
 import {Segment} from 'shared/util/records';
 import {SegmentGrowthChart} from './Growth';
 import {withRequest} from 'shared/hoc';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 const MembershipChart = withRequest(
 	API.individualSegment.fetchMembershipChangesAggregations,
@@ -70,11 +71,7 @@ const SegmentProfileCard: React.FC<ISegmentProfileCardProps> = ({
 				button
 				className="button-root"
 				displayType="secondary"
-				href={toRoute(Routes.CONTACTS_SEGMENT_MEMBERSHIP, {
-					channelId,
-					groupId,
-					id,
-				})}
+				href={setUriQueryValues({id}, config.segmentMembershipURL)}
 				small
 			>
 				{Liferay.Language.get('view-members')}

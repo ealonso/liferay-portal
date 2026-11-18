@@ -10,9 +10,10 @@ import {addAlert} from 'shared/actions/alerts';
 import {Alert} from 'shared/types';
 import {connect} from 'react-redux';
 import {PropTypes} from 'prop-types';
-import {Routes, toRoute} from 'shared/util/router';
 import {Segment} from 'shared/util/records';
-import {SegmentCategories, SEGMENTS} from 'shared/util/constants';
+import {SegmentCategories} from 'shared/util/constants';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 const MessageKeys = {
 	ExternalReferenceCodeIsAlreadyUsed:
@@ -46,7 +47,6 @@ export default WrappedComponent => {
 			addAlert: PropTypes.func.isRequired,
 			channelId: PropTypes.string,
 			groupId: PropTypes.string.isRequired,
-			history: PropTypes.object.isRequired,
 			id: PropTypes.string,
 			segment: PropTypes.instanceOf(Segment)
 		};
@@ -82,7 +82,7 @@ export default WrappedComponent => {
 
 		@autobind
 		handleSubmit(form, formRef, submitFn) {
-			const {addAlert, channelId, groupId, history, id} = this.props;
+			const {addAlert} = this.props;
 
 			const {setSubmitting} = formRef.current;
 
@@ -94,13 +94,8 @@ export default WrappedComponent => {
 						(Array.isArray(segment) && segment.length) ||
 						(segment && !Array.isArray(segment))
 					) {
-						history.push(
-							toRoute(Routes.CONTACTS_ENTITY, {
-								channelId,
-								groupId,
-								id: segment.id || segment[0].id,
-								type: SEGMENTS
-							})
+						window.location.assign(
+							setUriQueryValues({id: segment.id || segment[0].id}, config.segmentURL)
 						);
 
 						addAlert({
@@ -134,7 +129,6 @@ export default WrappedComponent => {
 				channelId,
 				className,
 				groupId,
-				history,
 				id,
 				segment,
 				type,
@@ -217,13 +211,7 @@ export default WrappedComponent => {
 											)
 										});
 
-										history.push(
-											toRoute(Routes.CONTACTS_LIST_ENTITY, {
-												channelId,
-												groupId,
-												type: SEGMENTS
-											})
-										);
+										window.location.assign(config.segmentsURL);
 									})
 									.catch(() => {
 										addAlert({

@@ -475,8 +475,6 @@ class SegmentEditor extends React.Component<ISegmentEditorProps> {
 									/>
 
 									<Toolbar
-										channelId={channelId}
-										groupId={groupId}
 										id={id ?? ''}
 										onDeleteSegment={onDeleteSegment}
 										valid={isValid && hasChanges}
