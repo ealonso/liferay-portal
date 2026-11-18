@@ -8,9 +8,9 @@ import {EntityTypes} from 'shared/util/constants';
 import {getSafeDecodedURIComponent} from 'shared/util/util';
 import {Individual} from 'shared/util/records';
 import {PropTypes} from 'prop-types';
-import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
-import {setUriQueryValue} from 'shared/util/url';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 export default class InterestDetails extends React.Component {
 	static defaultProps = {
@@ -27,37 +27,27 @@ export default class InterestDetails extends React.Component {
 	};
 
 	getNavigationItems() {
-		const {channelId, groupId, id, interestId} = this.props;
+		const {id, interestId} = this.props;
 
 		const active = this.props.active === 'true';
 
 		return [
 			{
 				active,
-				href: setUriQueryValue(
-					toRoute(Routes.CONTACTS_INDIVIDUAL_INTEREST_DETAILS, {
-						channelId,
-						groupId,
-						id,
-						interestId
-					}),
-					'active',
-					true
-				),
+				href: setUriQueryValues({
+					active: 'true',
+					id,
+					interestId
+				}, config.individualInterestURL),
 				label: Liferay.Language.get('active-pages')
 			},
 			{
 				active: !active,
-				href: setUriQueryValue(
-					toRoute(Routes.CONTACTS_INDIVIDUAL_INTEREST_DETAILS, {
-						channelId,
-						groupId,
-						id,
-						interestId
-					}),
-					'active',
-					false
-				),
+				href: setUriQueryValues({
+					active: 'false',
+					id,
+					interestId
+				}, config.individualInterestURL),
 				label: Liferay.Language.get('inactive-pages')
 			}
 		];
@@ -77,11 +67,7 @@ export default class InterestDetails extends React.Component {
 						borderless
 						button
 						displayType='secondary'
-						href={toRoute(Routes.CONTACTS_INDIVIDUAL_INTERESTS, {
-							channelId,
-							groupId,
-							id
-						})}
+						href={setUriQueryValues({id}, config.individualInterestsURL)}
 					>
 						<ClayIcon
 							className='icon-root mr-2'

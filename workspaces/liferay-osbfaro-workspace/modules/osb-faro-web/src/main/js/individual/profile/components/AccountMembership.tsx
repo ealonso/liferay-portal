@@ -11,9 +11,10 @@ import {
 import {formatDataValue} from 'shared/util/data-value';
 import {formatUTCDate, getCustomDateFormat} from 'shared/util/date';
 import {Map} from 'immutable';
-import {Routes, toRoute} from 'shared/util/router';
 import {SectionHeader} from 'shared/components/SectionHeader';
 import {useLocale} from 'shared/hooks/useLocale';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 const accountMembershipConfig: DataDrivenConfig = [
 	{
@@ -56,9 +57,7 @@ const dateKeys = ['createdDate', 'lastActivityDate'];
 
 interface IAccountMembershipProps {
 	accountData?: Map<string, any>;
-	channelId?: string;
 	children?: React.ReactNode;
-	groupId?: string;
 	loading?: boolean;
 	showEmptyState?: boolean;
 }
@@ -80,9 +79,7 @@ const ACCOUNT_MEMBERSHIP_LABEL_MAP: Record<string, string> = {
 
 const AccountMembership: React.FC<IAccountMembershipProps> = ({
 	accountData,
-	channelId,
 	children: emptyState,
-	groupId,
 	loading = false,
 	showEmptyState = false,
 }) => {
@@ -112,12 +109,8 @@ const AccountMembership: React.FC<IAccountMembershipProps> = ({
 	const getHref = (key: string): string | undefined => {
 		const accountId = accountData?.get('id');
 
-		if (key === 'accountName' && accountId && channelId && groupId) {
-			return toRoute(Routes.CONTACTS_ACCOUNT, {
-				channelId,
-				groupId,
-				id: accountId,
-			});
+		if (key === 'accountName' && accountId) {
+			return setUriQueryValues({id: accountId}, config.accountURL);
 		}
 
 		return undefined;

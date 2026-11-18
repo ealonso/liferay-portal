@@ -7,8 +7,9 @@ import React from 'react';
 import {formatDateToTimeZone, LONG_DATE_FORMAT} from 'shared/util/date';
 import {Individual} from 'shared/util/records';
 import {PropTypes} from 'prop-types';
-import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 export default class DetailsCard extends React.PureComponent {
 	static defaultProps = {
@@ -16,14 +17,12 @@ export default class DetailsCard extends React.PureComponent {
 	};
 
 	static propTypes = {
-		channelId: PropTypes.string,
 		entity: PropTypes.instanceOf(Individual),
-		groupId: PropTypes.string.isRequired,
 		timeZoneId: PropTypes.string.isRequired
 	};
 
 	render() {
-		const {channelId, className, entity, groupId, timeZoneId} = this.props;
+		const {className, entity, timeZoneId} = this.props;
 
 		const individual = entity.toJS();
 
@@ -64,11 +63,7 @@ export default class DetailsCard extends React.PureComponent {
 						button
 						className='button-root'
 						displayType='secondary'
-						href={toRoute(Routes.CONTACTS_INDIVIDUAL_DETAILS, {
-							channelId,
-							groupId,
-							id
-						})}
+						href={setUriQueryValues({id}, config.individualDetailsURL)}
 						small
 					>
 						{Liferay.Language.get('view-all-details')}

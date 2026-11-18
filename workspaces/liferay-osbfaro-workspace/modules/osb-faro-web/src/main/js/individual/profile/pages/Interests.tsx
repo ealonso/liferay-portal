@@ -13,10 +13,11 @@ import {
 	NAME,
 } from 'shared/util/pagination';
 import {interestListColumns} from 'shared/util/table-columns';
-import {Sizes, INDIVIDUALS} from 'shared/util/constants';
-import {Routes, toRoute} from 'shared/util/router';
+import {Sizes} from 'shared/util/constants';
 import {sub} from 'shared/util/lang';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 export const TOTAL_DAYS = 90;
 
@@ -55,22 +56,16 @@ const Interests: React.FC<IInterestsProps> = ({channelId, groupId, id}) => {
 				className="interest-history-table"
 				columns={[
 					interestListColumns.getName({
-						channelId,
-						groupId,
-						id,
 						maxWidth: null,
 						routeFn: ({data: {name}}) =>
 							name &&
-							toRoute(
-								Routes.CONTACTS_INDIVIDUAL_INTEREST_DETAILS,
+							setUriQueryValues(
 								{
-									channelId,
-									groupId,
 									id,
 									interestId: name,
-								}
+								},
+								config.individualInterestURL
 							),
-						type: INDIVIDUALS,
 					}),
 					{
 						accessor: 'relatedPagesCount',

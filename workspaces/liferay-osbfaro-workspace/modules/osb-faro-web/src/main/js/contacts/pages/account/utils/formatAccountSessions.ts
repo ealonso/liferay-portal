@@ -10,8 +10,9 @@ import {
 	VerticalTimelineIndividual,
 	VerticalTimelineSession,
 } from 'shared/util/activities';
-import {Routes, toRoute} from 'shared/util/router';
 import {UserSessionEvent} from 'shared/queries/UserSessionQuery';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 const ANONYMOUS_KEY = '__anonymous__';
 
@@ -43,11 +44,10 @@ const getIndividual = (
 		...(linkId &&
 			channelId &&
 			groupId && {
-				individualUrl: toRoute(Routes.CONTACTS_INDIVIDUAL, {
-					channelId,
-					groupId,
-					id: linkId,
-				}),
+				individualUrl: setUriQueryValues(
+					{id: linkId},
+					config.individualURL
+				),
 			}),
 		isAnonymous,
 		...(jobTitle && {jobTitle}),

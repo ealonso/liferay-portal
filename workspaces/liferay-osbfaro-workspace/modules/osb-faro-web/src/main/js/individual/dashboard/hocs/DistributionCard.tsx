@@ -5,9 +5,8 @@ import React from 'react';
 import URLConstants from 'shared/util/url-constants';
 import {connect, ConnectedProps} from 'react-redux';
 import {fetchIndividualsDistribution} from 'shared/actions/distributions';
-import {Routes, toRoute} from 'shared/util/router';
 import {toPromise} from 'shared/util/validators';
-import {useParams} from 'react-router-dom';
+import {config} from 'shared/util/config';
 
 const connector = connect(null, {
 	fetchDistribution: fetchIndividualsDistribution,
@@ -25,10 +24,7 @@ interface IIndividualsDistributionCardProps
 const IndividualsDistributionCard: React.FC<
 	IIndividualsDistributionCardProps
 > = ({fetchDistribution, id, ...otherProps}) => {
-	const {channelId = '', groupId = ''} = useParams<{
-		channelId: string;
-		groupId: string;
-	}>();
+	const {channelId = '', groupId = ''} = config;
 
 	return (
 		<DistributionCard
@@ -62,10 +58,7 @@ const IndividualsDistributionCard: React.FC<
 					title={Liferay.Language.get('no-results-were-found')}
 				/>
 			)}
-			viewAllLink={toRoute(Routes.CONTACTS_INDIVIDUALS_DISTRIBUTION, {
-				channelId,
-				groupId,
-			})}
+			viewAllLink={config.individualsDistributionURL}
 			{...otherProps}
 		/>
 	);

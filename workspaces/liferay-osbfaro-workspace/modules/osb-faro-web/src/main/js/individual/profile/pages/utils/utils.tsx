@@ -1,7 +1,8 @@
 import ClayLink from '@clayui/link';
 import React from 'react';
-import {Routes, toRoute} from 'shared/util/router';
 import {Text} from '@clayui/core';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 export type IndividualHeaderData = {
 	accountName: string;
@@ -10,10 +11,7 @@ export type IndividualHeaderData = {
 	properties: {email: string};
 };
 
-export const buildHeaderSubtitle = (
-	individual: IndividualHeaderData,
-	{channelId, groupId}: {channelId: string; groupId: string}
-) => {
+export const buildHeaderSubtitle = (individual: IndividualHeaderData) => {
 	const {email} = individual.properties;
 	const {accountName, accounts, lastSessionCountry} = individual;
 
@@ -22,11 +20,7 @@ export const buildHeaderSubtitle = (
 	const account =
 		accountName && accountId ? (
 			<ClayLink
-				href={toRoute(Routes.CONTACTS_ACCOUNT, {
-					channelId,
-					groupId,
-					id: accountId,
-				})}
+				href={setUriQueryValues({id: accountId}, config.accountURL)}
 			>
 				{accountName}
 			</ClayLink>

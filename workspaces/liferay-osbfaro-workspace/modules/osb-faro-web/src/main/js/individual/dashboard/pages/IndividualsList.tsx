@@ -25,9 +25,9 @@ import {FilterByType, FilterInputType, FilterOptionType} from 'shared/types';
 import {IndividualsListCDPColumns} from 'shared/util/table-columns';
 import {Map, Set} from 'immutable';
 import {RangeKeyTimeRanges, Sizes} from 'shared/util/constants';
-import {useParams} from 'react-router-dom';
 import {useRequest} from 'shared/hooks/useRequest';
 import {useStatefulPagination} from 'shared/hooks/useStatefulPagination';
+import {config} from 'shared/util/config';
 
 const MAX_DELTA = 500;
 
@@ -150,10 +150,7 @@ const IndividualsList: React.FC<IIndividualsListProps> = ({
 	campaignId,
 	onClearFilters,
 }) => {
-	const {channelId = '', groupId = ''} = useParams<{
-		channelId: string;
-		groupId: string;
-	}>();
+	const {channelId = '', groupId = ''} = config;
 
 	const paginationParams = useStatefulPagination(undefined, {
 		initialFilterBy: Map({
@@ -276,10 +273,7 @@ const IndividualsList: React.FC<IIndividualsListProps> = ({
 					<SearchableEntityTable
 						{...paginationParams}
 						columns={[
-							IndividualsListCDPColumns.getNameEmail({
-								channelId,
-								groupId,
-							}),
+							IndividualsListCDPColumns.getNameEmail(),
 							IndividualsListCDPColumns.accountNames,
 							IndividualsListCDPColumns.country,
 							IndividualsListCDPColumns.firstSeen,
