@@ -16,13 +16,12 @@ import {
 	isAtStageLimit,
 } from 'lifecycle/utils/lifecycleValidation';
 import {ILifecycleDetail} from 'shared/api/lifecycle';
-import {Routes, toRoute} from 'shared/util/router';
 import {useDispatch} from 'react-redux';
 import {moveItem} from 'shared/util/array';
 import {useEffect, useMemo, useRef, useState} from 'react';
-import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
-import {useLocation, useParams} from 'react-router-dom';
 import {useRequest} from 'shared/hooks/useRequest';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 const LIFECYCLE_NAME_LOOKUP_PAGE_SIZE = 100;
 
@@ -76,11 +75,9 @@ export const useLifecycleSettingsForm = ({
 }) => {
 	const dispatch = useDispatch();
 
-	const history = useHistoryAdapter();
+	const {channelId, groupId} = config;
 
-	const {channelId, groupId, lifecycleId, sourceLifecycleId} = useParams();
-
-	const {state} = useLocation();
+	const {backLifecycleId, lifecycleId, sourceLifecycleId} = config.params;
 
 	const [stageConfigs, setStageConfigs] =
 		useState<IStageConfig[]>(initialStageConfigs);
@@ -146,22 +143,22 @@ export const useLifecycleSettingsForm = ({
 		}
 	}, [catalogError, dispatch]);
 
-	const backLifecycleId =
-		lifecycleId ?? sourceLifecycleId ?? state?.lifecycleId;
+	const dashboardLifecycleId =
+		lifecycleId ?? sourceLifecycleId ?? backLifecycleId;
 
-	const backURL = toRoute(
-		backLifecycleId ? Routes.LIFECYCLE_DASHBOARD : Routes.LIFECYCLE,
-		{channelId, groupId, lifecycleId: backLifecycleId}
+	const backURL = setUriQueryValues(
+		{lifecycleId: dashboardLifecycleId},
+		dashboardLifecycleId ? config.lifecycleURL : config.lifecyclesURL
 	);
 
 	useEffect(() => {
 		if (redirect?.replace) {
-			history.replace(redirect.url);
+			window.location.replace(redirect.url);
 		}
 		else if (redirect) {
-			history.push(redirect.url);
+			window.location.assign(redirect.url);
 		}
-	}, [history, redirect]);
+	}, [redirect]);
 
 	const changeLifecycleName = (name: string) => {
 		setLifecycleName(name);

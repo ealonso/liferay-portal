@@ -13,13 +13,13 @@ import {formatDateToTimeZone, SHORT_DATE_TIME_FORMAT} from 'shared/util/date';
 import {getStageCountLabel} from 'lifecycle/utils/lifecycleLabels';
 import {ILifecycle, ILifecycleDetail} from 'shared/api/lifecycle';
 import {PageActions} from 'shared/components/base-page/Header';
-import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
 import {useDebounce} from 'shared/hooks/useDebounce';
 import {useLifecycleActions} from 'lifecycle/hooks/useLifecycleActions';
-import {useParams} from 'react-router-dom';
 import {useRequest} from 'shared/hooks/useRequest';
 import {useTimeZone} from 'shared/hooks/useTimeZone';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 const LIFECYCLES_PAGE_SIZE = 20;
 
@@ -104,7 +104,7 @@ const LifecycleSwitchList: React.FC<ILifecycleSwitchListProps> = ({
 	onShowDetails,
 	openLifecycleERC,
 }) => {
-	const {channelId, groupId} = useParams();
+	const {channelId, groupId} = config;
 
 	const {timeZoneId} = useTimeZone();
 
@@ -189,12 +189,13 @@ const LifecycleSwitchList: React.FC<ILifecycleSwitchListProps> = ({
 							<ClayList.ItemField expand>
 								<ClayList.ItemTitle
 									aria-current={open ? 'page' : undefined}
-									href={toRoute(Routes.LIFECYCLE_DASHBOARD, {
-										channelId,
-										groupId,
-										lifecycleId:
-											lifecycle.externalReferenceCode,
-									})}
+									href={setUriQueryValues(
+										{
+											lifecycleId:
+												lifecycle.externalReferenceCode,
+										},
+										config.lifecycleURL
+									)}
 									onClick={onNavigate}
 								>
 									{lifecycle.name || lifecycle.id}

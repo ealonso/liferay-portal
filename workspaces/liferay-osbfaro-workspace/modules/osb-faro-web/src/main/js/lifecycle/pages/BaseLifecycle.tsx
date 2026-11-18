@@ -30,9 +30,7 @@ import {
 	ConfigureLifecycleEmptyState,
 	LifecycleAccountDataEmptyState,
 } from 'lifecycle/components/LifecycleEmptyStates';
-import {useNavigate, useParams} from 'react-router-dom';
 import {RangeKeyTimeRanges} from 'shared/util/constants';
-import {Routes, toRoute} from 'shared/util/router';
 import {SectionHeader} from 'shared/components/SectionHeader';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useLifecycleAccountData} from 'lifecycle/hooks/useLifecycleAccountData';
@@ -41,6 +39,8 @@ import {useRequest} from 'shared/hooks/useRequest';
 import {useSegmentFilter} from 'shared/hooks/useSegmentFilter';
 import {noop} from 'lodash';
 import {AccountDataStatus} from 'lifecycle/utils/types';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 const ProcessingLifecycleEmptyState = () => (
 	<div className="card mt-4 py-8">
@@ -58,7 +58,7 @@ const ProcessingLifecycleEmptyState = () => (
 const LifecycleOverview = () => {
 	const {filters, lifecycleId} = useLifecycle();
 
-	const {groupId} = useParams();
+	const {groupId} = config;
 
 	const {data: overviewData, loading: overviewLoading} = useRequest({
 		dataSourceFn: API.lifecycle.fetchOverviewMetrics,
@@ -84,7 +84,7 @@ const LifecycleStagesSection = ({
 }: ILifecycleStagesSectionProps) => {
 	const {filters, lifecycleId} = useLifecycle();
 
-	const {groupId} = useParams();
+	const {groupId} = config;
 
 	const {segmentId} = useSegmentFilter();
 
@@ -117,7 +117,7 @@ const LifecycleStagesSection = ({
 const LifecycleAccounts = () => {
 	const {filters, lifecycleId, stageSelectionNonce} = useLifecycle();
 
-	const {channelId, groupId} = useParams();
+	const {channelId, groupId} = config;
 
 	const {segmentId, segmentName} = useSegmentFilter();
 
@@ -149,9 +149,9 @@ const BaseLifecycle = () => {
 	const currentUser = useCurrentUser();
 	const {selectedChannel} = useContext(ChannelContext);
 
-	const navigate = useNavigate();
+	const {channelId, groupId} = config;
 
-	const {channelId, groupId, lifecycleId: lifecycleIdParam} = useParams();
+	const {lifecycleId: lifecycleIdParam} = config.params;
 
 	const {refetch: refetchAccountData, status: accountDataStatus} =
 		useLifecycleAccountData();
@@ -190,16 +190,11 @@ const BaseLifecycle = () => {
 
 	useEffect(() => {
 		if (!lifecycleIdParam && lifecycleId) {
-			navigate(
-				toRoute(Routes.LIFECYCLE_DASHBOARD, {
-					channelId,
-					groupId,
-					lifecycleId,
-				}),
-				{replace: true}
+			window.location.replace(
+				setUriQueryValues({lifecycleId}, config.lifecycleURL)
 			);
 		}
-	}, [channelId, groupId, lifecycleId, lifecycleIdParam, navigate]);
+	}, [lifecycleId, lifecycleIdParam]);
 
 	const switchButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -259,9 +254,11 @@ const BaseLifecycle = () => {
 			button: true,
 			className: 'rounded-lg',
 			displayType: 'primary',
-			href: toRoute(Routes.LIFECYCLE_CREATE, {channelId, groupId}),
+			href: setUriQueryValues(
+				{backLifecycleId: lifecycleId},
+				config.editLifecycleURL
+			),
 			label: Liferay.Language.get('new-lifecycle'),
-			state: {lifecycleId},
 		},
 	];
 
@@ -283,7 +280,6 @@ const BaseLifecycle = () => {
 			<LifecyclesPage>
 				<LifecycleAccountDataEmptyState
 					authorized={authorized}
-					groupId={groupId!}
 					onReload={refetchAccountData}
 					status={accountDataStatus}
 				/>
@@ -297,10 +293,7 @@ const BaseLifecycle = () => {
 				{defaultLifecyclesError ? (
 					<ErrorDisplay onReload={refetchDefaultLifecycles} spacer />
 				) : (
-					<ConfigureLifecycleEmptyState
-						channelId={channelId!}
-						groupId={groupId!}
-					/>
+					<ConfigureLifecycleEmptyState />
 				)}
 			</LifecyclesPage>
 		);
@@ -323,10 +316,7 @@ const BaseLifecycle = () => {
 							groupId: groupId!,
 							label: selectedChannel?.name,
 						}),
-						breadcrumbs.getLifecycles({
-							channelId: channelId!,
-							groupId: groupId!,
-						}),
+						breadcrumbs.getLifecycles(),
 						...(lifecycle?.name
 							? [
 									breadcrumbs.getEntityName({
