@@ -6,13 +6,14 @@ import getCN from 'classnames';
 import {LoadingDialog} from 'shared/components/modals/LoadingModal';
 import omitDefinedProps from 'shared/util/omitDefinedProps';
 import React from 'react';
+import withPageConfig from 'shared/hoc/WithPageConfig';
 import {addAlert} from 'shared/actions/alerts';
 import {Alert} from 'shared/types';
 import {connect} from 'react-redux';
 import {PropTypes} from 'prop-types';
-import {Routes, toRoute} from 'shared/util/router';
 import {Segment} from 'shared/util/records';
-import {SegmentCategories, SEGMENTS} from 'shared/util/constants';
+import {SegmentCategories} from 'shared/util/constants';
+import {setUriQueryValues} from 'shared/util/url';
 
 const MessageKeys = {
 	ExternalReferenceCodeIsAlreadyUsed:
@@ -46,8 +47,8 @@ export default WrappedComponent => {
 			addAlert: PropTypes.func.isRequired,
 			channelId: PropTypes.string,
 			groupId: PropTypes.string.isRequired,
-			history: PropTypes.object.isRequired,
 			id: PropTypes.string,
+			pageConfig: PropTypes.object.isRequired,
 			segment: PropTypes.instanceOf(Segment)
 		};
 
@@ -82,7 +83,7 @@ export default WrappedComponent => {
 
 		@autobind
 		handleSubmit(form, formRef, submitFn) {
-			const {addAlert, channelId, groupId, history, id} = this.props;
+			const {addAlert, pageConfig} = this.props;
 
 			const {setSubmitting} = formRef.current;
 
@@ -94,13 +95,8 @@ export default WrappedComponent => {
 						(Array.isArray(segment) && segment.length) ||
 						(segment && !Array.isArray(segment))
 					) {
-						history.push(
-							toRoute(Routes.CONTACTS_ENTITY, {
-								channelId,
-								groupId,
-								id: segment.id || segment[0].id,
-								type: SEGMENTS
-							})
+						Liferay.Util.navigate(
+							setUriQueryValues({id: segment.id || segment[0].id}, pageConfig.segmentURL)
 						);
 
 						addAlert({
@@ -134,8 +130,8 @@ export default WrappedComponent => {
 				channelId,
 				className,
 				groupId,
-				history,
 				id,
+				pageConfig,
 				segment,
 				type,
 				...otherProps
@@ -217,13 +213,7 @@ export default WrappedComponent => {
 											)
 										});
 
-										history.push(
-											toRoute(Routes.CONTACTS_LIST_ENTITY, {
-												channelId,
-												groupId,
-												type: SEGMENTS
-											})
-										);
+										Liferay.Util.navigate(pageConfig.segmentsURL);
 									})
 									.catch(() => {
 										addAlert({
@@ -248,5 +238,5 @@ export default WrappedComponent => {
 
 	return connect(null, {
 		addAlert
-	})(BaseEdit);
+	})(withPageConfig(BaseEdit));
 };

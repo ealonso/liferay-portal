@@ -10,7 +10,6 @@ import {CSVType} from 'shared/components/download-report/utils';
 import {DownloadStaticCSVReport} from 'shared/components/download-report/DownloadStaticCSVReport';
 import {ReferencedObjectsProvider} from 'segment/segment-editor/dynamic/context/referencedObjects';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
 import {SectionHeader} from 'shared/components/SectionHeader';
 import {getSegmentAlerts} from 'segment/utils/alerts';
 import {Segment} from 'shared/util/records';
@@ -18,14 +17,13 @@ import {
 	SegmentCategories,
 	SegmentStates,
 	SegmentTypes,
-	SEGMENTS,
 } from 'shared/util/constants';
 import {useChannelContext} from 'shared/context/channel';
 import {useDeleteSegments} from 'segment/hooks/useDeleteSegments';
 import {useLifecycleDetails} from 'lifecycle/hooks/useLifecycleDetails';
 import {useModal} from '@clayui/modal';
-import {useNavigate} from 'react-router-dom';
 import {useTimeZone} from 'shared/hooks/useTimeZone';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface IAccountProfileProps {
 	channelId: string;
@@ -38,14 +36,15 @@ const AccountProfile: React.FC<IAccountProfileProps> = ({
 	groupId,
 	segment,
 }) => {
+	const config = usePageConfig();
+
+	const {editSegmentURL, segmentsURL} = config;
+
 	const {selectedChannel} = useChannelContext();
 	const {timeZoneId} = useTimeZone();
 
-	const navigate = useNavigate();
-
 	const {deleteSegments, deleteSegmentsModal} = useDeleteSegments(groupId);
 	const notificationsModal = useModal();
-
 	const {lifecycles, loading: lifecyclesLoading} = useLifecycleDetails({
 		channelId,
 		groupId,
@@ -62,12 +61,15 @@ const AccountProfile: React.FC<IAccountProfileProps> = ({
 		>
 			<BasePage.Header
 				breadcrumbs={[
-					breadcrumbs.getHome({
-						channelId,
-						groupId,
-						label: selectedChannel && selectedChannel.name,
-					}),
-					breadcrumbs.getSegments({channelId, groupId}),
+					breadcrumbs.getHome(
+						{
+							channelId,
+							groupId,
+							label: selectedChannel && selectedChannel.name,
+						},
+						config
+					),
+					breadcrumbs.getSegments(segmentsURL),
 					breadcrumbs.getEntityName({label: name}),
 				]}
 				groupId={groupId}
@@ -84,14 +86,11 @@ const AccountProfile: React.FC<IAccountProfileProps> = ({
 						<BasePage.Header.PageActionsToolbar
 							actions={[
 								{
-									href: toRoute(
-										Routes.CONTACTS_SEGMENT_EDIT,
+									href: setUriQueryValues(
 										{
-											channelId,
-											groupId,
 											id: segment.id,
-											type: SEGMENTS,
-										}
+										},
+										editSegmentURL
 									),
 									icon: {symbol: 'pencil'},
 									label: Liferay.Language.get('edit-segment'),
@@ -129,15 +128,8 @@ const AccountProfile: React.FC<IAccountProfileProps> = ({
 											ids: [segment.id],
 											name,
 											onSuccess: () =>
-												navigate(
-													toRoute(
-														Routes.CONTACTS_LIST_ENTITY,
-														{
-															channelId,
-															groupId,
-															type: SEGMENTS,
-														}
-													)
+												Liferay.Util.navigate(
+													segmentsURL
 												),
 										}),
 								},

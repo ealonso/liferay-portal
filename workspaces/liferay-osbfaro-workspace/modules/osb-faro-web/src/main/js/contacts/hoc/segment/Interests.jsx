@@ -11,12 +11,11 @@ import {
 	mapPropsToOptions
 } from 'contacts/hoc/mappers/interests-query';
 import {graphql} from '@apollo/client/react/hoc';
-import {setUriQueryValue} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
+import {setUriQueryValue, setUriQueryValues} from 'shared/util/url';
 import {Sizes} from 'shared/util/constants';
-import {useParams} from 'react-router-dom';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
 import {withBaseResults} from 'shared/hoc';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const withData = () =>
 	graphql(getInterestsQuery(CompositionTypes.SegmentInterests), {
@@ -50,8 +49,9 @@ const TableWithData = withBaseResults(withData, {
 	emptyTitle: Liferay.Language.get('no-interests-were-found'),
 	getColumns: ({
 		maxCount,
+		pageConfig,
 		router: {
-			params: {channelId, groupId, id}
+			params: {id}
 		},
 		totalCount
 	}) => [
@@ -60,13 +60,11 @@ const TableWithData = withBaseResults(withData, {
 			routeFn: ({data: {name}}) =>
 				name &&
 				setUriQueryValue(
-					toRoute(Routes.CONTACTS_SEGMENT_INTEREST_DETAILS, {
-						channelId,
-						groupId,
+					setUriQueryValues({
 						id,
 						interestId: name,
 						tabId: PAGES
-					}),
+					}, pageConfig.segmentInterestURL),
 					'active',
 					true
 				),
@@ -88,7 +86,11 @@ const TableWithData = withBaseResults(withData, {
 });
 
 const Interests = props => {
-	const {channelId, id} = useParams();
+	const {
+		channelId,
+		params: {id},
+	} = usePageConfig();
+
 	const {delta, orderIOMap, page, query} = useQueryPagination({
 		initialOrderIOMap: createOrderIOMap(COUNT)
 	});

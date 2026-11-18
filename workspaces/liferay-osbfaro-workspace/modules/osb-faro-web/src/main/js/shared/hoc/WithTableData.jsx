@@ -1,6 +1,7 @@
 import React from 'react';
 import Table from 'shared/components/table';
 import {compose, withError} from 'shared/hoc';
+import {usePageConfig} from 'shared/context/pageConfig';
 import {withEmpty} from 'cerebro-shared/hocs/utils';
 
 const withTableData = (
@@ -9,8 +10,16 @@ const withTableData = (
 ) => {
 	const TableWithData = compose(
 		withData(),
-		WrappedComponent => props =>
-			<WrappedComponent {...props} columns={getColumns(props)} />,
+		WrappedComponent => props => {
+			const pageConfig = usePageConfig();
+
+			return (
+				<WrappedComponent
+					{...props}
+					columns={getColumns({...props, pageConfig})}
+				/>
+			);
+		},
 		withError({page: false}),
 		withEmpty({emptyDescription, emptyIcon, emptyTitle, spacer: true})
 	)(Table);

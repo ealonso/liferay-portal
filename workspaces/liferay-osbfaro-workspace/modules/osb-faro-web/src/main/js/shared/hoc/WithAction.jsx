@@ -1,5 +1,6 @@
 import ErrorPage from '../pages/ErrorPage';
 import Loading from 'shared/components/Loading';
+import withPageConfig from './WithPageConfig';
 import React from 'react';
 import {connect} from 'react-redux';
 import {isFunction, noop} from 'lodash';
@@ -65,11 +66,12 @@ export default (action, mapStateToRemoteData, options = {}) =>
 				action
 			}
 		)(
-			class extends React.Component {
+			withPageConfig(class extends React.Component {
 				static propTypes = {
 					data: PropTypes.any,
 					error: PropTypes.bool.isRequired,
 					loading: PropTypes.bool.isRequired,
+					pageConfig: PropTypes.object.isRequired,
 					router: PropTypes.object
 				};
 
@@ -92,6 +94,7 @@ export default (action, mapStateToRemoteData, options = {}) =>
 						errorStatus,
 						groupId,
 						loading,
+						pageConfig,
 						...otherProps
 					} = this.props;
 
@@ -100,7 +103,7 @@ export default (action, mapStateToRemoteData, options = {}) =>
 						(error && bypassErrorPage && !data)
 					) {
 						const props = isFunction(errorPageProps)
-							? errorPageProps({channelId, groupId})
+							? errorPageProps({channelId, groupId, pageConfig})
 							: errorPageProps;
 
 						return renderErrorPage({
@@ -124,6 +127,6 @@ export default (action, mapStateToRemoteData, options = {}) =>
 						);
 					}
 				}
-			}
+			})
 		);
 	};

@@ -11,10 +11,10 @@ import {
 	getDefaultSortOrder,
 	NAME,
 } from 'shared/util/pagination';
-import {EntityTypes, Sizes, SEGMENTS} from 'shared/util/constants';
+import {EntityTypes, Sizes} from 'shared/util/constants';
 import {RootState} from 'shared/store';
-import {Routes, toRoute} from 'shared/util/router';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface IFetchAssociatedSegmentsArgs {
 	[key: string]: unknown;
@@ -71,6 +71,8 @@ const AssociatedSegments: React.FC<IAssociatedSegmentsProps> = ({
 	id,
 	timeZoneId,
 }) => {
+	const {segmentsURL} = usePageConfig();
+
 	const {delta, orderIOMap, page, query} = useQueryPagination({
 		initialOrderIOMap: createOrderIOMap(NAME, getDefaultSortOrder(NAME)),
 	});
@@ -128,11 +130,7 @@ const AssociatedSegments: React.FC<IAssociatedSegmentsProps> = ({
 				button
 				className="button-root"
 				displayType="primary"
-				href={toRoute(Routes.CONTACTS_LIST_SEGMENT, {
-					channelId,
-					groupId,
-					type: SEGMENTS,
-				})}
+				href={segmentsURL}
 			>
 				{Liferay.Language.get('create-segment')}
 			</ClayLink>

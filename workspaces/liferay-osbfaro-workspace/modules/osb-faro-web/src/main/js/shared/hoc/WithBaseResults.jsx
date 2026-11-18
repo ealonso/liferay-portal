@@ -3,6 +3,7 @@ import FaroConstants from 'shared/util/constants';
 import React from 'react';
 import Table from 'shared/components/table';
 import {compose, withError, withPaginationBar, withToolbar} from 'shared/hoc';
+import {usePageConfig} from 'shared/context/pageConfig';
 import {withEmpty} from 'cerebro-shared/hocs/utils';
 import {withLoading} from 'shared/hoc/util';
 
@@ -32,8 +33,16 @@ const withBaseResults = (withData, configs) => {
 	const TableWithData = compose(
 		withData(),
 		withQueryOptions,
-		WrappedComponent => props =>
-			<WrappedComponent {...props} columns={getColumns(props)} />,
+		WrappedComponent => props => {
+			const pageConfig = usePageConfig();
+
+			return (
+				<WrappedComponent
+					{...props}
+					columns={getColumns({...props, pageConfig})}
+				/>
+			);
+		},
 		withSelection,
 		withToolbar({
 			disableSearch,

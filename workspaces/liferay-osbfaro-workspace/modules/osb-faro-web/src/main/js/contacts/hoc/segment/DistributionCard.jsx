@@ -5,9 +5,13 @@ import React from 'react';
 import URLConstants from 'shared/util/url-constants';
 import {connect} from 'react-redux';
 import {fetchDistribution} from 'shared/actions/distributions';
-import {Routes, toRoute} from 'shared/util/router';
+import {usePageConfig} from 'shared/context/pageConfig';
+import {setUriQueryValues} from 'shared/util/url';
 
-const SegmentDistributionCard = ({channelId, groupId, id, ...otherProps}) => (
+const SegmentDistributionCard = ({channelId, groupId, id, ...otherProps}) => {
+	const {segmentDistributionURL} = usePageConfig();
+
+	return (
 	<DistributionCard
 		channelId={channelId}
 		distributionKey={id}
@@ -39,13 +43,10 @@ const SegmentDistributionCard = ({channelId, groupId, id, ...otherProps}) => (
 			/>
 		)}
 		showContext
-		viewAllLink={toRoute(Routes.CONTACTS_SEGMENT_DISTRIBUTION, {
-			channelId,
-			groupId,
-			id
-		})}
+		viewAllLink={setUriQueryValues({id}, segmentDistributionURL)}
 		{...otherProps}
 	/>
 );
+};
 
 export default connect(null, {fetchDistribution})(SegmentDistributionCard);
