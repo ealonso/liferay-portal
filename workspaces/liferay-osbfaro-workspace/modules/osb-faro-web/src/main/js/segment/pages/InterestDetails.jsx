@@ -1,9 +1,9 @@
 import BaseInterestDetails from 'contacts/pages/BaseInterestDetails';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Routes} from 'shared/util/router';
 import {Segment} from 'shared/util/records';
 import {SEGMENTS} from 'shared/util/constants';
+import {config} from 'shared/util/config';
 
 export default class InterestDetails extends React.Component {
 	static propTypes = {
@@ -17,7 +17,8 @@ export default class InterestDetails extends React.Component {
 			<BaseInterestDetails
 				{...otherProps}
 				entity={segment}
-				interestDetailsRoute={Routes.CONTACTS_SEGMENT_INTEREST_DETAILS}
+				interestDetailsURL={config.segmentInterestURL}
+				interestsURL={config.segmentInterestsURL}
 				type={SEGMENTS}
 			/>
 		);

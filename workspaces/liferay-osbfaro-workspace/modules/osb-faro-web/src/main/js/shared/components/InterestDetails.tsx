@@ -15,12 +15,11 @@ import {OrderedMap} from 'immutable';
 import {OrderParams} from 'shared/util/records';
 import {RangeKeyTimeRanges} from 'shared/util/constants';
 import {RangeSelectors, Router} from 'shared/types';
-import {Routes} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
-import {useParams} from 'react-router-dom';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
 import {useQueryRangeSelectors} from 'shared/hooks/useQueryRangeSelectors';
 import {withBaseResults, withRangeKey} from 'shared/hoc';
+import {config} from 'shared/util/config';
 
 const withData = () =>
 	graphql(
@@ -70,8 +69,6 @@ const TableWithData: React.FC<ITableWithDataProps> = withRangeKey(
 		getColumns: ({
 			accountId,
 			accountName,
-			channelId,
-			groupId,
 			rangeSelectors,
 			segmentId,
 			segmentName,
@@ -79,10 +76,7 @@ const TableWithData: React.FC<ITableWithDataProps> = withRangeKey(
 			sitePagesListColumns.getTitleUrl({
 				accountId,
 				accountName,
-				channelId,
-				groupId,
 				rangeSelectors,
-				route: Routes.SITES_TOUCHPOINTS_OVERVIEW,
 				segmentId,
 				segmentName,
 			}),
@@ -109,7 +103,9 @@ const InterestDetails: React.FC<IInterestDetailsProps> = ({
 	className,
 	router,
 }) => {
-	const {channelId, groupId, interestId} = useParams();
+	const {channelId, groupId} = config;
+
+	const {interestId} = config.params;
 	const {delta, orderIOMap, page, query} = useQueryPagination({
 		initialOrderIOMap: createOrderIOMap(VISITORS_METRIC),
 	});

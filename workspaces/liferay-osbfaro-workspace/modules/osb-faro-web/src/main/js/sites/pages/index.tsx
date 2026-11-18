@@ -1,21 +1,16 @@
 import * as breadcrumbs from 'shared/util/breadcrumbs';
 import AccountDropdown from 'shared/components/AccountDropdown';
 import BasePage from 'shared/components/base-page';
-import BundleRouter from 'route-middleware/BundleRouter';
 import ClayLink from '@clayui/link';
 import DownloadCSVReport from 'shared/components/download-report/DownloadCSVReport';
 import DownloadPDFReport from 'shared/components/download-report/DownloadPDFReport';
-import ErrorPage from 'shared/pages/ErrorPage';
 import getCN from 'classnames';
 import Loading from 'shared/components/Loading';
-import React, {lazy, Suspense} from 'react';
+import React, {Suspense} from 'react';
 import SegmentDropdown from 'shared/components/SegmentDropdown';
 import StatesRenderer from 'shared/components/states-renderer/StatesRenderer';
 import URLConstants from 'shared/util/url-constants';
 import {CSVType} from 'shared/components/download-report/utils';
-import {getMatchedRoute, Routes, toRoute} from 'shared/util/router';
-import {pickBy} from 'lodash';
-import {Route, Routes as RouterRoutes, useParams} from 'react-router-dom';
 import {Router} from 'shared/types';
 import {useAccountFilter} from 'shared/hooks/useAccountFilter';
 import {useChannelContext} from 'shared/context/channel';
@@ -23,68 +18,22 @@ import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useDataSources} from 'shared/context/dataSources';
 import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
 import {useSegmentFilter} from 'shared/hooks/useSegmentFilter';
+import {config} from 'shared/util/config';
 
-const InterestDetails = lazy(
-	() =>
-		import(
-
-			/* webpackChunkName: "SitesDashboardInterestDetails" */ './InterestDetails'
-		)
-);
-const Interests = lazy(
-	() =>
-		import(/* webpackChunkName: "SitesDashboardInterests" */ './Interests')
-);
-const Overview = lazy(
-	() => import(/* webpackChunkName: "SitesDashboardOverview" */ './Overview')
-);
-const SearchTermsPage = lazy(
-	() =>
-		import(
-
-			/* webpackChunkName: "SitesDashboardSearchTerms" */ './SearchTermsPage'
-		)
-);
-const Touchpoints = lazy(
-	() =>
-		import(
-
-			/* webpackChunkName: "SitesDashboardTouchpoints" */ './Touchpoints'
-		)
-);
-
-const NAV_ITEMS = [
-	{
-		exact: true,
-		label: Liferay.Language.get('overview'),
-		route: Routes.SITES,
-	},
-	{
-		exact: true,
-		label: Liferay.Language.get('pages'),
-		route: Routes.SITES_TOUCHPOINTS,
-	},
-	{
-		exact: false,
-		label: Liferay.Language.get('interests'),
-		route: Routes.SITES_INTERESTS,
-	},
-	{
-		exact: true,
-		label: Liferay.Language.get('search-terms'),
-		route: Routes.SITES_SEARCH_TERMS,
-	},
-];
+export interface IDashboardContentArgs {
+	channelName?: string | null;
+}
 
 interface IDashboardProps extends React.HTMLAttributes<HTMLDivElement> {
+	renderContent: (args: IDashboardContentArgs) => React.ReactNode;
 	router: Router;
 }
 
-export const Dashboard: React.FC<IDashboardProps> = ({router}) => {
-	const {channelId, groupId = ''} = useParams<{
-		channelId: string;
-		groupId: string;
-	}>();
+export const Dashboard: React.FC<IDashboardProps> = ({
+	renderContent,
+	router,
+}) => {
+	const {channelId, groupId = ''} = config;
 	const {accountId, accountName, setAccount} = useAccountFilter();
 	const {segmentId, segmentName, setSegment} = useSegmentFilter();
 	const dataSourceStates = useDataSources();
@@ -98,7 +47,6 @@ export const Dashboard: React.FC<IDashboardProps> = ({router}) => {
 
 	const authorized = currentUser.isAdmin();
 	const selectedChannelName = selectedChannel && selectedChannel.name;
-	const matchedRoute = getMatchedRoute(NAV_ITEMS);
 
 	return (
 		<BasePage
@@ -124,16 +72,7 @@ export const Dashboard: React.FC<IDashboardProps> = ({router}) => {
 					}
 				/>
 
-				<BasePage.Header.NavBar
-					items={NAV_ITEMS}
-					routeParams={{channelId, groupId}}
-					routeQueries={pickBy({
-						accountId,
-						accountName,
-						segmentId,
-						segmentName,
-					})}
-				/>
+				<BasePage.Header.NavBar />
 			</BasePage.Header>
 
 			<BasePage.SubHeader>
@@ -156,7 +95,7 @@ export const Dashboard: React.FC<IDashboardProps> = ({router}) => {
 				)}
 
 				<div className="d-flex justify-content-end w-100">
-					{matchedRoute === Routes.SITES && (
+					{config.friendlyURL === '/sites' && (
 						<DownloadPDFReport
 							disabled={!!dataSourceStates.empty}
 							subtitle={selectedChannelName ?? undefined}
@@ -164,7 +103,7 @@ export const Dashboard: React.FC<IDashboardProps> = ({router}) => {
 						/>
 					)}
 
-					{matchedRoute === Routes.SITES_SEARCH_TERMS && (
+					{config.friendlyURL === '/search-terms' && (
 						<DownloadCSVReport
 							disabled={!!dataSourceStates.empty}
 							type={CSVType.SearchTerms}
@@ -172,7 +111,7 @@ export const Dashboard: React.FC<IDashboardProps> = ({router}) => {
 						/>
 					)}
 
-					{matchedRoute === Routes.SITES_TOUCHPOINTS && (
+					{config.friendlyURL === '/pages' && (
 						<DownloadCSVReport
 							disabled={!!dataSourceStates.empty}
 							type={CSVType.Page}
@@ -224,12 +163,7 @@ export const Dashboard: React.FC<IDashboardProps> = ({router}) => {
 												button
 												className="button-root"
 												displayType="primary"
-												href={toRoute(
-													Routes.SETTINGS_DATA_SOURCE_LIST,
-													{
-														groupId,
-													}
-												)}
+												href={config.dataSourcesURL}
 											>
 												{Liferay.Language.get(
 													'connect-data-source'
@@ -245,63 +179,9 @@ export const Dashboard: React.FC<IDashboardProps> = ({router}) => {
 							/>
 
 							<StatesRenderer.Success>
-								<RouterRoutes>
-									<Route
-										element={
-											<BundleRouter
-												data={InterestDetails}
-												destructured={false}
-											/>
-										}
-										path="interests/:interestId"
-									/>
-
-									<Route
-										element={
-											<BundleRouter
-												data={Interests}
-												destructured={false}
-											/>
-										}
-										path="interests"
-									/>
-
-									<Route
-										element={
-											<BundleRouter
-												data={Touchpoints}
-												destructured={false}
-											/>
-										}
-										path="pages"
-									/>
-
-									<Route
-										element={
-											<BundleRouter
-												componentProps={{
-													channelName:
-														selectedChannelName,
-												}}
-												data={Overview}
-												destructured={false}
-											/>
-										}
-										index
-									/>
-
-									<Route
-										element={
-											<BundleRouter
-												data={SearchTermsPage}
-												destructured={false}
-											/>
-										}
-										path="search-terms"
-									/>
-
-									<Route element={<ErrorPage />} path="*" />
-								</RouterRoutes>
+								{renderContent({
+									channelName: selectedChannelName,
+								})}
 							</StatesRenderer.Success>
 						</StatesRenderer>
 					</Suspense>

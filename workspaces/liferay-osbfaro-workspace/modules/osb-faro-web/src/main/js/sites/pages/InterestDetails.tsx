@@ -2,19 +2,17 @@ import ClayIcon from 'shared/components/Icon';
 import ClayLink from '@clayui/link';
 import InterestDetails from 'shared/components/InterestDetails';
 import React from 'react';
-import {pickBy} from 'lodash';
+import {isString, pickBy} from 'lodash';
 import {Router} from 'shared/types';
-import {useParams} from 'react-router-dom';
 import {useQueryRangeSelectors} from 'shared/hooks/useQueryRangeSelectors';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
+import {config} from 'shared/util/config';
 
 interface IInterestDetailsProps extends React.HTMLAttributes<HTMLDivElement> {
 	router: Router;
 }
 
 const InterestDetailsPage: React.FC<IInterestDetailsProps> = ({router}) => {
-	const {channelId, groupId} = useParams();
 	const rangeSelectors = useQueryRangeSelectors();
 	const {accountId, accountName, segmentId, segmentName} = router.query;
 
@@ -28,18 +26,17 @@ const InterestDetailsPage: React.FC<IInterestDetailsProps> = ({router}) => {
 							button
 							displayType="secondary"
 							href={setUriQueryValues(
-								pickBy({
-									accountId,
-									accountName,
-									segmentId,
-									segmentName,
-									...rangeSelectors,
-								}),
-
-								toRoute(Routes.SITES_INTERESTS, {
-									channelId,
-									groupId,
-								})
+								pickBy(
+									{
+										accountId,
+										accountName,
+										segmentId,
+										segmentName,
+										...rangeSelectors,
+									},
+									isString
+								),
+								config.siteInterestsURL
 							)}
 						>
 							<ClayIcon

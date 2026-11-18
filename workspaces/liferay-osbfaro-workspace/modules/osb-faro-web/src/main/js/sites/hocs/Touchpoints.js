@@ -18,7 +18,6 @@ import {
 	metricsListColumns,
 	sitePagesListColumns,
 } from 'shared/util/table-columns';
-import {Routes} from 'shared/util/router';
 import {Sizes} from 'shared/util/constants';
 
 // LRAC-6976 POC TEMP
@@ -64,10 +63,7 @@ const getTableWithData = (useDB) => {
 		getColumns: ({
 			accountId,
 			accountName,
-			router: {
-				params: {channelId, groupId},
-				query,
-			},
+			router: {query},
 			segmentId,
 			segmentName,
 		}) => {
@@ -77,10 +73,7 @@ const getTableWithData = (useDB) => {
 				sitePagesListColumns.getTitleUrl({
 					accountId,
 					accountName,
-					channelId,
-					groupId,
 					rangeSelectors,
-					route: Routes.SITES_TOUCHPOINTS_OVERVIEW,
 					segmentId,
 					segmentName,
 				}),

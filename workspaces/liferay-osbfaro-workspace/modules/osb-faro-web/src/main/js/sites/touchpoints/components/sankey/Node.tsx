@@ -9,14 +9,13 @@ import {
 	URL_COLOR,
 } from './utils';
 import {getSafeDecodedURIComponent} from 'shared/util/util';
-import {getUrl} from 'shared/util/urls';
 import {Layer, Rectangle} from 'recharts';
-import {Link, useParams} from 'react-router-dom';
 import {pickBy} from 'lodash';
-import {Routes} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
 import {TitleKey, Type} from './types';
 import {toThousands} from 'shared/util/numbers';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 function truncateText(text: string, limit: number) {
 	if (text.length > limit) {
@@ -87,8 +86,6 @@ export const Node = ({
 	const x = normalizeNumber(initialX);
 	const y = normalizeNumber(initialY);
 
-	const {channelId, groupId} = useParams();
-
 	return (
 		<Layer
 			crossOrigin={undefined}
@@ -145,23 +142,20 @@ export const Node = ({
 				payload.external ? (
 					<Title title={payload.name} x={x} y={y - 32} />
 				) : (
-					<Link
+					<a
 						data-tooltip-align="right"
-						title={Liferay.Language.get('go-to-dashboard-page')}
-						to={getUrl(Routes.SITES_TOUCHPOINTS_OVERVIEW, {
-							params: {
-								channelId,
-								groupId,
+						href={setUriQueryValues(
+							{
+								...pickBy(rangeSelectors),
 								title: payload.name,
 								touchpoint: payload.url,
 							},
-							query: {
-								...pickBy(rangeSelectors),
-							},
-						})}
+							config.pageOverviewURL
+						)}
+						title={Liferay.Language.get('go-to-dashboard-page')}
 					>
 						<Title title={payload.name} x={x} y={y - 32} />
-					</Link>
+					</a>
 				)
 			) : (
 				<Title title={payload.name} x={x} y={y - 12} />

@@ -5,10 +5,10 @@ import React from 'react';
 import {connect} from 'react-redux';
 import {MAX_LABEL_LENGTH} from 'shared/util/constants';
 import {Option, Picker} from '@clayui/core';
-import {Routes, toRoute} from 'shared/util/router';
 import {truncateText} from 'shared/util/util';
 import {updateDefaultChannelId} from 'shared/actions/preferences';
-import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 export type Channel = {
 	createTime: number;
@@ -63,8 +63,6 @@ export const ChannelsMenu: React.FC<IChannelsMenuProps> = ({
 	groupId,
 	updateDefaultChannelId,
 }) => {
-	const history = useHistoryAdapter();
-
 	const channel = getDefaultChannel(defaultChannelId, channels);
 
 	return (
@@ -99,11 +97,11 @@ export const ChannelsMenu: React.FC<IChannelsMenuProps> = ({
 						groupId,
 					});
 
-					history.push(
-						toRoute(Routes.SITES, {
-							channelId: selected.id,
-							groupId,
-						})
+					window.location.assign(
+						setUriQueryValues(
+							{channelId: selected.id},
+							config.sitesURL
+						)
 					);
 				}}
 				searchable
