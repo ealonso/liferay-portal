@@ -6,7 +6,6 @@ import {DataSourceStates} from 'shared/util/constants';
 import {fromJS} from 'immutable';
 import {Project} from 'shared/util/records';
 import {range, uniqueId} from 'lodash';
-import {MemoryRouter} from 'react-router';
 
 const FRIENDLY_URL_BASE = '/faro-liferay-';
 
@@ -18,7 +17,8 @@ const mockAccountList = range(3).map(
 			fromJS(
 				data.mockProject(i, {
 					groupId: Number(uniqueId()),
-					name: `mockProject_AccountA ${i}`
+					name: `mockProject_AccountA ${i}`,
+					url: `/web/workspace-${i}`
 				})
 			)
 		)
@@ -32,7 +32,8 @@ const mockAccountWithFriendlyURLList = range(2).map(
 					corpProjectUuid: null,
 					friendlyURL: `${FRIENDLY_URL_BASE}${i}`,
 					groupId: 123,
-					name: `mockProject_AccountA ${i}`
+					name: `mockProject_AccountA ${i}`,
+					url: `/web${FRIENDLY_URL_BASE}${i}`
 				})
 			)
 		)
@@ -68,9 +69,7 @@ const mockAccountWithUnconfiguredList = range(2).map(
 );
 
 const DefaultComponent = props => (
-	<MemoryRouter>
-		<WorkspaceList {...props} />
-	</MemoryRouter>
+	<WorkspaceList {...props} />
 );
 
 describe('WorkspaceList', () => {

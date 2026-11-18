@@ -1,7 +1,6 @@
 import BaseCard from '../index';
 import mockStore from 'test/mock-store';
 import React from 'react';
-import {MemoryRouter} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
@@ -10,11 +9,9 @@ jest.unmock('react-dom');
 
 const Wrapper = ({children}) => (
 	<Provider store={mockStore()}>
-		<MemoryRouter>
-			<MockedProvider addTypename={false} freezeResults={false}>
-				{children}
-			</MockedProvider>
-		</MemoryRouter>
+		<MockedProvider addTypename={false} freezeResults={false}>
+			{children}
+		</MockedProvider>
 	</Provider>
 );
 

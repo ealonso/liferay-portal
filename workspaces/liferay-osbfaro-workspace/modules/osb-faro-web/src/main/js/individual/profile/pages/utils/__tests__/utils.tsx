@@ -1,12 +1,9 @@
-import {Routes, toRoute} from 'shared/util/router';
 import {buildHeaderSubtitle} from '../utils';
 import {cleanup, render} from '@testing-library/react';
 
 jest.unmock('react-dom');
 
 describe('buildHeaderSubtitle', () => {
-	const context = {channelId: '123', groupId: 'liferay.com'};
-
 	afterEach(cleanup);
 
 	it('links the account name to its account page when an account id exists', () => {
@@ -17,12 +14,11 @@ describe('buildHeaderSubtitle', () => {
 			properties: {email: 'jane@acme.com'},
 		};
 
-		const {getByRole} = render(buildHeaderSubtitle(individual, context));
+		const {getByRole} = render(buildHeaderSubtitle(individual));
 
-		const link = getByRole('link', {name: 'Acme Corporation'});
-
-		expect(link.getAttribute('href')).toBe(
-			toRoute(Routes.CONTACTS_ACCOUNT, {...context, id: 'acc-1'})
+		expect(getByRole('link', {name: 'Acme Corporation'})).toHaveAttribute(
+			'href',
+			'/account?id=acc-1'
 		);
 	});
 
@@ -35,7 +31,7 @@ describe('buildHeaderSubtitle', () => {
 		};
 
 		const {container, queryByRole} = render(
-			buildHeaderSubtitle(individual, context)
+			buildHeaderSubtitle(individual)
 		);
 
 		expect(queryByRole('link')).toBeNull();

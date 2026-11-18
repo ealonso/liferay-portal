@@ -5,17 +5,9 @@ import React from 'react';
 import {ApolloProvider} from '@apollo/client';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useBlocker: () => ({state: 'unblocked'}),
-	useParams: () => ({
-		groupId: '23'
-	})
-}));
 
 const defaultProps = {
 	router: {params: {groupId: '23'}, query: {delta: '10', page: '1'}}
@@ -24,9 +16,9 @@ const defaultProps = {
 const DefaultComponent = props => (
 	<ApolloProvider client={client}>
 		<Provider store={mockStore()}>
-			<MemoryRouter>
+			<WorkspacePage>
 				<CreateItemSimilarity {...defaultProps} {...props} />
-			</MemoryRouter>
+			</WorkspacePage>
 		</Provider>
 	</ApolloProvider>
 );

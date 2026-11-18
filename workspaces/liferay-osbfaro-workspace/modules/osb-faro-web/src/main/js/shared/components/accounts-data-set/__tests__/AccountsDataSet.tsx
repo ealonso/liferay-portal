@@ -675,21 +675,21 @@ describe('AccountsDataSet', () => {
 		}
 	);
 
-	it('should render the account name link with channelId in the href', async () => {
+	it('should render the account name linked to the account page', async () => {
 		await renderAccountsDataSet(
 			<AccountsDataSet apiURL="fake-url" channelId="123" groupId="23" />
 		);
 
-		const {container} = render(
+		render(
 			lastCustomDataRenderers!.accountNameRenderer({
 				itemData: {id: 'abc'},
 				value: 'Acme Corp',
 			})
 		);
 
-		expect(container.querySelector('a')).toHaveAttribute(
+		expect(screen.getByRole('link', {name: 'Acme Corp'})).toHaveAttribute(
 			'href',
-			'/workspace/23/123/contacts/accounts/abc'
+			'/account?id=abc'
 		);
 	});
 

@@ -4,7 +4,6 @@ import {cleanup, render} from '@testing-library/react';
 import {createOrderIOMap, EMAIL_ADDRESS} from 'shared/util/pagination';
 import {noop} from 'lodash';
 import {OrderByDirections} from 'shared/util/constants';
-import {MemoryRouter} from 'react-router';
 import {useModal} from '@clayui/modal';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
 import {waitForModal} from 'test/render-modal';
@@ -23,28 +22,26 @@ const TestModal = props => {
 };
 
 const DefaultComponent = props => (
-	<MemoryRouter>
-		<TestModal
-			columns={[
-				{
-					accessor: 'name',
-					className: 'table-cell-expand',
-					label: 'name'
-				},
-				{
-					accessor: 'emailAddress',
-					label: 'email'
-				}
-			]}
-			dataSourceFn={() =>
-				Promise.resolve({items: ITEMS, total: ITEMS.length})
+	<TestModal
+		columns={[
+			{
+				accessor: 'name',
+				className: 'table-cell-expand',
+				label: 'name'
+			},
+			{
+				accessor: 'emailAddress',
+				label: 'email'
 			}
-			groupId='23'
-			onClose={noop}
-			rowIdentifier='emailAddress'
-			{...props}
-		/>
-	</MemoryRouter>
+		]}
+		dataSourceFn={() =>
+			Promise.resolve({items: ITEMS, total: ITEMS.length})
+		}
+		groupId='23'
+		onClose={noop}
+		rowIdentifier='emailAddress'
+		{...props}
+	/>
 );
 
 describe('SearchableEntitiesTableModal', () => {

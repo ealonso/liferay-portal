@@ -165,8 +165,7 @@ exports[`GlobalAttributeList should render 1`] = `
                   >
                     <a
                       class="text-truncate"
-                      data-discover="true"
-                      href="/workspace/23/settings/definitions/event-attributes/0"
+                      href="/event-attribute?attributeId=0"
                     >
                       name-0
                     </a>

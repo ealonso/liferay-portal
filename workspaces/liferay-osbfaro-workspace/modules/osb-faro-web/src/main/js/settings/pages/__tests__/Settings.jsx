@@ -4,30 +4,29 @@ import mockStore, {mockStoreData, mockStoreDataLDP} from 'test/mock-store';
 import React from 'react';
 import {fromJS} from 'immutable';
 import {InMemoryCache} from '@apollo/client';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {mockDataSourcesReq} from 'test/graphql-data';
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
 import {render, screen} from '@testing-library/react';
-import {Routes, toRoute} from 'shared/util/router';
-import {Settings} from '../Settings';
 import {SubscriptionNames} from 'shared/util/subscriptions';
+import {UsageApp} from '../../../fragments/settings/SettingsApps';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
+
+jest.mock('../../../fragments/PageApp', () => ({children}) => children);
 
 jest.mock('shared/hooks/useCurrentUser', () => ({
 	useCurrentUser: jest.fn()
 }));
-
-const usagePath = toRoute(Routes.SETTINGS_USAGE, {groupId: '23'});
 
 const mockStoreDataSaaS = mockStoreData.setIn(
 	['projects', '23', 'data', 'faroSubscription'],
 	fromJS({name: SubscriptionNames.LiferaySaasEnterprisePlan})
 );
 
-const renderSettingsAt = store =>
+const renderUsagePage = store =>
 	render(
 		<Provider store={store}>
 			<MockedProvider
@@ -43,22 +42,26 @@ const renderSettingsAt = store =>
 					])
 				]}
 			>
-				<MemoryRouter initialEntries={[usagePath]}>
-					<RouterRoutes>
-						<Route element={<Settings />} path={`${Routes.SETTINGS}/*`} />
-					</RouterRoutes>
-				</MemoryRouter>
+				<WorkspacePage channelId='' groupId='23'>
+					<UsageApp channelId='' groupId='23' pageURLs={{}} />
+				</WorkspacePage>
 			</MockedProvider>
 		</Provider>
 	);
 
-describe('Settings usage page routing', () => {
+describe('Settings usage page', () => {
 	beforeEach(() => {
 		useCurrentUser.mockImplementation(() => ({isAdmin: () => true}));
 	});
 
+	afterEach(() => {
+		API.projects.fetch.mockImplementation(() =>
+			Promise.resolve(data.mockProject())
+		);
+	});
+
 	it('should render the classic Usage Overview page for a non-SaaS, non-LDP project', async () => {
-		renderSettingsAt(mockStore());
+		renderUsagePage(mockStore());
 
 		expect(
 			await screen.findByTestId('subscription-details')
@@ -66,7 +69,7 @@ describe('Settings usage page routing', () => {
 	});
 
 	it('should render the SaaS Usage Overview page for an LDP project', async () => {
-		API.projects.fetch.mockReturnValueOnce(
+		API.projects.fetch.mockReturnValue(
 			Promise.resolve(
 				data.mockProject('23', {
 					faroSubscription: fromJS({
@@ -76,7 +79,7 @@ describe('Settings usage page routing', () => {
 			)
 		);
 
-		renderSettingsAt(mockStore(mockStoreDataLDP));
+		renderUsagePage(mockStore(mockStoreDataLDP));
 
 		expect(
 			await screen.findByText('View Your Workspace Metrics')
@@ -84,7 +87,7 @@ describe('Settings usage page routing', () => {
 	});
 
 	it('should render the SaaS Usage Overview page for a SaaS project', async () => {
-		API.projects.fetch.mockReturnValueOnce(
+		API.projects.fetch.mockReturnValue(
 			Promise.resolve(
 				data.mockProject('23', {
 					faroSubscription: fromJS({
@@ -94,7 +97,7 @@ describe('Settings usage page routing', () => {
 			)
 		);
 
-		renderSettingsAt(mockStore(mockStoreDataSaaS));
+		renderUsagePage(mockStore(mockStoreDataSaaS));
 
 		expect(
 			await screen.findByText('View Your SaaS Project Metrics')

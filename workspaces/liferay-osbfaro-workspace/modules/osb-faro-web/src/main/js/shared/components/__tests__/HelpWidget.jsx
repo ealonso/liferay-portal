@@ -4,7 +4,6 @@ import React from 'react';
 import {Provider} from 'react-redux';
 import {fireEvent, render, screen} from '@testing-library/react';
 import {fromJS} from 'immutable';
-import {MemoryRouter} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {PLANS} from 'shared/util/subscriptions';
 
@@ -42,11 +41,9 @@ describe('HelpWidget', () => {
 
 		render(
 			<Provider store={store}>
-				<MemoryRouter>
-					<MockedProvider>
-						<HelpWidget groupId='23' />
-					</MockedProvider>
-				</MemoryRouter>
+				<MockedProvider>
+					<HelpWidget groupId='23' />
+				</MockedProvider>
 			</Provider>
 		);
 

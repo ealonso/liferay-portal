@@ -5,6 +5,7 @@ import {useDataSources} from 'shared/context/dataSources';
 import {useLifecycleAccountData} from '../useLifecycleAccountData';
 import {useRequest} from 'shared/hooks/useRequest';
 import {AccountDataStatus} from 'lifecycle/utils/types';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -14,11 +15,6 @@ jest.mock('shared/hooks/useRequest', () => ({
 
 jest.mock('shared/context/dataSources', () => ({
 	useDataSources: jest.fn(),
-}));
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({channelId: '123', groupId: '23'}),
 }));
 
 const mockedUseDataSources = useDataSources as jest.Mock;
@@ -34,7 +30,11 @@ const StatusProbe = () => (
 );
 
 const renderStatus = () => {
-	render(<StatusProbe />);
+	render(
+		<WorkspacePage channelId="123" groupId="23">
+			<StatusProbe />
+		</WorkspacePage>
+	);
 
 	return screen.getByTestId('status').textContent;
 };

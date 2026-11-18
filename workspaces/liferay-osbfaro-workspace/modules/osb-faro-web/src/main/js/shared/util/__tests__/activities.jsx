@@ -21,7 +21,7 @@ const CONTEXT = {channelId: '456', groupId: '23'};
 
 const CAMPAIGN_ENTITY_ID = '6beeaea355642c82e8bb7f9c049f58e8';
 
-const CAMPAIGN_URL = `/workspace/23/456/campaigns/${CAMPAIGN_ENTITY_ID}`;
+const CAMPAIGN_URL = `/campaign?id=${CAMPAIGN_ENTITY_ID}`;
 
 const CAMPAIGN = {
 	campaignEntityId: CAMPAIGN_ENTITY_ID,
@@ -285,7 +285,7 @@ describe('activities', () => {
 			expect(rest).toEqual([]);
 			expect(group).toMatchObject({
 				descriptionUrl:
-					'/workspace/23/456/sites/pages/overview/https%3A%2F%2Fliferay.com%2Fhome/Home',
+					'/page-overview?touchpoint=https%3A%2F%2Fliferay.com%2Fhome&title=Home',
 				pageGroup: true,
 				subtitle: HOME_URL,
 				title: 'Home',
@@ -500,7 +500,7 @@ describe('activities', () => {
 			},
 			{
 				'ind-1':
-					'/workspace/23/456/contacts/individuals/known-individuals/ind-1'
+					'/individual?id=ind-1'
 			}
 		],
 		[
@@ -510,7 +510,7 @@ describe('activities', () => {
 				'2026-07-15': {campaigns: [{campaignId: 'c1'}]},
 				'2026-07-16': {campaigns: [{campaignId: 'c1'}]}
 			},
-			{c1: '/workspace/23/456/campaigns/c1'}
+			{c1: '/campaign?id=c1'}
 		]
 	])('%s', (_, buildUrls, campaignDays, expected) => {
 		it('routes every id in the campaign days, once each', () => {

@@ -7,12 +7,10 @@ import {
 	getMapResultToProps,
 	mapPropsToOptions
 } from 'segment/segment-editor/dynamic/mappers/dxp-entity-bag-mapper';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {noop, range} from 'lodash';
 import {Provider} from 'react-redux';
 import {render, screen, waitFor} from '@testing-library/react';
-import {Routes} from 'shared/util/router';
 import {useModal} from '@clayui/modal';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
 import {waitForModal} from 'test/render-modal';
@@ -76,18 +74,9 @@ const DefaultComponent = ({
 	...props
 }) => (
 	<Provider store={mockStore()}>
-		<MemoryRouter initialEntries={['/workspace/23/settings/data-source']}>
-			<RouterRoutes>
-				<Route
-					element={
-						<MockedProvider addTypename={false} mocks={mocks}>
-							<TestModal {...defaultProps} {...props} />
-						</MockedProvider>
-					}
-					path={`${Routes.SETTINGS_DATA_SOURCE_LIST}/*`}
-				/>
-			</RouterRoutes>
-		</MemoryRouter>
+		<MockedProvider addTypename={false} mocks={mocks}>
+			<TestModal {...defaultProps} {...props} />
+		</MockedProvider>
 	</Provider>
 );
 

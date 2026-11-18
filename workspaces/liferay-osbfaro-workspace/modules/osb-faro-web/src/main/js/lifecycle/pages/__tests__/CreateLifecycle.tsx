@@ -17,14 +17,13 @@ import {
 	waitFor,
 	within,
 } from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {CATALOG_FIELDS_MAX_PAGE_SIZE} from 'shared/api/catalog';
-import {Routes, toRoute} from 'shared/util/router';
 import {useLifecycleAccountData} from 'lifecycle/hooks/useLifecycleAccountData';
 import {useRequest} from 'shared/hooks/useRequest';
 import {useUnsavedChangesPrompt} from 'shared/hooks/useUnsavedChangesPrompt';
 import {AccountDataStatus} from 'lifecycle/utils/types';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -75,15 +74,6 @@ const buildStage = (configured: boolean): IStageConfig => ({
 
 const mockedCreateStageConfig = createStageConfig as jest.Mock;
 
-const mockPush = jest.fn();
-
-const mockReplace = jest.fn();
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({channelId: '123', groupId: '23'}),
-}));
-
 jest.mock('shared/hooks/useUnsavedChangesPrompt', () => ({
 	useUnsavedChangesPrompt: jest.fn(),
 }));
@@ -96,29 +86,35 @@ jest.mock('shared/hooks/useTimeZone', () => ({
 	useTimeZone: () => ({timeZoneId: 'UTC'}),
 }));
 
-jest.mock('shared/hooks/useHistoryAdapter', () => ({
-	useHistoryAdapter: () => ({push: mockPush, replace: mockReplace}),
-}));
-
 const mockedUseRequest = useRequest as jest.Mock;
 
-const renderPage = (
-	initialEntries: React.ComponentProps<
-		typeof MemoryRouter
-	>['initialEntries'] = ['/workspace/23/123/lifecycle/new']
-) =>
+const renderPage = (params: {[name: string]: string} = {}) =>
 	render(
-		<MemoryRouter initialEntries={initialEntries}>
+		<WorkspacePage channelId="123" groupId="23" params={params}>
 			<CreateLifecycle />
-		</MemoryRouter>
+		</WorkspacePage>
 	);
 
-const lifecycleURL = toRoute(Routes.LIFECYCLE, {
-	channelId: '123',
-	groupId: '23',
-});
+const originalLocation = window.location;
+
+const assign = jest.fn();
+const replace = jest.fn();
 
 describe('CreateLifecycle', () => {
+	beforeAll(() => {
+		Object.defineProperty(window, 'location', {
+			configurable: true,
+			value: {...originalLocation, assign, replace},
+		});
+	});
+
+	afterAll(() => {
+		Object.defineProperty(window, 'location', {
+			configurable: true,
+			value: originalLocation,
+		});
+	});
+
 	beforeEach(() => {
 		jest.clearAllMocks();
 
@@ -148,11 +144,9 @@ describe('CreateLifecycle', () => {
 		const renderWithStore = () =>
 			render(
 				<Provider store={mockStore()}>
-					<MemoryRouter
-						initialEntries={['/workspace/23/123/lifecycle/new']}
-					>
+					<WorkspacePage channelId="123" groupId="23">
 						<CreateLifecycle />
-					</MemoryRouter>
+					</WorkspacePage>
 				</Provider>
 			);
 
@@ -303,27 +297,18 @@ describe('CreateLifecycle', () => {
 
 		expect(screen.getByRole('link', {name: /cancel/i})).toHaveAttribute(
 			'href',
-			lifecycleURL
+			'/lifecycles'
 		);
 		expect(screen.getByRole('link', {name: /back/i})).toHaveAttribute(
 			'href',
-			lifecycleURL
+			'/lifecycles'
 		);
 	});
 
 	it('links cancel and back to the dashboard it was opened from', () => {
-		renderPage([
-			{
-				pathname: '/workspace/23/123/lifecycle/new',
-				state: {lifecycleId: '7'},
-			},
-		]);
+		renderPage({backLifecycleId: '7'});
 
-		const dashboardURL = toRoute(Routes.LIFECYCLE_DASHBOARD, {
-			channelId: '123',
-			groupId: '23',
-			lifecycleId: '7',
-		});
+		const dashboardURL = '/lifecycle?lifecycleId=7';
 
 		expect(screen.getByRole('link', {name: /cancel/i})).toHaveAttribute(
 			'href',
@@ -554,10 +539,10 @@ describe('CreateLifecycle', () => {
 
 		fireEvent.click(screen.getByRole('button', {name: /remove.stage 1/i}));
 
-		expect(mockedPrompt).toHaveBeenLastCalledWith(false, expect.anything());
+		expect(mockedPrompt).toHaveBeenLastCalledWith(false);
 		expect(screen.getByRole('link', {name: /cancel/i})).toHaveAttribute(
 			'href',
-			lifecycleURL
+			'/lifecycles'
 		);
 	});
 
@@ -566,19 +551,19 @@ describe('CreateLifecycle', () => {
 
 		renderPage();
 
-		expect(mockedPrompt).toHaveBeenLastCalledWith(false, expect.anything());
+		expect(mockedPrompt).toHaveBeenLastCalledWith(false);
 
 		fireEvent.change(screen.getByLabelText(/^name/i), {
 			target: {value: 'My Lifecycle'},
 		});
 
-		expect(mockedPrompt).toHaveBeenLastCalledWith(true, expect.anything());
+		expect(mockedPrompt).toHaveBeenLastCalledWith(true);
 
 		fireEvent.change(screen.getByLabelText(/^name/i), {
 			target: {value: ''},
 		});
 
-		expect(mockedPrompt).toHaveBeenLastCalledWith(false, expect.anything());
+		expect(mockedPrompt).toHaveBeenLastCalledWith(false);
 	});
 
 	it('renders a loading state while the catalog is loading', () => {
@@ -723,26 +708,19 @@ describe('CreateLifecycle', () => {
 		clickCreate();
 
 		await waitFor(() =>
-			expect(mockReplace).toHaveBeenCalledWith(
-				toRoute(Routes.LIFECYCLE_DASHBOARD, {
-					channelId: '123',
-					groupId: '23',
-					lifecycleId: 'lifecycle-erc-42',
-				})
+			expect(replace).toHaveBeenCalledWith(
+				'/lifecycle?lifecycleId=lifecycle-erc-42'
 			)
 		);
 
-		expect(mockPush).not.toHaveBeenCalled();
+		expect(assign).not.toHaveBeenCalled();
 		expect(mockDispatch).toHaveBeenCalledWith(
 			expect.objectContaining({
 				alertType: Alert.Types.Success,
 				message: expect.stringMatching(/my lifecycle.+created/i),
 			})
 		);
-		expect(useUnsavedChangesPrompt).toHaveBeenLastCalledWith(
-			false,
-			expect.anything()
-		);
+		expect(useUnsavedChangesPrompt).toHaveBeenLastCalledWith(false);
 	});
 
 	it('keeps the editor open with an error toast when creation fails', async () => {
@@ -767,8 +745,8 @@ describe('CreateLifecycle', () => {
 			)
 		);
 
-		expect(mockPush).not.toHaveBeenCalled();
-		expect(mockReplace).not.toHaveBeenCalled();
+		expect(assign).not.toHaveBeenCalled();
+		expect(replace).not.toHaveBeenCalled();
 		expect(
 			screen.getByRole('group', {name: /configuration summary/i})
 		).toHaveTextContent(/my lifecycle/i);

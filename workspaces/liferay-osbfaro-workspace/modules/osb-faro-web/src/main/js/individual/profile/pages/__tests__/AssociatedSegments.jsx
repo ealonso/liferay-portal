@@ -5,7 +5,6 @@ import React from 'react';
 import {Individual} from 'shared/util/records';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
 
 jest.unmock('react-dom');
@@ -13,18 +12,16 @@ jest.unmock('react-dom');
 describe('IndividualAssociatedSegments', () => {
 	it('should render', async () => {
 		const {container, getByText} = render(
-			<MemoryRouter>
-				<Provider store={mockStore()}>
-					<AssociatedSegments
-						groupId='23'
-						id='test'
-						individual={data.getImmutableMock(
-							Individual,
-							data.mockIndividual
-						)}
-					/>
-				</Provider>
-			</MemoryRouter>
+			<Provider store={mockStore()}>
+				<AssociatedSegments
+					groupId='23'
+					id='test'
+					individual={data.getImmutableMock(
+						Individual,
+						data.mockIndividual
+					)}
+				/>
+			</Provider>
 		);
 
 		await waitForLoadingToBeRemoved(container);

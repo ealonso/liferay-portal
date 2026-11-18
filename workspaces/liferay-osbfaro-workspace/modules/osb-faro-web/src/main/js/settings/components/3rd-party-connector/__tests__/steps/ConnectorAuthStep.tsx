@@ -5,12 +5,7 @@ import {updateSearchParams} from 'settings/components/base-page/utis';
 
 jest.unmock('react-dom');
 
-const useHistoryMock = jest.fn();
 const useWizardPageMock = jest.fn();
-
-jest.mock('shared/hooks/useHistoryAdapter', () => ({
-	useHistoryAdapter: () => useHistoryMock(),
-}));
 
 jest.mock('settings/components/base-page/WizardPageContext', () => ({
 	useWizardPage: () => useWizardPageMock(),
@@ -50,15 +45,30 @@ const buildConfig = (
 	...overrides,
 });
 
+const originalLocation = window.location;
+
+const assign = jest.fn();
+
 describe('ConnectorAuthStep', () => {
-	let push: jest.Mock;
+	beforeAll(() => {
+		Object.defineProperty(window, 'location', {
+			configurable: true,
+			value: {...originalLocation, assign},
+		});
+	});
+
+	afterAll(() => {
+		Object.defineProperty(window, 'location', {
+			configurable: true,
+			value: originalLocation,
+		});
+	});
 
 	beforeEach(() => {
+		assign.mockClear();
 		connectorAuthSpy.mockClear();
 		(updateSearchParams as jest.Mock).mockClear();
 
-		push = jest.fn();
-		useHistoryMock.mockReturnValue({push});
 		useWizardPageMock.mockReturnValue({dataSource: undefined});
 	});
 
@@ -96,7 +106,6 @@ describe('ConnectorAuthStep', () => {
 		props.onSubmit({id: 'new-id'});
 
 		expect(updateSearchParams).toHaveBeenCalledWith(
-			{push},
 			'dataSourceId',
 			'new-id'
 		);
@@ -138,7 +147,7 @@ describe('ConnectorAuthStep', () => {
 
 		props.onCancel();
 
-		expect(push).toHaveBeenCalledTimes(1);
-		expect(push.mock.calls[0][0]).toContain('23');
+		expect(assign).toHaveBeenCalledTimes(1);
+		expect(assign).toHaveBeenCalledWith('/data-sources');
 	});
 });

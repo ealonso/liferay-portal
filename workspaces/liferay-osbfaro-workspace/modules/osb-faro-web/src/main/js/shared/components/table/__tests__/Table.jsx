@@ -2,7 +2,6 @@ import React from 'react';
 import Table, {getRowIdentifierValue} from '../index';
 import {mockIndividual} from 'test/data';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
 import {times} from 'lodash';
 
 jest.unmock('react-dom');
@@ -23,13 +22,11 @@ const COLUMNS = [
 describe('Table', () => {
 	it('should render', () => {
 		const {container} = render(
-			<MemoryRouter>
-				<Table
-					columns={COLUMNS}
-					items={INDIVIDUALS}
-					rowIdentifier='id'
-				/>
-			</MemoryRouter>
+			<Table
+				columns={COLUMNS}
+				items={INDIVIDUALS}
+				rowIdentifier='id'
+			/>
 		);
 
 		expect(container).toMatchSnapshot();
@@ -37,9 +34,7 @@ describe('Table', () => {
 
 	it('should render without items', () => {
 		const {container} = render(
-			<MemoryRouter>
-				<Table columns={COLUMNS} rowIdentifier='id' />
-			</MemoryRouter>
+			<Table columns={COLUMNS} rowIdentifier='id' />
 		);
 
 		expect(container.querySelector('tbody')).toBeNull();
@@ -47,14 +42,12 @@ describe('Table', () => {
 
 	it('should render with borders', () => {
 		const {container} = render(
-			<MemoryRouter>
-				<Table
-					bordered
-					columns={COLUMNS}
-					items={INDIVIDUALS}
-					rowIdentifier='id'
-				/>
-			</MemoryRouter>
+			<Table
+				bordered
+				columns={COLUMNS}
+				items={INDIVIDUALS}
+				rowIdentifier='id'
+			/>
 		);
 
 		expect(container.querySelector('.table-head-bordered')).toBeTruthy();
@@ -62,14 +55,12 @@ describe('Table', () => {
 
 	it('should render with nowrap rows', () => {
 		const {container} = render(
-			<MemoryRouter>
-				<Table
-					columns={COLUMNS}
-					items={INDIVIDUALS}
-					nowrap
-					rowIdentifier='id'
-				/>
-			</MemoryRouter>
+			<Table
+				columns={COLUMNS}
+				items={INDIVIDUALS}
+				nowrap
+				rowIdentifier='id'
+			/>
 		);
 
 		expect(container.querySelector('.table-nowrap')).toBeTruthy();
@@ -77,14 +68,12 @@ describe('Table', () => {
 
 	it('should render without nowrap rows, so long values wrap', () => {
 		const {container} = render(
-			<MemoryRouter>
-				<Table
-					columns={COLUMNS}
-					items={INDIVIDUALS}
-					nowrap={false}
-					rowIdentifier='id'
-				/>
-			</MemoryRouter>
+			<Table
+				columns={COLUMNS}
+				items={INDIVIDUALS}
+				nowrap={false}
+				rowIdentifier='id'
+			/>
 		);
 
 		expect(container.querySelector('.table-nowrap')).toBeNull();
@@ -92,14 +81,12 @@ describe('Table', () => {
 
 	it('should render w/ loading', () => {
 		const {container} = render(
-			<MemoryRouter>
-				<Table
-					columns={COLUMNS}
-					items={INDIVIDUALS}
-					loading
-					rowIdentifier='id'
-				/>
-			</MemoryRouter>
+			<Table
+				columns={COLUMNS}
+				items={INDIVIDUALS}
+				loading
+				rowIdentifier='id'
+			/>
 		);
 
 		expect(container.querySelector('.loading-root')).toBeTruthy();

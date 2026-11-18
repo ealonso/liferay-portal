@@ -4,18 +4,11 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import Workspaces, {routingFn} from '../Workspaces';
 import {ApolloProvider} from '@apollo/client';
-import {
-	BrowserRouter,
-	MemoryRouter,
-	Route,
-	Routes as RouterRoutes
-} from 'react-router-dom';
-import {cleanup, render, screen} from '@testing-library/react';
+import {cleanup, render} from '@testing-library/react';
 import {Map} from 'immutable';
 import {noop} from 'lodash';
 import {Project} from 'shared/util/records';
 import {Provider} from 'react-redux';
-import {Routes, toRoute} from 'shared/util/router';
 import {SubscriptionNames} from 'shared/util/subscriptions';
 import {useFetchProjects} from 'shared/hooks/useProjects';
 
@@ -27,7 +20,8 @@ const mockBasicProject = id =>
 			data.mockSubscription({
 				name: SubscriptionNames.LiferayAnalyticsCloudBasic
 			})
-		)
+		),
+		url: `/web/workspace-${id}`
 	});
 
 const mockBasicProjectUnconfigured = id =>
@@ -37,34 +31,14 @@ const mockBasicProjectUnconfigured = id =>
 			data.mockSubscription({
 				name: SubscriptionNames.LiferayAnalyticsCloudBasic
 			})
-		)
+		),
+		url: `/web/workspace-${id}`
 	});
 
 const DefaultComponent = props => (
 	<ApolloProvider client={client}>
 		<Provider store={mockStore()}>
-			<BrowserRouter>
-				<Workspaces {...props} clearStore={jest.fn()} />
-			</BrowserRouter>
-		</Provider>
-	</ApolloProvider>
-);
-
-const RoutedComponent = () => (
-	<ApolloProvider client={client}>
-		<Provider store={mockStore()}>
-			<MemoryRouter initialEntries={['/workspaces']}>
-				<RouterRoutes>
-					<Route element={<Workspaces />} path='/workspaces' />
-
-					<Route
-						element={<p>{'workspace creation'}</p>}
-						path={toRoute(Routes.WORKSPACE_ADD_WITH_CORP_PROJECT_UUID, {
-							corpProjectUuid
-						})}
-					/>
-				</RouterRoutes>
-			</MemoryRouter>
+			<Workspaces {...props} clearStore={jest.fn()} />
 		</Provider>
 	</ApolloProvider>
 );
@@ -140,7 +114,8 @@ describe('Workspaces', () => {
 					data.mockSubscription({
 						name: SubscriptionNames.LiferayAnalyticsCloudBusiness
 					})
-				)
+				),
+				url: '/web/workspace-123'
 			})
 		];
 
@@ -179,28 +154,41 @@ describe('Workspaces', () => {
 	});
 
 	it('should send a single account without a workspace to the workspace creation', () => {
+		const {location} = window;
+
+		const assign = jest.fn();
+
+		Object.defineProperty(window, 'location', {
+			configurable: true,
+			value: {...location, assign}
+		});
+
 		useFetchProjects.mockImplementation(() => ({
 			data: [mockBasicProjectUnconfigured(0)],
 			loading: false
 		}));
 
-		render(<RoutedComponent />);
+		try {
+			const {container} = render(<DefaultComponent />);
 
-		expect(screen.getByText('workspace creation')).toBeInTheDocument();
+			expect(assign).toHaveBeenCalledWith(
+				'/add-workspace?corpProjectUuid=corpProjectUuid24'
+			);
+			expect(container).toBeEmptyDOMElement();
+		}
+		finally {
+			Object.defineProperty(window, 'location', {
+				configurable: true,
+				value: location
+			});
+		}
 	});
 });
 
 describe('routingFn', () => {
 	it('should route the user to the create workspace page if there is only one workspace and it is NOT configured', () => {
-		const expectedRoute = toRoute(
-			Routes.WORKSPACE_ADD_WITH_CORP_PROJECT_UUID,
-			{
-				corpProjectUuid
-			}
-		);
-
 		expect(routingFn({projects: [mockBasicProjectUnconfigured(0)]})).toBe(
-			expectedRoute
+			'/add-workspace?corpProjectUuid=corpProjectUuid24'
 		);
 	});
 });

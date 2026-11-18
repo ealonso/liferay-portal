@@ -5,7 +5,6 @@ import React from 'react';
 import {cleanup, render} from '@testing-library/react';
 import {Individual} from 'shared/util/records';
 import {Provider} from 'react-redux';
-import {MemoryRouter} from 'react-router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
 
 jest.unmock('react-dom');
@@ -15,18 +14,16 @@ describe('IndividualDetails', () => {
 
 	it('should render', async () => {
 		const {container} = render(
-			<MemoryRouter>
-				<Provider store={mockStore()}>
-					<Details
-						groupId='23'
-						id='test'
-						individual={data.getImmutableMock(
-							Individual,
-							data.mockIndividual
-						)}
-					/>
-				</Provider>
-			</MemoryRouter>
+			<Provider store={mockStore()}>
+				<Details
+					groupId='23'
+					id='test'
+					individual={data.getImmutableMock(
+						Individual,
+						data.mockIndividual
+					)}
+				/>
+			</Provider>
 		);
 
 		jest.runAllTimers();

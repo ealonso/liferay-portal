@@ -4,7 +4,6 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import {cleanup, render, waitFor} from '@testing-library/react';
 import {InMemoryCache} from '@apollo/client';
-import {MemoryRouter, Route, Routes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
 import {useModal} from '@clayui/modal';
@@ -22,11 +21,7 @@ const TestModal = props => {
 
 const Wrapper = ({children}) => (
 	<Provider store={mockStore()}>
-		<MemoryRouter initialEntries={['/workspace/23']}>
-			<Routes>
-				<Route element={children} path='/workspace/:groupId' />
-			</Routes>
-		</MemoryRouter>
+		{children}
 	</Provider>
 );
 

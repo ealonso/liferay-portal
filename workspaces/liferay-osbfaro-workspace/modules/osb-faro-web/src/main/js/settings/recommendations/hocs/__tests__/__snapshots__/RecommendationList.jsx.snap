@@ -85,7 +85,7 @@ exports[`RecommendationList should render 1`] = `
             >
               <a
                 class="nav-btn btn"
-                href="/workspace/23/settings/recommendations/create-item-similarity-model"
+                href="/edit-recommendation"
               >
                 New Model
               </a>
@@ -351,8 +351,7 @@ exports[`RecommendationList should render 1`] = `
                     >
                       <a
                         class="text-truncate"
-                        data-discover="true"
-                        href="/workspace/23/settings/recommendations/0"
+                        href="/recommendation?jobId=0"
                       >
                         Recommendation Job Name 0
                       </a>
@@ -417,8 +416,7 @@ exports[`RecommendationList should render 1`] = `
                     >
                       <a
                         class="text-truncate"
-                        data-discover="true"
-                        href="/workspace/23/settings/recommendations/1"
+                        href="/recommendation?jobId=1"
                       >
                         Recommendation Job Name 1
                       </a>
@@ -483,8 +481,7 @@ exports[`RecommendationList should render 1`] = `
                     >
                       <a
                         class="text-truncate"
-                        data-discover="true"
-                        href="/workspace/23/settings/recommendations/2"
+                        href="/recommendation?jobId=2"
                       >
                         Recommendation Job Name 2
                       </a>
@@ -549,8 +546,7 @@ exports[`RecommendationList should render 1`] = `
                     >
                       <a
                         class="text-truncate"
-                        data-discover="true"
-                        href="/workspace/23/settings/recommendations/3"
+                        href="/recommendation?jobId=3"
                       >
                         Recommendation Job Name 3
                       </a>
@@ -615,8 +611,7 @@ exports[`RecommendationList should render 1`] = `
                     >
                       <a
                         class="text-truncate"
-                        data-discover="true"
-                        href="/workspace/23/settings/recommendations/4"
+                        href="/recommendation?jobId=4"
                       >
                         Recommendation Job Name 4
                       </a>
@@ -681,8 +676,7 @@ exports[`RecommendationList should render 1`] = `
                     >
                       <a
                         class="text-truncate"
-                        data-discover="true"
-                        href="/workspace/23/settings/recommendations/5"
+                        href="/recommendation?jobId=5"
                       >
                         Recommendation Job Name 5
                       </a>
@@ -747,8 +741,7 @@ exports[`RecommendationList should render 1`] = `
                     >
                       <a
                         class="text-truncate"
-                        data-discover="true"
-                        href="/workspace/23/settings/recommendations/6"
+                        href="/recommendation?jobId=6"
                       >
                         Recommendation Job Name 6
                       </a>
@@ -813,8 +806,7 @@ exports[`RecommendationList should render 1`] = `
                     >
                       <a
                         class="text-truncate"
-                        data-discover="true"
-                        href="/workspace/23/settings/recommendations/7"
+                        href="/recommendation?jobId=7"
                       >
                         Recommendation Job Name 7
                       </a>
@@ -879,8 +871,7 @@ exports[`RecommendationList should render 1`] = `
                     >
                       <a
                         class="text-truncate"
-                        data-discover="true"
-                        href="/workspace/23/settings/recommendations/8"
+                        href="/recommendation?jobId=8"
                       >
                         Recommendation Job Name 8
                       </a>
@@ -945,8 +936,7 @@ exports[`RecommendationList should render 1`] = `
                     >
                       <a
                         class="text-truncate"
-                        data-discover="true"
-                        href="/workspace/23/settings/recommendations/9"
+                        href="/recommendation?jobId=9"
                       >
                         Recommendation Job Name 9
                       </a>

@@ -5,9 +5,7 @@ import SegmentGrowthWithList, {
 	SegmentGrowthChart,
 	SelectedPointInfo
 } from '../Growth';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {render, screen} from '@testing-library/react';
-import {Routes} from 'shared/util/router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
 
 jest.unmock('react-dom');
@@ -28,32 +26,19 @@ jest.mock('recharts', () => {
 describe('SegmentGrowthWithList', () => {
 	it('should render', async () => {
 		const {container} = render(
-			<MemoryRouter
-				initialEntries={[
-					'/workspace/23/123123/contacts/segments/321321/membership'
+			<SegmentGrowthWithList
+				channelId='123'
+				data={[
+					{
+						added: 1,
+						modifiedDate: data.getTimestamp(),
+						removed: 3
+					}
 				]}
-			>
-				<RouterRoutes>
-					<Route
-						element={
-							<SegmentGrowthWithList
-								channelId='123'
-								data={[
-									{
-										added: 1,
-										modifiedDate: data.getTimestamp(),
-										removed: 3
-									}
-								]}
-								groupId='23'
-								id='3'
-								onPointSelect={jest.fn()}
-							/>
-						}
-						path={`${Routes.CONTACTS_SEGMENT_MEMBERSHIP}/*`}
-					/>
-				</RouterRoutes>
-			</MemoryRouter>
+				groupId='23'
+				id='3'
+				onPointSelect={jest.fn()}
+			/>
 		);
 
 		jest.runAllTimers();
@@ -65,33 +50,20 @@ describe('SegmentGrowthWithList', () => {
 
 	it('requests only known individuals when the segment excludes anonymous users', async () => {
 		const {container} = render(
-			<MemoryRouter
-				initialEntries={[
-					'/workspace/23/123123/contacts/segments/321321/membership'
+			<SegmentGrowthWithList
+				channelId='123'
+				data={[
+					{
+						added: 1,
+						modifiedDate: data.getTimestamp(),
+						removed: 3
+					}
 				]}
-			>
-				<RouterRoutes>
-					<Route
-						element={
-							<SegmentGrowthWithList
-								channelId='123'
-								data={[
-									{
-										added: 1,
-										modifiedDate: data.getTimestamp(),
-										removed: 3
-									}
-								]}
-								groupId='23'
-								id='3'
-								includeAnonymousUsers={false}
-								onPointSelect={jest.fn()}
-							/>
-						}
-						path={`${Routes.CONTACTS_SEGMENT_MEMBERSHIP}/*`}
-					/>
-				</RouterRoutes>
-			</MemoryRouter>
+				groupId='23'
+				id='3'
+				includeAnonymousUsers={false}
+				onPointSelect={jest.fn()}
+			/>
 		);
 
 		jest.runAllTimers();

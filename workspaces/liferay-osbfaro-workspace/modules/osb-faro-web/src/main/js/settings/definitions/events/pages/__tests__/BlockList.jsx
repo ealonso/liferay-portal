@@ -5,26 +5,18 @@ import React from 'react';
 import {ApolloProvider} from '@apollo/client';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		channelId: '456',
-		groupId: '2000'
-	})
-}));
 
 describe('BlockList', () => {
 	it('should render', () => {
 		const {container} = render(
 			<ApolloProvider client={client}>
 				<Provider store={mockStore()}>
-					<MemoryRouter>
+					<WorkspacePage channelId='456' groupId='2000'>
 						<BlockList groupId='23' />
-					</MemoryRouter>
+					</WorkspacePage>
 				</Provider>
 			</ApolloProvider>
 		);

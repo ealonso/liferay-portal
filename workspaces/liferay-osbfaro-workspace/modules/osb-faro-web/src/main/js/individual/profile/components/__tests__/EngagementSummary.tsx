@@ -2,7 +2,6 @@ import EngagementSummary from '../EngagementSummary';
 import mockStore from 'test/mock-store';
 import React from 'react';
 import {cleanup, render, screen} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {
 	mockPreferenceReq,
@@ -10,6 +9,7 @@ import {
 	mockTimeRangeReq,
 } from 'test/graphql-data';
 import {Provider} from 'react-redux';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -34,7 +34,7 @@ const renderEngagementSummary = (
 ) =>
 	render(
 		<Provider store={mockStore()}>
-			<MemoryRouter>
+			<WorkspacePage channelId="123" groupId="456">
 				<MockedProvider
 					addTypename={false}
 					mocks={[
@@ -55,7 +55,7 @@ const renderEngagementSummary = (
 						<div>{'No Individuals Data Has Been Synced'}</div>
 					</EngagementSummary>
 				</MockedProvider>
-			</MemoryRouter>
+			</WorkspacePage>
 		</Provider>
 	);
 

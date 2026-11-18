@@ -15,12 +15,11 @@ import {
 	within,
 } from '@testing-library/react';
 import {ILifecycleDetail} from 'shared/api/lifecycle';
-import {MemoryRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
-import {Routes, toRoute} from 'shared/util/router';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useRequest} from 'shared/hooks/useRequest';
 import {setBodyWidth} from 'test/body-width';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -30,11 +29,6 @@ jest.mock('shared/hooks/useRequest', () => ({
 
 jest.mock('shared/hooks/useCurrentUser', () => ({
 	useCurrentUser: jest.fn(),
-}));
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({channelId: '123', groupId: '23', lifecycleId: 'erc-1'}),
 }));
 
 const mockedUseCurrentUser = useCurrentUser as jest.Mock;
@@ -150,9 +144,13 @@ const getPageRequests = () =>
 const renderPanel = (props: React.ComponentProps<typeof Panel> = {}) =>
 	render(
 		<Provider store={mockStore()}>
-			<MemoryRouter>
+			<WorkspacePage
+				channelId="123"
+				groupId="23"
+				params={{lifecycleId: 'erc-1'}}
+			>
 				<Panel {...props} />
-			</MemoryRouter>
+			</WorkspacePage>
 		</Provider>
 	);
 
@@ -182,14 +180,7 @@ describe('LifecycleSwitchPanel', () => {
 
 		expect(
 			screen.getByRole('link', {name: 'Partner Lifecycle'})
-		).toHaveAttribute(
-			'href',
-			toRoute(Routes.LIFECYCLE_DASHBOARD, {
-				channelId: '123',
-				groupId: '23',
-				lifecycleId: 'erc-2',
-			})
-		);
+		).toHaveAttribute('href', '/lifecycle?lifecycleId=erc-2');
 		expect(document.querySelectorAll('.list-group-item-flex')).toHaveLength(
 			3
 		);

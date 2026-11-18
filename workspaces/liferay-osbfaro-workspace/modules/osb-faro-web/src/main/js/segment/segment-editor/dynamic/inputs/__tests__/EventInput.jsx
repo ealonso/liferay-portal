@@ -5,13 +5,12 @@ import React from 'react';
 import {createCustomValueMap} from '../../utils/custom-inputs';
 import {fromJS} from 'immutable';
 import {InMemoryCache} from '@apollo/client';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockEventPropertiesReq} from 'test/graphql-data';
 import {Property} from 'shared/util/records';
 import {range} from 'lodash';
 import {fireEvent, render, screen, waitFor} from '@testing-library/react';
-import {Routes} from 'shared/util/router';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -99,51 +98,44 @@ describe('EventInput', () => {
 				}
 				mocks={mocks}
 			>
-				<MemoryRouter
-					initialEntries={[
-						'/workspace/23/123123/contacts/segments/create?type=BATCH'
-					]}
+				<WorkspacePage
+					channelId='123123'
+					groupId='23'
+					params={{type: 'BATCH'}}
 				>
-					<RouterRoutes>
-						<Route
-							element={
-								<EventInput
-									displayValue='Asset Clicked'
-									onChange={jest.fn()}
-									operatorRenderer={() => (
-										<div>{'has / has not'}</div>
-									)}
-									property={
-										new Property({
-											entityName: 'Event',
-											id: '3',
-											label: 'assetDepthReached',
-											name: '3',
-											options: [],
-											propertyKey: 'event',
-											type: 'event'
-										})
-									}
-									segmentType='BATCH'
-									touched={{
-										attribute: true,
-										attributeValue: 'true',
-										dateFilter: true,
-										occurenceCount: true
-									}}
-									valid={{
-										attribute: true,
-										attributeValue: 'true',
-										dateFilter: true,
-										occurenceCount: true
-									}}
-									value={fromJS(mockValue)}
-								/>
-							}
-							path={`${Routes.CONTACTS_SEGMENT_CREATE}/*`}
-						/>
-					</RouterRoutes>
-				</MemoryRouter>
+					<EventInput
+						displayValue='Asset Clicked'
+						onChange={jest.fn()}
+						operatorRenderer={() => (
+							<div>{'has / has not'}</div>
+						)}
+						property={
+							new Property({
+								entityName: 'Event',
+								id: '3',
+								label: 'assetDepthReached',
+								name: '3',
+								options: [],
+								propertyKey: 'event',
+								type: 'event'
+							})
+						}
+						segmentType='BATCH'
+						touched={{
+							attribute: true,
+							attributeValue: 'true',
+							dateFilter: true,
+							occurenceCount: true
+						}}
+						valid={{
+							attribute: true,
+							attributeValue: 'true',
+							dateFilter: true,
+							occurenceCount: true
+						}}
+						value={fromJS(mockValue)}
+					/>
+				</WorkspacePage>
 			</MockedProvider>
 		);
 
@@ -187,51 +179,44 @@ describe('EventInput', () => {
 				}
 				mocks={mocks}
 			>
-				<MemoryRouter
-					initialEntries={[
-						'/workspace/23/123123/contacts/segments/create?type=BATCH'
-					]}
+				<WorkspacePage
+					channelId='123123'
+					groupId='23'
+					params={{type: 'BATCH'}}
 				>
-					<RouterRoutes>
-						<Route
-							element={
-								<EventInput
-									displayValue='Asset Clicked'
-									onChange={jest.fn()}
-									operatorRenderer={() => (
-										<div>{'has / has not'}</div>
-									)}
-									property={
-										new Property({
-											entityName: 'Event',
-											id: '3',
-											label: 'assetDepthReached',
-											name: '3',
-											options: [],
-											propertyKey: 'event',
-											type: 'event'
-										})
-									}
-									segmentType='BATCH'
-									touched={{
-										attribute: true,
-										attributeValue: 'true',
-										dateFilter: true,
-										occurenceCount: true
-									}}
-									valid={{
-										attribute: true,
-										attributeValue: 'true',
-										dateFilter: true,
-										occurenceCount: true
-									}}
-									value={fromJS(mockValue)}
-								/>
-							}
-							path={`${Routes.CONTACTS_SEGMENT_CREATE}/*`}
-						/>
-					</RouterRoutes>
-				</MemoryRouter>
+					<EventInput
+						displayValue='Asset Clicked'
+						onChange={jest.fn()}
+						operatorRenderer={() => (
+							<div>{'has / has not'}</div>
+						)}
+						property={
+							new Property({
+								entityName: 'Event',
+								id: '3',
+								label: 'assetDepthReached',
+								name: '3',
+								options: [],
+								propertyKey: 'event',
+								type: 'event'
+							})
+						}
+						segmentType='BATCH'
+						touched={{
+							attribute: true,
+							attributeValue: 'true',
+							dateFilter: true,
+							occurenceCount: true
+						}}
+						valid={{
+							attribute: true,
+							attributeValue: 'true',
+							dateFilter: true,
+							occurenceCount: true
+						}}
+						value={fromJS(mockValue)}
+					/>
+				</WorkspacePage>
 			</MockedProvider>
 		);
 
@@ -291,51 +276,44 @@ describe('EventInput', () => {
 				}
 				mocks={mocks}
 			>
-				<MemoryRouter
-					initialEntries={[
-						'/workspace/23/123123/contacts/segments/create?type=BATCH'
-					]}
+				<WorkspacePage
+					channelId='123123'
+					groupId='23'
+					params={{type: 'BATCH'}}
 				>
-					<RouterRoutes>
-						<Route
-							element={
-								<EventInput
-									displayValue='Asset Clicked'
-									onChange={jest.fn()}
-									operatorRenderer={() => (
-										<div>{'has / has not'}</div>
-									)}
-									property={
-										new Property({
-											entityName: 'Event',
-											id: '3',
-											label: 'assetDepthReached',
-											name: '3',
-											options: [],
-											propertyKey: 'event',
-											type: 'event'
-										})
-									}
-									segmentType='BATCH'
-									touched={{
-										attribute: false,
-										attributeValue: false,
-										dateFilter: true,
-										occurenceCount: true
-									}}
-									valid={{
-										attribute: true,
-										attributeValue: true,
-										dateFilter: true,
-										occurenceCount: true
-									}}
-									value={fromJS(noAttributeValue)}
-								/>
-							}
-							path={`${Routes.CONTACTS_SEGMENT_CREATE}/*`}
-						/>
-					</RouterRoutes>
-				</MemoryRouter>
+					<EventInput
+						displayValue='Asset Clicked'
+						onChange={jest.fn()}
+						operatorRenderer={() => (
+							<div>{'has / has not'}</div>
+						)}
+						property={
+							new Property({
+								entityName: 'Event',
+								id: '3',
+								label: 'assetDepthReached',
+								name: '3',
+								options: [],
+								propertyKey: 'event',
+								type: 'event'
+							})
+						}
+						segmentType='BATCH'
+						touched={{
+							attribute: false,
+							attributeValue: false,
+							dateFilter: true,
+							occurenceCount: true
+						}}
+						valid={{
+							attribute: true,
+							attributeValue: true,
+							dateFilter: true,
+							occurenceCount: true
+						}}
+						value={fromJS(noAttributeValue)}
+					/>
+				</WorkspacePage>
 			</MockedProvider>
 		);
 

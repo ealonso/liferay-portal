@@ -9,6 +9,7 @@ import {
 	waitFor,
 } from '@testing-library/react';
 import {LifecycleContextProvider} from '../../context/LifecycleContext';
+import {WorkspacePage} from 'test/mock-page-context';
 import {
 	mockListGeometry,
 	mockPaginatedFieldValues,
@@ -17,23 +18,20 @@ import {
 
 jest.unmock('react-dom');
 
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({channelId: '456', groupId: '2000'}),
-}));
-
 const fetchFieldValues = API.accounts.fetchFieldValues as jest.Mock;
 
 const renderFilter = (props = {}) =>
 	render(
-		<LifecycleContextProvider lifecycleId="1">
-			<FilterPicker
-				entityLabel="Industries"
-				fieldMappingFieldName="industry"
-				filterKey="industryFilter"
-				{...props}
-			/>
-		</LifecycleContextProvider>
+		<WorkspacePage channelId="456" groupId="2000">
+			<LifecycleContextProvider lifecycleId="1">
+				<FilterPicker
+					entityLabel="Industries"
+					fieldMappingFieldName="industry"
+					filterKey="industryFilter"
+					{...props}
+				/>
+			</LifecycleContextProvider>
+		</WorkspacePage>
 	);
 
 const getTrigger = (name = 'Filter By Industries') =>

@@ -7,7 +7,6 @@ import TopPagesCardContent, {
 } from '../TopPagesCardContent';
 import {cleanup, render, screen} from '@testing-library/react';
 import {EXIT_RATE_METRIC} from 'shared/util/pagination';
-import {MemoryRouter} from 'react-router-dom';
 import {noop} from 'lodash';
 import {Provider} from 'react-redux';
 import {RangeKeyTimeRanges} from 'shared/util/constants';
@@ -55,15 +54,13 @@ const renderContent = (
 	render(
 		<Provider store={mockStore()}>
 			<BasePage.Context.Provider value={MOCK_CONTEXT}>
-				<MemoryRouter>
-					<TopPagesCardContent
-						activeTabId={activeTabId}
-						footer={footer}
-						items={items}
-						onActiveTabIdChange={noop}
-						rangeSelectors={rangeSelectors}
-					/>
-				</MemoryRouter>
+				<TopPagesCardContent
+					activeTabId={activeTabId}
+					footer={footer}
+					items={items}
+					onActiveTabIdChange={noop}
+					rangeSelectors={rangeSelectors}
+				/>
 			</BasePage.Context.Provider>
 		</Provider>
 	);
@@ -76,7 +73,7 @@ describe('TopPagesCardContent', () => {
 
 		expect(screen.getByText('A page').closest('a')).toHaveAttribute(
 			'href',
-			'/workspace/456/123/sites/pages/overview/https%3A%2F%2Fliferay.com%2Fpage/A%20page'
+			'/page-overview?title=A+page&touchpoint=https%3A%2F%2Fliferay.com%2Fpage'
 		);
 	});
 
@@ -90,14 +87,12 @@ describe('TopPagesCardContent', () => {
 						accountName: 'IQVIA',
 					}}
 				>
-					<MemoryRouter>
-						<TopPagesCardContent
-							activeTabId={TOP_PAGES_TABS[0].tabId}
-							items={[item({})]}
-							onActiveTabIdChange={noop}
-							rangeSelectors={RANGE_SELECTORS}
-						/>
-					</MemoryRouter>
+					<TopPagesCardContent
+						activeTabId={TOP_PAGES_TABS[0].tabId}
+						items={[item({})]}
+						onActiveTabIdChange={noop}
+						rangeSelectors={RANGE_SELECTORS}
+					/>
 				</BasePage.Context.Provider>
 			</Provider>
 		);
@@ -116,9 +111,7 @@ describe('TopPagesCardContent', () => {
 
 		expect(
 			container.querySelector('.table-title a')?.getAttribute('href')
-		).toBe(
-			'/workspace/456/123/sites/pages/overview/https%3A%2F%2Fliferay.com%2Fpage'
-		);
+		).toBe('/page-overview?touchpoint=https%3A%2F%2Fliferay.com%2Fpage');
 	});
 
 	it('should render the exit rate with a single decimal place', () => {

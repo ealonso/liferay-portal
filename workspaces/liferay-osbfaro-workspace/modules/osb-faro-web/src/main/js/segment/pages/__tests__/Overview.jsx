@@ -7,8 +7,8 @@ import {ApolloProvider} from '@apollo/client';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
 import {Segment} from 'shared/util/records';
-import {MemoryRouter} from 'react-router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -49,9 +49,9 @@ describe('SegmentOverview', () => {
 		const {container} = render(
 			<Provider store={mockStore()}>
 				<ApolloProvider client={client}>
-					<MemoryRouter>
+					<WorkspacePage params={{id: '0'}}>
 						<Overview groupId='23' segment={segment} />
-					</MemoryRouter>
+					</WorkspacePage>
 				</ApolloProvider>
 			</Provider>
 		);
@@ -65,12 +65,12 @@ describe('SegmentOverview', () => {
 		const {container} = render(
 			<Provider store={mockStore()}>
 				<ApolloProvider client={client}>
-					<MemoryRouter>
+					<WorkspacePage params={{id: '0'}}>
 						<Overview
 							groupId='23'
 							segment={segment.set('lastMembershipUpdateDate', null)}
 						/>
-					</MemoryRouter>
+					</WorkspacePage>
 				</ApolloProvider>
 			</Provider>
 		);

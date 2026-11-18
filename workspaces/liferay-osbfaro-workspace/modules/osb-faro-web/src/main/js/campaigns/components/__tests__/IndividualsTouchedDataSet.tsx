@@ -1,8 +1,8 @@
 import IndividualsTouchedDataSet from '../IndividualsTouchedDataSet';
 import React from 'react';
 import {cleanup, render, screen} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
 import {warmFrontendDataSet} from 'test/warm-frontend-data-set';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -19,15 +19,18 @@ jest.mock('@liferay/frontend-data-set-web', () => ({
 
 const getFields = () => lastFDSProps.views[0].schema.fields;
 
-const renderDataSet = (initialEntry = '/') =>
+const renderDataSet = (query = '') =>
 	render(
-		<MemoryRouter initialEntries={[initialEntry]}>
+		<WorkspacePage
+			channelId="123"
+			params={Object.fromEntries(new URLSearchParams(query))}
+		>
 			<IndividualsTouchedDataSet
 				campaignId="7"
 				channelId="123"
 				groupId="23"
 			/>
-		</MemoryRouter>
+		</WorkspacePage>
 	);
 
 beforeAll(warmFrontendDataSet);
@@ -58,7 +61,7 @@ describe('IndividualsTouchedDataSet', () => {
 
 	it('should ask the endpoint for a custom range by its bounds alone', () => {
 		renderDataSet(
-			'/?rangeEnd=2026-10-20&rangeKey=CUSTOM&rangeStart=2026-10-01'
+			'?rangeEnd=2026-10-20&rangeKey=CUSTOM&rangeStart=2026-10-01'
 		);
 
 		expect(lastFDSProps.apiURL).toBe(
@@ -151,7 +154,7 @@ describe('IndividualsTouchedDataSet', () => {
 		expect(container).toHaveTextContent('Jane Doe');
 		expect(container.querySelector('a')).toHaveAttribute(
 			'href',
-			'/workspace/23/123/contacts/individuals/known-individuals/101?rangeKey=30'
+			'/individual?id=101&rangeKey=30'
 		);
 	});
 

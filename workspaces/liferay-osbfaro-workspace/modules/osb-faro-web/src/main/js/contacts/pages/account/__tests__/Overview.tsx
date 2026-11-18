@@ -4,25 +4,18 @@ import Overview from '../Overview';
 import React from 'react';
 import {AccountIndividualMetricType} from '../utils/types';
 import {cleanup, render, screen} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockPreferenceReq, mockTimeRangeReq} from 'test/graphql-data';
 import {Provider} from 'react-redux';
-import {useParams} from 'react-router-dom';
 import {useRequest} from 'shared/hooks/useRequest';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: jest.fn(),
-}));
 
 jest.mock('shared/hooks/useRequest', () => ({
 	useRequest: jest.fn(),
 }));
 
-const mockedUseParams = useParams as jest.Mock;
 const mockedUseRequest = useRequest as jest.Mock;
 
 const mockAccountIndividualMetrics = [
@@ -107,17 +100,20 @@ const mockAccount = {
 	],
 };
 
-const renderOverview = (props = {}) =>
+const renderOverview = (
+	props = {},
+	params: {[name: string]: string} = {id: 'acc-1'}
+) =>
 	render(
 		<Provider store={mockStore()}>
-			<MemoryRouter>
+			<WorkspacePage channelId="123" groupId="456" params={params}>
 				<MockedProvider
 					addTypename={false}
 					mocks={[mockTimeRangeReq(), mockPreferenceReq()]}
 				>
 					<Overview {...props} />
 				</MockedProvider>
-			</MemoryRouter>
+			</WorkspacePage>
 		</Provider>
 	);
 
@@ -126,12 +122,6 @@ describe('Overview', () => {
 
 	beforeEach(() => {
 		mockRefetch.mockClear();
-
-		mockedUseParams.mockReturnValue({
-			channelId: '123',
-			groupId: '456',
-			id: 'acc-1',
-		});
 
 		mockUseRequest();
 	});
@@ -248,12 +238,7 @@ describe('Overview', () => {
 		});
 
 		it('should skip the request while the account id is missing', () => {
-			mockedUseParams.mockReturnValue({
-				channelId: '123',
-				groupId: '456',
-			});
-
-			renderOverview({account: mockAccount});
+			renderOverview({account: mockAccount}, {});
 
 			expect(mockedUseRequest).toHaveBeenCalledWith(
 				expect.objectContaining({

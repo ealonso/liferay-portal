@@ -3,12 +3,12 @@ import AttributeList from '../AttributeList';
 import mockStore from 'test/mock-store';
 import React from 'react';
 import {AttributeTypes} from 'event-analysis/utils/types';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockEventAttributeDefinitionsReq} from 'test/graphql-data';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -33,22 +33,15 @@ const DefaultComponent = ({
 	]
 }) => (
 	<Provider store={mockStore()}>
-		<MemoryRouter
-			initialEntries={[
-				`/workspace/${groupId}/456/settings/definitions/event-attributes/custom`
-			]}
+		<WorkspacePage
+			channelId='456'
+			groupId={groupId}
+			params={{tab: 'local'}}
 		>
-			<RouterRoutes>
-				<Route
-					element={
-						<MockedProvider addTypename={false} mocks={mocks}>
-							<AttributeList />
-						</MockedProvider>
-					}
-					path='/workspace/:groupId/:channelId/settings/definitions/event-attributes/custom/*'
-				/>
-			</RouterRoutes>
-		</MemoryRouter>
+			<MockedProvider addTypename={false} mocks={mocks}>
+				<AttributeList />
+			</MockedProvider>
+		</WorkspacePage>
 	</Provider>
 );
 

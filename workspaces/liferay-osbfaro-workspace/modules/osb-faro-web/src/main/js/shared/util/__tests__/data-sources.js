@@ -20,7 +20,6 @@ import {
 } from 'shared/util/constants';
 import {fromJS} from 'immutable';
 import {noop, range} from 'lodash';
-import {Routes, toRoute} from 'shared/util/router';
 
 function getMockLiferayDataSource(id, config) {
 	return data.getImmutableMock(
@@ -33,31 +32,25 @@ function getMockLiferayDataSource(id, config) {
 
 describe('data-sources', () => {
 	describe('dataSourceRedirectFn', () => {
-		it('should return the SETTINGS_DATA_SOURCE route if the data source state is NOT VALID', () => {
-			const groupId = '23';
+		it('should return the data source page URL if the data source state is NOT VALID', () => {
 			const id = '123';
 
 			const result = dataSourceRedirectFn({
 				dataSource: getMockLiferayDataSource(id, {
 					state: DataSourceStates.UrlInvalid,
 				}),
-				groupId,
 			});
 
-			expect(result).toBe(
-				toRoute(Routes.SETTINGS_DATA_SOURCE, {groupId, id})
-			);
+			expect(result).toBe('/data-source?id=123');
 		});
 
 		it('should return null if the data source state is VALID', () => {
-			const groupId = '23';
 			const id = '123';
 
 			const result = dataSourceRedirectFn({
 				dataSource: getMockLiferayDataSource(id, {
 					state: DataSourceStates.Ready,
 				}),
-				groupId,
 			});
 
 			expect(result).toBe(null);

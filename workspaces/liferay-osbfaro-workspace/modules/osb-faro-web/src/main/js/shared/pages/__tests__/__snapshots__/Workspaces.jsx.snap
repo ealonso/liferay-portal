@@ -105,7 +105,7 @@ exports[`Workspaces should render a list of projects if there is only one projec
               >
                 <a
                   class="button-root workspace-link border-button btn btn-unstyled"
-                  href="/workspace/23"
+                  href="/web/workspace-23"
                 >
                   <div
                     class="autofit-col autofit-col-expand"
@@ -157,7 +157,7 @@ exports[`Workspaces should render a list of projects if there is only one projec
           >
             <a
               class="button-root btn btn-sm btn-secondary"
-              href="/workspace/add/trial"
+              href="/add-workspace"
             >
               Start Free Trial
             </a>
@@ -304,7 +304,7 @@ exports[`Workspaces should render empty state 1`] = `
                 </p>
                 <a
                   class="btn btn-secondary"
-                  href="/workspace/add/trial"
+                  href="/add-workspace"
                 >
                   Start Free Trial
                 </a>
@@ -423,7 +423,7 @@ exports[`Workspaces should render with a message that all basic tier plans have 
               >
                 <a
                   class="button-root workspace-link border-button btn btn-unstyled"
-                  href="/workspace/123"
+                  href="/web/workspace-123"
                 >
                   <div
                     class="autofit-col autofit-col-expand"
@@ -473,7 +473,7 @@ exports[`Workspaces should render with a message that all basic tier plans have 
               >
                 <a
                   class="button-root workspace-link border-button btn btn-unstyled"
-                  href="/workspace/124"
+                  href="/web/workspace-124"
                 >
                   <div
                     class="autofit-col autofit-col-expand"
@@ -525,7 +525,7 @@ exports[`Workspaces should render with a message that all basic tier plans have 
           >
             <a
               class="button-root btn btn-sm btn-secondary"
-              href="/workspace/add/trial"
+              href="/add-workspace"
             >
               Start Free Trial
             </a>
@@ -642,7 +642,7 @@ exports[`Workspaces should render with a message that one or more basic tier wor
               >
                 <a
                   class="button-root workspace-link border-button btn btn-unstyled"
-                  href="/workspace/124"
+                  href="/web/workspace-124"
                 >
                   <div
                     class="autofit-col autofit-col-expand"
@@ -692,7 +692,7 @@ exports[`Workspaces should render with a message that one or more basic tier wor
               >
                 <a
                   class="button-root workspace-link border-button btn btn-unstyled"
-                  href="/workspace/123"
+                  href="/web/workspace-123"
                 >
                   <div
                     class="autofit-col autofit-col-expand"
@@ -744,7 +744,7 @@ exports[`Workspaces should render with a message that one or more basic tier wor
           >
             <a
               class="button-root btn btn-sm btn-secondary"
-              href="/workspace/add/trial"
+              href="/add-workspace"
             >
               Start Free Trial
             </a>

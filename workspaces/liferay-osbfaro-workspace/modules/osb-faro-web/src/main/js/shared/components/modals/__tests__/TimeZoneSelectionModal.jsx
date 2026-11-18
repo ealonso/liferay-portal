@@ -5,7 +5,6 @@ import TimeZoneSelectionModal from '../TimeZoneSelectionModal';
 import {cleanup, fireEvent, screen, waitFor} from '@testing-library/react';
 import {fromJS} from 'immutable';
 import {InMemoryCache} from '@apollo/client';
-import {MemoryRouter} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
 import {renderModal} from 'test/render-modal';
@@ -37,24 +36,22 @@ const DefaultComponent = ({
 			})
 		)}
 	>
-		<MemoryRouter>
-			<MockedProvider
-				cache={
-					new InMemoryCache({
-						addTypename: false
-					})
-				}
-				mocks={[]}
-			>
-				<TimeZoneSelectionModal
-					groupId={mockGroupId}
-					notificationId='123'
-					observer={observer}
-					onClose={jest.fn()}
-					{...props}
-				/>
-			</MockedProvider>
-		</MemoryRouter>
+		<MockedProvider
+			cache={
+				new InMemoryCache({
+					addTypename: false
+				})
+			}
+			mocks={[]}
+		>
+			<TimeZoneSelectionModal
+				groupId={mockGroupId}
+				notificationId='123'
+				observer={observer}
+				onClose={jest.fn()}
+				{...props}
+			/>
+		</MockedProvider>
 	</Provider>
 );
 

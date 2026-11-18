@@ -6,7 +6,6 @@ import {fromJS} from 'immutable';
 import {Project} from 'shared/util/records';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
 
 jest.unmock('react-dom');
 
@@ -20,15 +19,13 @@ const defaultProps = {
 
 const WrappedComponent = () => (
 	<Provider store={mockStore()}>
-		<MemoryRouter>
-			<AssociatedSegmentsList
-				channelId='123123'
-				dataSourceFn={() => Promise.resolve({})}
-				groupId='23'
-				id='test'
-				total={2}
-			/>
-		</MemoryRouter>
+		<AssociatedSegmentsList
+			channelId='123123'
+			dataSourceFn={() => Promise.resolve({})}
+			groupId='23'
+			id='test'
+			total={2}
+		/>
 	</Provider>
 );
 

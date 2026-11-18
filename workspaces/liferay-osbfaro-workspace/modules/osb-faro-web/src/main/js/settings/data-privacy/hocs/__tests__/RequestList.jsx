@@ -4,11 +4,11 @@ import RequestList from '../RequestList';
 import RequestListQuery from '../../queries/RequestListQuery';
 import {cleanup, render} from '@testing-library/react';
 import {GDPRRequestStatuses, GDPRRequestTypes} from 'shared/util/constants';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
 import {User} from 'shared/util/records';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -103,22 +103,11 @@ const mocks = [
 
 const Wrapper = ({children, store = mockStore()}) => (
 	<Provider store={store}>
-		<MemoryRouter
-			initialEntries={[
-				'/workspace/23/settings/data-privacy/request-log/?delta=10'
-			]}
-		>
-			<RouterRoutes>
-				<Route
-					element={
-						<MockedProvider addTypename={false} mocks={mocks}>
-							{children}
-						</MockedProvider>
-					}
-					path='/workspace/:groupId/settings/data-privacy/request-log/*'
-				/>
-			</RouterRoutes>
-		</MemoryRouter>
+		<WorkspacePage params={{delta: '10'}}>
+			<MockedProvider addTypename={false} mocks={mocks}>
+				{children}
+			</MockedProvider>
+		</WorkspacePage>
 	</Provider>
 );
 

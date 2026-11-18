@@ -5,7 +5,6 @@ import React from 'react';
 import {fireEvent, render} from '@testing-library/react';
 import {Provider} from 'react-redux';
 import {range} from 'lodash';
-import {MemoryRouter} from 'react-router';
 
 jest.unmock('react-dom');
 
@@ -17,13 +16,11 @@ describe('EventDetailsCard', () => {
 	it('should render', () => {
 		const {container} = render(
 			<Provider store={mockStore()}>
-				<MemoryRouter>
-					<EventDetailsCard
-						eventAttributes={eventAttributes}
-						eventName='viewArticle'
-						groupId='23'
-					/>
-				</MemoryRouter>
+				<EventDetailsCard
+					eventAttributes={eventAttributes}
+					eventName='viewArticle'
+					groupId='23'
+				/>
 			</Provider>
 		);
 
@@ -33,13 +30,11 @@ describe('EventDetailsCard', () => {
 	it('should match the displayed code with the selected attributes', () => {
 		const {container} = render(
 			<Provider store={mockStore()}>
-				<MemoryRouter>
-					<EventDetailsCard
-						eventAttributes={eventAttributes}
-						eventName='viewArticle'
-						groupId='23'
-					/>
-				</MemoryRouter>
+				<EventDetailsCard
+					eventAttributes={eventAttributes}
+					eventName='viewArticle'
+					groupId='23'
+				/>
 			</Provider>
 		);
 

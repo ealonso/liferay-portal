@@ -3,7 +3,6 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import TopPagesCard from '../TopPagesCard';
 import {cleanup, fireEvent, render, screen} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {
 	mockSitesTopPagesReq,
@@ -38,27 +37,25 @@ const renderTopPagesCard = () =>
 	render(
 		<Provider store={mockStore()}>
 			<BasePage.Context.Provider value={MOCK_CONTEXT}>
-				<MemoryRouter>
-					<MockedProvider
-						addTypename={false}
-						mocks={[
-							mockTimeRangeReq(),
-							mockPreferenceReq(),
-							mockSitesTopPagesReq({
-								individualId: INDIVIDUAL_ID,
-							}),
-							mockSitesTopPagesReq({
-								individualId: INDIVIDUAL_ID,
-								sort: {
-									column: 'entrancesMetric',
-									type: 'DESC',
-								},
-							}),
-						]}
-					>
-						<TopPagesCard />
-					</MockedProvider>
-				</MemoryRouter>
+				<MockedProvider
+					addTypename={false}
+					mocks={[
+						mockTimeRangeReq(),
+						mockPreferenceReq(),
+						mockSitesTopPagesReq({
+							individualId: INDIVIDUAL_ID,
+						}),
+						mockSitesTopPagesReq({
+							individualId: INDIVIDUAL_ID,
+							sort: {
+								column: 'entrancesMetric',
+								type: 'DESC',
+							},
+						}),
+					]}
+				>
+					<TopPagesCard />
+				</MockedProvider>
 			</BasePage.Context.Provider>
 		</Provider>
 	);
@@ -80,18 +77,16 @@ const renderTopPagesCardWithoutPages = () =>
 	render(
 		<Provider store={mockStore()}>
 			<BasePage.Context.Provider value={MOCK_CONTEXT}>
-				<MemoryRouter>
-					<MockedProvider
-						addTypename={false}
-						mocks={[
-							mockTimeRangeReq(),
-							mockPreferenceReq(),
-							mockEmptyIndividualTopPagesReq(),
-						]}
-					>
-						<TopPagesCard />
-					</MockedProvider>
-				</MemoryRouter>
+				<MockedProvider
+					addTypename={false}
+					mocks={[
+						mockTimeRangeReq(),
+						mockPreferenceReq(),
+						mockEmptyIndividualTopPagesReq(),
+					]}
+				>
+					<TopPagesCard />
+				</MockedProvider>
 			</BasePage.Context.Provider>
 		</Provider>
 	);
@@ -111,14 +106,12 @@ const renderTopPagesCardWithoutIndividual = () =>
 					individualName: undefined,
 				}}
 			>
-				<MemoryRouter>
-					<MockedProvider
-						addTypename={false}
-						mocks={[mockTimeRangeReq(), mockPreferenceReq()]}
-					>
-						<TopPagesCard />
-					</MockedProvider>
-				</MemoryRouter>
+				<MockedProvider
+					addTypename={false}
+					mocks={[mockTimeRangeReq(), mockPreferenceReq()]}
+				>
+					<TopPagesCard />
+				</MockedProvider>
 			</BasePage.Context.Provider>
 		</Provider>
 	);
@@ -156,11 +149,9 @@ describe('TopPagesCard', () => {
 			.closest('a')
 			?.getAttribute('href');
 
-		expect(href).toContain(
-			'/workspace/456/123/sites/pages/overview/123/My%20asset%20A'
+		expect(href).toBe(
+			'/page-overview?individualId=ind-1&individualName=Jane+Doe&title=My+asset+A&touchpoint=123'
 		);
-		expect(href).toContain('individualId=ind-1');
-		expect(href).toContain('individualName=Jane+Doe');
 	});
 
 	it('should sort by entrances on the entrance pages tab', async () => {

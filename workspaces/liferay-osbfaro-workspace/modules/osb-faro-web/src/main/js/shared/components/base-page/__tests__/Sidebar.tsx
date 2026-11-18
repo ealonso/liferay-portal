@@ -2,7 +2,6 @@ import BasePage from '..';
 import mockStore from 'test/mock-store';
 import React from 'react';
 import {cleanup, fireEvent, render, screen} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {resetBodyWidth, setBodyWidth} from 'test/body-width';
 
@@ -25,15 +24,13 @@ const Panel = ({
 
 	return (
 		<Provider store={mockStore()}>
-			<MemoryRouter>
-				<BasePage className="test-page" documentTitle="Test">
-					<div data-testid="page-content" />
+			<BasePage className="test-page" documentTitle="Test">
+				<div data-testid="page-content" />
 
-					<BasePage.Sidebar onOpenChange={onOpenChange} open={open}>
-						<button type="button">{'Inside'}</button>
-					</BasePage.Sidebar>
-				</BasePage>
-			</MemoryRouter>
+				<BasePage.Sidebar onOpenChange={onOpenChange} open={open}>
+					<button type="button">{'Inside'}</button>
+				</BasePage.Sidebar>
+			</BasePage>
 		</Provider>
 	);
 };

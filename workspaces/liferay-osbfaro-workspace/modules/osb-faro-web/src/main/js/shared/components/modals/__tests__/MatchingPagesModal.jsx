@@ -5,7 +5,6 @@ import {MockedProvider} from '@apollo/client/testing';
 import {mockRecommendationPageAssetsReq} from 'test/graphql-data';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
 import {useModal} from '@clayui/modal';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
 import {waitForModal} from 'test/render-modal';
@@ -21,20 +20,18 @@ const TestModal = props => {
 describe('MatchingPagesModal', () => {
 	it('should render', async () => {
 		render(
-			<MemoryRouter>
-				<MockedProvider mocks={[mockRecommendationPageAssetsReq([])]}>
-					<Provider store={mockStore()}>
-						<TestModal
-							itemFilters={[
-								{
-									name: 'includeFilter',
-									value: '.*custom-assets'
-								}
-							]}
-						/>
-					</Provider>
-				</MockedProvider>
-			</MemoryRouter>
+			<MockedProvider mocks={[mockRecommendationPageAssetsReq([])]}>
+				<Provider store={mockStore()}>
+					<TestModal
+						itemFilters={[
+							{
+								name: 'includeFilter',
+								value: '.*custom-assets'
+							}
+						]}
+					/>
+				</Provider>
+			</MockedProvider>
 		);
 
 		await waitForModal();

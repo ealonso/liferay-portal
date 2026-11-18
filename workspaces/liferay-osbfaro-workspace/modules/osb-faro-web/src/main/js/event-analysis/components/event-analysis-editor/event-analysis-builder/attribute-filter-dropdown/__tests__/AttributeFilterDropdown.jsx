@@ -5,12 +5,12 @@ import React from 'react';
 import {act, fireEvent, render, waitFor} from '@testing-library/react';
 import {AttributesProvider} from '../../../context/attributes';
 import {DISPLAY_NAME} from 'shared/util/pagination';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockEventAttributeDefinitionsReq} from 'test/graphql-data';
 import {OrderByDirections} from 'shared/util/constants';
 import {Provider} from 'react-redux';
 import {range} from 'lodash';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -36,31 +36,22 @@ describe('AttributeFilterDropdown', () => {
 
 	const WrappedComponent = ({mocks = defaultMocks, ...props}) => (
 		<Provider store={mockStore()}>
-			<MemoryRouter
-				initialEntries={['/workspace/123/456/event-analysis/123']}
-			>
-				<RouterRoutes>
-					<Route
-						element={
-							<MockedProvider addTypename={false} mocks={mocks}>
-								<AttributesProvider>
-									<AttributeFilterDropdown
-										eventId='3'
-										trigger={
-											<button data-testid='target'>
-												{'click me'}
-											</button>
-										}
-										uneditableIds={[]}
-										{...props}
-									/>
-								</AttributesProvider>
-							</MockedProvider>
-						}
-						path='/workspace/:groupId/:channelId/event-analysis/:id/*'
-					/>
-				</RouterRoutes>
-			</MemoryRouter>
+			<WorkspacePage channelId='456' groupId='123' params={{id: '123'}}>
+				<MockedProvider addTypename={false} mocks={mocks}>
+					<AttributesProvider>
+						<AttributeFilterDropdown
+							eventId='3'
+							trigger={
+								<button data-testid='target'>
+									{'click me'}
+								</button>
+							}
+							uneditableIds={[]}
+							{...props}
+						/>
+					</AttributesProvider>
+				</MockedProvider>
+			</WorkspacePage>
 		</Provider>
 	);
 

@@ -3,7 +3,6 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import {act, fireEvent, render} from '@testing-library/react';
 import {Individual} from 'shared/util/records';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {
 	mockEventMetrics,
@@ -14,25 +13,20 @@ import {
 import {mockIndividual} from 'test/data';
 import {Provider} from 'react-redux';
 import {RangeKeyTimeRanges} from 'shared/util/constants';
-import {Routes} from 'shared/util/router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
 const DefaultComponent = ({children}: {children: React.ReactNode}) => (
 	<Provider store={mockStore()}>
-		<MemoryRouter
-			initialEntries={[
-				'/workspace/23/123123/contacts/individuals/known-individuals/4423123123',
-			]}
+		<WorkspacePage
+			channelId="123123"
+			groupId="23"
+			params={{id: '4423123123'}}
 		>
-			<RouterRoutes>
-				<Route
-					element={children}
-					path={`${Routes.CONTACTS_INDIVIDUAL}/*`}
-				/>
-			</RouterRoutes>
-		</MemoryRouter>
+			{children}
+		</WorkspacePage>
 	</Provider>
 );
 

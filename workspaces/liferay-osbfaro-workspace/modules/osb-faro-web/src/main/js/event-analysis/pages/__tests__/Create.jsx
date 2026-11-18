@@ -9,7 +9,6 @@ import {cleanup, fireEvent, render, waitFor} from '@testing-library/react';
 import {DISPLAY_NAME} from 'shared/util/pagination';
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {
 	mockEventDefinitionsReq,
@@ -19,19 +18,10 @@ import {
 import {OrderByDirections} from 'shared/util/constants';
 import {Provider} from 'react-redux';
 import {range} from 'lodash';
-import {Routes} from 'shared/util/router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useBlocker: () => ({state: 'unblocked'}),
-	useParams: () => ({
-		channelId: '456',
-		groupId: '123'
-	})
-}));
 
 const WrappedComponent = () => (
 	<Provider store={mockStore()}>
@@ -59,24 +49,17 @@ const WrappedComponent = () => (
 					)
 				]}
 			>
-				<MemoryRouter
-					initialEntries={[
-						'/workspace/123/456/event-analysis/create'
-					]}
+				<WorkspacePage
+					channelId='456'
+					friendlyURL='/edit-event-analysis'
+					groupId='123'
 				>
-					<RouterRoutes>
-						<Route
-							element={
-								<DataSourcesProvider groupId='123'>
-									<DndProvider backend={HTML5Backend}>
-										<EventAnalysisCreate />
-									</DndProvider>
-								</DataSourcesProvider>
-							}
-							path={`${Routes.EVENT_ANALYSIS_CREATE}/*`}
-						/>
-					</RouterRoutes>
-				</MemoryRouter>
+					<DataSourcesProvider groupId='123'>
+						<DndProvider backend={HTML5Backend}>
+							<EventAnalysisCreate />
+						</DndProvider>
+					</DataSourcesProvider>
+				</WorkspacePage>
 			</MockedProvider>
 		</ApolloProvider>
 	</Provider>
@@ -196,7 +179,7 @@ describe('Event Analysis Create', () => {
 
 		expect(getByText('Cancel')).toHaveAttribute(
 			'href',
-			'/workspace/123/456/event-analysis'
+			'/events'
 		);
 	});
 });

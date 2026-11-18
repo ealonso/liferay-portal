@@ -9,7 +9,6 @@ import {DISPLAY_NAME} from 'shared/util/pagination';
 import {DndProvider} from 'react-dnd';
 import {EventTypes} from 'event-analysis/utils/types';
 import {HTML5Backend} from 'react-dnd-html5-backend';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {
 	mockEventAnalysisReq,
@@ -21,19 +20,10 @@ import {
 import {OrderByDirections} from 'shared/util/constants';
 import {Provider} from 'react-redux';
 import {range} from 'lodash';
-import {Routes} from 'shared/util/router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		channelId: '123',
-		groupId: '456',
-		id: '1'
-	})
-}));
 
 const WrappedComponent = () => (
 	<Provider store={mockStore()}>
@@ -77,20 +67,16 @@ const WrappedComponent = () => (
 					)
 				]}
 			>
-				<MemoryRouter
-					initialEntries={['/workspace/123/456/event-analysis/1']}
+				<WorkspacePage
+					channelId='123'
+					friendlyURL='/edit-event-analysis'
+					groupId='456'
+					params={{id: '1'}}
 				>
-					<RouterRoutes>
-						<Route
-							element={
-								<DndProvider backend={HTML5Backend}>
-									<EventAnalysisEdit />
-								</DndProvider>
-							}
-							path={`${Routes.EVENT_ANALYSIS_EDIT}/*`}
-						/>
-					</RouterRoutes>
-				</MemoryRouter>
+					<DndProvider backend={HTML5Backend}>
+						<EventAnalysisEdit />
+					</DndProvider>
+				</WorkspacePage>
 			</MockedProvider>
 		</ApolloProvider>
 	</Provider>

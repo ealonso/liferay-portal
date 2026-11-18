@@ -33,7 +33,7 @@ const buildEvent = (
 describe('getEventDashboardUrl', () => {
 	it('builds an asset dashboard link for an asset event', () => {
 		expect(getEventDashboardUrl(buildEvent(), CONTEXT)).toBe(
-			'/workspace/liferay.com/420253908131944590/assets/web-content/521827670/page/Any/Company%20-%20Nav%20Item%201/webContent?rangeKey=30'
+			'/asset?assetId=521827670&assetType=web-content&touchpoint=Any&type=webContent&title=Company+-+Nav+Item+1&rangeKey=30'
 		);
 	});
 
@@ -48,7 +48,7 @@ describe('getEventDashboardUrl', () => {
 		});
 
 		expect(getEventDashboardUrl(event, CONTEXT)).toBe(
-			'/workspace/liferay.com/420253908131944590/sites/pages/overview/https%3A%2F%2Fwww.liferay.com%2Flegal/Legal%202026%20-%20Liferay%20DXP?rangeKey=30'
+			'/page-overview?touchpoint=https%3A%2F%2Fwww.liferay.com%2Flegal&title=Legal+2026+-+Liferay+DXP&rangeKey=30'
 		);
 	});
 
@@ -61,7 +61,7 @@ describe('getEventDashboardUrl', () => {
 		});
 
 		expect(getEventDashboardUrl(event, CONTEXT)).toBe(
-			'/workspace/liferay.com/420253908131944590/assets/forms/54321/page/Any/Contact%20Form/form?rangeKey=30'
+			'/asset?assetId=54321&assetType=forms&touchpoint=Any&type=form&title=Contact+Form&rangeKey=30'
 		);
 	});
 
@@ -74,7 +74,7 @@ describe('getEventDashboardUrl', () => {
 		});
 
 		expect(getEventDashboardUrl(event, CONTEXT)).toBe(
-			'/workspace/liferay.com/420253908131944590/assets/blogs/372644605/page/Any/A%20Guide%20to%20Headless%20CMS/blog?rangeKey=30'
+			'/asset?assetId=372644605&assetType=blogs&touchpoint=Any&type=blog&title=A+Guide+to+Headless+CMS&rangeKey=30'
 		);
 	});
 
@@ -87,7 +87,7 @@ describe('getEventDashboardUrl', () => {
 		});
 
 		expect(getEventDashboardUrl(event, CONTEXT)).toBe(
-			'/workspace/liferay.com/420253908131944590/assets/documents-and-media/527759973/page/Any/Liferay-vs-Adobe/document?rangeKey=30'
+			'/asset?assetId=527759973&assetType=documents-and-media&touchpoint=Any&type=document&title=Liferay-vs-Adobe&rangeKey=30'
 		);
 	});
 
@@ -103,7 +103,7 @@ describe('getEventDashboardUrl', () => {
 		});
 
 		expect(getEventDashboardUrl(event, CONTEXT)).toBe(
-			'/workspace/liferay.com/420253908131944590/assets/object-entry/match-102/page/Any/England%20vs%20Argentina/WorldCupMatch?rangeKey=30'
+			'/asset?assetId=match-102&assetType=object-entry&touchpoint=Any&type=WorldCupMatch&title=England+vs+Argentina&rangeKey=30'
 		);
 	});
 
@@ -180,7 +180,7 @@ describe('getEventDashboardUrl', () => {
 		});
 
 		expect(url).toContain(
-			'/workspace/liferay.com/420253908131944590/assets/web-content/521827670/page/Any/Company%20-%20Nav%20Item%201/webContent'
+			'/asset?assetId=521827670&assetType=web-content&touchpoint=Any&type=webContent&title=Company+-+Nav+Item+1'
 		);
 		expect(url).toContain('rangeKey=30');
 		expect(url).toContain('accountId=acc-1');
@@ -205,7 +205,7 @@ describe('getEventDashboardUrl', () => {
 		});
 
 		expect(url).toContain(
-			'/workspace/liferay.com/420253908131944590/assets/object-entry/match-102/page/Any/England%20vs%20Argentina/WorldCupMatch'
+			'/asset?assetId=match-102&assetType=object-entry&touchpoint=Any&type=WorldCupMatch&title=England+vs+Argentina'
 		);
 		expect(url).toContain('accountId=acc-1');
 		expect(url).toContain('accountName=Acme');

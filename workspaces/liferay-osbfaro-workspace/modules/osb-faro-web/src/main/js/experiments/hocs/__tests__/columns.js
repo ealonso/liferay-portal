@@ -1,17 +1,8 @@
 import getColumns from '../columns';
 import React from 'react';
-import {MemoryRouter} from 'react-router-dom';
 import {render, screen} from '@testing-library/react';
 
 jest.unmock('react-dom');
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		channelId: '2000',
-		groupId: '1000',
-	}),
-}));
 
 const TIME_ZONE_ID = 'America/Recife';
 
@@ -37,15 +28,13 @@ const renderNameColumn = (data) => {
 	);
 
 	return render(
-		<MemoryRouter>
-			<table>
-				<tbody>
-					<tr>
-						<CellRenderer data={data} />
-					</tr>
-				</tbody>
-			</table>
-		</MemoryRouter>
+		<table>
+			<tbody>
+				<tr>
+					<CellRenderer data={data} />
+				</tr>
+			</tbody>
+		</table>
 	);
 };
 
@@ -54,6 +43,12 @@ describe('columns', () => {
 		renderNameColumn({id: '1', name: 'My test', pageURL: 'https://a.com'});
 
 		expect(screen.getByText('My test')).toBeInTheDocument();
+	});
+
+	it('links the experiment title to its page', () => {
+		renderNameColumn({id: '1', name: 'My test', pageURL: 'https://a.com'});
+
+		expect(screen.getByRole('link')).toHaveAttribute('href', '/test?id=1');
 	});
 
 	it('renders a missing experiment title as no data', () => {

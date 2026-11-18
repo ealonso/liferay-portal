@@ -3,9 +3,7 @@ import React from 'react';
 import SearchableTableModal from '../SearchableTableModal';
 import {cleanup, render} from '@testing-library/react';
 import {createOrderIOMap} from 'shared/util/pagination';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {noop} from 'lodash';
-import {Routes} from 'shared/util/router';
 import {useModal} from '@clayui/modal';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
 import {waitForModal} from 'test/render-modal';
@@ -40,16 +38,7 @@ const TestModal = props => {
 };
 
 const DefaultComponent = props => (
-	<MemoryRouter initialEntries={['/workspace/23/settings/data-source']}>
-		<RouterRoutes>
-			<Route
-				element={
-					<TestModal {...defaultProps} {...props} />
-				}
-				path={`${Routes.SETTINGS_DATA_SOURCE_LIST}/*`}
-			/>
-		</RouterRoutes>
-	</MemoryRouter>
+	<TestModal {...defaultProps} {...props} />
 );
 
 describe('SearchableTableModal', () => {

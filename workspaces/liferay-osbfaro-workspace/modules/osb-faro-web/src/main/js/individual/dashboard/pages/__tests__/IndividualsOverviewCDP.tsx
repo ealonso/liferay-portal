@@ -1,13 +1,13 @@
 import IndividualsOverviewCDP from '../IndividualsOverviewCDP';
 import mockStore from 'test/mock-store';
 import React from 'react';
-import {BrowserRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useDataSources} from 'shared/context/dataSources';
 import {useQuery} from '@apollo/client';
 import {useRequest} from 'shared/hooks/useRequest';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -26,14 +26,6 @@ jest.mock('shared/hooks/useCurrentUser', () => ({
 
 jest.mock('shared/context/dataSources', () => ({
 	useDataSources: jest.fn(),
-}));
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		channelId: '123',
-		groupId: '456',
-	}),
 }));
 
 jest.mock('../IndividualsList', () => ({
@@ -80,9 +72,9 @@ const mockedIndividualMetrics = {
 const renderIndividualsOverviewCDP = () =>
 	render(
 		<Provider store={mockStore()}>
-			<BrowserRouter>
+			<WorkspacePage channelId="123" groupId="456">
 				<IndividualsOverviewCDP />
-			</BrowserRouter>
+			</WorkspacePage>
 		</Provider>
 	);
 

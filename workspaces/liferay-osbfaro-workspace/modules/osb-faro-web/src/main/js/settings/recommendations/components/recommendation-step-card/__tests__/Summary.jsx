@@ -13,7 +13,6 @@ import {
 	mockRecommendationPageAssetsReq
 } from 'test/graphql-data';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
 
 jest.unmock('react-dom');
 
@@ -27,34 +26,32 @@ describe('Summary', () => {
 					mockRecommendationActivitiesReq([], {rangeKey: 60})
 				]}
 			>
-				<MemoryRouter>
-					<Form
-						initialValues={{
-							itemFilters: [
-								{
-									id: 'includeFilter - url ~ .*custom-assets',
-									name: 'includeFilter',
-									value: 'url ~ .*custom-assets'
-								}
-							],
-							name: 'Test Name',
-							runDataPeriod: JobRunDataPeriods.Last30Days,
-							runFrequency: JobRunFrequencies.Manual,
-							type: JobTypes.ItemSimilarity
-						}}
-					>
-						{({initialValues, values}) => (
-							<Form.Form>
-								<Summary
-									initialValues={initialValues}
-									runDate={data.getTimestamp()}
-									setFieldValue={jest.fn()}
-									{...values}
-								/>
-							</Form.Form>
-						)}
-					</Form>
-				</MemoryRouter>
+				<Form
+					initialValues={{
+						itemFilters: [
+							{
+								id: 'includeFilter - url ~ .*custom-assets',
+								name: 'includeFilter',
+								value: 'url ~ .*custom-assets'
+							}
+						],
+						name: 'Test Name',
+						runDataPeriod: JobRunDataPeriods.Last30Days,
+						runFrequency: JobRunFrequencies.Manual,
+						type: JobTypes.ItemSimilarity
+					}}
+				>
+					{({initialValues, values}) => (
+						<Form.Form>
+							<Summary
+								initialValues={initialValues}
+								runDate={data.getTimestamp()}
+								setFieldValue={jest.fn()}
+								{...values}
+							/>
+						</Form.Form>
+					)}
+				</Form>
 			</MockedProvider>
 		);
 
@@ -70,35 +67,33 @@ describe('Summary', () => {
 					mockRecommendationActivitiesReq([], {rangeKey: 60})
 				]}
 			>
-				<MemoryRouter>
-					<Form
-						initialValues={{
-							includePreviousPeriod: true,
-							itemFilters: [
-								{
-									id: 'includeFilter - url ~ .*custom-assets',
-									name: 'includeFilter',
-									value: 'url ~ .*custom-assets'
-								}
-							],
-							name: 'Test Name',
-							runDataPeriod: JobRunDataPeriods.Last30Days,
-							runFrequency: JobRunFrequencies.Manual,
-							type: JobTypes.ItemSimilarity
-						}}
-					>
-						{({initialValues, values}) => (
-							<Form.Form>
-								<Summary
-									initialValues={initialValues}
-									setFieldValue={jest.fn()}
-									trainingDate={data.getTimestamp()}
-									{...values}
-								/>
-							</Form.Form>
-						)}
-					</Form>
-				</MemoryRouter>
+				<Form
+					initialValues={{
+						includePreviousPeriod: true,
+						itemFilters: [
+							{
+								id: 'includeFilter - url ~ .*custom-assets',
+								name: 'includeFilter',
+								value: 'url ~ .*custom-assets'
+							}
+						],
+						name: 'Test Name',
+						runDataPeriod: JobRunDataPeriods.Last30Days,
+						runFrequency: JobRunFrequencies.Manual,
+						type: JobTypes.ItemSimilarity
+					}}
+				>
+					{({initialValues, values}) => (
+						<Form.Form>
+							<Summary
+								initialValues={initialValues}
+								setFieldValue={jest.fn()}
+								trainingDate={data.getTimestamp()}
+								{...values}
+							/>
+						</Form.Form>
+					)}
+				</Form>
 			</MockedProvider>
 		);
 

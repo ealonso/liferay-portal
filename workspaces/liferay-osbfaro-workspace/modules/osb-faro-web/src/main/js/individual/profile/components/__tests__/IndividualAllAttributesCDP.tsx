@@ -2,7 +2,6 @@ import * as API from 'shared/api';
 import IndividualAllAttributesCDP from '../IndividualAllAttributesCDP';
 import mockStore from 'test/mock-store';
 import React from 'react';
-import {MemoryRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {render, screen} from '@testing-library/react';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
@@ -31,13 +30,11 @@ describe('IndividualAllAttributesCDP', () => {
 
 		const {container} = render(
 			<Provider store={mockStore()}>
-				<MemoryRouter>
-					<IndividualAllAttributesCDP
-						groupId="23"
-						individualId="1"
-						showEmptyState={false}
-					/>
-				</MemoryRouter>
+				<IndividualAllAttributesCDP
+					groupId="23"
+					individualId="1"
+					showEmptyState={false}
+				/>
 			</Provider>
 		);
 

@@ -8,8 +8,8 @@ import {
 	screen,
 	waitFor,
 } from '@testing-library/react';
-import {MemoryRouter, Route, Routes} from 'react-router-dom';
 import {mockListGeometry, scrollListToBottom} from 'test/infinite-scroll';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -19,14 +19,9 @@ const MOCK_SEGMENT = (id: string, name: string) => ({
 });
 
 const Wrapper = ({children}: {children: React.ReactNode}) => (
-	<MemoryRouter initialEntries={['/workspace/123/456/sites']}>
-		<Routes>
-			<Route
-				element={children}
-				path="/workspace/:groupId/:channelId/sites"
-			/>
-		</Routes>
-	</MemoryRouter>
+	<WorkspacePage channelId="456" groupId="123">
+		{children}
+	</WorkspacePage>
 );
 
 // Opening the picker is what triggers the segments request.

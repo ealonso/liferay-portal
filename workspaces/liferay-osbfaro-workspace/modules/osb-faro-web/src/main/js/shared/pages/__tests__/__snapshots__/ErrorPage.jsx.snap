@@ -16,7 +16,7 @@ exports[`ErrorPage should render 1`] = `
     </p>
     <a
       class="button-root btn btn-secondary"
-      href="/"
+      href="/workspaces"
     >
       Go to Home
     </a>

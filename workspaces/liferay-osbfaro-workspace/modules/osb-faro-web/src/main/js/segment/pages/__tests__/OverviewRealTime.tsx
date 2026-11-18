@@ -5,7 +5,6 @@ import React from 'react';
 import {Provider} from 'react-redux';
 import {render, screen} from '@testing-library/react';
 import {Segment} from 'shared/util/records';
-import {MemoryRouter} from 'react-router';
 
 jest.unmock('react-dom');
 
@@ -18,20 +17,18 @@ jest.mock('shared/hooks/useTimeZone', () => ({
 const renderOverviewRealTime = () =>
 	render(
 		<Provider store={mockStore()}>
-			<MemoryRouter>
-				<OverviewRealTime
-					channelId="123"
-					groupId="23"
-					segment={
-						new Segment(
-							data.mockSegment(0, {
-								criteriaString:
-									"(demographics/middleName/value eq 'additionalName')",
-							})
-						)
-					}
-				/>
-			</MemoryRouter>
+			<OverviewRealTime
+				channelId="123"
+				groupId="23"
+				segment={
+					new Segment(
+						data.mockSegment(0, {
+							criteriaString:
+								"(demographics/middleName/value eq 'additionalName')",
+						})
+					)
+				}
+			/>
 		</Provider>
 	);
 

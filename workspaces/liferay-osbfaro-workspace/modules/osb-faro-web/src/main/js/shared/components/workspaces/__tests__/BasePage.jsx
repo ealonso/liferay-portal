@@ -2,7 +2,6 @@ jest.unmock('shared/components/DocumentTitle');
 
 import React from 'react';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
 import {User} from 'shared/util/records';
 import {WorkspacesBasePage} from '../BasePage';
 
@@ -18,13 +17,11 @@ const currentUser = new User({
 });
 
 const DefaultComponent = props => (
-	<MemoryRouter>
-		<WorkspacesBasePage
-			currentUser={currentUser}
-			title='Test Title'
-			{...props}
-		/>
-	</MemoryRouter>
+	<WorkspacesBasePage
+		currentUser={currentUser}
+		title='Test Title'
+		{...props}
+	/>
 );
 
 describe('WorkspacesBasePage', () => {

@@ -24,7 +24,7 @@ exports[`withPermission should render an error page 1`] = `
     </p>
     <a
       class="button-root btn btn-secondary"
-      href="/"
+      href="/workspaces"
     >
       Go to Home
     </a>

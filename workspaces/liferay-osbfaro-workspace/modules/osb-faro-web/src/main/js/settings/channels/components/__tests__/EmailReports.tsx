@@ -6,15 +6,9 @@ import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
 
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		groupId: '2000',
-	}),
-}));
 
 const WrappedComponent = ({reports, ...otherProps}: any) => {
 
@@ -24,9 +18,11 @@ const WrappedComponent = ({reports, ...otherProps}: any) => {
 	return (
 
 		// @ts-ignore
-		<Provider store={mockStore()}>
-			<EmailReports channelId="1234" {...otherProps} />
-		</Provider>
+		<WorkspacePage groupId="2000">
+			<Provider store={mockStore()}>
+				<EmailReports channelId="1234" {...otherProps} />
+			</Provider>
+		</WorkspacePage>
 	);
 };
 

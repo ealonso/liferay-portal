@@ -1,7 +1,6 @@
 import mockStore from 'test/mock-store';
 import React from 'react';
 import SegmentActivationCard from '../SegmentActivationCard';
-import {BrowserRouter} from 'react-router-dom';
 import {fireEvent, render} from '@testing-library/react';
 import {fromJS} from 'immutable';
 import {Provider} from 'react-redux';
@@ -14,11 +13,7 @@ jest.unmock('react-dom');
 
 const WrapperComponent: React.FC<{children: React.ReactNode}> = ({
 	children,
-}) => (
-	<Provider store={mockStore()}>
-		<BrowserRouter>{children}</BrowserRouter>
-	</Provider>
-);
+}) => <Provider store={mockStore()}>{children}</Provider>;
 
 jest.mock(
 	'shared/components/DateRangeInput',

@@ -5,9 +5,8 @@ import React from 'react';
 import {ApolloProvider} from '@apollo/client';
 import {ChannelContext} from 'shared/context/channel';
 import {cleanup, fireEvent, render} from '@testing-library/react';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {mockChannelContext} from 'test/mock-channel-context';
-import {Routes} from 'shared/util/router';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -27,30 +26,13 @@ const MOCK_CONTEXT = {
 const renderOverview = () =>
 	render(
 		<ApolloProvider client={client}>
-			<MemoryRouter initialEntries={['/workspace/23/123123/sites']}>
-				<RouterRoutes>
-					<Route
-						element={
-							<ChannelContext.Provider
-								value={mockChannelContext()}
-							>
-								<BasePage.Context.Provider value={MOCK_CONTEXT}>
-									<Overview
-										channelName="Test Channel"
-										router={{
-											params: {
-												channelId: '123123',
-												groupId: '23',
-											},
-										}}
-									/>
-								</BasePage.Context.Provider>
-							</ChannelContext.Provider>
-						}
-						path={Routes.SITES}
-					/>
-				</RouterRoutes>
-			</MemoryRouter>
+			<WorkspacePage channelId="123123">
+				<ChannelContext.Provider value={mockChannelContext()}>
+					<BasePage.Context.Provider value={MOCK_CONTEXT}>
+						<Overview channelName="Test Channel" />
+					</BasePage.Context.Provider>
+				</ChannelContext.Provider>
+			</WorkspacePage>
 		</ApolloProvider>
 	);
 
@@ -83,36 +65,9 @@ describe('Sites Dashboard Overview', () => {
 	});
 
 	it('render', () => {
-		const {container, getAllByText, getByLabelText, getByText} = render(
-			<ApolloProvider client={client}>
-				<MemoryRouter initialEntries={['/workspace/23/123123/sites']}>
-					<RouterRoutes>
-						<Route
-							element={
-								<ChannelContext.Provider
-									value={mockChannelContext()}
-								>
-									<BasePage.Context.Provider
-										value={MOCK_CONTEXT}
-									>
-										<Overview
-											channelName="Test Channel"
-											router={{
-												params: {
-													channelId: '123123',
-													groupId: '23',
-												},
-											}}
-										/>
-									</BasePage.Context.Provider>
-								</ChannelContext.Provider>
-							}
-							path={`${Routes.SITES}/*`}
-						/>
-					</RouterRoutes>
-				</MemoryRouter>
-			</ApolloProvider>
-		);
+		const {container, getAllByText, getByLabelText, getByText} =
+			renderOverview();
+
 		fireEvent.click(getByText('All Visitors'));
 
 		expect(getAllByText('All Visitors')[1]).toBeTruthy();

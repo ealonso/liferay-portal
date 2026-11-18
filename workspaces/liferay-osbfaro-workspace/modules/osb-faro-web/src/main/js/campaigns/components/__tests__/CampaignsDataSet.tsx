@@ -5,8 +5,8 @@ import {
 	EMPTY_STATE_IMAGE,
 	EMPTY_STATE_REDUCED_MOTION_IMAGE,
 } from 'shared/components/FrontendDataSet';
-import {MemoryRouter} from 'react-router-dom';
 import {warmFrontendDataSet} from 'test/warm-frontend-data-set';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -23,11 +23,14 @@ jest.mock('@liferay/frontend-data-set-web', () => ({
 
 const getFields = () => lastFDSProps.views[0].schema.fields;
 
-const renderDataSet = (initialEntry = '/') =>
+const renderDataSet = (query = '') =>
 	render(
-		<MemoryRouter initialEntries={[initialEntry]}>
+		<WorkspacePage
+			channelId="123"
+			params={Object.fromEntries(new URLSearchParams(query))}
+		>
 			<CampaignsDataSet channelId="123" groupId="23" />
-		</MemoryRouter>
+		</WorkspacePage>
 	);
 
 beforeAll(warmFrontendDataSet);
@@ -57,7 +60,7 @@ describe('CampaignsDataSet', () => {
 	});
 
 	it('should ask the endpoint for the range in the URL', () => {
-		renderDataSet('/?rangeKey=7');
+		renderDataSet('?rangeKey=7');
 
 		expect(lastFDSProps.apiURL).toBe(
 			'/o/faro/contacts/23/campaigns?channelId=123&rangeKey=7'
@@ -66,7 +69,7 @@ describe('CampaignsDataSet', () => {
 
 	it('should ask the endpoint for a custom range by its bounds alone', () => {
 		renderDataSet(
-			'/?rangeEnd=2026-10-20&rangeKey=CUSTOM&rangeStart=2026-10-01'
+			'?rangeEnd=2026-10-20&rangeKey=CUSTOM&rangeStart=2026-10-01'
 		);
 
 		expect(lastFDSProps.apiURL).toBe(
@@ -76,7 +79,7 @@ describe('CampaignsDataSet', () => {
 
 	it('should keep the custom range key on the campaign link', () => {
 		renderDataSet(
-			'/?rangeEnd=2026-10-20&rangeKey=CUSTOM&rangeStart=2026-10-01'
+			'?rangeEnd=2026-10-20&rangeKey=CUSTOM&rangeStart=2026-10-01'
 		);
 
 		const {container} = render(
@@ -88,7 +91,7 @@ describe('CampaignsDataSet', () => {
 
 		expect(container.querySelector('a')).toHaveAttribute(
 			'href',
-			'/workspace/23/123/campaigns/7?rangeEnd=2026-10-20&rangeKey=CUSTOM&rangeStart=2026-10-01'
+			'/campaign?id=7&rangeEnd=2026-10-20&rangeKey=CUSTOM&rangeStart=2026-10-01'
 		);
 	});
 
@@ -173,7 +176,7 @@ describe('CampaignsDataSet', () => {
 
 		expect(container.querySelector('a')).toHaveAttribute(
 			'href',
-			'/workspace/23/123/campaigns/7?rangeKey=30'
+			'/campaign?id=7&rangeKey=30'
 		);
 	});
 
@@ -281,7 +284,7 @@ describe('CampaignsDataSet', () => {
 		});
 
 		it('should seed the filter with the account selected globally', () => {
-			renderDataSet('/?accountId=9&accountName=Acme');
+			renderDataSet('?accountId=9&accountName=Acme');
 
 			expect(lastFDSProps.filters[0].preloadedData).toEqual({
 				exclude: false,
@@ -290,7 +293,7 @@ describe('CampaignsDataSet', () => {
 		});
 
 		it('should label the seeded account by its id when the name is missing', () => {
-			renderDataSet('/?accountId=9');
+			renderDataSet('?accountId=9');
 
 			expect(lastFDSProps.filters[0].preloadedData).toEqual({
 				exclude: false,
@@ -299,7 +302,7 @@ describe('CampaignsDataSet', () => {
 		});
 
 		it('should leave the filtering of the table to its own filter', () => {
-			renderDataSet('/?accountId=9&accountName=Acme');
+			renderDataSet('?accountId=9&accountName=Acme');
 
 			expect(lastFDSProps.apiURL).toBe(
 				'/o/faro/contacts/23/campaigns?channelId=123&rangeKey=30'
@@ -307,7 +310,7 @@ describe('CampaignsDataSet', () => {
 		});
 
 		it('should carry the global account on the campaign link', () => {
-			renderDataSet('/?accountId=9&accountName=Acme&rangeKey=7');
+			renderDataSet('?accountId=9&accountName=Acme&rangeKey=7');
 
 			const params = getLinkParams();
 

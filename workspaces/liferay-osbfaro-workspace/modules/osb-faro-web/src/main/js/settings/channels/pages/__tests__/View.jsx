@@ -10,18 +10,11 @@ import {
 	screen
 } from '@testing-library/react';
 import {Provider} from 'react-redux';
-import {MemoryRouter} from 'react-router';
 import {User} from 'shared/util/records';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		groupId: '23'
-	})
-}));
 
 const defaultProps = {
 	currentUser: new User(data.mockUser()),
@@ -33,9 +26,9 @@ const DefaultComponent = props => {
 
 	return (
 		<Provider store={mockStore()}>
-			<MemoryRouter>
+			<WorkspacePage>
 				<View {...defaultProps} {...props} />
-			</MemoryRouter>
+			</WorkspacePage>
 		</Provider>
 	);
 };

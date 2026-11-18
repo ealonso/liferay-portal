@@ -9,7 +9,6 @@ import React from 'react';
 import {cleanup, fireEvent, render, screen} from '@testing-library/react';
 import {getImmutableMock, mockMemberUser, mockUser} from 'test/data';
 import {Provider} from 'react-redux';
-import {MemoryRouter} from 'react-router';
 import {User} from 'shared/util/records';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
 
@@ -17,13 +16,11 @@ jest.unmock('react-dom');
 
 const DefaultComponent = props => (
 	<Provider store={mockStore()}>
-		<MemoryRouter>
-			<NoPropertiesAvailable
-				currentUser={getImmutableMock(User, mockUser)}
-				groupId='123123'
-				{...props}
-			/>
-		</MemoryRouter>
+		<NoPropertiesAvailable
+			currentUser={getImmutableMock(User, mockUser)}
+			groupId='123123'
+			{...props}
+		/>
 	</Provider>
 );
 

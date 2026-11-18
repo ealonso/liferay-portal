@@ -2,11 +2,10 @@ import React from 'react';
 import SearchToolbar from '../index';
 import {Map, Set} from 'immutable';
 import {render} from '@testing-library/react';
-import {withStaticRouter} from 'test/mock-router';
 
 jest.unmock('react-dom');
 
-const DefaultComponent = withStaticRouter(SearchToolbar);
+const DefaultComponent = SearchToolbar;
 
 describe('SearchToolbar', () => {
 	it('should render', () => {

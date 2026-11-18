@@ -9,7 +9,6 @@ import {
 import {LIFECYCLE_STAGE_DEFAULT_MAX_DAYS} from 'lifecycle/utils/constants';
 import {ICatalogField} from 'shared/api/catalog';
 import {fireEvent, render, screen} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
 
 jest.mock('shared/util/date', () => ({
 	...jest.requireActual('shared/util/date'),
@@ -95,15 +94,13 @@ const renderPanel = (
 	props: Partial<React.ComponentProps<typeof StageConfigurationPanel>> = {}
 ) =>
 	render(
-		<MemoryRouter>
-			<StageConfigurationPanel
-				fields={mockFields}
-				lifecycleName="Growth and Retention Hub"
-				onChange={jest.fn()}
-				value={baseValue}
-				{...props}
-			/>
-		</MemoryRouter>
+		<StageConfigurationPanel
+			fields={mockFields}
+			lifecycleName="Growth and Retention Hub"
+			onChange={jest.fn()}
+			value={baseValue}
+			{...props}
+		/>
 	);
 
 describe('StageConfigurationPanel', () => {

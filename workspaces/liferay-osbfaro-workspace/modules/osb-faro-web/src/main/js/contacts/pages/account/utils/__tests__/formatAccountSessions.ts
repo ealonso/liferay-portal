@@ -182,9 +182,7 @@ describe('formatAccountSessions', () => {
 			)
 		);
 
-		expect(individual.individualUrl).toBe(
-			'/workspace/liferay.com/420253908131944590/contacts/individuals/known-individuals/ind-1'
-		);
+		expect(individual.individualUrl).toBe('/individual?id=ind-1');
 	});
 
 	it('links an anonymous individual by their userId when there is no individualId', () => {
@@ -197,9 +195,7 @@ describe('formatAccountSessions', () => {
 
 		expect(individual.isAnonymous).toBe(true);
 		expect(individual.individualId).toBe('abc123');
-		expect(individual.individualUrl).toBe(
-			'/workspace/liferay.com/420253908131944590/contacts/individuals/known-individuals/abc123'
-		);
+		expect(individual.individualUrl).toBe('/individual?id=abc123');
 	});
 
 	it('does not link an individual without an individualId or userId', () => {

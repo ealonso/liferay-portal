@@ -4,9 +4,7 @@ import mockDate from 'test/mock-date';
 import React from 'react';
 import {Account, Segment} from 'shared/util/records';
 import {ACCOUNTS, SEGMENTS} from 'shared/util/constants';
-import {Routes} from 'shared/util/router';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
 
 jest.unmock('react-dom');
@@ -18,20 +16,17 @@ describe('BaseInterestDetails', () => {
 
 	it('should render', async () => {
 		const {container, getByText} = render(
-			<MemoryRouter>
-				<BaseInterestDetails
-					channelId='123'
-					entity={new Segment(data.mockSegment())}
-					groupId='23'
-					id='test'
-					interestDetailsRoute={
-						Routes.CONTACTS_SEGMENT_INTEREST_DETAILS
-					}
-					interestId='1'
-					tabId='individuals'
-					type={SEGMENTS}
-				/>
-			</MemoryRouter>
+			<BaseInterestDetails
+				channelId='123'
+				entity={new Segment(data.mockSegment())}
+				groupId='23'
+				id='test'
+				interestDetailsURL='/segment-interest'
+				interestId='1'
+				interestsURL='/segment-interests'
+				tabId='individuals'
+				type={SEGMENTS}
+			/>
 		);
 
 		jest.runAllTimers();
@@ -41,21 +36,51 @@ describe('BaseInterestDetails', () => {
 		expect(getByText('Back to Interests')).toBeInTheDocument();
 	});
 
+	it('should link the back button and the tabs to the interest pages', () => {
+		const {getByRole} = render(
+			<BaseInterestDetails
+				channelId='123'
+				entity={new Segment(data.mockSegment())}
+				groupId='23'
+				id='test'
+				interestDetailsURL='/segment-interest'
+				interestId='1'
+				interestsURL='/segment-interests'
+				tabId='individuals'
+				type={SEGMENTS}
+			/>
+		);
+
+		expect(getByRole('link', {name: 'Back to Interests'})).toHaveAttribute(
+			'href',
+			'/segment-interests?id=test'
+		);
+		expect(getByRole('link', {name: 'Active Pages'})).toHaveAttribute(
+			'href',
+			'/segment-interest?active=true&id=test&interestId=1&tabId=pages'
+		);
+		expect(getByRole('link', {name: 'Inactive Pages'})).toHaveAttribute(
+			'href',
+			'/segment-interest?active=false&id=test&interestId=1&tabId=pages'
+		);
+		expect(getByRole('link', {name: 'Individuals'})).toHaveAttribute(
+			'href',
+			'/segment-interest?id=test&interestId=1&tabId=individuals'
+		);
+	});
+
 	it('should render an individuals list tab', () => {
 		const {getByText} = render(
-			<MemoryRouter>
-				<BaseInterestDetails
-					entity={new Account(data.mockAccount())}
-					groupId='23'
-					id='test'
-					interestDetailsRoute={
-						Routes.CONTACTS_ACCOUNT_INTEREST_DETAILS
-					}
-					interestId='1'
-					tabId='individuals'
-					type={ACCOUNTS}
-				/>
-			</MemoryRouter>
+			<BaseInterestDetails
+				entity={new Account(data.mockAccount())}
+				groupId='23'
+				id='test'
+				interestDetailsFriendlyURL='/account-interest'
+				interestId='1'
+				interestsFriendlyURL='/account-interests'
+				tabId='individuals'
+				type={ACCOUNTS}
+			/>
 		);
 
 		jest.runAllTimers();
@@ -70,20 +95,17 @@ describe('BaseInterestDetails', () => {
 
 	it('should render an active pages list tab', () => {
 		const {getByText} = render(
-			<MemoryRouter>
-				<BaseInterestDetails
-					active='true'
-					entity={new Account(data.mockAccount())}
-					groupId='23'
-					id='test'
-					interestDetailsRoute={
-						Routes.CONTACTS_ACCOUNT_INTEREST_DETAILS
-					}
-					interestId='1'
-					tabId='pages'
-					type={ACCOUNTS}
-				/>
-			</MemoryRouter>
+			<BaseInterestDetails
+				active='true'
+				entity={new Account(data.mockAccount())}
+				groupId='23'
+				id='test'
+				interestDetailsFriendlyURL='/account-interest'
+				interestId='1'
+				interestsFriendlyURL='/account-interests'
+				tabId='pages'
+				type={ACCOUNTS}
+			/>
 		);
 
 		jest.runAllTimers();
@@ -98,20 +120,17 @@ describe('BaseInterestDetails', () => {
 
 	it('should render a pages list tab of inactive pages', () => {
 		const {getByText} = render(
-			<MemoryRouter>
-				<BaseInterestDetails
-					active='false'
-					entity={new Account(data.mockAccount())}
-					groupId='23'
-					id='test'
-					interestDetailsRoute={
-						Routes.CONTACTS_ACCOUNT_INTEREST_DETAILS
-					}
-					interestId='1'
-					tabId='pages'
-					type={ACCOUNTS}
-				/>
-			</MemoryRouter>
+			<BaseInterestDetails
+				active='false'
+				entity={new Account(data.mockAccount())}
+				groupId='23'
+				id='test'
+				interestDetailsFriendlyURL='/account-interest'
+				interestId='1'
+				interestsFriendlyURL='/account-interests'
+				tabId='pages'
+				type={ACCOUNTS}
+			/>
 		);
 
 		jest.runAllTimers();
@@ -132,20 +151,17 @@ describe('BaseInterestDetails date', () => {
 
 	it('renders the individuals list title as of the previous day', () => {
 		const {container} = render(
-			<MemoryRouter>
-				<BaseInterestDetails
-					channelId='123'
-					entity={new Segment(data.mockSegment())}
-					groupId='23'
-					id='test'
-					interestDetailsRoute={
-						Routes.CONTACTS_SEGMENT_INTEREST_DETAILS
-					}
-					interestId='Liferay'
-					tabId='individuals'
-					type={SEGMENTS}
-				/>
-			</MemoryRouter>
+			<BaseInterestDetails
+				channelId='123'
+				entity={new Segment(data.mockSegment())}
+				groupId='23'
+				id='test'
+				interestDetailsURL='/segment-interest'
+				interestId='Liferay'
+				interestsURL='/segment-interests'
+				tabId='individuals'
+				type={SEGMENTS}
+			/>
 		);
 
 		expect(container.querySelector('.list-title')).toHaveTextContent(

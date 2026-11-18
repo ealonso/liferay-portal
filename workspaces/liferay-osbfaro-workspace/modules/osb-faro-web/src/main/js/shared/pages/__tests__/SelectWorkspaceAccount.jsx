@@ -2,14 +2,11 @@ import * as data from 'test/data';
 import mockStore from 'test/mock-store';
 import React from 'react';
 import SelectWorkspaceAccount, {routingFn} from '../SelectWorkspaceAccount';
-import {BrowserRouter} from 'react-router-dom';
 import {DataSourceStates} from 'shared/util/constants';
 import {fromJS} from 'immutable';
 import {Project} from 'shared/util/records';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
-import {setUriQueryValue} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
 import {SubscriptionNames} from 'shared/util/subscriptions';
 import {useFetchProjects} from 'shared/hooks/useProjects';
 
@@ -67,9 +64,7 @@ describe('SelectWorkspaceAccount', () => {
 
 		const {getByText} = render(
 			<Provider store={mockStore()}>
-				<BrowserRouter>
-					<SelectWorkspaceAccount />
-				</BrowserRouter>
+				<SelectWorkspaceAccount />
 			</Provider>
 		);
 
@@ -81,11 +76,7 @@ describe('SelectWorkspaceAccount', () => {
 
 describe('routingFn', () => {
 	it('should route the user to the workspaces list if there are multiple basic workspaces and all are configured', () => {
-		const expectedRoute = setUriQueryValue(
-			toRoute(Routes.WORKSPACES),
-			'allBasicConfigured',
-			true
-		);
+		const expectedRoute = '/workspaces?allBasicConfigured=true';
 
 		const mockProjects = [
 			new Project(
@@ -106,16 +97,15 @@ describe('routingFn', () => {
 	});
 
 	it('should route the user to the workspace homepage if there is only one basic tier workspace and it is configured', () => {
-		const expectedRoute = toRoute(Routes.WORKSPACE_WITH_ID, {
-			groupId: '127'
-		});
+		const expectedRoute = '/web/workspace-127';
 
 		const mockProjects = [
 			mockBusinessProject,
 			new Project(
 				data.mockProject(127, {
 					faroSubscription: fromJS(mockBasicSubscription),
-					name: 'Project B'
+					name: 'Project B',
+					url: '/web/workspace-127'
 				})
 			)
 		];
@@ -125,12 +115,7 @@ describe('routingFn', () => {
 
 	it('should route the user to the create workspace form if there is only one basic tier workspace and it is NOT configured', () => {
 		const corpProjectUuid = 'corpProjectId-124';
-		const expectedRoute = toRoute(
-			Routes.WORKSPACE_ADD_WITH_CORP_PROJECT_UUID,
-			{
-				corpProjectUuid
-			}
-		);
+		const expectedRoute = `/add-workspace?corpProjectUuid=${corpProjectUuid}`;
 
 		const mockProjects = [
 			mockBusinessProject,

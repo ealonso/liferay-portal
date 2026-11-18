@@ -2,11 +2,11 @@ import IndividualsDataSet, {getVisitorType} from '../IndividualsDataSet';
 import React from 'react';
 import {cleanup, render, screen} from '@testing-library/react';
 import {warmFrontendDataSet} from 'test/warm-frontend-data-set';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
 let lastFDSProps: any;
-let mockSearch = '';
 
 jest.mock('@liferay/frontend-data-set-web', () => ({
 	...jest.requireActual('@liferay/frontend-data-set-web'),
@@ -17,11 +17,19 @@ jest.mock('@liferay/frontend-data-set-web', () => ({
 	},
 }));
 
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useLocation: () => ({search: mockSearch}),
-	useParams: () => ({channelId: '456', groupId: '23', id: 'acc-1'}),
-}));
+const renderDataSet = (
+	ui: React.ReactElement = <IndividualsDataSet />,
+	params: {[name: string]: string} = {}
+) =>
+	render(
+		<WorkspacePage
+			channelId="456"
+			groupId="23"
+			params={{id: 'acc-1', ...params}}
+		>
+			{ui}
+		</WorkspacePage>
+	);
 
 beforeAll(warmFrontendDataSet);
 
@@ -29,13 +37,12 @@ describe('IndividualsDataSet', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 		lastFDSProps = undefined;
-		mockSearch = '';
 	});
 
 	afterEach(cleanup);
 
 	it('should render the FrontendDataSet with the dataset id', () => {
-		render(<IndividualsDataSet />);
+		renderDataSet();
 
 		expect(screen.getByTestId('fds-component')).toHaveAttribute(
 			'id',
@@ -44,7 +51,7 @@ describe('IndividualsDataSet', () => {
 	});
 
 	it('should call the account individuals api with the group and account ids', () => {
-		render(<IndividualsDataSet />);
+		renderDataSet();
 
 		expect(lastFDSProps.apiURL).toBe(
 			'/o/faro/contacts/23/account/acc-1/individuals?channelId=456&rangeKey=30'
@@ -52,15 +59,13 @@ describe('IndividualsDataSet', () => {
 	});
 
 	it('should default the range to the last thirty days', () => {
-		render(<IndividualsDataSet />);
+		renderDataSet();
 
 		expect(lastFDSProps.apiURL).toContain('rangeKey=30');
 	});
 
 	it('should request the range that is on the query string', () => {
-		mockSearch = '?rangeKey=7';
-
-		render(<IndividualsDataSet />);
+		renderDataSet(<IndividualsDataSet />, {rangeKey: '7'});
 
 		expect(lastFDSProps.apiURL).toBe(
 			'/o/faro/contacts/23/account/acc-1/individuals?channelId=456&rangeKey=7'
@@ -68,10 +73,11 @@ describe('IndividualsDataSet', () => {
 	});
 
 	it('should request a custom range by its bounds alone', () => {
-		mockSearch =
-			'?rangeEnd=2026-02-20&rangeKey=CUSTOM&rangeStart=2026-02-10';
-
-		render(<IndividualsDataSet />);
+		renderDataSet(<IndividualsDataSet />, {
+			rangeEnd: '2026-02-20',
+			rangeKey: 'CUSTOM',
+			rangeStart: '2026-02-10',
+		});
 
 		expect(lastFDSProps.apiURL).toBe(
 			'/o/faro/contacts/23/account/acc-1/individuals?channelId=456&rangeEnd=2026-02-20&rangeStart=2026-02-10'
@@ -79,7 +85,7 @@ describe('IndividualsDataSet', () => {
 	});
 
 	it('should tell an empty result apart by the selected period', () => {
-		render(<IndividualsDataSet />);
+		renderDataSet();
 
 		expect(lastFDSProps.emptyState.description).toBe(
 			'No activities were found on the selected period.'
@@ -90,7 +96,7 @@ describe('IndividualsDataSet', () => {
 	});
 
 	it('should configure the dataset with pagination shown', () => {
-		render(<IndividualsDataSet />);
+		renderDataSet();
 
 		expect(lastFDSProps.showPagination).toBe(true);
 		expect(lastFDSProps.pagination).toBeDefined();
@@ -98,7 +104,7 @@ describe('IndividualsDataSet', () => {
 
 	describe('preview', () => {
 		it('should use its own dataset id', () => {
-			render(<IndividualsDataSet preview />);
+			renderDataSet(<IndividualsDataSet preview />);
 
 			expect(screen.getByTestId('fds-component')).toHaveAttribute(
 				'id',
@@ -107,13 +113,13 @@ describe('IndividualsDataSet', () => {
 		});
 
 		it('should request only five individuals', () => {
-			render(<IndividualsDataSet preview />);
+			renderDataSet(<IndividualsDataSet preview />);
 
 			expect(lastFDSProps.views[0].initialPaginationDelta).toBe(5);
 		});
 
 		it('should hide the management bar, the search and the pagination', () => {
-			render(<IndividualsDataSet preview />);
+			renderDataSet(<IndividualsDataSet preview />);
 
 			expect(lastFDSProps.showManagementBar).toBe(false);
 			expect(lastFDSProps.showSearch).toBe(false);
@@ -122,7 +128,7 @@ describe('IndividualsDataSet', () => {
 		});
 
 		it('should declare the same columns as the full table, none sortable', () => {
-			render(<IndividualsDataSet preview />);
+			renderDataSet(<IndividualsDataSet preview />);
 
 			const fields = lastFDSProps.views[0].schema.fields;
 
@@ -138,7 +144,7 @@ describe('IndividualsDataSet', () => {
 		});
 
 		it('should keep the total events sort of the full table', () => {
-			render(<IndividualsDataSet preview />);
+			renderDataSet(<IndividualsDataSet preview />);
 
 			const activeSort = lastFDSProps.sorts.find(
 				(sort: any) => sort.active
@@ -150,7 +156,7 @@ describe('IndividualsDataSet', () => {
 	});
 
 	it('should declare the six expected sortable columns', () => {
-		render(<IndividualsDataSet />);
+		renderDataSet();
 
 		const fields = lastFDSProps.views[0].schema.fields;
 
@@ -168,7 +174,7 @@ describe('IndividualsDataSet', () => {
 	});
 
 	it('should no longer declare the department column', () => {
-		render(<IndividualsDataSet />);
+		renderDataSet();
 
 		const fields = lastFDSProps.views[0].schema.fields;
 
@@ -178,7 +184,7 @@ describe('IndividualsDataSet', () => {
 	});
 
 	it('should label the columns from the language bundle', () => {
-		render(<IndividualsDataSet />);
+		renderDataSet();
 
 		const fields = lastFDSProps.views[0].schema.fields;
 
@@ -193,7 +199,7 @@ describe('IndividualsDataSet', () => {
 	});
 
 	it('should offer every sortable column in the Order menu, total events descending by default', () => {
-		render(<IndividualsDataSet />);
+		renderDataSet();
 
 		expect(lastFDSProps.sorts).toEqual([
 			{
@@ -242,7 +248,7 @@ describe('IndividualsDataSet', () => {
 	});
 
 	it('should abbreviate the total events', () => {
-		render(<IndividualsDataSet />);
+		renderDataSet();
 
 		const renderer = lastFDSProps.customDataRenderers.totalEventsRenderer;
 
@@ -252,7 +258,7 @@ describe('IndividualsDataSet', () => {
 	});
 
 	it('should render zero total events as zero', () => {
-		render(<IndividualsDataSet />);
+		renderDataSet();
 
 		const renderer = lastFDSProps.customDataRenderers.totalEventsRenderer;
 
@@ -262,7 +268,7 @@ describe('IndividualsDataSet', () => {
 	});
 
 	it('should render missing total events as no data', () => {
-		render(<IndividualsDataSet />);
+		renderDataSet();
 
 		const renderer = lastFDSProps.customDataRenderers.totalEventsRenderer;
 
@@ -272,7 +278,7 @@ describe('IndividualsDataSet', () => {
 	});
 
 	it('should render no sessions as no activities in the visitor type', () => {
-		render(<IndividualsDataSet />);
+		renderDataSet();
 
 		const renderer = lastFDSProps.customDataRenderers.visitorTypeRenderer;
 
@@ -282,7 +288,7 @@ describe('IndividualsDataSet', () => {
 	});
 
 	it('should render a missing visitor type as no data', () => {
-		render(<IndividualsDataSet />);
+		renderDataSet();
 
 		const renderer = lastFDSProps.customDataRenderers.visitorTypeRenderer;
 
@@ -292,7 +298,7 @@ describe('IndividualsDataSet', () => {
 	});
 
 	it('should format the average session duration', () => {
-		render(<IndividualsDataSet />);
+		renderDataSet();
 
 		const renderer =
 			lastFDSProps.customDataRenderers.avgSessionDurationRenderer;
@@ -303,7 +309,7 @@ describe('IndividualsDataSet', () => {
 	});
 
 	it('should format a zero average session duration', () => {
-		render(<IndividualsDataSet />);
+		renderDataSet();
 
 		const renderer =
 			lastFDSProps.customDataRenderers.avgSessionDurationRenderer;
@@ -314,7 +320,7 @@ describe('IndividualsDataSet', () => {
 	});
 
 	it('should render a missing average session duration as no data', () => {
-		render(<IndividualsDataSet />);
+		renderDataSet();
 
 		const renderer =
 			lastFDSProps.customDataRenderers.avgSessionDurationRenderer;
@@ -325,7 +331,7 @@ describe('IndividualsDataSet', () => {
 	});
 
 	it('should read the job title from the individual properties', () => {
-		render(<IndividualsDataSet />);
+		renderDataSet();
 
 		const renderer = lastFDSProps.customDataRenderers.jobTitleRenderer;
 
@@ -339,7 +345,7 @@ describe('IndividualsDataSet', () => {
 	});
 
 	it('should render a missing job title as no data', () => {
-		render(<IndividualsDataSet />);
+		renderDataSet();
 
 		const renderer = lastFDSProps.customDataRenderers.jobTitleRenderer;
 
@@ -348,8 +354,8 @@ describe('IndividualsDataSet', () => {
 		expect(screen.getByText('–')).toHaveClass('text-secondary');
 	});
 
-	it('should wire the individual name renderer to the contacts individual route', () => {
-		render(<IndividualsDataSet />);
+	it('should link the individual name to the individual page', () => {
+		renderDataSet();
 
 		const renderer =
 			lastFDSProps.customDataRenderers.individualNameRenderer;
@@ -359,17 +365,16 @@ describe('IndividualsDataSet', () => {
 			value: 'Ada Lovelace',
 		});
 
-		expect(link.props.href).toContain(
-			'/contacts/individuals/known-individuals/individual-1'
-		);
+		expect(link.props.href).toBe('/individual?id=individual-1&rangeKey=30');
 		expect(link.props.children).toBe('Ada Lovelace');
 	});
 
 	it('should carry the range to the individual profile', () => {
-		mockSearch =
-			'?rangeEnd=2026-02-20&rangeKey=CUSTOM&rangeStart=2026-02-10';
-
-		render(<IndividualsDataSet />);
+		renderDataSet(<IndividualsDataSet />, {
+			rangeEnd: '2026-02-20',
+			rangeKey: 'CUSTOM',
+			rangeStart: '2026-02-10',
+		});
 
 		const renderer =
 			lastFDSProps.customDataRenderers.individualNameRenderer;
@@ -385,7 +390,7 @@ describe('IndividualsDataSet', () => {
 	});
 
 	it('should not put the channel id on the individual profile query', () => {
-		render(<IndividualsDataSet />);
+		renderDataSet();
 
 		const renderer =
 			lastFDSProps.customDataRenderers.individualNameRenderer;
@@ -399,7 +404,7 @@ describe('IndividualsDataSet', () => {
 	});
 
 	it('should format the last active date', () => {
-		render(<IndividualsDataSet />);
+		renderDataSet();
 
 		const renderer = lastFDSProps.customDataRenderers.lastActiveRenderer;
 

@@ -38,17 +38,6 @@ jest.mock('shared/hooks/useTimeZone', () => ({
 	useTimeZone: () => ({timeZoneId: 'UTC'})
 }));
 
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		channelId: '456',
-		groupId: '2000',
-		query: {
-			rangeKey: '30'
-		}
-	})
-}));
-
 const ISO_DATE = /^\d{4}-\d{2}-\d{2}$/;
 
 const WrapperComponent = ({children}) => (

@@ -69,7 +69,7 @@ exports[`Workspace Empty State should render 1`] = `
         </p>
         <a
           class="btn btn-secondary"
-          href="/workspace/add/trial"
+          href="/add-workspace"
         >
           Start Free Trial
         </a>

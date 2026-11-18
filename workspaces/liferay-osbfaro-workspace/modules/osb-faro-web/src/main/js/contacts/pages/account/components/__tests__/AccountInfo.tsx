@@ -1,13 +1,16 @@
 import AccountInfo from '../AccountInfo';
 import React from 'react';
 import {cleanup, fireEvent, render, screen} from '@testing-library/react';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({id: 'acc-123'}),
-}));
+const AccountPage = ({children}: {children: React.ReactNode}) => (
+	<WorkspacePage params={{id: 'acc-123'}}>{children}</WorkspacePage>
+);
+
+const renderAccountInfo = (ui: React.ReactElement) =>
+	render(ui, {wrapper: AccountPage});
 
 jest.mock('../AccountDetailsModal', () => ({
 	__esModule: true,
@@ -34,7 +37,7 @@ describe('AccountInfo', () => {
 
 	describe('rendering', () => {
 		it('should render the card title', () => {
-			render(<AccountInfo account={mockAccount} />);
+			renderAccountInfo(<AccountInfo account={mockAccount} />);
 
 			expect(
 				screen.getByText('General Account Information')
@@ -42,7 +45,7 @@ describe('AccountInfo', () => {
 		});
 
 		it('should render every info label', () => {
-			render(<AccountInfo account={mockAccount} />);
+			renderAccountInfo(<AccountInfo account={mockAccount} />);
 
 			expect(screen.getByText('Account Type')).toBeInTheDocument();
 			expect(screen.getByText('Industry')).toBeInTheDocument();
@@ -52,7 +55,7 @@ describe('AccountInfo', () => {
 		});
 
 		it('should render the values from the mock', () => {
-			render(<AccountInfo account={mockAccount} />);
+			renderAccountInfo(<AccountInfo account={mockAccount} />);
 
 			expect(screen.getByText('Customer')).toBeInTheDocument();
 			expect(screen.getByText('Technology')).toBeInTheDocument();
@@ -62,7 +65,7 @@ describe('AccountInfo', () => {
 		});
 
 		it('should render a zero annual revenue', () => {
-			render(
+			renderAccountInfo(
 				<AccountInfo account={{...mockAccount, annualRevenue: 0}} />
 			);
 
@@ -70,7 +73,7 @@ describe('AccountInfo', () => {
 		});
 
 		it('should render a zero company size', () => {
-			render(
+			renderAccountInfo(
 				<AccountInfo account={{...mockAccount, numberOfEmployees: 0}} />
 			);
 
@@ -88,13 +91,15 @@ describe('AccountInfo', () => {
 			['website', undefined],
 			['website', ''],
 		])('should render a %s of %p as no data', (key, value) => {
-			render(<AccountInfo account={{...mockAccount, [key]: value}} />);
+			renderAccountInfo(
+				<AccountInfo account={{...mockAccount, [key]: value}} />
+			);
 
 			expect(screen.getByText('–')).toHaveClass('text-secondary');
 		});
 
 		it('should render the website value as an external link', () => {
-			render(<AccountInfo account={mockAccount} />);
+			renderAccountInfo(<AccountInfo account={mockAccount} />);
 
 			const link = screen.getByRole('link', {
 				name: /https:\/\/acme\.com/,
@@ -106,7 +111,7 @@ describe('AccountInfo', () => {
 		});
 
 		it('should render the View All button', () => {
-			render(<AccountInfo account={mockAccount} />);
+			renderAccountInfo(<AccountInfo account={mockAccount} />);
 
 			expect(
 				screen.getByRole('button', {name: 'View All'})
@@ -116,7 +121,7 @@ describe('AccountInfo', () => {
 
 	describe('loading', () => {
 		it('should render the loading indicator and hide the content when loading is true', () => {
-			const {container} = render(
+			const {container} = renderAccountInfo(
 				<AccountInfo account={mockAccount} loading />
 			);
 
@@ -131,7 +136,7 @@ describe('AccountInfo', () => {
 
 	describe('empty state', () => {
 		it('should render the empty title and description when no account is provided', () => {
-			render(<AccountInfo />);
+			renderAccountInfo(<AccountInfo />);
 
 			expect(
 				screen.getByText('No Account Attributes Available')
@@ -144,7 +149,7 @@ describe('AccountInfo', () => {
 		});
 
 		it('should not render the View All button when there are no attributes', () => {
-			render(<AccountInfo />);
+			renderAccountInfo(<AccountInfo />);
 
 			expect(
 				screen.queryByRole('button', {name: 'View All'})
@@ -152,7 +157,7 @@ describe('AccountInfo', () => {
 		});
 
 		it('should render the empty state when the account has no resolvable attributes', () => {
-			render(<AccountInfo account={{}} />);
+			renderAccountInfo(<AccountInfo account={{}} />);
 
 			expect(
 				screen.getByText('No Account Attributes Available')
@@ -160,7 +165,7 @@ describe('AccountInfo', () => {
 		});
 
 		it('should render the empty state when every attribute is null or empty', () => {
-			render(
+			renderAccountInfo(
 				<AccountInfo
 					account={{
 						accountType: '',
@@ -179,7 +184,7 @@ describe('AccountInfo', () => {
 		});
 
 		it('should not render the empty state when the only attribute is a zero', () => {
-			render(<AccountInfo account={{annualRevenue: 0}} />);
+			renderAccountInfo(<AccountInfo account={{annualRevenue: 0}} />);
 
 			expect(
 				screen.queryByText('No Account Attributes Available')
@@ -190,7 +195,7 @@ describe('AccountInfo', () => {
 
 	describe('details modal', () => {
 		it('should not render the modal until the View All button is clicked', () => {
-			render(<AccountInfo account={mockAccount} />);
+			renderAccountInfo(<AccountInfo account={mockAccount} />);
 
 			expect(
 				screen.queryByTestId('account-details-modal')
@@ -198,7 +203,7 @@ describe('AccountInfo', () => {
 		});
 
 		it('should open the modal when the View All button is clicked', () => {
-			render(<AccountInfo account={mockAccount} />);
+			renderAccountInfo(<AccountInfo account={mockAccount} />);
 
 			fireEvent.click(screen.getByRole('button', {name: 'View All'}));
 
@@ -208,7 +213,7 @@ describe('AccountInfo', () => {
 		});
 
 		it('should close the modal when onClose is called', () => {
-			render(<AccountInfo account={mockAccount} />);
+			renderAccountInfo(<AccountInfo account={mockAccount} />);
 
 			fireEvent.click(screen.getByRole('button', {name: 'View All'}));
 			fireEvent.click(screen.getByRole('button', {name: 'close'}));

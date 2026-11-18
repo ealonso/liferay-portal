@@ -200,8 +200,7 @@ exports[`CustomEventList should render 1`] = `
                   >
                     <a
                       class="text-truncate"
-                      data-discover="true"
-                      href="/workspace/23/settings/definitions/events/0"
+                      href="/event-definition?eventId=0"
                     >
                       name-0
                     </a>
@@ -389,7 +388,7 @@ exports[`CustomEventList should render alert notification 1`] = `
         </span>
         <a
           class="button-root py-0"
-          href="/workspace/23/settings/definitions/events/block-list"
+          href="/event-definitions?tab=block-list"
         >
           View Block List
         </a>
@@ -603,8 +602,7 @@ exports[`CustomEventList should render alert notification 1`] = `
                   >
                     <a
                       class="text-truncate"
-                      data-discover="true"
-                      href="/workspace/23/settings/definitions/events/0"
+                      href="/event-definition?eventId=0"
                     >
                       name-0
                     </a>

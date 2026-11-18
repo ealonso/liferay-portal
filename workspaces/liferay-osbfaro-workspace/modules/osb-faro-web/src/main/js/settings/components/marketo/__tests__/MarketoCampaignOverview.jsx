@@ -4,11 +4,11 @@ import React from 'react';
 import MarketoCampaignOverview from '../MarketoCampaignOverview';
 import {cleanup, render} from '@testing-library/react';
 import {DataSource} from 'shared/util/records';
-import {MemoryRouter, Route, Routes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
 import {useRequest} from 'shared/hooks/useRequest';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -22,20 +22,11 @@ jest.mock('shared/hooks/useCurrentUser', () => ({
 
 const WrappedComponent = props => (
 	<Provider store={mockStore()}>
-		<MemoryRouter
-			initialEntries={['/workspace/23/settings/data-source/test']}
-		>
-			<Routes>
-				<Route
-					element={
-						<MockedProvider addTypename={false}>
-							<MarketoCampaignOverview {...props} />
-						</MockedProvider>
-					}
-					path='/workspace/:groupId/settings/data-source/:id'
-				/>
-			</Routes>
-		</MemoryRouter>
+		<WorkspacePage params={{id: 'test'}}>
+			<MockedProvider addTypename={false}>
+				<MarketoCampaignOverview {...props} />
+			</MockedProvider>
+		</WorkspacePage>
 	</Provider>
 );
 

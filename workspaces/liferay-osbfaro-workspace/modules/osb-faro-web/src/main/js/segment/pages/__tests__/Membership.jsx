@@ -7,7 +7,6 @@ import {Provider} from 'react-redux';
 import {render, screen} from '@testing-library/react';
 import {Segment} from 'shared/util/records';
 import {SegmentTypes} from 'shared/util/constants';
-import {MemoryRouter} from 'react-router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
 
 jest.unmock('react-dom');
@@ -25,9 +24,7 @@ const defaultProps = {
 describe('Membership', () => {
 	const WrappedComponent = props => (
 		<Provider store={mockStore()}>
-			<MemoryRouter>
-				<Membership {...defaultProps} {...props} />
-			</MemoryRouter>
+			<Membership {...defaultProps} {...props} />
 		</Provider>
 	);
 
@@ -78,9 +75,7 @@ describe('Membership', () => {
 
 describe('MembershipChart', () => {
 	const WrappedComponent = props => (
-		<MemoryRouter>
-			<MembershipChart {...defaultProps} {...props} />
-		</MemoryRouter>
+		<MembershipChart {...defaultProps} {...props} />
 	);
 
 	it('should render', async () => {

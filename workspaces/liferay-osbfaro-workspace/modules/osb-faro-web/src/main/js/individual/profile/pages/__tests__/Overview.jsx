@@ -12,7 +12,6 @@ import {
 	mockTimeRangeReq
 } from 'test/graphql-data';
 import {Provider} from 'react-redux';
-import {MemoryRouter} from 'react-router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
 
 jest.unmock('react-dom');
@@ -33,16 +32,14 @@ describe('IndividualOverview', () => {
 				]}
 			>
 				<Provider store={mockStore()}>
-					<MemoryRouter>
-						<Overview
-							groupId='23'
-							id='test'
-							individual={data.getImmutableMock(
-								Individual,
-								data.mockIndividual
-							)}
-						/>
-					</MemoryRouter>
+					<Overview
+						groupId='23'
+						id='test'
+						individual={data.getImmutableMock(
+							Individual,
+							data.mockIndividual
+						)}
+					/>
 				</Provider>
 			</MockedProvider>
 		);

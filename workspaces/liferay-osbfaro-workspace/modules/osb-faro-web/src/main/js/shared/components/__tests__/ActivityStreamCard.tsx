@@ -1,7 +1,6 @@
 import ActivityStreamCard from '../ActivityStreamCard';
 import mockStore from 'test/mock-store';
 import React from 'react';
-import {MemoryRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {RangeKeyTimeRanges} from 'shared/util/constants';
 import {render} from '@testing-library/react';
@@ -58,9 +57,7 @@ const baseProps = {
 const renderCard = (props = {}) =>
 	render(
 		<Provider store={mockStore()}>
-			<MemoryRouter>
-				<ActivityStreamCard {...baseProps} {...props} />
-			</MemoryRouter>
+			<ActivityStreamCard {...baseProps} {...props} />
 		</Provider>
 	);
 

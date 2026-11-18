@@ -7,12 +7,12 @@ import {
 	ITopCategory,
 	ITopTag,
 } from 'shared/components/TopCategoriesAndTagsBaseCard';
-import {MemoryRouter} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockPreferenceReq, mockTimeRangeReq} from 'test/graphql-data';
 import {Provider} from 'react-redux';
 import {RangeKeyTimeRanges} from 'shared/util/constants';
 import {useRequest} from 'shared/hooks/useRequest';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -27,11 +27,6 @@ jest.mock('shared/api', () => ({
 
 jest.mock('shared/hooks/useRequest', () => ({
 	useRequest: jest.fn(),
-}));
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({channelId: '5', groupId: '23', id: 'ind-1'}),
 }));
 
 const mockedUseRequest = useRequest as jest.Mock;
@@ -52,14 +47,18 @@ const renderTopCategoriesAndTags = () =>
 	render(
 		<Provider store={mockStore()}>
 			<BasePage.Context.Provider value={MOCK_CONTEXT}>
-				<MemoryRouter>
+				<WorkspacePage
+					channelId="5"
+					groupId="23"
+					params={{id: INDIVIDUAL_ID}}
+				>
 					<MockedProvider
 						addTypename={false}
 						mocks={[mockTimeRangeReq(), mockPreferenceReq()]}
 					>
 						<TopCategoriesAndTags individualId={INDIVIDUAL_ID} />
 					</MockedProvider>
-				</MemoryRouter>
+				</WorkspacePage>
 			</BasePage.Context.Provider>
 		</Provider>
 	);

@@ -2,6 +2,8 @@ import '@testing-library/jest-dom';
 import 'jest-extended/all';
 import lang from './lang';
 import {TextDecoder, TextEncoder} from 'util';
+import {PAGE_URLS} from './mock-page-context';
+import {initializeConfig} from 'shared/util/config';
 
 // Temporarily silence console.error/warn in tests until the underlying
 // deprecations (Apollo Client v3, react-dom/test-utils, graphql HOC/<Query />,
@@ -17,6 +19,8 @@ jest.mock('shared/components/DocumentTitle');
 jest.mock('react-dom');
 
 document.body.className = 'dxp';
+
+initializeConfig({pageURLs: PAGE_URLS});
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
 	disconnect: jest.fn(),

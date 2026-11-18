@@ -3,7 +3,7 @@ import React from 'react';
 import TabsCard from '../TabsCard';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -11,9 +11,22 @@ describe('TabsCard', () => {
 	it('should render', () => {
 		const {container} = render(
 			<Provider store={mockStore()}>
-				<MemoryRouter>
-					<TabsCard groupId='23' />
-				</MemoryRouter>
+				<WorkspacePage
+					navigationItems={[
+					{
+						active: true,
+						href: '/event-attributes',
+						label: 'Global Attributes'
+					},
+					{
+						active: false,
+						href: '/event-attributes?tab=local',
+						label: 'Attributes'
+					}
+				]}
+				>
+					<TabsCard />
+				</WorkspacePage>
 			</Provider>
 		);
 

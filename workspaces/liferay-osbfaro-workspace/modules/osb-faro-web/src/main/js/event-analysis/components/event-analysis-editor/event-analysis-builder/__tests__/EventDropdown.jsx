@@ -5,7 +5,6 @@ import React from 'react';
 import {DISPLAY_NAME} from 'shared/util/pagination';
 import {fireEvent, render, waitFor} from '@testing-library/react';
 import {InMemoryCache} from '@apollo/client';
-import {MemoryRouter} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockEventDefinitionsReq} from 'test/graphql-data';
 import {OrderByDirections} from 'shared/util/constants';
@@ -39,25 +38,23 @@ describe('EventDropdown', () => {
 
 	const WrappedComponent = ({mocks = defaultMocks, ...props}) => (
 		<Provider store={mockStore()}>
-			<MemoryRouter>
-				<MockedProvider
-					cache={
-						new InMemoryCache({
-							addTypename: false,
-							freezeResults: false
-						})
+			<MockedProvider
+				cache={
+					new InMemoryCache({
+						addTypename: false,
+						freezeResults: false
+					})
+				}
+				mocks={mocks}
+			>
+				<EventDropdown
+					onEventChange={jest.fn()}
+					trigger={
+						<button data-testid='target'>{'click me'}</button>
 					}
-					mocks={mocks}
-				>
-					<EventDropdown
-						onEventChange={jest.fn()}
-						trigger={
-							<button data-testid='target'>{'click me'}</button>
-						}
-						{...props}
-					/>
-				</MockedProvider>
-			</MemoryRouter>
+					{...props}
+				/>
+			</MockedProvider>
 		</Provider>
 	);
 

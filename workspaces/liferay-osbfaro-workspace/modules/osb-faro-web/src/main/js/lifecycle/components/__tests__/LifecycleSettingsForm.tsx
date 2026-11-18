@@ -1,10 +1,10 @@
 import LifecycleSettingsForm from '../LifecycleSettingsForm';
 import React from 'react';
-import {MemoryRouter} from 'react-router-dom';
 import {render, screen} from '@testing-library/react';
 import {resetBodyWidth, setBodyWidth} from 'test/body-width';
 import {useLifecycleSettingsForm} from 'lifecycle/hooks/useLifecycleSettingsForm';
 import {useRequest} from 'shared/hooks/useRequest';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -16,21 +16,12 @@ jest.mock('react-redux', () => ({
 	useDispatch: () => jest.fn(),
 }));
 
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({channelId: '123', groupId: '23'}),
-}));
-
 jest.mock('shared/hooks/useUnsavedChangesPrompt', () => ({
 	useUnsavedChangesPrompt: jest.fn(),
 }));
 
 jest.mock('shared/hooks/useTimeZone', () => ({
 	useTimeZone: () => ({timeZoneId: 'UTC'}),
-}));
-
-jest.mock('shared/hooks/useHistoryAdapter', () => ({
-	useHistoryAdapter: () => ({push: jest.fn()}),
 }));
 
 const LifecycleSettingsFormHarness = () => {
@@ -62,9 +53,9 @@ describe('LifecycleSettingsForm', () => {
 
 	it('places the form in the BaseEditPage main content region', () => {
 		render(
-			<MemoryRouter>
+			<WorkspacePage channelId="123" groupId="23">
 				<LifecycleSettingsFormHarness />
-			</MemoryRouter>
+			</WorkspacePage>
 		);
 
 		const main = screen
@@ -77,9 +68,9 @@ describe('LifecycleSettingsForm', () => {
 
 	it('places the lifecycle conditions panel in the sidebar', () => {
 		render(
-			<MemoryRouter>
+			<WorkspacePage channelId="123" groupId="23">
 				<LifecycleSettingsFormHarness />
-			</MemoryRouter>
+			</WorkspacePage>
 		);
 
 		expect(

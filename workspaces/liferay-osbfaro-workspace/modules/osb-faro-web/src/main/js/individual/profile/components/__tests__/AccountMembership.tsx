@@ -107,23 +107,23 @@ describe('Account Membership', () => {
 
 	it('links the account name to the account page', () => {
 		const {getByRole} = renderWithStore(
-			<AccountMembership
-				accountData={fromJS(mockData)}
-				channelId="420253908131944590"
-				groupId="liferay.com"
-			/>
+			<AccountMembership accountData={fromJS(mockData)} />
 		);
 
 		expect(getByRole('link', {name: 'Acme Corporation'})).toHaveAttribute(
 			'href',
-			'/workspace/liferay.com/420253908131944590/contacts/accounts/001xx000003DGbYAAW'
+			'/account?id=001xx000003DGbYAAW'
 		);
 	});
 
-	it('does not link the account name without a channel and group', () => {
-		const {queryByRole} = renderWithStore(
-			<AccountMembership accountData={fromJS(mockData)} />
+	it('does not link the account name without an account id', () => {
+		const {getByText, queryByRole} = renderWithStore(
+			<AccountMembership
+				accountData={fromJS({...mockData, id: undefined})}
+			/>
 		);
+
+		expect(getByText('Acme Corporation')).toBeInTheDocument();
 
 		expect(queryByRole('link', {name: 'Acme Corporation'})).toBeNull();
 	});

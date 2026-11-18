@@ -1,7 +1,6 @@
 import AssetDashboard from '../Dashboard';
 import mockStore from 'test/mock-store';
 import React from 'react';
-import {MemoryRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {render, screen} from '@testing-library/react';
 import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
@@ -91,26 +90,25 @@ jest.mock('shared/hooks/useLDPEnabled', () => ({
 const renderDashboard = (tabId?: string, slug = 'blogs') =>
 	render(
 		<Provider store={mockStore()}>
-			<MemoryRouter>
-				<AssetDashboard
-					className=""
-					router={
-						{
-							params: {
-								assetId: 'asset-1',
-								assetType: slug,
-								channelId: '1',
-								groupId: '2',
-								tabId,
-								title: 'my blog',
-								touchpoint: 'http://example.com/web/site/blog',
-								type: 'Blog',
-							},
-							query: {},
-						} as any
-					}
-				/>
-			</MemoryRouter>
+			<AssetDashboard
+				className=""
+				router={
+					{
+						params: {
+							assetId: 'asset-1',
+							assetType: slug,
+							channelId: '1',
+							groupId: '2',
+							tabId,
+							title: 'my blog',
+							touchpoint: 'http://example.com/web/site/blog',
+							type: 'Blog',
+						},
+						query: {},
+					} as any
+				}
+				tabId={tabId ?? 'page'}
+			/>
 		</Provider>
 	);
 

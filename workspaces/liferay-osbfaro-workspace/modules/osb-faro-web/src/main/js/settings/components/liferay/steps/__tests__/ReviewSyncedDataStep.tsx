@@ -1,7 +1,6 @@
 import DataSourceQuery from 'shared/queries/DataSourceQuery';
 import React from 'react';
 import {DataSourceTypes, OrderByDirections} from 'shared/util/constants';
-import {MemoryRouter} from 'react-router-dom';
 import {MockedProvider, MockedResponse} from '@apollo/client/testing';
 import {render} from '@testing-library/react';
 import {ReviewSyncedDataStep} from '../ReviewSyncedDataStep';
@@ -37,11 +36,9 @@ const Wrapper = ({
 	children: React.ReactNode;
 	mocks?: MockedResponse[];
 }) => (
-	<MemoryRouter>
-		<MockedProvider addTypename={false} mocks={mocks}>
-			{children}
-		</MockedProvider>
-	</MemoryRouter>
+	<MockedProvider addTypename={false} mocks={mocks}>
+		{children}
+	</MockedProvider>
 );
 
 describe('ReviewSyncedDataStep', () => {

@@ -8,21 +8,16 @@ import {
 	screen,
 	waitFor,
 } from '@testing-library/react';
-import {MemoryRouter, Route, Routes} from 'react-router-dom';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
 const searchCampaignNames = API.campaigns.searchCampaignNames as jest.Mock;
 
 const Wrapper = ({children}: {children: React.ReactNode}) => (
-	<MemoryRouter initialEntries={['/workspace/123/456/individuals']}>
-		<Routes>
-			<Route
-				element={children}
-				path="/workspace/:groupId/:channelId/individuals"
-			/>
-		</Routes>
-	</MemoryRouter>
+	<WorkspacePage channelId="456" groupId="123">
+		{children}
+	</WorkspacePage>
 );
 
 // Opening the picker is what triggers the campaigns request.

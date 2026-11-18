@@ -3,30 +3,19 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
-import {Routes} from 'shared/util/router';
 
 jest.unmock('react-dom');
 
 const WrappedComponent = props => (
 	<Provider store={mockStore()}>
-		<MemoryRouter initialEntries={['/workspace/23/event-analysis']}>
-			<RouterRoutes>
-				<Route
-					element={
-						<MockedProvider freezeResults={false}>
-							<DndProvider backend={HTML5Backend}>
-								<EventAnalysisBuilder {...props} />
-							</DndProvider>
-						</MockedProvider>
-					}
-					path={`${Routes.EVENT_ANALYSIS}/*`}
-				/>
-			</RouterRoutes>
-		</MemoryRouter>
+		<MockedProvider freezeResults={false}>
+			<DndProvider backend={HTML5Backend}>
+				<EventAnalysisBuilder {...props} />
+			</DndProvider>
+		</MockedProvider>
 	</Provider>
 );
 

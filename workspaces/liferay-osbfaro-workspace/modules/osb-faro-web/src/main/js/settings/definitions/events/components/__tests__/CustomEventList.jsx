@@ -6,15 +6,14 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import {cleanup, render} from '@testing-library/react';
 import {InMemoryCache} from '@apollo/client';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockEventDefinitionsReq} from 'test/graphql-data';
 import {NotificationSubtypes} from 'shared/util/records/Notification';
 import {Provider} from 'react-redux';
 import {range} from 'lodash';
-import {Routes} from 'shared/util/router';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -26,9 +25,6 @@ const mockNotificationAlertList = NotificationAlertList;
 
 const WrappedComponent = ({
 	children,
-	initialEntries = [
-		'/workspace/23/settings/definitions/events/custom?delta=1'
-	],
 	mocks = [
 		mockEventDefinitionsReq(
 			[
@@ -45,21 +41,14 @@ const WrappedComponent = ({
 	]
 }) => (
 	<Provider store={mockStore()}>
-		<MemoryRouter initialEntries={initialEntries}>
-			<RouterRoutes>
-				<Route
-					element={
-						<MockedProvider
-							cache={new InMemoryCache({freezeResults: false})}
-							mocks={mocks}
-						>
-							{children}
-						</MockedProvider>
-					}
-					path={`${Routes.SETTINGS_DEFINITIONS_EVENTS_CUSTOM}/*`}
-				/>
-			</RouterRoutes>
-		</MemoryRouter>
+		<WorkspacePage params={{delta: '1', tab: 'custom'}}>
+			<MockedProvider
+				cache={new InMemoryCache({freezeResults: false})}
+				mocks={mocks}
+			>
+				{children}
+			</MockedProvider>
+		</WorkspacePage>
 	</Provider>
 );
 

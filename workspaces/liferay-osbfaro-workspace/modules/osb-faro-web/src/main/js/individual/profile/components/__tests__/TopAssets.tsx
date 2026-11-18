@@ -4,12 +4,12 @@ import React from 'react';
 import TopAssets from '../TopAssets';
 import {cleanup, fireEvent, render, screen} from '@testing-library/react';
 import {ITopAsset} from 'shared/api/assets';
-import {MemoryRouter} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockPreferenceReq, mockTimeRangeReq} from 'test/graphql-data';
 import {Provider} from 'react-redux';
 import {RangeKeyTimeRanges} from 'shared/util/constants';
 import {useRequest} from 'shared/hooks/useRequest';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -21,17 +21,6 @@ jest.mock('shared/api', () => ({
 
 jest.mock('shared/hooks/useRequest', () => ({
 	useRequest: jest.fn(),
-}));
-
-const mockPush = jest.fn();
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({channelId: '5', groupId: '23', id: 'ind-1'}),
-}));
-
-jest.mock('shared/hooks/useHistoryAdapter', () => ({
-	useHistoryAdapter: () => ({push: mockPush}),
 }));
 
 const mockedUseRequest = useRequest as jest.Mock;
@@ -52,14 +41,18 @@ const renderTopAssets = () =>
 	render(
 		<Provider store={mockStore()}>
 			<BasePage.Context.Provider value={MOCK_CONTEXT}>
-				<MemoryRouter>
+				<WorkspacePage
+					channelId="5"
+					groupId="23"
+					params={{id: INDIVIDUAL.individualId}}
+				>
 					<MockedProvider
 						addTypename={false}
 						mocks={[mockTimeRangeReq(), mockPreferenceReq()]}
 					>
 						<TopAssets {...INDIVIDUAL} />
 					</MockedProvider>
-				</MemoryRouter>
+				</WorkspacePage>
 			</BasePage.Context.Provider>
 		</Provider>
 	);
@@ -163,15 +156,16 @@ describe('TopAssets', () => {
 			expect(screen.getAllByText('30').length).toBeGreaterThan(0);
 		});
 
-		it('should route document assets through the Documents and Media path', () => {
+		it('should link document assets to the Documents and Media asset page', () => {
 			renderTopAssets();
 
 			const link = screen.getAllByRole('link', {
 				name: 'Brochure PDF',
 			})[0] as HTMLAnchorElement;
 
-			expect(link.getAttribute('href')).toContain(
-				'/assets/documents-and-media/'
+			expect(link).toHaveAttribute(
+				'href',
+				'/asset?individualId=ind-1&individualName=Jane+Doe&assetId=a-2&assetType=documents-and-media&touchpoint=overview&type=document&title=Brochure+PDF'
 			);
 		});
 

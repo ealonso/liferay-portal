@@ -8,18 +8,10 @@ import {MockedProvider} from '@apollo/client/testing';
 import {mockEventDefinitionReq} from 'test/graphql-data';
 import {Provider} from 'react-redux';
 import {fireEvent, render, screen} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
 import {waitForLoading} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		eventId: '0',
-		groupId: '23'
-	})
-}));
 
 describe('Event View page', () => {
 	it('should render', async () => {
@@ -44,9 +36,9 @@ describe('Event View page', () => {
 							)
 						]}
 					>
-						<MemoryRouter>
+						<WorkspacePage params={{eventId: '0'}}>
 							<View eventId='0' groupId='23' />
-						</MemoryRouter>
+						</WorkspacePage>
 					</MockedProvider>
 				</Provider>
 			</ApolloProvider>
@@ -73,9 +65,9 @@ describe('Event View page', () => {
 							mockEventDefinitionReq(definition, {id: '0'})
 						]}
 					>
-						<MemoryRouter>
+						<WorkspacePage params={{eventId: '0'}}>
 							<View eventId='0' groupId='23' />
-						</MemoryRouter>
+						</WorkspacePage>
 					</MockedProvider>
 				</Provider>
 			</ApolloProvider>

@@ -1,8 +1,8 @@
 import AccountsTouchedDataSet from '../AccountsTouchedDataSet';
 import React from 'react';
 import {cleanup, render, screen} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
 import {warmFrontendDataSet} from 'test/warm-frontend-data-set';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -19,9 +19,12 @@ jest.mock('@liferay/frontend-data-set-web', () => ({
 
 const getFields = () => lastFDSProps.views[0].schema.fields;
 
-const renderDataSet = (initialEntry = '/', props = {}) =>
+const renderDataSet = (query = '', props = {}) =>
 	render(
-		<MemoryRouter initialEntries={[initialEntry]}>
+		<WorkspacePage
+			channelId="123"
+			params={Object.fromEntries(new URLSearchParams(query))}
+		>
 			<AccountsTouchedDataSet
 				campaignId="7"
 				channelId="123"
@@ -30,7 +33,7 @@ const renderDataSet = (initialEntry = '/', props = {}) =>
 				loading={false}
 				{...props}
 			/>
-		</MemoryRouter>
+		</WorkspacePage>
 	);
 
 beforeAll(warmFrontendDataSet);
@@ -60,7 +63,7 @@ describe('AccountsTouchedDataSet', () => {
 	});
 
 	it('should ask the endpoint for the account selected globally', () => {
-		renderDataSet('/?accountId=9&accountName=Acme');
+		renderDataSet('?accountId=9&accountName=Acme');
 
 		expect(lastFDSProps.apiURL).toBe(
 			'/o/faro/contacts/23/campaigns/7/accounts?accountIds=9&accountLifecycleId=55&channelId=123&rangeKey=30'
@@ -68,7 +71,7 @@ describe('AccountsTouchedDataSet', () => {
 	});
 
 	it('should leave out the lifecycle when there is none', () => {
-		renderDataSet('/', {lifecycles: []});
+		renderDataSet('', {lifecycles: []});
 
 		expect(lastFDSProps.apiURL).toBe(
 			'/o/faro/contacts/23/campaigns/7/accounts?channelId=123&rangeKey=30'
@@ -76,7 +79,7 @@ describe('AccountsTouchedDataSet', () => {
 	});
 
 	it('should hold the table back while the lifecycle loads', () => {
-		renderDataSet('/', {lifecycles: undefined, loading: true});
+		renderDataSet('', {lifecycles: undefined, loading: true});
 
 		expect(screen.queryByTestId('fds-component')).not.toBeInTheDocument();
 		expect(lastFDSProps).toBeUndefined();
@@ -84,7 +87,7 @@ describe('AccountsTouchedDataSet', () => {
 
 	it('should ask the endpoint for a custom range by its bounds alone', () => {
 		renderDataSet(
-			'/?rangeEnd=2026-10-20&rangeKey=CUSTOM&rangeStart=2026-10-01'
+			'?rangeEnd=2026-10-20&rangeKey=CUSTOM&rangeStart=2026-10-01'
 		);
 
 		expect(lastFDSProps.apiURL).toBe(
@@ -191,7 +194,7 @@ describe('AccountsTouchedDataSet', () => {
 
 		expect(container.querySelector('a')).toHaveAttribute(
 			'href',
-			'/workspace/23/123/contacts/accounts/101/overview'
+			'/account?id=101'
 		);
 	});
 

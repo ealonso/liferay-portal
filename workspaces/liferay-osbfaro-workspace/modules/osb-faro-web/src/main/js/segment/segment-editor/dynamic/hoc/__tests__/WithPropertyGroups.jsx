@@ -2,7 +2,6 @@ import * as API from 'shared/api';
 import React, {useState} from 'react';
 import withPropertyGroups from '../WithPropertyGroups';
 import {act, fireEvent, render, screen} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
 
 jest.unmock('react-dom');
@@ -120,9 +119,7 @@ describe('WithPropertyGroups', () => {
 		const WrappedComponent = withPropertyGroups(TestComponent);
 
 		const {container} = render(
-			<MemoryRouter>
-				<WrappedComponent channelId='123' groupId='123' type='BATCH' />
-			</MemoryRouter>
+			<WrappedComponent channelId='123' groupId='123' type='BATCH' />
 		);
 
 		jest.runAllTimers();
@@ -172,9 +169,7 @@ describe('WithPropertyGroups', () => {
 		};
 
 		render(
-			<MemoryRouter>
-				<Ancestor />
-			</MemoryRouter>
+			<Ancestor />
 		);
 
 		await act(async () => {});
@@ -208,13 +203,11 @@ describe('WithPropertyGroups', () => {
 			const WrappedComponent = withPropertyGroups(TestComponent);
 
 			const {container} = render(
-				<MemoryRouter>
-					<WrappedComponent
-						channelId='123'
-						groupId='123'
-						type='BATCH'
-					/>
-				</MemoryRouter>
+				<WrappedComponent
+					channelId='123'
+					groupId='123'
+					type='BATCH'
+				/>
 			);
 
 			await act(async () => {});

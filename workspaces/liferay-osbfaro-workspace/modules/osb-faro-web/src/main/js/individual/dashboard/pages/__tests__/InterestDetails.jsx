@@ -2,12 +2,11 @@ import InterestDetails from '../InterestDetails';
 import mockStore from 'test/mock-store';
 import React from 'react';
 import {cleanup, render} from '@testing-library/react';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockTimeRangeReq, mockTouchpointsReq} from 'test/graphql-data';
 import {Provider} from 'react-redux';
-import {Routes} from 'shared/util/router';
 import {waitForLoading} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -45,7 +44,7 @@ describe('Individuals Dashboard Individuals Interest Details', () => {
 	afterEach(cleanup);
 
 	it('renders', async () => {
-		const {getByText} = render(
+		const {getByRole} = render(
 			<Provider store={mockStore()}>
 				<MockedProvider
 					mocks={[
@@ -53,41 +52,37 @@ describe('Individuals Dashboard Individuals Interest Details', () => {
 						mockTimeRangeReq()
 					]}
 				>
-					<MemoryRouter
-						initialEntries={[
-							'/workspace/23/321321/contacts/individuals/interests/test'
-						]}
+					<WorkspacePage
+						channelId='321321'
+						groupId='23'
+						params={{interestId: 'test'}}
 					>
-						<RouterRoutes>
-							<Route
-								element={
-									<InterestDetails
-										router={{
-											params: {
-												channelId: '321321',
-												groupId: '23',
-												interestId: 'test'
-											},
-											query: {
-												delta: '2',
-												page: '1',
-												rangeEnd: null,
-												rangeKey: '30',
-												rangeStart: null
-											}
-										}}
-									/>
+						<InterestDetails
+							router={{
+								params: {
+									channelId: '321321',
+									groupId: '23',
+									interestId: 'test'
+								},
+								query: {
+									delta: '2',
+									page: '1',
+									rangeEnd: null,
+									rangeKey: '30',
+									rangeStart: null
 								}
-								path={`${Routes.CONTACTS_INDIVIDUALS_INTEREST_DETAILS}/*`}
-							/>
-						</RouterRoutes>
-					</MemoryRouter>
+							}}
+						/>
+					</WorkspacePage>
 				</MockedProvider>
 			</Provider>
 		);
 
 		await waitForLoading(document.body);
 
-		expect(getByText('Back to Interests')).toBeInTheDocument();
+		expect(getByRole('link', {name: 'Back to Interests'})).toHaveAttribute(
+			'href',
+			'/individuals-interests?rangeKey=30'
+		);
 	});
 });

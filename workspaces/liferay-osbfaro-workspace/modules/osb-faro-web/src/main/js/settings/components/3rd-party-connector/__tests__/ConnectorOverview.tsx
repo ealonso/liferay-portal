@@ -10,18 +10,13 @@ import {fromJS} from 'immutable';
 import {generateConnectorToken, updateConnector} from 'shared/api/connector';
 import {Provider} from 'react-redux';
 import {revoke} from 'shared/api/api-tokens';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
-const useParamsMock = jest.fn();
 const useCurrentUserMock = jest.fn();
 const useDisconnectDataSourceMock = jest.fn();
 const useRequestMock = jest.fn();
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => useParamsMock(),
-}));
 
 jest.mock('shared/hooks/useCurrentUser', () => ({
 	useCurrentUser: () => useCurrentUserMock(),
@@ -151,15 +146,17 @@ const renderOverview = (
 	}> = {}
 ) =>
 	render(
-		<Provider store={mockStore()}>
-			<ConnectorOverview
-				config={props.config ?? buildConfig()}
-				dataSource={
-					props.dataSource ??
-					buildDataSource(DataSourceStatuses.Active)
-				}
-			/>
-		</Provider>
+		<WorkspacePage params={{id: 'ds-1'}}>
+			<Provider store={mockStore()}>
+				<ConnectorOverview
+					config={props.config ?? buildConfig()}
+					dataSource={
+						props.dataSource ??
+						buildDataSource(DataSourceStatuses.Active)
+					}
+				/>
+			</Provider>
+		</WorkspacePage>
 	);
 
 const mockEntityCounts = (counts: {[entity: string]: number | undefined}) =>
@@ -183,7 +180,6 @@ describe('ConnectorOverview', () => {
 		(revoke as jest.Mock).mockClear();
 		useDisconnectDataSourceMock.mockClear();
 
-		useParamsMock.mockReturnValue({groupId: '23', id: 'ds-1'});
 		useCurrentUserMock.mockReturnValue({isAdmin: () => true});
 		useDisconnectDataSourceMock.mockReturnValue({
 			handleDisconnect: jest.fn(),

@@ -3,7 +3,6 @@ import BasePage from 'shared/components/base-page';
 import mockStore from 'test/mock-store';
 import React from 'react';
 import {CompositionTypes, RangeKeyTimeRanges} from 'shared/util/constants';
-import {MemoryRouter} from 'react-router-dom';
 import {
 	mockAcquisitionsReq,
 	mockPreferenceReq,
@@ -32,21 +31,19 @@ const MOCK_CONTEXT = {
 const DefaultComponent = () => (
 	<Provider store={mockStore()}>
 		<BasePage.Context.Provider value={MOCK_CONTEXT}>
-			<MemoryRouter>
-				<MockedProvider
-					addTypename={false}
-					mocks={[
-						mockTimeRangeReq(),
-						mockPreferenceReq(),
-						mockAcquisitionsReq(),
-					]}
-				>
-					<AcquisitionsCard
-						compositionBagName={CompositionTypes.Acquisitions}
-						label="card label"
-					/>
-				</MockedProvider>
-			</MemoryRouter>
+			<MockedProvider
+				addTypename={false}
+				mocks={[
+					mockTimeRangeReq(),
+					mockPreferenceReq(),
+					mockAcquisitionsReq(),
+				]}
+			>
+				<AcquisitionsCard
+					compositionBagName={CompositionTypes.Acquisitions}
+					label="card label"
+				/>
+			</MockedProvider>
 		</BasePage.Context.Provider>
 	</Provider>
 );

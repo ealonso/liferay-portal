@@ -10,10 +10,10 @@ import {
 	waitFor,
 } from '@testing-library/react';
 import {mockChannelContext} from 'test/mock-channel-context';
-import {MemoryRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {RangeKeyTimeRanges} from 'shared/util/constants';
 import {warmFrontendDataSet} from 'test/warm-frontend-data-set';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -348,20 +348,25 @@ jest.mock('shared/util/breadcrumbs', () => ({
 	})),
 }));
 
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useNavigate: jest.fn(),
-	useParams: () => ({
-		channelId: '123',
-		groupId: '23',
-	}),
-}));
+// The page reads its query from the page context and navigates through
+// window.location, so both carry the same query string.
 
-// Default push spy shared across tests, reset in beforeEach.
+const mockLocationAssign = jest.fn();
 
-const mockHistoryPush = jest.fn();
+const {location} = window;
 
-const buildInitialEntries = (path = '/workspace/23/123/assets') => [path];
+const mockLocation = (queryString: string) => {
+	Object.defineProperty(window, 'location', {
+		configurable: true,
+		value: {
+			assign: mockLocationAssign,
+			href: `http://localhost/assets${queryString}`,
+			origin: 'http://localhost',
+			pathname: '/assets',
+			search: queryString,
+		},
+	});
+};
 
 // LDP is enabled by default so the account/segment filters, which are LDP-only,
 // stay present for the shared assertions and the snapshot.
@@ -374,16 +379,20 @@ const renderList = async ({
 	queryString = '',
 	store: storeOverride = store,
 }: {queryString?: string; store?: typeof store} = {}) => {
+	mockLocation(queryString);
+
 	const result = render(
 		<Provider store={storeOverride}>
 			<ChannelContext.Provider value={mockChannelContext() as any}>
-				<MemoryRouter
-					initialEntries={buildInitialEntries(
-						`/workspace/23/123/assets${queryString}`
+				<WorkspacePage
+					channelId="123"
+					friendlyURL="/assets"
+					params={Object.fromEntries(
+						new URLSearchParams(queryString)
 					)}
 				>
 					<List />
-				</MemoryRouter>
+				</WorkspacePage>
 			</ChannelContext.Provider>
 		</Provider>
 	);
@@ -396,18 +405,20 @@ const renderList = async ({
 	return result;
 };
 
-// Obtain the mocked useNavigate so we can configure it per test.
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const {useNavigate} = require('react-router-dom');
-
 beforeAll(warmFrontendDataSet);
+
+afterAll(() => {
+	Object.defineProperty(window, 'location', {
+		configurable: true,
+		value: location,
+	});
+});
 
 describe('List', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 
-		useNavigate.mockReturnValue(mockHistoryPush);
+		mockLocation('');
 	});
 
 	afterEach(cleanup);
@@ -629,11 +640,11 @@ describe('List', () => {
 
 			fireEvent.click(screen.getByTestId('trigger-view-asset'));
 
-			const pushedPath: string = mockHistoryPush.mock.calls[0][0];
+			const assignedURL: string = mockLocationAssign.mock.calls[0][0];
 
-			expect(pushedPath).toContain('rangeKey=CUSTOM');
-			expect(pushedPath).toContain('rangeEnd=2024-03-01');
-			expect(pushedPath).toContain('rangeStart=2024-01-01');
+			expect(assignedURL).toContain('rangeKey=CUSTOM');
+			expect(assignedURL).toContain('rangeEnd=2024-03-01');
+			expect(assignedURL).toContain('rangeStart=2024-01-01');
 		});
 
 		it('should put only the range key on the asset link for a preset range', async () => {
@@ -641,10 +652,10 @@ describe('List', () => {
 
 			fireEvent.click(screen.getByTestId('trigger-view-asset'));
 
-			const pushedPath: string = mockHistoryPush.mock.calls[0][0];
+			const assignedURL: string = mockLocationAssign.mock.calls[0][0];
 
-			expect(pushedPath).toContain('rangeKey=7');
-			expect(pushedPath).not.toContain('rangeStart=');
+			expect(assignedURL).toContain('rangeKey=7');
+			expect(assignedURL).not.toContain('rangeStart=');
 		});
 	});
 
@@ -1066,19 +1077,19 @@ describe('List', () => {
 	});
 
 	describe('onRangeSelectorChange', () => {
-		it('should call history.push when the range selector changes', async () => {
+		it('should navigate when the range selector changes', async () => {
 			await renderList();
 
 			fireEvent.click(screen.getByTestId('change-range-btn'));
 
-			expect(mockHistoryPush).toHaveBeenCalledTimes(1);
+			expect(mockLocationAssign).toHaveBeenCalledTimes(1);
 		});
 
 		it('should update the displayed range key after a change', async () => {
 
 			// List calls setRangeSelectors in the onRangeSelectorChange
 			// handler, which causes a re-render passing the new rangeSelectors
-			// to the stub DropdownRangeKey. Since history.push is mocked and
+			// to the stub DropdownRangeKey. Since window.location.assign is mocked and
 			// does not navigate, the state update drives the re-render.
 
 			await renderList();
@@ -1090,14 +1101,14 @@ describe('List', () => {
 			);
 		});
 
-		it('should include the new rangeKey in the URL pushed to history', async () => {
+		it('should include the new rangeKey in the URL it navigates to', async () => {
 			await renderList();
 
 			fireEvent.click(screen.getByTestId('change-range-btn'));
 
-			const pushedPath: string = mockHistoryPush.mock.calls[0][0];
+			const assignedURL: string = mockLocationAssign.mock.calls[0][0];
 
-			expect(pushedPath).toContain(RangeKeyTimeRanges.Last7Days);
+			expect(assignedURL).toContain(RangeKeyTimeRanges.Last7Days);
 		});
 
 		it('should reset page to DEFAULT_CUR (1) when the range changes', async () => {
@@ -1107,9 +1118,9 @@ describe('List', () => {
 
 			// FaroConstants.pagination.cur === 1 in the jest config globals
 
-			const pushedPath: string = mockHistoryPush.mock.calls[0][0];
+			const assignedURL: string = mockLocationAssign.mock.calls[0][0];
 
-			expect(pushedPath).toContain('page=1');
+			expect(assignedURL).toContain('page=1');
 		});
 
 		it('should strip rangeEnd and rangeStart from the URL when switching to a preset range', async () => {
@@ -1124,10 +1135,10 @@ describe('List', () => {
 
 			fireEvent.click(screen.getByTestId('change-range-btn'));
 
-			const pushedPath: string = mockHistoryPush.mock.calls[0][0];
+			const assignedURL: string = mockLocationAssign.mock.calls[0][0];
 
-			expect(pushedPath).not.toContain('rangeEnd=2024-03-01');
-			expect(pushedPath).not.toContain('rangeStart=2024-01-01');
+			expect(assignedURL).not.toContain('rangeEnd=2024-03-01');
+			expect(assignedURL).not.toContain('rangeStart=2024-01-01');
 		});
 
 		it('should include rangeEnd and rangeStart in the URL for a custom range', async () => {
@@ -1138,10 +1149,10 @@ describe('List', () => {
 			// pickBy strips null values; rangeEnd and rangeStart are truthy
 			// for a custom range, so they should appear in the URL.
 
-			const pushedPath: string = mockHistoryPush.mock.calls[0][0];
+			const assignedURL: string = mockLocationAssign.mock.calls[0][0];
 
-			expect(pushedPath).toContain('rangeEnd=2024-03-01');
-			expect(pushedPath).toContain('rangeStart=2024-01-01');
+			expect(assignedURL).toContain('rangeEnd=2024-03-01');
+			expect(assignedURL).toContain('rangeStart=2024-01-01');
 		});
 
 		it('should update the displayed range key to CustomRange after a custom range change', async () => {
@@ -1190,9 +1201,9 @@ describe('List', () => {
 					<ChannelContext.Provider
 						value={contextWithNoChannel as any}
 					>
-						<MemoryRouter initialEntries={buildInitialEntries()}>
+						<WorkspacePage channelId="123" friendlyURL="/assets">
 							<List />
-						</MemoryRouter>
+						</WorkspacePage>
 					</ChannelContext.Provider>
 				</Provider>
 			);

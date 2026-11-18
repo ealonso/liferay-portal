@@ -6,7 +6,6 @@ import TimeZonePicker from '../TimeZonePicker';
 import {cleanup, render} from '@testing-library/react';
 import {fromJS} from 'immutable';
 import {InMemoryCache} from '@apollo/client';
-import {MemoryRouter} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
 
@@ -28,30 +27,28 @@ const DefaultComponent = props => (
 			})
 		)}
 	>
-		<MemoryRouter>
-			<MockedProvider
-				cache={
-					new InMemoryCache({
-						addTypename: false
-					})
-				}
-				mocks={[]}
+		<MockedProvider
+			cache={
+				new InMemoryCache({
+					addTypename: false
+				})
+			}
+			mocks={[]}
+		>
+			<Form
+				initialValues={{
+					timeZoneId: 'UTC'
+				}}
+				onSubmit={jest.fn()}
 			>
-				<Form
-					initialValues={{
-						timeZoneId: 'UTC'
-					}}
-					onSubmit={jest.fn()}
-				>
-					<TimeZonePicker
-						fieldName='timeZoneId'
-						setFieldTouched={jest.fn()}
-						setFieldValue={jest.fn()}
-						{...props}
-					/>
-				</Form>
-			</MockedProvider>
-		</MemoryRouter>
+				<TimeZonePicker
+					fieldName='timeZoneId'
+					setFieldTouched={jest.fn()}
+					setFieldValue={jest.fn()}
+					{...props}
+				/>
+			</Form>
+		</MockedProvider>
 	</Provider>
 );
 

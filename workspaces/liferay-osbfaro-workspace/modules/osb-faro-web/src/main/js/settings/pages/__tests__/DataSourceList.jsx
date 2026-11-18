@@ -11,10 +11,9 @@ import mockStore, {mockStoreData} from 'test/mock-store';
 import React from 'react';
 import {DataSourceStates, DataSourceTypes} from 'shared/util/constants';
 import {fireEvent, render, screen} from '@testing-library/react';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {Provider} from 'react-redux';
-import {Routes} from 'shared/util/router';
 import {TimeZone} from 'shared/util/records';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -213,10 +212,8 @@ describe('DataSourceList exports', () => {
 	});
 
 	describe('DataSourceName', () => {
-		const renderInRouter = ui => render(<MemoryRouter>{ui}</MemoryRouter>);
-
 		it('renders a link to the data source when not being deleted', () => {
-			const {container, getByText} = renderInRouter(
+			const {container, getByText} = render(
 				<DataSourceName
 					data={{
 						id: 'ds-1',
@@ -235,7 +232,7 @@ describe('DataSourceList exports', () => {
 		});
 
 		it('renders the name as plain text (no link) while the data source is being deleted', () => {
-			const {container, getByText} = renderInRouter(
+			const {container, getByText} = render(
 				<DataSourceName
 					data={{
 						id: 'ds-1',
@@ -278,16 +275,9 @@ describe('DataSourceList', () => {
 					)
 				)}
 			>
-				<MemoryRouter
-					initialEntries={['/workspace/23/settings/data-source']}
-				>
-					<RouterRoutes>
-						<Route
-							element={<DataSourceList />}
-							path={`${Routes.SETTINGS_DATA_SOURCE_LIST}/*`}
-						/>
-					</RouterRoutes>
-				</MemoryRouter>
+				<WorkspacePage friendlyURL='/data-sources'>
+					<DataSourceList />
+				</WorkspacePage>
 			</Provider>
 		);
 

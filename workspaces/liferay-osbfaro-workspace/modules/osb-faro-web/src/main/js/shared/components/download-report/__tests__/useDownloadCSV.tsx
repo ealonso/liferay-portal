@@ -1,31 +1,30 @@
 jest.unmock('react-dom');
 
+import React from 'react';
 import {CSVType, useDownloadCSV} from '../utils';
 import {RangeKeyTimeRanges} from 'shared/util/constants';
 import {renderHook} from '@testing-library/react';
+import {WorkspacePage} from 'test/mock-page-context';
 
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: jest.fn(() => ({
-		channelId: '123',
-		groupId: '456',
-		title: 'my asset title',
-	})),
-}));
-
-describe('useDownloadCSV', () => {
-	beforeEach(() => {
-		delete (window as {location?: Location}).location;
-
-		(window as {location: unknown}).location = new URL(
-			'https://ldp.liferay.com/workspace/liferay.com/420253908131944590'
-		);
+const renderDownloadCSV = (
+	options: Parameters<typeof useDownloadCSV>[0],
+	params: {[name: string]: string} = {}
+) =>
+	renderHook(() => useDownloadCSV(options), {
+		wrapper: ({children}: {children?: React.ReactNode}) => (
+			<WorkspacePage
+				channelId="123"
+				groupId="456"
+				params={{title: 'my asset title', ...params}}
+			>
+				{children}
+			</WorkspacePage>
+		),
 	});
 
+describe('useDownloadCSV', () => {
 	it('should return the correct URL for default parameters', () => {
-		const {result} = renderHook(() =>
-			useDownloadCSV({type: CSVType.Individual})
-		);
+		const {result} = renderDownloadCSV({type: CSVType.Individual});
 
 		const url = result.current({
 			rangeEnd: '',
@@ -39,9 +38,7 @@ describe('useDownloadCSV', () => {
 	});
 
 	it('should include custom date range in the URL', () => {
-		const {result} = renderHook(() =>
-			useDownloadCSV({type: CSVType.Individual})
-		);
+		const {result} = renderDownloadCSV({type: CSVType.Individual});
 
 		const url = result.current({
 			rangeEnd: '2024-01-31',
@@ -54,15 +51,13 @@ describe('useDownloadCSV', () => {
 	});
 
 	it('should include optional parameters when provided', () => {
-		const {result} = renderHook(() =>
-			useDownloadCSV({
-				assetId: '12345',
-				assetType: 'blog',
-				individualId: '67890',
-				segmentId: 'segment123',
-				type: CSVType.Individual,
-			})
-		);
+		const {result} = renderDownloadCSV({
+			assetId: '12345',
+			assetType: 'blog',
+			individualId: '67890',
+			segmentId: 'segment123',
+			type: CSVType.Individual,
+		});
 
 		const url = result.current({
 			rangeEnd: '',
@@ -76,13 +71,11 @@ describe('useDownloadCSV', () => {
 	});
 
 	it('should include the fixed filter and objectType when provided', () => {
-		const {result} = renderHook(() =>
-			useDownloadCSV({
-				filter: "(assetType eq 'blog')",
-				objectType: 'ObjectType1',
-				type: CSVType.Asset,
-			})
-		);
+		const {result} = renderDownloadCSV({
+			filter: "(assetType eq 'blog')",
+			objectType: 'ObjectType1',
+			type: CSVType.Asset,
+		});
 
 		const url = result.current({
 			rangeEnd: '',
@@ -97,12 +90,10 @@ describe('useDownloadCSV', () => {
 	});
 
 	it('should override the fixed filter and query when overrides are provided', () => {
-		const {result} = renderHook(() =>
-			useDownloadCSV({
-				filter: "(assetType eq 'blog')",
-				type: CSVType.Asset,
-			})
-		);
+		const {result} = renderDownloadCSV({
+			filter: "(assetType eq 'blog')",
+			type: CSVType.Asset,
+		});
 
 		const url = result.current(
 			{
@@ -120,12 +111,10 @@ describe('useDownloadCSV', () => {
 	});
 
 	it('should fall back to the fixed filter when no override filter is provided', () => {
-		const {result} = renderHook(() =>
-			useDownloadCSV({
-				filter: "(assetType eq 'blog')",
-				type: CSVType.Asset,
-			})
-		);
+		const {result} = renderDownloadCSV({
+			filter: "(assetType eq 'blog')",
+			type: CSVType.Asset,
+		});
 
 		const url = result.current({
 			rangeEnd: '',
@@ -139,12 +128,9 @@ describe('useDownloadCSV', () => {
 	});
 
 	it('should include order by fields if field and sortOrder are present', () => {
-		(window as {location: unknown}).location = new URL(
-			'https://ldp.liferay.com/workspace/liferay.com/420253908131944590/?field=name&page=1&sortOrder=DESC'
-		);
-
-		const {result} = renderHook(() =>
-			useDownloadCSV({type: CSVType.Individual})
+		const {result} = renderDownloadCSV(
+			{type: CSVType.Individual},
+			{field: 'name', page: '1', sortOrder: 'DESC'}
 		);
 
 		const url = result.current({

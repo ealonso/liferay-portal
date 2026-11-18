@@ -45,7 +45,7 @@ exports[`SegmentOverview should render 1`] = `
         >
           <a
             class="button-root btn btn-outline-borderless btn-sm btn-outline-secondary"
-            href="/workspace/23/contacts/segments/0/membership"
+            href="/segment-membership?id=0"
           >
             View Members
             <svg
@@ -97,7 +97,7 @@ exports[`SegmentOverview should render 1`] = `
         >
           <a
             class="button-root c-link link-secondary text-decoration-none"
-            href="/workspace/23/contacts/segments/0/interests"
+            href="/segment-interests?id=0"
           >
             View All Interests
             <svg
@@ -215,7 +215,7 @@ exports[`SegmentOverview should render 1`] = `
         >
           <a
             class="button-root btn btn-outline-borderless btn-sm btn-outline-secondary"
-            href="/workspace/23/contacts/segments/0/distribution"
+            href="/segment-distribution?id=0"
           >
             Explore Breakdown
             <svg

@@ -9,7 +9,6 @@ import {
 	screen,
 	waitFor
 } from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
 import {useModal} from '@clayui/modal';
@@ -21,35 +20,33 @@ const DefaultComponent = ({children, onClose = jest.fn(), ...props}) => {
 
 	return (
 		<Provider store={mockStore()}>
-			<MemoryRouter>
-				<MockedProvider addTypename={false}>
-					<div>
-						<button
-							onClick={() => onOpenChange(true)}
-							type="button"
-						>
-							{'trigger'}
-						</button>
+			<MockedProvider addTypename={false}>
+				<div>
+					<button
+						onClick={() => onOpenChange(true)}
+						type="button"
+					>
+						{'trigger'}
+					</button>
 
-						{open && (
-							<DeleteConfirmationModal
-								deleteConfirmationText="delete me"
-								disabled={false}
-								observer={observer}
-								onClose={() => {
-									onClose();
-	
-									onOpenChange(false);
-								}}
-								onSubmit={jest.fn()}
-								{...props}
-							>
-								{children}
-							</DeleteConfirmationModal>
-						)}
-					</div>
-				</MockedProvider>
-			</MemoryRouter>
+					{open && (
+						<DeleteConfirmationModal
+							deleteConfirmationText="delete me"
+							disabled={false}
+							observer={observer}
+							onClose={() => {
+								onClose();
+
+								onOpenChange(false);
+							}}
+							onSubmit={jest.fn()}
+							{...props}
+						>
+							{children}
+						</DeleteConfirmationModal>
+					)}
+				</div>
+			</MockedProvider>
 		</Provider>
 	);
 };

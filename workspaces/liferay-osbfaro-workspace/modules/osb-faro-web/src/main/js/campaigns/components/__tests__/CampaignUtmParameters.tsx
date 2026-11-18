@@ -2,7 +2,6 @@ import * as API from 'shared/api';
 import CampaignUtmParameters from '../CampaignUtmParameters';
 import React from 'react';
 import {fireEvent, render, screen} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
 
 jest.unmock('react-dom');
 
@@ -11,13 +10,7 @@ const fetchCampaignAcquisitionParameters = API.campaigns
 
 const renderComponent = () =>
 	render(
-		<MemoryRouter>
-			<CampaignUtmParameters
-				campaignId="7"
-				channelId="123"
-				groupId="23"
-			/>
-		</MemoryRouter>
+		<CampaignUtmParameters campaignId="7" channelId="123" groupId="23" />
 	);
 
 describe('CampaignUtmParameters', () => {

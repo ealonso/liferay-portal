@@ -6,37 +6,26 @@ import {AttributesContext, AttributesProvider} from '../../context/attributes';
 import {DndProvider} from 'react-dnd';
 import {HTML5Backend} from 'react-dnd-html5-backend';
 import {InMemoryCache} from '@apollo/client';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
 import {fireEvent, render, screen} from '@testing-library/react';
-import {Routes} from 'shared/util/router';
 
 jest.unmock('react-dom');
 
 const Providers = ({children}) => (
 	<Provider store={mockStore()}>
-		<MemoryRouter initialEntries={['/workspace/23/event-analysis']}>
-			<RouterRoutes>
-				<Route
-					element={
-						<MockedProvider
-							cache={
-								new InMemoryCache({
-									addTypename: false,
-									freezeResults: false
-								})
-							}
-						>
-							<DndProvider backend={HTML5Backend}>
-								{children}
-							</DndProvider>
-						</MockedProvider>
-					}
-					path={`${Routes.EVENT_ANALYSIS}/*`}
-				/>
-			</RouterRoutes>
-		</MemoryRouter>
+		<MockedProvider
+			cache={
+				new InMemoryCache({
+					addTypename: false,
+					freezeResults: false
+				})
+			}
+		>
+			<DndProvider backend={HTML5Backend}>
+				{children}
+			</DndProvider>
+		</MockedProvider>
 	</Provider>
 );
 

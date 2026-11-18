@@ -8,13 +8,12 @@ import {ApolloProvider} from '@apollo/client';
 import {ChannelContext} from 'shared/context/channel';
 import {cleanup, render} from '@testing-library/react';
 import {Dashboard} from '../index';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {mockChannelContext} from 'test/mock-channel-context';
 import {mockEmptyState, mockSuccessState} from 'test/__mocks__/mock-objects';
 import {Provider} from 'react-redux';
-import {Routes} from 'shared/util/router';
 import {User} from 'shared/util/records';
 import {UserRoleNames} from 'shared/util/constants';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -37,27 +36,24 @@ const MOCK_CONTEXT = {
 
 const mockUseDataSource = useDataSources;
 
-const WrappedComponent = props => (
+const WrappedComponent = ({
+	channelContext = mockChannelContext(),
+	...props
+}) => (
 	<ApolloProvider client={client}>
 		<Provider store={mockStore()}>
-			<MemoryRouter initialEntries={['/workspace/2000/123/sites']}>
-				<RouterRoutes>
-					<Route
-						element={
-							<ChannelContext.Provider value={mockChannelContext()}>
-								<BasePage.Context.Provider value={MOCK_CONTEXT}>
-									<Dashboard
-										currentUser={MEMBER_USER}
-										router={MOCK_CONTEXT.router}
-										{...props}
-									/>
-								</BasePage.Context.Provider>
-							</ChannelContext.Provider>
-						}
-						path={`${Routes.SITES}/*`}
-					/>
-				</RouterRoutes>
-			</MemoryRouter>
+			<WorkspacePage channelId="123" groupId="2000">
+				<ChannelContext.Provider value={channelContext}>
+					<BasePage.Context.Provider value={MOCK_CONTEXT}>
+						<Dashboard
+							currentUser={MEMBER_USER}
+							renderContent={() => null}
+							router={MOCK_CONTEXT.router}
+							{...props}
+						/>
+					</BasePage.Context.Provider>
+				</ChannelContext.Provider>
+			</WorkspacePage>
 		</Provider>
 	</ApolloProvider>
 );
@@ -66,51 +62,16 @@ describe('Sites Dashboard Index', () => {
 	afterEach(cleanup);
 	mockUseDataSource.useDataSources = jest.fn(() => mockSuccessState);
 
-	beforeAll(() => {
-		delete window.location;
-	});
-
 	it('renders w/ "No Sites Are Connected" as title', () => {
-		window.location = {
-			pathname: '/workspace/2000/123/sites'
-		};
-
 		const CHANNEL_CONTEXT_MOCK = {
 			channelDispatch: () => {},
 			channels: [],
 			selectedChannel: null
 		};
 
-		const WrappedComponentWithContext = props => (
-			<ApolloProvider client={client}>
-				<Provider store={mockStore()}>
-					<MemoryRouter
-						initialEntries={['/workspace/2000/123/sites']}
-					>
-						<RouterRoutes>
-							<Route
-								element={
-									<ChannelContext.Provider
-										value={CHANNEL_CONTEXT_MOCK}
-									>
-										<BasePage.Context.Provider value={MOCK_CONTEXT}>
-											<Dashboard
-												currentUser={MEMBER_USER}
-												router={MOCK_CONTEXT.router}
-												{...props}
-											/>
-										</BasePage.Context.Provider>
-									</ChannelContext.Provider>
-								}
-								path={`${Routes.SITES}/*`}
-							/>
-						</RouterRoutes>
-					</MemoryRouter>
-				</Provider>
-			</ApolloProvider>
+		const {container} = render(
+			<WrappedComponent channelContext={CHANNEL_CONTEXT_MOCK} />
 		);
-
-		const {container} = render(<WrappedComponentWithContext />);
 
 		expect(container.querySelector('.title-section')).toHaveTextContent(
 			'No Sites Are Connected'
@@ -120,9 +81,6 @@ describe('Sites Dashboard Index', () => {
 
 describe('sites with no Data Source', () => {
 	it('should render EmptyState', () => {
-		window.location = {
-			pathname: '/workspace/2000/123/sites'
-		};
 		mockUseDataSource.useDataSources = jest.fn(() => mockEmptyState);
 
 		const {getByText} = render(<WrappedComponent />);

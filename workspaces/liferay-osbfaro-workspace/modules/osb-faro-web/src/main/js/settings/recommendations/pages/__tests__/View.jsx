@@ -2,7 +2,6 @@ import * as data from 'test/data';
 import mockStore from 'test/mock-store';
 import React from 'react';
 import View from '../View';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {
 	mockRecommendationJobRunsReq,
@@ -10,8 +9,8 @@ import {
 } from 'test/graphql-data';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
-import {Routes} from 'shared/util/router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -23,34 +22,25 @@ jest.mock('shared/hooks/useTimeZone', () => ({
 
 const DefaultComponent = props => (
 	<Provider store={mockStore()}>
-		<MemoryRouter
-			initialEntries={['/workspace/123/settings/recommendations/321']}
-		>
-			<RouterRoutes>
-				<Route
-					element={
-						<MockedProvider
-							mocks={[
-								mockRecommendationJobRunsReq([
-									data.mockRecommendationJobRun(0)
-								]),
-								mockRecommendationReq(
-									data.mockRecommendationJob('321', {
-										nextRunDate: new Date().getTime()
-									})
-								)
-							]}
-						>
-							<View
-								router={{params: {groupId: '123', jobId: '321'}}}
-								{...props}
-							/>
-						</MockedProvider>
-					}
-					path={`${Routes.SETTINGS_RECOMMENDATION_MODEL_VIEW}/*`}
+		<WorkspacePage groupId='123' params={{jobId: '321'}}>
+			<MockedProvider
+				mocks={[
+					mockRecommendationJobRunsReq([
+						data.mockRecommendationJobRun(0)
+					]),
+					mockRecommendationReq(
+						data.mockRecommendationJob('321', {
+							nextRunDate: new Date().getTime()
+						})
+					)
+				]}
+			>
+				<View
+					router={{params: {groupId: '123', jobId: '321'}}}
+					{...props}
 				/>
-			</RouterRoutes>
-		</MemoryRouter>
+			</MockedProvider>
+		</WorkspacePage>
 	</Provider>
 );
 

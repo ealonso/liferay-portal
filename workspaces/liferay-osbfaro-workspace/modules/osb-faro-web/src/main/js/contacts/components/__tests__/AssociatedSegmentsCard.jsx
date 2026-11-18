@@ -3,20 +3,12 @@ import AssociatedSegmentsCard from '../AssociatedSegmentsCard';
 import NoResultsDisplay from 'shared/components/NoResultsDisplay';
 import React from 'react';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
 
 jest.unmock('react-dom');
 
 const DefaultComponent = props => (
-	<MemoryRouter>
-		<AssociatedSegmentsCard
-			groupId='23'
-			id='123'
-			pageUrl='/foo'
-			{...props}
-		/>
-	</MemoryRouter>
+	<AssociatedSegmentsCard groupId='23' id='123' pageUrl='/foo' {...props} />
 );
 
 describe('AssociatedSegmentsCard', () => {

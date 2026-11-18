@@ -4,7 +4,6 @@ import React from 'react';
 import {CalculationTypes} from 'event-analysis/utils/types';
 import {fireEvent, render} from '@testing-library/react';
 import {InMemoryCache} from '@apollo/client';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
 
@@ -13,28 +12,19 @@ jest.unmock('react-dom');
 const renderEditor = (props) =>
 	render(
 		<Provider store={mockStore()}>
-			<MemoryRouter>
-				<RouterRoutes>
-					<Route
-						element={
-							<MockedProvider
-								cache={
-									new InMemoryCache({
-										addTypename: false,
-										freezeResults: false
-									})
-								}
-							>
-								<EventAnalysisEditor
-									type={CalculationTypes.Total}
-									{...props}
-								/>
-							</MockedProvider>
-						}
-						path='/*'
-					/>
-				</RouterRoutes>
-			</MemoryRouter>
+			<MockedProvider
+				cache={
+					new InMemoryCache({
+						addTypename: false,
+						freezeResults: false
+					})
+				}
+			>
+				<EventAnalysisEditor
+					type={CalculationTypes.Total}
+					{...props}
+				/>
+			</MockedProvider>
 		</Provider>
 	);
 

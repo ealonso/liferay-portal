@@ -4,12 +4,12 @@ import React from 'react';
 import {CHART_COLORS, MAIN_NODE_COLOR, SECONDARY_NODE_COLOR} from '../utils';
 import {cleanup, fireEvent, getByTestId, render} from '@testing-library/react';
 import {InMemoryCache} from '@apollo/client';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockPagePathReq} from 'test/graphql-data';
 import {RangeKeyTimeRanges} from 'shared/util/constants';
 import {RangeSelectors} from 'shared/types';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -128,37 +128,33 @@ const WrapperComponent = ({
 	reqOptions?: Record<string, unknown>;
 	segmentId?: string;
 }) => (
-	<MemoryRouter
-		initialEntries={[
-			'/workspace/4567/123/sites/pages/overview/https%3A%2F%2Fliferay.com%2Fhome/Liferay%20DXP%20-%20Home?rangeKey=30',
-		]}
+	<WorkspacePage
+		channelId="123"
+		friendlyURL="/page-overview"
+		groupId="4567"
+		params={{
+			rangeKey: '30',
+			title: 'Liferay DXP - Home',
+			touchpoint: 'https://liferay.com/home',
+		}}
 	>
-		<RouterRoutes>
-			<Route
-				element={
-					<BasePage.Context.Provider
-						value={{accountId, filters: {}, router: {}, segmentId}}
-					>
-						<MockedProvider
-							cache={
-								new InMemoryCache({freezeResults: false} as any)
-							}
-							mocks={[
-								mockPagePathReq(data, {
-									accountId,
-									segmentId,
-									...reqOptions,
-								} as any),
-							]}
-						>
-							<PagePathCard rangeSelectors={rangeSelectors} />
-						</MockedProvider>
-					</BasePage.Context.Provider>
-				}
-				path="/workspace/:groupId/:channelId/sites/pages/overview/:touchpoint/:title/*"
-			/>
-		</RouterRoutes>
-	</MemoryRouter>
+		<BasePage.Context.Provider
+			value={{accountId, filters: {}, router: {}, segmentId}}
+		>
+			<MockedProvider
+				cache={new InMemoryCache({freezeResults: false} as any)}
+				mocks={[
+					mockPagePathReq(data, {
+						accountId,
+						segmentId,
+						...reqOptions,
+					} as any),
+				]}
+			>
+				<PagePathCard rangeSelectors={rangeSelectors} />
+			</MockedProvider>
+		</BasePage.Context.Provider>
+	</WorkspacePage>
 );
 
 describe('PagePathCard', () => {
@@ -338,7 +334,7 @@ describe('PagePathCard', () => {
 
 		expect(link).toHaveAttribute(
 			'href',
-			'/workspace/4567/123/sites/pages/overview/https%3A%2F%2Fwww.liferay.com/Liferay%20Home%20Page?rangeKey=0'
+			'/page-overview?rangeKey=0&title=Liferay+Home+Page&touchpoint=https%3A%2F%2Fwww.liferay.com'
 		);
 	});
 
@@ -361,7 +357,7 @@ describe('PagePathCard', () => {
 
 		expect(link).toHaveAttribute(
 			'href',
-			'/workspace/4567/123/sites/pages/overview/https%3A%2F%2Fwww.liferay.com/Liferay%20Home%20Page?rangeKey=0'
+			'/page-overview?rangeKey=0&title=Liferay+Home+Page&touchpoint=https%3A%2F%2Fwww.liferay.com'
 		);
 	});
 });

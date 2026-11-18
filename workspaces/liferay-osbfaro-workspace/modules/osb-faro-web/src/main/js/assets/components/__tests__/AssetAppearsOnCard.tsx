@@ -14,23 +14,10 @@ import {
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
 import {RangeKeyTimeRanges} from 'shared/util/constants';
-import {MemoryRouter} from 'react-router-dom';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		assetId: 'myBlogId',
-		channelId: '123',
-		groupId: '456',
-		query: {
-			rangeKey: RangeKeyTimeRanges.Last30Days,
-		},
-		title: 'Blog Title',
-	}),
-}));
 
 const WrappedComponent = ({
 	accessors,
@@ -49,7 +36,15 @@ const WrappedComponent = ({
 }) => (
 	<Provider store={mockStore()}>
 		<ApolloProvider client={client}>
-			<MemoryRouter>
+			<WorkspacePage
+				channelId="123"
+				groupId="456"
+				params={{
+					assetId: 'myBlogId',
+					rangeKey: RangeKeyTimeRanges.Last30Days,
+					title: 'Blog Title',
+				}}
+			>
 				<MockedProvider
 					mocks={[
 						mockTimeRangeReq(),
@@ -71,7 +66,7 @@ const WrappedComponent = ({
 						emptyStateText={emptyStateText}
 					/>
 				</MockedProvider>
-			</MemoryRouter>
+			</WorkspacePage>
 		</ApolloProvider>
 	</Provider>
 );

@@ -3,49 +3,40 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import {AttributesProvider} from '../../../../context/attributes';
 import {InMemoryCache} from '@apollo/client';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
 const DefaultComponent = props => (
 	<Provider store={mockStore()}>
-		<MemoryRouter
-			initialEntries={['/workspace/123/456/event-analysis/789']}
-		>
-			<RouterRoutes>
-				<Route
-					element={
-						<MockedProvider
-							cache={
-								new InMemoryCache({
-									addTypename: false,
-									freezeResults: false
-								})
-							}
-						>
-							<AttributesProvider>
-								<FilterOptions
-									attribute={{
-										dataType: 'STRING',
-										displayName: 'Filed Ticket',
-										id: '4',
-										name: 'filedTicket'
-									}}
-									onActiveChange={jest.fn()}
-									onAttributeChange={jest.fn()}
-									onEditClick={jest.fn()}
-									{...props}
-								/>
-							</AttributesProvider>
-						</MockedProvider>
-					}
-					path='/workspace/:groupId/:channelId/event-analysis/:id/*'
-				/>
-			</RouterRoutes>
-		</MemoryRouter>
+		<WorkspacePage channelId='456' groupId='123' params={{id: '789'}}>
+			<MockedProvider
+				cache={
+					new InMemoryCache({
+						addTypename: false,
+						freezeResults: false
+					})
+				}
+			>
+				<AttributesProvider>
+					<FilterOptions
+						attribute={{
+							dataType: 'STRING',
+							displayName: 'Filed Ticket',
+							id: '4',
+							name: 'filedTicket'
+						}}
+						onActiveChange={jest.fn()}
+						onAttributeChange={jest.fn()}
+						onEditClick={jest.fn()}
+						{...props}
+					/>
+				</AttributesProvider>
+			</MockedProvider>
+		</WorkspacePage>
 	</Provider>
 );
 

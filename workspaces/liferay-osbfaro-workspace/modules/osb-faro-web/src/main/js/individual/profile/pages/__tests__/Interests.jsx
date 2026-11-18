@@ -1,29 +1,27 @@
 import Interests, {ContributionsCell} from '../Interests';
 import React from 'react';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {render} from '@testing-library/react';
-import {Routes} from 'shared/util/router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
 describe('Interests', () => {
 	it('should render', async () => {
 		const {getByText} = render(
-			<MemoryRouter
-				initialEntries={[
-					'/workspace/23/123/contacts/individuals/known-individuals/321321/interests?delta=2&page=1&field=count&sortOrder=DESC'
-				]}
+			<WorkspacePage
+				channelId='123'
+				groupId='23'
+				params={{
+					delta: '2',
+					field: 'count',
+					id: '321321',
+					page: '1',
+					sortOrder: 'DESC'
+				}}
 			>
-				<RouterRoutes>
-					<Route
-						element={
-							<Interests channelId='123' groupId='23' id='test' />
-						}
-						path={`${Routes.CONTACTS_INDIVIDUAL_INTERESTS}/*`}
-					/>
-				</RouterRoutes>
-			</MemoryRouter>
+				<Interests channelId='123' groupId='23' id='test' />
+			</WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(document.body);

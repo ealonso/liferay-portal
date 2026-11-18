@@ -13,28 +13,21 @@ import {
 import {getISODate} from 'shared/util/date';
 import {mockGetDateNow} from 'test/mock-date';
 import {Provider} from 'react-redux';
-import {MemoryRouter} from 'react-router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		groupId: '23'
-	})
-}));
 
 const defaultProps = {
 	groupId: '23'
 };
 
 const DefaultComponent = props => (
-	<MemoryRouter>
+	<WorkspacePage>
 		<Provider store={mockStore()}>
 			<AccessTokenList {...defaultProps} {...props} />
 		</Provider>
-	</MemoryRouter>
+	</WorkspacePage>
 );
 
 describe('AccessTokenList', () => {

@@ -1,31 +1,20 @@
 import Header from '../Header';
 import mockStore from 'test/mock-store';
 import React from 'react';
-import {BrowserRouter} from 'react-router-dom';
-import {cleanup, render} from '@testing-library/react';
+import {cleanup, render, screen} from '@testing-library/react';
+import {WorkspacePage} from 'test/mock-page-context';
 import {Provider} from 'react-redux';
-import {Routes} from 'shared/util/router';
-import {MemoryRouter} from 'react-router';
+
 jest.unmock('react-dom');
 
 const WrappedComponent = props => (
 	<Provider store={mockStore()}>
-		<MemoryRouter>
-			<Header {...props}></Header>
-		</MemoryRouter>
+		<Header {...props}></Header>
 	</Provider>
 );
 
 describe('BasePage.Header', () => {
 	afterEach(cleanup);
-
-	beforeAll(() => {
-		delete window.location;
-
-		window.location = {
-			pathname: '/workspace/123/sites/contacts/accounts/321'
-		};
-	});
 
 	it('renders Header', () => {
 		const {container} = render(
@@ -51,49 +40,34 @@ describe('BasePage.Header', () => {
 	});
 
 	describe('NavBar', () => {
-		it('renders NavBar', () => {
-			const {container} = render(
-				<BrowserRouter>
-					<Header.NavBar
-						items={[
-							{
-								exact: true,
-								label: 'Test',
-								route: Routes.CONTACTS_ACCOUNT
-							}
-						]}
-						routeParams={{
-							groupId: '123',
-							id: '321'
-						}}
-						routeQueries={{rangeKey: '30'}}
-					/>
-				</BrowserRouter>
+		const renderNavBar = navigationItems =>
+			render(
+				<WorkspacePage navigationItems={navigationItems}>
+					<Header.NavBar />
+				</WorkspacePage>
 			);
+
+		it('renders NavBar', () => {
+			const {container} = renderNavBar([
+				{
+					active: true,
+					href: '/account?id=321&rangeKey=30',
+					label: 'Test'
+				}
+			]);
 
 			expect(container).toMatchSnapshot();
 		});
 
 		it('renders NavBar with deprecated label', () => {
-			const {container} = render(
-				<BrowserRouter>
-					<Header.NavBar
-						items={[
-							{
-								deprecated: true,
-								exact: true,
-								label: 'Test',
-								route: Routes.CONTACTS_ACCOUNT
-							}
-						]}
-						routeParams={{
-							groupId: '123',
-							id: '321'
-						}}
-						routeQueries={{rangeKey: '30'}}
-					/>
-				</BrowserRouter>
-			);
+			const {container} = renderNavBar([
+				{
+					active: true,
+					deprecated: true,
+					href: '/account?id=321&rangeKey=30',
+					label: 'Test'
+				}
+			]);
 
 			const deprecatedBadge = document.querySelector(
 				'.badge.badge-warning.badge-translucent'
@@ -104,23 +78,27 @@ describe('BasePage.Header', () => {
 			expect(deprecatedBadge).toHaveTextContent('DEPRECATED');
 		});
 
-		it('renders NavBar w/o routeQueries', () => {
-			const {container} = render(
-				<BrowserRouter>
-					<Header.NavBar
-						items={[
-							{
-								exact: true,
-								label: 'Test',
-								route: Routes.CONTACTS_ACCOUNT
-							}
-						]}
-						routeParams={{groupId: '123', id: '321'}}
-					/>
-				</BrowserRouter>
-			);
+		it('marks the navigation item of the current page as active', () => {
+			renderNavBar([
+				{href: '/account?id=321', label: 'Overview'},
+				{
+					active: true,
+					href: '/account-individuals?id=321',
+					label: 'Individuals'
+				}
+			]);
 
-			expect(container).toMatchSnapshot();
+			expect(
+				screen.getByRole('link', {name: 'Individuals'})
+			).toHaveAttribute('aria-current', 'page');
+			expect(
+				screen.getByRole('link', {name: 'Overview'})
+			).not.toHaveAttribute('aria-current');
+			expect(
+				screen.getByRole('button', {
+					name: 'Open Menu, Current Page: Individuals'
+				})
+			).toBeInTheDocument();
 		});
 	});
 

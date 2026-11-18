@@ -13,7 +13,7 @@ exports[`WorkspaceList should render 1`] = `
       >
         <a
           class="button-root workspace-link border-button btn btn-unstyled"
-          href="/workspace/1"
+          href="/web/workspace-0"
         >
           <div
             class="autofit-col autofit-col-expand"
@@ -63,7 +63,7 @@ exports[`WorkspaceList should render 1`] = `
       >
         <a
           class="button-root workspace-link border-button btn btn-unstyled"
-          href="/workspace/2"
+          href="/web/workspace-1"
         >
           <div
             class="autofit-col autofit-col-expand"
@@ -113,7 +113,7 @@ exports[`WorkspaceList should render 1`] = `
       >
         <a
           class="button-root workspace-link border-button btn btn-unstyled"
-          href="/workspace/3"
+          href="/web/workspace-2"
         >
           <div
             class="autofit-col autofit-col-expand"
@@ -176,7 +176,7 @@ exports[`WorkspaceList should render WorkspaceList with friendlyURL 1`] = `
       >
         <a
           class="button-root workspace-link border-button btn btn-unstyled"
-          href="/workspace/faro-liferay-0"
+          href="/web/faro-liferay-0"
         >
           <div
             class="autofit-col autofit-col-expand"
@@ -226,7 +226,7 @@ exports[`WorkspaceList should render WorkspaceList with friendlyURL 1`] = `
       >
         <a
           class="button-root workspace-link border-button btn btn-unstyled"
-          href="/workspace/faro-liferay-1"
+          href="/web/faro-liferay-1"
         >
           <div
             class="autofit-col autofit-col-expand"

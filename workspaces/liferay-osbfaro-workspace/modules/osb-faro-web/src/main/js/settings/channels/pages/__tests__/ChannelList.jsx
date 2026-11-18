@@ -4,11 +4,10 @@ import ChannelList from '../ChannelList';
 import mockStore, {mockStoreData} from 'test/mock-store';
 import React from 'react';
 import {cleanup, render, screen} from '@testing-library/react';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {RemoteData, TimeZone, User} from 'shared/util/records';
-import {Routes} from 'shared/util/router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -18,11 +17,7 @@ const defaultProps = {
 
 const Wrapper = ({children, store = mockStore()}) => (
 	<Provider store={store}>
-		<MemoryRouter initialEntries={['/workspace/23/settings/properties']}>
-			<RouterRoutes>
-				<Route element={children} path={`${Routes.SETTINGS_CHANNELS}/*`} />
-			</RouterRoutes>
-		</MemoryRouter>
+		<WorkspacePage friendlyURL='/properties'>{children}</WorkspacePage>
 	</Provider>
 );
 

@@ -14,8 +14,8 @@ import {DataSource} from 'shared/util/records';
 import {DeleteDataSource} from '../DeleteDataSource';
 import {EntityTypes} from 'shared/util/constants';
 import {fromJS} from 'immutable';
-import {MemoryRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -71,7 +71,7 @@ describe('DeleteDataSource', () => {
 
 	const DefaultComponent = props => (
 		<Provider store={store}>
-			<MemoryRouter>
+			<WorkspacePage>
 				<DeleteDataSource
 					actionRequestFn={jest.fn()}
 					dataSource={dataSource}
@@ -84,7 +84,7 @@ describe('DeleteDataSource', () => {
 					pageActionText={Liferay.Language.get('delete-data-source')}
 					{...props}
 				/>
-			</MemoryRouter>
+			</WorkspacePage>
 		</Provider>
 	);
 

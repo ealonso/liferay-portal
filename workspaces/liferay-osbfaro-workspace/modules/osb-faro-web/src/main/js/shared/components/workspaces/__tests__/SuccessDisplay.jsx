@@ -10,7 +10,7 @@ describe('WorkspacesSuccessDisplay', () => {
 	it('should render', () => {
 		const {container} = render(
 			<Provider store={mockStore()}>
-				<WorkspacesSuccessDisplay friendlyURL='/fooFriendlyUrl' />
+				<WorkspacesSuccessDisplay url='/web/foo' />
 			</Provider>
 		);
 
@@ -20,17 +20,17 @@ describe('WorkspacesSuccessDisplay', () => {
 	it('should link to the workspace on the configured faroURL', () => {
 		render(
 			<Provider store={mockStore()}>
-				<WorkspacesSuccessDisplay friendlyURL='/fooFriendlyUrl' />
+				<WorkspacesSuccessDisplay url='/web/foo' />
 			</Provider>
 		);
 
 		expect(
 			screen.getByRole('link', {
-				name: 'http://localhost:3000/workspace/fooFriendlyUrl',
+				name: 'http://localhost:3000/web/foo',
 			})
 		).toHaveAttribute(
 			'href',
-			'http://localhost:3000/workspace/fooFriendlyUrl'
+			'http://localhost:3000/web/foo'
 		);
 	});
 });

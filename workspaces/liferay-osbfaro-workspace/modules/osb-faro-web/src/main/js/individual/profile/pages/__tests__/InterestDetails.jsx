@@ -3,7 +3,6 @@ import InterestDetails from '../InterestDetails';
 import React from 'react';
 import {Individual} from 'shared/util/records';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
 
 const defaultProps = {
@@ -18,35 +17,36 @@ jest.unmock('react-dom');
 
 describe('InterestDetails', () => {
 	it('should render', async () => {
-		const {container, getByText} = render(
-			<MemoryRouter>
-				<InterestDetails {...defaultProps} />
-			</MemoryRouter>
+		const {container, getByRole} = render(
+			<InterestDetails {...defaultProps} />
 		);
 
 		await waitForLoadingToBeRemoved(container);
 
-		expect(getByText('Back to Interests')).toBeInTheDocument();
+		expect(getByRole('link', {name: 'Back to Interests'})).toHaveAttribute(
+			'href',
+			'/individual-interests?id=test'
+		);
 	});
 
 	it('should render an active pages list tab', async () => {
 		const {container, getByText} = render(
-			<MemoryRouter>
-				<InterestDetails {...defaultProps} />
-			</MemoryRouter>
+			<InterestDetails {...defaultProps} />
 		);
 
 		await waitForLoadingToBeRemoved(container);
 
 		expect(getByText('Active Pages')).toBeTruthy();
 		expect(getByText('Active Pages').parentElement).toHaveClass('active');
+		expect(getByText('Active Pages').closest('a')).toHaveAttribute(
+			'href',
+			'/individual-interest?active=true&id=test&interestId=1'
+		);
 	});
 
 	it('should render an inactive pages list tab', async () => {
 		const {container, getByText} = render(
-			<MemoryRouter>
-				<InterestDetails {...defaultProps} active='false' />
-			</MemoryRouter>
+			<InterestDetails {...defaultProps} active='false' />
 		);
 
 		await waitForLoadingToBeRemoved(container);

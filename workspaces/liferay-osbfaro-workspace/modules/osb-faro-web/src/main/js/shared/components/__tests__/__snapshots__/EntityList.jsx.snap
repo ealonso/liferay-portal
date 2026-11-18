@@ -31,8 +31,7 @@ exports[`EntityList should render 1`] = `
             <strong>
               <a
                 class="list-group-link"
-                data-discover="true"
-                href="/workspace/23/contacts/individuals/0"
+                href="/individual?id=0"
               >
                 Foo Bar
               </a>
@@ -68,8 +67,7 @@ exports[`EntityList should render 1`] = `
             <strong>
               <a
                 class="list-group-link"
-                data-discover="true"
-                href="/workspace/23/contacts/individuals/1"
+                href="/individual?id=1"
               >
                 Foo Bar
               </a>
@@ -105,8 +103,7 @@ exports[`EntityList should render 1`] = `
             <strong>
               <a
                 class="list-group-link"
-                data-discover="true"
-                href="/workspace/23/contacts/individuals/2"
+                href="/individual?id=2"
               >
                 Foo Bar
               </a>

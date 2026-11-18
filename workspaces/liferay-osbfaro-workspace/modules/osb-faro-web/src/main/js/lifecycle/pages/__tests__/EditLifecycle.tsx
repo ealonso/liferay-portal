@@ -5,13 +5,12 @@ import React from 'react';
 import {Alert} from 'shared/types';
 import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import {ILifecycleStage} from 'shared/api/lifecycle';
-import {MemoryRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
-import {Routes, toRoute} from 'shared/util/router';
 import {useLifecycleAccountData} from 'lifecycle/hooks/useLifecycleAccountData';
 import {useRequest} from 'shared/hooks/useRequest';
 import {useUnsavedChangesPrompt} from 'shared/hooks/useUnsavedChangesPrompt';
 import {AccountDataStatus} from 'lifecycle/utils/types';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -39,23 +38,12 @@ jest.mock('shared/actions/alerts', () => ({
 	addAlert: jest.fn((alert) => alert),
 }));
 
-const mockPush = jest.fn();
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({channelId: '123', groupId: '23', lifecycleId: 'erc-9'}),
-}));
-
 jest.mock('shared/hooks/useUnsavedChangesPrompt', () => ({
 	useUnsavedChangesPrompt: jest.fn(),
 }));
 
 jest.mock('shared/hooks/useTimeZone', () => ({
 	useTimeZone: () => ({timeZoneId: 'UTC'}),
-}));
-
-jest.mock('shared/hooks/useHistoryAdapter', () => ({
-	useHistoryAdapter: () => ({push: mockPush}),
 }));
 
 const mockedUseRequest = useRequest as jest.Mock;
@@ -111,19 +99,37 @@ const mockCatalog =
 const renderPage = () =>
 	render(
 		<Provider store={mockStore()}>
-			<MemoryRouter>
+			<WorkspacePage
+				channelId="123"
+				groupId="23"
+				params={{lifecycleId: 'erc-9'}}
+			>
 				<EditLifecycle />
-			</MemoryRouter>
+			</WorkspacePage>
 		</Provider>
 	);
 
-const lifecycleURL = toRoute(Routes.LIFECYCLE_DASHBOARD, {
-	channelId: '123',
-	groupId: '23',
-	lifecycleId: 'erc-9',
-});
+const lifecycleURL = '/lifecycle?lifecycleId=erc-9';
+
+const originalLocation = window.location;
+
+const assign = jest.fn();
 
 describe('EditLifecycle', () => {
+	beforeAll(() => {
+		Object.defineProperty(window, 'location', {
+			configurable: true,
+			value: {...originalLocation, assign, replace: jest.fn()},
+		});
+	});
+
+	afterAll(() => {
+		Object.defineProperty(window, 'location', {
+			configurable: true,
+			value: originalLocation,
+		});
+	});
+
 	beforeEach(() => {
 		jest.clearAllMocks();
 
@@ -155,13 +161,13 @@ describe('EditLifecycle', () => {
 		const renderWithStore = () =>
 			render(
 				<Provider store={mockStore()}>
-					<MemoryRouter
-						initialEntries={[
-							'/workspace/23/123/lifecycle/erc-9/edit',
-						]}
+					<WorkspacePage
+						channelId="123"
+						groupId="23"
+						params={{lifecycleId: 'erc-9'}}
 					>
 						<EditLifecycle />
-					</MemoryRouter>
+					</WorkspacePage>
 				</Provider>
 			);
 
@@ -404,7 +410,7 @@ describe('EditLifecycle', () => {
 			screen.getByRole('group', {name: /configuration summary/i})
 		);
 
-		expect(mockedPrompt).toHaveBeenLastCalledWith(false, expect.anything());
+		expect(mockedPrompt).toHaveBeenLastCalledWith(false);
 	});
 
 	it('warns about unsaved changes after editing a stage', () => {
@@ -418,7 +424,7 @@ describe('EditLifecycle', () => {
 			target: {value: 'Changed'},
 		});
 
-		expect(mockedPrompt).toHaveBeenLastCalledWith(true, expect.anything());
+		expect(mockedPrompt).toHaveBeenLastCalledWith(true);
 	});
 
 	it('warns about unsaved changes after reordering the stages', () => {
@@ -434,7 +440,7 @@ describe('EditLifecycle', () => {
 		fireEvent.keyDown(handle, {key: 'ArrowDown'});
 		fireEvent.keyDown(handle, {key: 'Enter'});
 
-		expect(mockedPrompt).toHaveBeenLastCalledWith(true, expect.anything());
+		expect(mockedPrompt).toHaveBeenLastCalledWith(true);
 	});
 
 	it('blocks Save when the last stage is removed', () => {
@@ -469,7 +475,7 @@ describe('EditLifecycle', () => {
 			)
 		);
 
-		expect(mockPush).not.toHaveBeenCalled();
+		expect(assign).not.toHaveBeenCalled();
 	});
 
 	it('tells the user to reload when someone else changed the lifecycle', async () => {
@@ -490,7 +496,7 @@ describe('EditLifecycle', () => {
 			)
 		);
 
-		expect(mockPush).not.toHaveBeenCalled();
+		expect(assign).not.toHaveBeenCalled();
 	});
 
 	it('renders a loading state while the lifecycle is loading', () => {
@@ -508,13 +514,7 @@ describe('EditLifecycle', () => {
 				: {data: null, error: true, loading: false}
 		);
 
-		render(
-			<Provider store={mockStore()}>
-				<MemoryRouter>
-					<EditLifecycle />
-				</MemoryRouter>
-			</Provider>
-		);
+		renderPage();
 
 		expect(screen.queryByText(/edit lifecycle/i)).toBeNull();
 		expect(
@@ -522,10 +522,7 @@ describe('EditLifecycle', () => {
 		).toBeInTheDocument();
 		expect(
 			screen.getByRole('link', {name: /go to lifecycles/i})
-		).toHaveAttribute(
-			'href',
-			toRoute(Routes.LIFECYCLE, {channelId: '123', groupId: '23'})
-		);
+		).toHaveAttribute('href', '/lifecycles');
 	});
 
 	it('saves the loaded version by its id, alerts success, and navigates to the dashboard', async () => {
@@ -561,9 +558,7 @@ describe('EditLifecycle', () => {
 		]);
 		expect(payload.stages[0]).not.toHaveProperty('stageType');
 
-		await waitFor(() =>
-			expect(mockPush).toHaveBeenCalledWith(lifecycleURL)
-		);
+		await waitFor(() => expect(assign).toHaveBeenCalledWith(lifecycleURL));
 
 		expect(mockDispatch).toHaveBeenCalledWith(
 			expect.objectContaining({alertType: Alert.Types.Success})

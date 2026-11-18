@@ -16,25 +16,13 @@ import {DownloadReportModal, ReportType} from '../DownloadReportModal';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockPreferenceReq, mockTimeRangeReq} from 'test/graphql-data';
 import {Provider} from 'react-redux';
-import {RangeKeyTimeRanges} from 'shared/util/constants';
 import {RangeSelectors} from 'shared/types';
-import {MemoryRouter} from 'react-router-dom';
 import {sub} from 'shared/util/lang';
 import {useModal} from '@clayui/modal';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		channelId: '456',
-		groupId: '2000',
-		query: {
-			rangeKey: RangeKeyTimeRanges.Last30Days,
-		},
-	}),
-}));
 
 jest.mock('shared/hooks/useTimeZone', () => ({
 	useTimeZone: () => ({timeZoneId: 'UTC'}),
@@ -134,24 +122,22 @@ const WrapperComponent: React.FC<IWrapperComponent> = ({
 		<>
 			{visible && (
 				<ApolloProvider client={client}>
-					<MemoryRouter>
-						<MockedProvider
-							mocks={[mockTimeRangeReq(), mockPreferenceReq()]}
-						>
-							<Provider store={mockStore()}>
-								<DownloadReportModal
-									{...otherProps}
-									infoMessage={infoMessage}
-									observer={observer}
-									onClose={jest.fn()}
-									onSubmit={onSubmit}
-									type={type}
-								>
-									{children}
-								</DownloadReportModal>
-							</Provider>
-						</MockedProvider>
-					</MemoryRouter>
+					<MockedProvider
+						mocks={[mockTimeRangeReq(), mockPreferenceReq()]}
+					>
+						<Provider store={mockStore()}>
+							<DownloadReportModal
+								{...otherProps}
+								infoMessage={infoMessage}
+								observer={observer}
+								onClose={jest.fn()}
+								onSubmit={onSubmit}
+								type={type}
+							>
+								{children}
+							</DownloadReportModal>
+						</Provider>
+					</MockedProvider>
 				</ApolloProvider>
 			)}
 
@@ -165,7 +151,9 @@ const WrapperComponent: React.FC<IWrapperComponent> = ({
 
 const generateCSVURL = (type: CSVType) => {
 	const {getByRole, getByTestId} = render(
-		<WrapperCSVComponent type={type} />
+		<WorkspacePage channelId="456" groupId="2000">
+			<WrapperCSVComponent type={type} />
+		</WorkspacePage>
 	);
 
 	fireEvent.click(

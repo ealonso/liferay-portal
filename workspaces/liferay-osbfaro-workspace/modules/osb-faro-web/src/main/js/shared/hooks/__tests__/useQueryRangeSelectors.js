@@ -1,7 +1,7 @@
 import React from 'react';
-import {MemoryRouter} from 'react-router-dom';
 import {render} from '@testing-library/react';
 import {useQueryRangeSelectors} from 'shared/hooks/useQueryRangeSelectors';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -14,14 +14,8 @@ const DefaultComponent = ({rangeEnd, rangeKey, rangeStart}) => (
 		{`rangeStart: ${rangeStart}`}
 	</>
 );
-const WrapperComponent = ({children, queryString = ''}) => (
-	<MemoryRouter
-		initialEntries={[
-			`/workspace/23/321321/contacts/accounts/123123/interests/test${queryString}`,
-		]}
-	>
-		{children}
-	</MemoryRouter>
+const WrapperComponent = ({children, params}) => (
+	<WorkspacePage params={params}>{children}</WorkspacePage>
 );
 
 describe('useQueryRangeSelectors', () => {
@@ -59,7 +53,9 @@ describe('useQueryRangeSelectors', () => {
 		};
 
 		const {container} = render(
-			<WrapperComponent queryString="?rangeKey=90&rangeEnd=9087&rangeStart=54546">
+			<WrapperComponent
+				params={{rangeEnd: '9087', rangeKey: '90', rangeStart: '54546'}}
+			>
 				<TestComponent />
 			</WrapperComponent>
 		);

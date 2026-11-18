@@ -1,6 +1,7 @@
 import AccountIndividuals from '../AccountIndividuals';
 import React from 'react';
 import {cleanup, render, screen} from '@testing-library/react';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -12,9 +13,6 @@ jest.mock('@liferay/frontend-data-set-web', () => ({
 }));
 
 let lastDropdownProps: any;
-let mockSearch = '';
-
-const mockPush = jest.fn();
 
 // Mocking the dropdown keeps these off the Apollo query it runs to load the
 // range presets; what matters here is the range it is given and the range it
@@ -28,63 +26,77 @@ jest.mock('shared/components/dropdown-range-key/DropdownRangeKey', () => ({
 	},
 }));
 
-jest.mock('shared/hooks/useHistoryAdapter', () => ({
-	useHistoryAdapter: () => ({push: mockPush}),
-}));
+const mockLocationAssign = jest.fn();
 
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useLocation: () => ({search: mockSearch}),
-	useParams: () => ({channelId: '456', groupId: '23', id: 'acc-1'}),
-}));
+const originalLocation = window.location;
+
+const mockLocation = (href = 'http://localhost/account') => {
+	Object.defineProperty(window, 'location', {
+		configurable: true,
+		value: {...originalLocation, assign: mockLocationAssign, href},
+	});
+};
+
+const renderAccountIndividuals = (params: {[name: string]: string} = {}) =>
+	render(
+		<WorkspacePage
+			channelId="456"
+			groupId="23"
+			params={{id: 'acc-1', ...params}}
+		>
+			<AccountIndividuals />
+		</WorkspacePage>
+	);
 
 describe('AccountIndividuals', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 		lastDropdownProps = undefined;
-		mockSearch = '';
 
-		// The handler reads window.location, which jsdom shares across tests.
-
-		window.history.replaceState({}, '', '/');
+		mockLocation();
 	});
 
 	afterEach(cleanup);
 
+	afterAll(() => {
+		Object.defineProperty(window, 'location', {
+			configurable: true,
+			value: originalLocation,
+		});
+	});
+
 	it('should render the card title', () => {
-		render(<AccountIndividuals />);
+		renderAccountIndividuals();
 
 		expect(screen.getByText('Account Individuals')).toBeInTheDocument();
 	});
 
 	it('should render the range dropdown', () => {
-		render(<AccountIndividuals />);
+		renderAccountIndividuals();
 
 		expect(lastDropdownProps).toBeDefined();
 	});
 
 	it('should default the range to the last thirty days', () => {
-		render(<AccountIndividuals />);
+		renderAccountIndividuals();
 
 		expect(lastDropdownProps.rangeSelectors.rangeKey).toBe('30');
 	});
 
 	it('should show the range that is on the query string', () => {
-		mockSearch = '?rangeKey=7';
-
-		render(<AccountIndividuals />);
+		renderAccountIndividuals({rangeKey: '7'});
 
 		expect(lastDropdownProps.rangeSelectors.rangeKey).toBe('7');
 	});
 
 	it('should offer the custom range picker', () => {
-		render(<AccountIndividuals />);
+		renderAccountIndividuals();
 
 		expect(lastDropdownProps.legacy).toBe(false);
 	});
 
 	it('should write the selected preset to the query string', () => {
-		render(<AccountIndividuals />);
+		renderAccountIndividuals();
 
 		lastDropdownProps.onRangeSelectorChange({
 			rangeEnd: null,
@@ -92,17 +104,19 @@ describe('AccountIndividuals', () => {
 			rangeStart: null,
 		});
 
-		expect(mockPush).toHaveBeenCalledWith('/?rangeKey=90');
+		expect(mockLocationAssign).toHaveBeenCalledWith('/account?rangeKey=90');
 	});
 
 	it('should drop the previous bounds when a preset is selected', () => {
-		window.history.replaceState(
-			{},
-			'',
-			'/?rangeEnd=2026-02-20&rangeKey=CUSTOM&rangeStart=2026-02-10'
+		mockLocation(
+			'http://localhost/account?rangeEnd=2026-02-20&rangeKey=CUSTOM&rangeStart=2026-02-10'
 		);
 
-		render(<AccountIndividuals />);
+		renderAccountIndividuals({
+			rangeEnd: '2026-02-20',
+			rangeKey: 'CUSTOM',
+			rangeStart: '2026-02-10',
+		});
 
 		lastDropdownProps.onRangeSelectorChange({
 			rangeEnd: null,
@@ -110,15 +124,15 @@ describe('AccountIndividuals', () => {
 			rangeStart: null,
 		});
 
-		const [pushedURL] = mockPush.mock.calls[0];
+		const [assignedURL] = mockLocationAssign.mock.calls[0];
 
-		expect(pushedURL).not.toContain('rangeEnd');
-		expect(pushedURL).not.toContain('rangeStart');
-		expect(pushedURL).toContain('rangeKey=30');
+		expect(assignedURL).not.toContain('rangeEnd');
+		expect(assignedURL).not.toContain('rangeStart');
+		expect(assignedURL).toContain('rangeKey=30');
 	});
 
 	it('should render the card description', () => {
-		render(<AccountIndividuals />);
+		renderAccountIndividuals();
 
 		expect(
 			screen.getByText(
@@ -128,7 +142,7 @@ describe('AccountIndividuals', () => {
 	});
 
 	it('should render the individuals data set', () => {
-		render(<AccountIndividuals />);
+		renderAccountIndividuals();
 
 		expect(screen.getByTestId('fds-component')).toHaveAttribute(
 			'id',

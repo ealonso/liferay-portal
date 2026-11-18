@@ -16,7 +16,7 @@ exports[`withAction should render a custom error message 1`] = `
     </p>
     <a
       class="button-root btn btn-secondary"
-      href="/"
+      href="/workspaces"
     >
       Go to Home
     </a>
@@ -40,7 +40,7 @@ exports[`withAction should render error if the RemoteData has error 1`] = `
     </p>
     <a
       class="button-root btn btn-secondary"
-      href="/"
+      href="/workspaces"
     >
       Go to Home
     </a>

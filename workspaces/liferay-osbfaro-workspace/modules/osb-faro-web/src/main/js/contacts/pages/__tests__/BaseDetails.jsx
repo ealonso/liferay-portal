@@ -4,22 +4,19 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import {cleanup, render} from '@testing-library/react';
 import {Provider} from 'react-redux';
-import {MemoryRouter} from 'react-router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
 
 jest.unmock('react-dom');
 
 const DefaultComponent = props => (
-	<MemoryRouter>
-		<Provider store={mockStore()}>
-			<BaseDetails
-				dataSourceFn={() => Promise.resolve(data.mockAccountDetails())}
-				groupId='23'
-				id='test'
-				{...props}
-			/>
-		</Provider>
-	</MemoryRouter>
+	<Provider store={mockStore()}>
+		<BaseDetails
+			dataSourceFn={() => Promise.resolve(data.mockAccountDetails())}
+			groupId='23'
+			id='test'
+			{...props}
+		/>
+	</Provider>
 );
 
 describe('BaseDetails', () => {

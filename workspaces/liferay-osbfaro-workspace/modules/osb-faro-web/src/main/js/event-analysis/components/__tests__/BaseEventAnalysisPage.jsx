@@ -24,9 +24,9 @@ import mockStore, {mockStoreData} from 'test/mock-store';
 import React from 'react';
 import {CreateEventAnalysisMutation} from 'event-analysis/queries/EventAnalysisQuery';
 import {fireEvent, render, screen, waitFor} from '@testing-library/react';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -45,37 +45,37 @@ const renderPage = () =>
 					}
 				]}
 			>
-				<MemoryRouter
-					initialEntries={['/workspace/23/1/event-analysis/create']}
+				<WorkspacePage
+					channelId="1"
+					friendlyURL="/edit-event-analysis"
+					groupId="23"
 				>
-					<RouterRoutes>
-						<Route
-							element={
-								<DataSourcesProvider groupId="23">
-									<BaseEventAnalysisPage event={EVENT} />
-								</DataSourcesProvider>
-							}
-							path="workspace/:groupId/:channelId/event-analysis/create"
-						/>
-
-						<Route
-							element={<p>{'event analysis list'}</p>}
-							path="workspace/:groupId/:channelId/event-analysis"
-						/>
-					</RouterRoutes>
-				</MemoryRouter>
+					<DataSourcesProvider groupId="23">
+						<BaseEventAnalysisPage event={EVENT} />
+					</DataSourcesProvider>
+				</WorkspacePage>
 			</MockedProvider>
 		</Provider>
 	);
 
 describe('BaseEventAnalysisPage', () => {
+	const {location} = window;
+
 	beforeEach(() => {
 		jest.clearAllMocks();
+
+		delete window.location;
+
+		window.location = {...location, assign: jest.fn()};
 
 		EventAnalysisEditor.mockImplementation(() => 'event analysis editor');
 	});
 
-	it('shows the creating title while saving a new analysis', async () => {
+	afterEach(() => {
+		window.location = location;
+	});
+
+	it('shows the creating title while saving a new analysis and then goes to the list', async () => {
 		renderPage();
 
 		fireEvent.change(screen.getByLabelText(/^title/i), {
@@ -88,9 +88,9 @@ describe('BaseEventAnalysisPage', () => {
 			'Creating...'
 		);
 
-		expect(
-			await screen.findByText('event analysis list')
-		).toBeInTheDocument();
+		await waitFor(() =>
+			expect(window.location.assign).toHaveBeenCalledWith('/events')
+		);
 	});
 
 	it('does not rerender the editor while typing the title', async () => {

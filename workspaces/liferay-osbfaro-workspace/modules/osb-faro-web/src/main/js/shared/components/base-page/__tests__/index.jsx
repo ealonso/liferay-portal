@@ -2,7 +2,6 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import {BasePage} from '../index';
 import {cleanup, render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
 import {Provider} from 'react-redux';
 import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
 
@@ -23,11 +22,9 @@ describe('BasePage', () => {
 	it('renders BasePage', () => {
 		const {container} = render(
 			<Provider store={mockStore()}>
-				<MemoryRouter>
-					<BasePage documentTitle='Test title'>
-						{'Test test'}
-					</BasePage>
-				</MemoryRouter>
+				<BasePage documentTitle='Test title'>
+					{'Test test'}
+				</BasePage>
 			</Provider>
 		);
 
@@ -37,9 +34,7 @@ describe('BasePage', () => {
 	it('sets the document title with Analytics Cloud for a non-LDP workspace', () => {
 		render(
 			<Provider store={mockStore()}>
-				<MemoryRouter>
-					<BasePage documentTitle='Test title' />
-				</MemoryRouter>
+				<BasePage documentTitle='Test title' />
 			</Provider>
 		);
 
@@ -51,9 +46,7 @@ describe('BasePage', () => {
 
 		render(
 			<Provider store={mockStore()}>
-				<MemoryRouter>
-					<BasePage documentTitle='Test title' />
-				</MemoryRouter>
+				<BasePage documentTitle='Test title' />
 			</Provider>
 		);
 

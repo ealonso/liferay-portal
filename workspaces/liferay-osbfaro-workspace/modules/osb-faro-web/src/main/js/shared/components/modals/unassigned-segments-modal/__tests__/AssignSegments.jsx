@@ -3,7 +3,6 @@ import AssignSegments from '../AssignSegments';
 import React from 'react';
 import {ChannelContext} from 'shared/context/channel';
 import {cleanup, fireEvent, render, waitFor} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
 import {mockChannelContext} from 'test/mock-channel-context';
 import {mockSegment} from 'test/data';
 import {UnassignedSegmentsContext} from 'shared/context/unassignedSegments';
@@ -27,13 +26,11 @@ const mockedContext = {
 };
 
 const DefaultComponent = props => (
-	<MemoryRouter>
-		<UnassignedSegmentsContext.Provider value={mockedContext}>
-			<ChannelContext.Provider value={mockChannelContext()}>
-				<AssignSegments groupId='123' onClose={jest.fn()} {...props} />
-			</ChannelContext.Provider>
-		</UnassignedSegmentsContext.Provider>
-	</MemoryRouter>
+	<UnassignedSegmentsContext.Provider value={mockedContext}>
+		<ChannelContext.Provider value={mockChannelContext()}>
+			<AssignSegments groupId='123' onClose={jest.fn()} {...props} />
+		</ChannelContext.Provider>
+	</UnassignedSegmentsContext.Provider>
 );
 
 describe('AssignSegments', () => {

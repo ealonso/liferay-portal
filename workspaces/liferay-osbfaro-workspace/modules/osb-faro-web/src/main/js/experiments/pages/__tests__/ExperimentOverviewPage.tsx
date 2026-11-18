@@ -4,7 +4,6 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import {ApolloProvider} from '@apollo/client';
 import {fireEvent, render} from '@testing-library/react';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {
 	mockExperimentDraftReq,
@@ -12,38 +11,24 @@ import {
 	mockExperimentStatusReq,
 } from 'test/graphql-data';
 import {Provider} from 'react-redux';
-import {Routes} from 'shared/util/router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		channelId: '2000',
-		groupId: '1000',
-		id: '123',
-		query: {},
-	}),
-}));
 
 const WrappedComponent = ({mocks}: {mocks: any[]}) => (
 	<ApolloProvider client={client}>
 		<Provider store={mockStore()}>
-			<MemoryRouter
-				initialEntries={['/workspace/1000/2000/tests/overview/123']}
+			<WorkspacePage
+				channelId="2000"
+				friendlyURL="/test"
+				groupId="1000"
+				params={{id: '123'}}
 			>
-				<RouterRoutes>
-					<Route
-						element={
-							<MockedProvider mocks={mocks}>
-								<ExperimentOverviewPage />
-							</MockedProvider>
-						}
-						path={`${Routes.TESTS_OVERVIEW}/*`}
-					/>
-				</RouterRoutes>
-			</MemoryRouter>
+				<MockedProvider mocks={mocks}>
+					<ExperimentOverviewPage />
+				</MockedProvider>
+			</WorkspacePage>
 		</Provider>
 	</ApolloProvider>
 );

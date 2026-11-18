@@ -3,18 +3,9 @@ import client from 'shared/apollo/client';
 import React from 'react';
 import {ApolloProvider} from '@apollo/client';
 import {cleanup, render} from '@testing-library/react';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useLocation: () => ({
-		search: '?rangeKey=30'
-	}),
-	useParams: () => ({
-		channelId: '456'
-	})
-}));
 
 describe('ActiveIndividualsCard', () => {
 	afterEach(cleanup);
@@ -22,7 +13,9 @@ describe('ActiveIndividualsCard', () => {
 	it('should render', () => {
 		const {container} = render(
 			<ApolloProvider client={client}>
-				<ActiveIndividualsCard />
+				<WorkspacePage channelId='456' params={{rangeKey: '30'}}>
+					<ActiveIndividualsCard />
+				</WorkspacePage>
 			</ApolloProvider>
 		);
 		expect(container).toMatchSnapshot();

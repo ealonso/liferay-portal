@@ -16,7 +16,7 @@ exports[`Sites Dashboard InterestDetails render 1`] = `
         >
           <a
             class="btn btn-outline-borderless btn-outline-secondary"
-            href="/workspace/123/456/sites/interests?rangeKey=30"
+            href="/site-interests?rangeKey=30"
           >
             <svg
               class="lexicon-icon lexicon-icon-angle-left-small icon-root mr-2"
@@ -42,7 +42,7 @@ exports[`Sites Dashboard InterestDetails render 1`] = `
               <span
                 class="interest-title"
               >
-                "undefined"
+                "Liferay"
               </span>
             </div>
           </div>

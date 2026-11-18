@@ -6,21 +6,14 @@ import {fromJS} from 'immutable';
 import {Project} from 'shared/util/records';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
 import {SubscriptionNames} from 'shared/util/subscriptions';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
 jest.mock('shared/hooks/useTimeZone', () => ({
 	useTimeZone: () => ({timeZoneId: 'UTC'})
-}));
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		groupId: '23'
-	})
 }));
 
 jest.mock('shared/hooks/useCurrentUser', () => ({
@@ -42,9 +35,9 @@ const defaultProps = {
 
 const WrappedComponent = ({store = mockStore(), ...props}) => (
 	<Provider store={store}>
-		<MemoryRouter>
+		<WorkspacePage>
 			<UsageOverviewExternal {...props} />
-		</MemoryRouter>
+		</WorkspacePage>
 	</Provider>
 );
 

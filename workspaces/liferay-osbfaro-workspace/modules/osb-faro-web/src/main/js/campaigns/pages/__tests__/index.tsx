@@ -3,22 +3,14 @@ import Campaigns from '../index';
 import mockStore from 'test/mock-store';
 import React from 'react';
 import {ChannelContext} from 'shared/context/channel';
-import {act, cleanup, render, waitFor} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
+import {cleanup, render, waitFor} from '@testing-library/react';
 import {mockChannelContext} from 'test/mock-channel-context';
 import {Provider} from 'react-redux';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useDataSources} from 'shared/context/dataSources';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		channelId: '123',
-		groupId: '23',
-	}),
-}));
 
 jest.mock('shared/context/dataSources', () => ({
 	useDataSources: jest.fn(),
@@ -67,16 +59,44 @@ const fetchCampaignMetrics = API.campaigns.fetchCampaignMetrics as jest.Mock;
 const mockedUseCurrentUser = useCurrentUser as jest.Mock;
 const mockedUseDataSources = useDataSources as jest.Mock;
 
-const renderCampaigns = (initialEntry = '/') =>
-	render(
+const mockLocationAssign = jest.fn();
+
+const {location} = window;
+
+// The page reads its query from the page context and writes it back through
+// window.location, so both carry the same query string.
+
+const renderCampaigns = (query = '') => {
+	Object.defineProperty(window, 'location', {
+		configurable: true,
+		value: {
+			assign: mockLocationAssign,
+			href: `http://localhost/campaigns${query}`,
+			origin: 'http://localhost',
+		},
+	});
+
+	return render(
 		<Provider store={mockStore()}>
 			<ChannelContext.Provider value={mockChannelContext() as any}>
-				<MemoryRouter initialEntries={[initialEntry]}>
+				<WorkspacePage
+					channelId="123"
+					friendlyURL="/campaigns"
+					params={Object.fromEntries(new URLSearchParams(query))}
+				>
 					<Campaigns />
-				</MemoryRouter>
+				</WorkspacePage>
 			</ChannelContext.Provider>
 		</Provider>
 	);
+};
+
+afterAll(() => {
+	Object.defineProperty(window, 'location', {
+		configurable: true,
+		value: location,
+	});
+});
 
 describe('Campaigns', () => {
 	beforeEach(() => {
@@ -151,7 +171,7 @@ describe('Campaigns', () => {
 	});
 
 	it('should read the range from the URL', async () => {
-		renderCampaigns('/?rangeKey=7');
+		renderCampaigns('?rangeKey=7');
 
 		expect(lastDropdownRangeKeyProps.rangeSelectors.rangeKey).toBe('7');
 
@@ -164,7 +184,7 @@ describe('Campaigns', () => {
 
 	it('should ask for the metrics of a custom range by its bounds alone', async () => {
 		renderCampaigns(
-			'/?rangeEnd=2026-10-20&rangeKey=CUSTOM&rangeStart=2026-10-01'
+			'?rangeEnd=2026-10-20&rangeKey=CUSTOM&rangeStart=2026-10-01'
 		);
 
 		await waitFor(() =>
@@ -179,33 +199,21 @@ describe('Campaigns', () => {
 		);
 	});
 
-	it('should write the selected range to the URL', async () => {
+	it('should write the selected range to the URL', () => {
 		renderCampaigns();
 
-		act(() =>
-			lastDropdownRangeKeyProps.onRangeSelectorChange({
-				rangeEnd: '',
-				rangeKey: '90',
-				rangeStart: '',
-			})
-		);
+		lastDropdownRangeKeyProps.onRangeSelectorChange({
+			rangeEnd: '',
+			rangeKey: '90',
+			rangeStart: '',
+		});
 
-		expect(lastDropdownRangeKeyProps.rangeSelectors.rangeKey).toBe('90');
-
-		await waitFor(() =>
-			expect(fetchCampaignMetrics).toHaveBeenCalledWith(
-				expect.objectContaining({rangeQueryValues: {rangeKey: '90'}})
-			)
+		expect(mockLocationAssign).toHaveBeenCalledWith(
+			'/campaigns?rangeKey=90'
 		);
 	});
 
 	describe('account filter', () => {
-
-		// Some tests move the browser location, so put it back even when one
-		// of them fails halfway.
-
-		afterEach(() => window.history.pushState({}, '', '/'));
-
 		it('should render the account picker in the sub header', () => {
 			const {container} = renderCampaigns();
 
@@ -224,7 +232,7 @@ describe('Campaigns', () => {
 		});
 
 		it('should read the account from the URL', async () => {
-			renderCampaigns('/?accountId=9&accountName=Acme');
+			renderCampaigns('?accountId=9&accountName=Acme');
 
 			expect(lastAccountDropdownProps.initialAccountId).toBe('9');
 			expect(lastAccountDropdownProps.initialAccountName).toBe('Acme');
@@ -248,61 +256,35 @@ describe('Campaigns', () => {
 			);
 		});
 
-		it('should ask for the metrics of the account picked', async () => {
+		it('should write the account picked to the URL', () => {
 			renderCampaigns();
 
-			act(() =>
-				lastAccountDropdownProps.onFilterChange({id: '9', name: 'Acme'})
-			);
+			lastAccountDropdownProps.onFilterChange({id: '9', name: 'Acme'});
 
-			expect(lastAccountDropdownProps.initialAccountId).toBe('9');
-			expect(lastAccountDropdownProps.initialAccountName).toBe('Acme');
-
-			await waitFor(() =>
-				expect(fetchCampaignMetrics).toHaveBeenCalledWith(
-					expect.objectContaining({accountId: '9'})
-				)
+			expect(mockLocationAssign).toHaveBeenCalledWith(
+				'/campaigns?accountId=9&accountName=Acme'
 			);
 		});
 
-		it('should ask for the metrics of every account again once it is cleared', async () => {
-			renderCampaigns('/?accountId=9&accountName=Acme');
+		it('should take the account off the URL once it is cleared', () => {
+			renderCampaigns('?accountId=9&accountName=Acme');
 
-			act(() => lastAccountDropdownProps.onFilterChange(null));
+			lastAccountDropdownProps.onFilterChange(null);
 
-			expect(lastAccountDropdownProps.initialAccountId).toBeUndefined();
-
-			await waitFor(() =>
-				expect(fetchCampaignMetrics).toHaveBeenLastCalledWith(
-					expect.not.objectContaining({accountId: expect.anything()})
-				)
-			);
+			expect(mockLocationAssign).toHaveBeenCalledWith('/campaigns');
 		});
 
-		it('should keep the account when the range changes', async () => {
+		it('should keep the account when the range changes', () => {
+			renderCampaigns('?accountId=9&accountName=Acme');
 
-			// The range write builds on the browser location, which a
-			// memory router does not move, so line the two up.
+			lastDropdownRangeKeyProps.onRangeSelectorChange({
+				rangeEnd: '',
+				rangeKey: '90',
+				rangeStart: '',
+			});
 
-			window.history.pushState({}, '', '/?accountId=9&accountName=Acme');
-
-			renderCampaigns('/?accountId=9&accountName=Acme');
-
-			act(() =>
-				lastDropdownRangeKeyProps.onRangeSelectorChange({
-					rangeEnd: '',
-					rangeKey: '90',
-					rangeStart: '',
-				})
-			);
-
-			await waitFor(() =>
-				expect(fetchCampaignMetrics).toHaveBeenLastCalledWith(
-					expect.objectContaining({
-						accountId: '9',
-						rangeQueryValues: {rangeKey: '90'},
-					})
-				)
+			expect(mockLocationAssign).toHaveBeenCalledWith(
+				'/campaigns?accountId=9&accountName=Acme&rangeKey=90'
 			);
 		});
 	});

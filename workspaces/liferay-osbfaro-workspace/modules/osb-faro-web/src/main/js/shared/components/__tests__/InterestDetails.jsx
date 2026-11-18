@@ -2,7 +2,6 @@ import client from 'shared/apollo/client';
 import InterestDetails from '../InterestDetails';
 import React from 'react';
 import {ApolloProvider} from '@apollo/client';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {
 	mockPreferenceReq,
@@ -10,8 +9,8 @@ import {
 	mockTouchpointsReq
 } from 'test/graphql-data';
 import {render} from '@testing-library/react';
-import {Routes} from 'shared/util/router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -65,18 +64,12 @@ const DefaultComponent = () => (
 				mockTouchpointsReq(mockItems, {size: 2})
 			]}
 		>
-			<MemoryRouter
-				initialEntries={[
-					'/workspace/23/321321/contacts/accounts/123123/interests/test'
-				]}
+			<WorkspacePage
+				channelId='321321'
+				params={{id: '321', interestId: 'test'}}
 			>
-				<RouterRoutes>
-					<Route
-						element={<InterestDetails {...defaultProps} />}
-						path={Routes.CONTACTS_ACCOUNT_INTEREST_DETAILS}
-					/>
-				</RouterRoutes>
-			</MemoryRouter>
+				<InterestDetails {...defaultProps} />
+			</WorkspacePage>
 		</MockedProvider>
 	</ApolloProvider>
 );

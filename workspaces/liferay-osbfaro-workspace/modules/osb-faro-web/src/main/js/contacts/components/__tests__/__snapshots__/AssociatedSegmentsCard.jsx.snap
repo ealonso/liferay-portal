@@ -83,8 +83,7 @@ exports[`AssociatedSegmentsCard should render 1`] = `
                 <strong>
                   <a
                     class="list-group-link"
-                    data-discover="true"
-                    href="/workspace/23/contacts/segments/0"
+                    href="/segment?id=0"
                   >
                     Seattle0
                   </a>
@@ -122,8 +121,7 @@ exports[`AssociatedSegmentsCard should render 1`] = `
                 <strong>
                   <a
                     class="list-group-link"
-                    data-discover="true"
-                    href="/workspace/23/contacts/segments/1"
+                    href="/segment?id=1"
                   >
                     Seattle1
                   </a>

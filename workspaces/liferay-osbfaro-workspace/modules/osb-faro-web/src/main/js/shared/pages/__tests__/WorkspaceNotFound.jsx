@@ -1,20 +1,14 @@
-import * as Router from 'shared/util/router';
 import mockStore from 'test/mock-store';
 import React from 'react';
 import WorkspaceNotFound from '../WorkspaceNotFound';
-import {BrowserRouter} from 'react-router-dom';
 import {cleanup, render} from '@testing-library/react';
 import {Provider} from 'react-redux';
-
-Router.navigate = jest.fn();
 
 jest.unmock('react-dom');
 
 const renderWithProvider = props => (
 	<Provider store={mockStore()}>
-		<BrowserRouter>
-			<WorkspaceNotFound {...props} />
-		</BrowserRouter>
+		<WorkspaceNotFound {...props} />
 	</Provider>
 );
 

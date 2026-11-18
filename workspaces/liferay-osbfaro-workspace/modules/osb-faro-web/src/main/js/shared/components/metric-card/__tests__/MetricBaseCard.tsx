@@ -9,7 +9,6 @@ import {
 	SessionsPerVisitorMetric,
 } from '../metrics';
 import {getSiteMetricsChartData} from 'shared/components/metric-card/util';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {
 	RangeKeyTimeRanges,
@@ -18,6 +17,7 @@ import {
 } from 'shared/util/constants';
 import {render, screen} from '@testing-library/react';
 import {SitesMetricQuery, SitesTabsQuery} from '../queries';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -55,18 +55,9 @@ const WrapperComponent = ({
 				},
 			}}
 		>
-			<MemoryRouter
-				initialEntries={[
-					`/workspace/2000/456/sites?rangeKey=${rangeKey}`,
-				]}
-			>
-				<RouterRoutes>
-					<Route
-						element={children}
-						path="/workspace/:groupId/:channelId/sites/*"
-					/>
-				</RouterRoutes>
-			</MemoryRouter>
+			<WorkspacePage channelId="456" groupId="2000" params={{rangeKey}}>
+				{children}
+			</WorkspacePage>
 		</BasePage.Context.Provider>
 	</MockedProvider>
 );

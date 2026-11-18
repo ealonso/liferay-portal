@@ -4,14 +4,13 @@ import React from 'react';
 import RecommendationListQuery from '../../queries/RecommendationListQuery';
 import Recommendations from '../Recommendations';
 import {InMemoryCache} from '@apollo/client';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockJobBag} from 'test/graphql-data';
 import {Provider} from 'react-redux';
 import {range} from 'lodash';
 import {render} from '@testing-library/react';
-import {Routes} from 'shared/util/router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -36,10 +35,8 @@ const defaultProps = {
 
 const DefaultComponent = props => (
 	<Provider store={mockStore()}>
-		<MemoryRouter
-			initialEntries={[
-				'/workspace/23/settings/recommendations?delta=10&page=1&sortOrder=DESC&field=name'
-			]}
+		<WorkspacePage
+			params={{delta: '10', field: 'name', page: '1', sortOrder: 'DESC'}}
 		>
 			<MockedProvider
 				cache={
@@ -50,16 +47,9 @@ const DefaultComponent = props => (
 				}
 				mocks={[mockRecommendationListReq()]}
 			>
-				<RouterRoutes>
-					<Route
-						element={
-							<Recommendations {...defaultProps} {...props} />
-						}
-						path={`${Routes.SETTINGS_RECOMMENDATIONS}/*`}
-					/>
-				</RouterRoutes>
+				<Recommendations {...defaultProps} {...props} />
 			</MockedProvider>
-		</MemoryRouter>
+		</WorkspacePage>
 	</Provider>
 );
 

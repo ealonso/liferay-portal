@@ -1,7 +1,6 @@
 import EmptyState, {CardEmpty} from '../EmptyState';
 import mockStore from 'test/mock-store';
 import React from 'react';
-import {BrowserRouter} from 'react-router-dom';
 import {cleanup, fireEvent, render, screen} from '@testing-library/react';
 import {Provider} from 'react-redux';
 
@@ -13,9 +12,7 @@ describe('Workspace Empty State', () => {
 	it('should render', () => {
 		const {container} = render(
 			<Provider store={mockStore()}>
-				<BrowserRouter>
-					<EmptyState />
-				</BrowserRouter>
+				<EmptyState />
 			</Provider>
 		);
 
@@ -25,9 +22,7 @@ describe('Workspace Empty State', () => {
 	it('should open the contact sales modal', async () => {
 		render(
 			<Provider store={mockStore()}>
-				<BrowserRouter>
-					<EmptyState />
-				</BrowserRouter>
+				<EmptyState />
 			</Provider>
 		);
 
@@ -100,17 +95,15 @@ describe('Workspace Empty State - CardEmpty', () => {
 
 	it('should contain a button with href', () => {
 		const {getByText} = render(
-			<BrowserRouter>
-				<CardEmpty
-					buttonProps={{
-						displayType: 'secondary',
-						href: '/workspaces',
-						label: 'CardEmpty Button Label'
-					}}
-					description='CardEmpty Description'
-					icon='home'
-				/>
-			</BrowserRouter>
+			<CardEmpty
+				buttonProps={{
+					displayType: 'secondary',
+					href: '/workspaces',
+					label: 'CardEmpty Button Label'
+				}}
+				description='CardEmpty Description'
+				icon='home'
+			/>
 		);
 
 		expect(getByText('CardEmpty Button Label')).toHaveAttribute(

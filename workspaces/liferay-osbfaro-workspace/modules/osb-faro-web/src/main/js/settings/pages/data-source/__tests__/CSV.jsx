@@ -5,21 +5,14 @@ import {CSV} from '../CSV';
 import {DataSource, User} from 'shared/util/records';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
 import {UserRoleNames} from 'shared/util/constants';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		groupId: '23'
-	})
-}));
-
 const DefaultComponent = props => (
 	<Provider store={mockStore()}>
-		<MemoryRouter>
+		<WorkspacePage params={{id: 'test'}}>
 			<CSV
 				currentUser={new User(data.mockUser())}
 				dataSource={new DataSource(data.mockCSVDataSource())}
@@ -27,7 +20,7 @@ const DefaultComponent = props => (
 				id='test'
 				{...props}
 			/>
-		</MemoryRouter>
+		</WorkspacePage>
 	</Provider>
 );
 

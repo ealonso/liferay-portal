@@ -1,8 +1,8 @@
 import React from 'react';
 import {createOrderIOMap, getSortFromOrderIOMap} from 'shared/util/pagination';
-import {MemoryRouter} from 'react-router-dom';
 import {render} from '@testing-library/react';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -23,14 +23,8 @@ const DefaultComponent = ({delta, orderIOMap, page, query}) => {
 		</>
 	);
 };
-const WrapperComponent = ({children, queryString = ''}) => (
-	<MemoryRouter
-		initialEntries={[
-			`/workspace/23/321321/contacts/accounts/123123/interests/test${queryString}`,
-		]}
-	>
-		{children}
-	</MemoryRouter>
+const WrapperComponent = ({children, params}) => (
+	<WorkspacePage params={params}>{children}</WorkspacePage>
 );
 
 describe('useQueryPagination', () => {
@@ -70,7 +64,15 @@ describe('useQueryPagination', () => {
 		};
 
 		const {container} = render(
-			<WrapperComponent queryString="?delta=5&field=name&sortOrder=DESC&query=meow&page=1">
+			<WrapperComponent
+				params={{
+					delta: '5',
+					field: 'name',
+					page: '1',
+					query: 'meow',
+					sortOrder: 'DESC',
+				}}
+			>
 				<TestComponent />
 			</WrapperComponent>
 		);

@@ -4,10 +4,10 @@ import React from 'react';
 import {ChannelContext} from 'shared/context/channel';
 import {cleanup, render, screen} from '@testing-library/react';
 import {mockChannelContext} from 'test/mock-channel-context';
-import {MemoryRouter, useNavigate} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {useRequest} from 'shared/hooks/useRequest';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -51,21 +51,7 @@ jest.mock('shared/util/breadcrumbs', () => ({
 	})),
 }));
 
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useNavigate: jest.fn(),
-	useParams: () => ({
-		channelId: '123',
-		groupId: '23',
-	}),
-}));
-
-const mockedUseNavigate = useNavigate as jest.Mock;
 const mockedUseRequest = useRequest as jest.Mock;
-
-const mockHistoryPush = jest.fn();
-
-const buildInitialEntries = (path = '/workspace/23/123/accounts') => [path];
 
 const store = mockStore();
 
@@ -139,17 +125,13 @@ const useRequestImpl =
 		return {data: accountMetricsMock};
 	};
 
-const renderList = ({queryString = ''}: {queryString?: string} = {}) =>
+const renderList = () =>
 	render(
 		<Provider store={store}>
 			<ChannelContext.Provider value={mockChannelContext() as any}>
-				<MemoryRouter
-					initialEntries={buildInitialEntries(
-						`/workspace/23/123/accounts${queryString}`
-					)}
-				>
+				<WorkspacePage channelId="123" groupId="23">
 					<List channelId="123" groupId="23" />
-				</MemoryRouter>
+				</WorkspacePage>
 			</ChannelContext.Provider>
 		</Provider>
 	);
@@ -160,7 +142,6 @@ describe('List', () => {
 		lastApiURL = undefined;
 		lastFilters = undefined;
 
-		mockedUseNavigate.mockReturnValue(mockHistoryPush);
 		mockedUseRequest.mockImplementation(useRequestImpl());
 	});
 

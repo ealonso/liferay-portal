@@ -212,7 +212,7 @@ exports[`DataTransformation should render 1`] = `
       >
         <a
           class="button-root cancel btn btn-secondary"
-          href="/workspace/23/settings/data-source"
+          href="/data-sources"
         >
           Cancel
         </a>

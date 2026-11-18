@@ -7,7 +7,6 @@ import {
 	screen,
 	waitFor,
 } from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
 import {useRequest} from 'shared/hooks/useRequest';
 import {warmFrontendDataSet} from 'test/warm-frontend-data-set';
 
@@ -32,11 +31,7 @@ const mockLifecycles = (data?: {id: string}[], loading = false) =>
 	(useRequest as jest.Mock).mockReturnValue({data, loading});
 
 const renderCard = () =>
-	render(
-		<MemoryRouter>
-			<MembershipsCard campaignId="7" channelId="123" groupId="23" />
-		</MemoryRouter>
-	);
+	render(<MembershipsCard campaignId="7" channelId="123" groupId="23" />);
 
 const getDataSet = (id: string) => document.getElementById(id) as HTMLElement;
 

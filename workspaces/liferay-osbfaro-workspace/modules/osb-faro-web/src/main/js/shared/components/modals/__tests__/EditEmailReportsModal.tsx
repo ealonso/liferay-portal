@@ -5,7 +5,6 @@ import {act, fireEvent, render, waitFor} from '@testing-library/react';
 import {addAlert} from 'shared/actions/alerts';
 import {Frequency} from 'settings/channels/components/EmailReports';
 import {InMemoryCache} from '@apollo/client';
-import {MemoryRouter} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
 import {useModal} from '@clayui/modal';
@@ -32,22 +31,20 @@ const DefaultComponent = (
 
 	return (
 		<Provider store={mockStore()}>
-			<MemoryRouter>
-				<MockedProvider
-					cache={
-						new InMemoryCache({
-							addTypename: false,
-						})
-					}
-				>
-					<EditEmailReportsModal
-						observer={observer}
-						onCancel={jest.fn()}
-						onSave={() => addAlert()}
-						{...props}
-					/>
-				</MockedProvider>
-			</MemoryRouter>
+			<MockedProvider
+				cache={
+					new InMemoryCache({
+						addTypename: false,
+					})
+				}
+			>
+				<EditEmailReportsModal
+					observer={observer}
+					onCancel={jest.fn()}
+					onSave={() => addAlert()}
+					{...props}
+				/>
+			</MockedProvider>
 		</Provider>
 	);
 };

@@ -89,7 +89,7 @@ exports[`DeleteDataSource should render 1`] = `
         </button>
         <a
           class="button-root btn btn-secondary"
-          href="/workspace/23/settings/data-source/123"
+          href="/data-source?id=123"
         >
           Cancel
         </a>

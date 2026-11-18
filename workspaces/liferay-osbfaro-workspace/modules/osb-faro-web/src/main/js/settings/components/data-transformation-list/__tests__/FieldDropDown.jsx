@@ -3,7 +3,6 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import {act, cleanup, render} from '@testing-library/react';
 import {Map} from 'immutable';
-import {MemoryRouter} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
 
@@ -11,9 +10,7 @@ jest.unmock('react-dom');
 
 const DefaultWrapper = ({children}) => (
 	<Provider store={mockStore()}>
-		<MemoryRouter>
-			<MockedProvider>{children}</MockedProvider>
-		</MemoryRouter>
+		<MockedProvider>{children}</MockedProvider>
 	</Provider>
 );
 

@@ -43,10 +43,6 @@ jest.mock('shared/hooks/useCurrentUser', () => ({
 	useCurrentUser: () => ({isAdmin: () => true})
 }));
 
-jest.mock('react-router-dom', () => ({
-	useParams: () => ({groupId: '12345'})
-}));
-
 jest.unmock('react-dom');
 
 describe('CriteriaSidebar', () => {

@@ -3,7 +3,6 @@ import BasePage from 'shared/components/base-page';
 import client from 'shared/apollo/client';
 import React from 'react';
 import {ApolloProvider} from '@apollo/client';
-import {BrowserRouter} from 'react-router-dom';
 import {render} from '@testing-library/react';
 
 jest.unmock('react-dom');
@@ -91,12 +90,10 @@ describe('AssetsListCard', () => {
 	const WrappedComponent = props => (
 		<ApolloProvider client={client}>
 			<BasePage.Context.Provider value={MOCK_CONTEXT}>
-				<BrowserRouter>
-					<AssetsListCard
-						{...props}
-						rangeSelectors={{rangeKey: '30'}}
-					/>
-				</BrowserRouter>
+				<AssetsListCard
+					{...props}
+					rangeSelectors={{rangeKey: '30'}}
+				/>
 			</BasePage.Context.Provider>
 		</ApolloProvider>
 	);

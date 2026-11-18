@@ -6,24 +6,15 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import {ApolloProvider} from '@apollo/client';
 import {fireEvent, render} from '@testing-library/react';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockEmptyState, mockSuccessState} from 'test/__mocks__/mock-objects';
 import {mockEventAnalysisListReq} from 'test/graphql-data';
 import {Provider} from 'react-redux';
-import {Routes} from 'shared/util/router';
 import {useRequest} from 'shared/hooks/useRequest';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		channelId: '456',
-		groupId: '123'
-	})
-}));
 
 const mockUseRequestResponse = (overrides = {}) => ({
 	data: [],
@@ -58,18 +49,13 @@ const WrappedComponent = ({eventAnalyses}) => (
 	<Provider store={mockStore()}>
 		<ApolloProvider client={client}>
 			<MockedProvider mocks={[mockEventAnalysisListReq(eventAnalyses)]}>
-				<MemoryRouter
-					initialEntries={['/workspace/123/456/event-analysis']}
+				<WorkspacePage
+					channelId='456'
+					friendlyURL='/events'
+					groupId='123'
 				>
-					<RouterRoutes>
-						<Route
-							element={
-								<EventAnalysisList />
-							}
-							path={`${Routes.EVENT_ANALYSIS}/*`}
-						/>
-					</RouterRoutes>
-				</MemoryRouter>
+					<EventAnalysisList />
+				</WorkspacePage>
 			</MockedProvider>
 		</ApolloProvider>
 	</Provider>

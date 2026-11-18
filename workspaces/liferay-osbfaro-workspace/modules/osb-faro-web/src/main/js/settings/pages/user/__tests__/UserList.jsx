@@ -3,14 +3,13 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import UserList from '../UserList';
 import {InMemoryCache} from '@apollo/client';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
-import {Routes} from 'shared/util/router';
 import {User} from 'shared/util/records';
 import {UserRoleNames} from 'shared/util/constants';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -21,25 +20,18 @@ const defaultProps = {
 
 const DefaultComponent = props => (
 	<Provider store={mockStore()}>
-		<MemoryRouter initialEntries={['/workspace/23/settings/users']}>
-			<RouterRoutes>
-				<Route
-					element={
-						<MockedProvider
-							cache={
-								new InMemoryCache({
-									addTypename: false,
-									freezeResults: false
-								})
-							}
-						>
-							<UserList {...defaultProps} {...props} />
-						</MockedProvider>
-					}
-					path={`${Routes.SETTINGS_USERS}/*`}
-				/>
-			</RouterRoutes>
-		</MemoryRouter>
+		<WorkspacePage friendlyURL='/users'>
+			<MockedProvider
+				cache={
+					new InMemoryCache({
+						addTypename: false,
+						freezeResults: false
+					})
+				}
+			>
+				<UserList {...defaultProps} {...props} />
+			</MockedProvider>
+		</WorkspacePage>
 	</Provider>
 );
 

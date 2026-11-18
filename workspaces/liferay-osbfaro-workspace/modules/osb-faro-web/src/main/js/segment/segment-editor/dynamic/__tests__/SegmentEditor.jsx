@@ -2,7 +2,7 @@ import * as data from 'test/data';
 import mockStore from 'test/mock-store';
 import React from 'react';
 import SegmentEditor, {validateSegmentEditor} from '../index';
-import {BrowserRouter} from 'react-router-dom';
+import {WorkspacePage} from 'test/mock-page-context';
 import {
 	cleanup,
 	fireEvent,
@@ -16,7 +16,7 @@ import {HTML5Backend} from 'react-dnd-html5-backend';
 import {Provider} from 'react-redux';
 import {Segment} from 'shared/util/records';
 import {SegmentStates} from 'shared/util/constants';
-import {useBlocker} from 'react-router-dom';
+import {useUnsavedChangesPrompt} from 'shared/hooks/useUnsavedChangesPrompt';
 
 jest.mock('segment/segment-editor/dynamic/criteria-sidebar/index');
 
@@ -26,24 +26,18 @@ jest.mock('uuid', () => ({
 
 jest.unmock('react-dom');
 
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useBlocker: jest.fn(() => ({state: 'unblocked'})),
+jest.mock('shared/hooks/useUnsavedChangesPrompt', () => ({
+	useUnsavedChangesPrompt: jest.fn()
 }));
 
 /**
- * Runs the guard the editor handed to `useBlocker` on its latest render,
- * answering whether the editor would stop the user from navigating away.
+ * Answers whether the editor asked, on its latest render, to warn the user
+ * before leaving the page.
  */
 function blocksNavigation() {
-	const {calls} = useBlocker.mock;
+	const {calls} = useUnsavedChangesPrompt.mock;
 
-	const shouldBlock = calls[calls.length - 1][0];
-
-	return shouldBlock({
-		currentLocation: {pathname: '/segments/create'},
-		nextLocation: {pathname: '/event-analysis'}
-	});
+	return calls[calls.length - 1][0];
 }
 
 describe('SegmentEditor', () => {
@@ -61,13 +55,13 @@ describe('SegmentEditor', () => {
 	});
 
 	beforeEach(() => {
-		useBlocker.mockClear();
+		useUnsavedChangesPrompt.mockClear();
 	});
 
 	it('should render', () => {
 		const {container} = render(
 			<Provider store={mockStore()}>
-				<BrowserRouter>
+				<WorkspacePage>
 					<DndProvider backend={HTML5Backend}>
 						<SegmentEditor
 							channelId='321'
@@ -75,7 +69,7 @@ describe('SegmentEditor', () => {
 							type='BATCH'
 						/>
 					</DndProvider>
-				</BrowserRouter>
+				</WorkspacePage>
 			</Provider>
 		);
 
@@ -85,7 +79,7 @@ describe('SegmentEditor', () => {
 	it('should render with error message', () => {
 		render(
 			<Provider store={mockStore()}>
-				<BrowserRouter>
+				<WorkspacePage>
 					<DndProvider backend={HTML5Backend}>
 						<SegmentEditor
 							channelId='321'
@@ -101,7 +95,7 @@ describe('SegmentEditor', () => {
 							type='BATCH'
 						/>
 					</DndProvider>
-				</BrowserRouter>
+				</WorkspacePage>
 			</Provider>
 		);
 
@@ -111,7 +105,7 @@ describe('SegmentEditor', () => {
 	it('renders the membership section above the segment conditions', () => {
 		render(
 			<Provider store={mockStore()}>
-				<BrowserRouter>
+				<WorkspacePage>
 					<DndProvider backend={HTML5Backend}>
 						<SegmentEditor
 							channelId='321'
@@ -119,7 +113,7 @@ describe('SegmentEditor', () => {
 							type='BATCH'
 						/>
 					</DndProvider>
-				</BrowserRouter>
+				</WorkspacePage>
 			</Provider>
 		);
 
@@ -136,7 +130,7 @@ describe('SegmentEditor', () => {
 	it('places the segment content in the BaseEditPage main content region', () => {
 		render(
 			<Provider store={mockStore()}>
-				<BrowserRouter>
+				<WorkspacePage>
 					<DndProvider backend={HTML5Backend}>
 						<SegmentEditor
 							channelId='321'
@@ -144,7 +138,7 @@ describe('SegmentEditor', () => {
 							type='BATCH'
 						/>
 					</DndProvider>
-				</BrowserRouter>
+				</WorkspacePage>
 			</Provider>
 		);
 
@@ -159,7 +153,7 @@ describe('SegmentEditor', () => {
 	it('renders the realtime segment with the sequential toggle in the conditions heading', () => {
 		const {container} = render(
 			<Provider store={mockStore()}>
-				<BrowserRouter>
+				<WorkspacePage>
 					<DndProvider backend={HTML5Backend}>
 						<SegmentEditor
 							channelId='321'
@@ -167,7 +161,7 @@ describe('SegmentEditor', () => {
 							type='REAL_TIME'
 						/>
 					</DndProvider>
-				</BrowserRouter>
+				</WorkspacePage>
 			</Provider>
 		);
 
@@ -195,7 +189,7 @@ describe('SegmentEditor', () => {
 	it('enables the sequential toggle on a realtime segment', async () => {
 		render(
 			<Provider store={mockStore()}>
-				<BrowserRouter>
+				<WorkspacePage>
 					<DndProvider backend={HTML5Backend}>
 						<SegmentEditor
 							channelId='321'
@@ -203,7 +197,7 @@ describe('SegmentEditor', () => {
 							type='REAL_TIME'
 						/>
 					</DndProvider>
-				</BrowserRouter>
+				</WorkspacePage>
 			</Provider>
 		);
 
@@ -223,7 +217,7 @@ describe('SegmentEditor', () => {
 	it('explains the sequential order in a popover next to the toggle', () => {
 		const {container} = render(
 			<Provider store={mockStore()}>
-				<BrowserRouter>
+				<WorkspacePage>
 					<DndProvider backend={HTML5Backend}>
 						<SegmentEditor
 							channelId='321'
@@ -231,7 +225,7 @@ describe('SegmentEditor', () => {
 							type='REAL_TIME'
 						/>
 					</DndProvider>
-				</BrowserRouter>
+				</WorkspacePage>
 			</Provider>
 		);
 
@@ -253,7 +247,7 @@ describe('SegmentEditor', () => {
 	it('does not render the sequential toggle on a batch segment', () => {
 		render(
 			<Provider store={mockStore()}>
-				<BrowserRouter>
+				<WorkspacePage>
 					<DndProvider backend={HTML5Backend}>
 						<SegmentEditor
 							channelId='321'
@@ -261,7 +255,7 @@ describe('SegmentEditor', () => {
 							type='BATCH'
 						/>
 					</DndProvider>
-				</BrowserRouter>
+				</WorkspacePage>
 			</Provider>
 		);
 
@@ -274,7 +268,7 @@ describe('SegmentEditor', () => {
 	it('shows the Segment ERC popover with the description and the slug rule', () => {
 		render(
 			<Provider store={mockStore()}>
-				<BrowserRouter>
+				<WorkspacePage>
 					<DndProvider backend={HTML5Backend}>
 						<SegmentEditor
 							channelId='321'
@@ -282,7 +276,7 @@ describe('SegmentEditor', () => {
 							type='BATCH'
 						/>
 					</DndProvider>
-				</BrowserRouter>
+				</WorkspacePage>
 			</Provider>
 		);
 
@@ -313,7 +307,7 @@ describe('SegmentEditor', () => {
 	it('should let the user leave an untouched creation form', () => {
 		render(
 			<Provider store={mockStore()}>
-				<BrowserRouter>
+				<WorkspacePage>
 					<DndProvider backend={HTML5Backend}>
 						<SegmentEditor
 							channelId='321'
@@ -321,7 +315,7 @@ describe('SegmentEditor', () => {
 							type='BATCH'
 						/>
 					</DndProvider>
-				</BrowserRouter>
+				</WorkspacePage>
 			</Provider>
 		);
 
@@ -331,7 +325,7 @@ describe('SegmentEditor', () => {
 	it('should warn before leaving once the segment name changes', () => {
 		render(
 			<Provider store={mockStore()}>
-				<BrowserRouter>
+				<WorkspacePage>
 					<DndProvider backend={HTML5Backend}>
 						<SegmentEditor
 							channelId='321'
@@ -339,7 +333,7 @@ describe('SegmentEditor', () => {
 							type='BATCH'
 						/>
 					</DndProvider>
-				</BrowserRouter>
+				</WorkspacePage>
 			</Provider>
 		);
 
@@ -353,7 +347,7 @@ describe('SegmentEditor', () => {
 	it('should let the user leave an untouched edit form', () => {
 		render(
 			<Provider store={mockStore()}>
-				<BrowserRouter>
+				<WorkspacePage>
 					<DndProvider backend={HTML5Backend}>
 						<SegmentEditor
 							channelId='321'
@@ -368,7 +362,7 @@ describe('SegmentEditor', () => {
 							type='BATCH'
 						/>
 					</DndProvider>
-				</BrowserRouter>
+				</WorkspacePage>
 			</Provider>
 		);
 

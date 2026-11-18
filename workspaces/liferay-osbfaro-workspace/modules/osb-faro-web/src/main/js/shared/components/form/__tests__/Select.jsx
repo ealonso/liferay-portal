@@ -5,7 +5,6 @@ import React from 'react';
 import Select from '../Select';
 import {Field, Form, Formik} from 'formik';
 import {InMemoryCache} from '@apollo/client';
-import {MemoryRouter} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
@@ -15,30 +14,28 @@ describe('Select', () => {
 	it('renders', async () => {
 		const {container} = render(
 			<Provider store={mockStore()}>
-				<MemoryRouter>
-					
-							<MockedProvider
-								cache={
-									new InMemoryCache({
-										addTypename: false
-									})
-								}
+				
+						<MockedProvider
+							cache={
+								new InMemoryCache({
+									addTypename: false
+								})
+							}
+						>
+							<Formik
+								initialValues={{test: 'red'}}
+								onSubmit={jest.fn()}
 							>
-								<Formik
-									initialValues={{test: 'red'}}
-									onSubmit={jest.fn()}
-								>
-									<Form>
-										<Field component={Select} name='test'>
-											<Select.Item value='red'>
-												{'red'}
-											</Select.Item>
-										</Field>
-									</Form>
-								</Formik>
-							</MockedProvider>
-						
-				</MemoryRouter>
+								<Form>
+									<Field component={Select} name='test'>
+										<Select.Item value='red'>
+											{'red'}
+										</Select.Item>
+									</Field>
+								</Form>
+							</Formik>
+						</MockedProvider>
+					
 			</Provider>
 		);
 
@@ -50,30 +47,28 @@ describe('Select', () => {
 	it('renders w/ label', async () => {
 		const {container} = render(
 			<Provider store={mockStore()}>
-				<MemoryRouter>
-					
-							<MockedProvider
-								cache={
-									new InMemoryCache({
-										addTypename: false
-									})
-								}
+				
+						<MockedProvider
+							cache={
+								new InMemoryCache({
+									addTypename: false
+								})
+							}
+						>
+							<Formik
+								initialValues={{test: ''}}
+								onSubmit={jest.fn()}
 							>
-								<Formik
-									initialValues={{test: ''}}
-									onSubmit={jest.fn()}
-								>
-									<Form>
-										<Field
-											component={Select}
-											label='foo'
-											name='test'
-										/>
-									</Form>
-								</Formik>
-							</MockedProvider>
-						
-				</MemoryRouter>
+								<Form>
+									<Field
+										component={Select}
+										label='foo'
+										name='test'
+									/>
+								</Form>
+							</Formik>
+						</MockedProvider>
+					
 			</Provider>
 		);
 
@@ -85,34 +80,32 @@ describe('Select', () => {
 	it('renders w/ error', async () => {
 		const {container} = render(
 			<Provider store={mockStore()}>
-				<MemoryRouter>
-					
-							<MockedProvider
-								cache={
-									new InMemoryCache({
-										addTypename: false
-									})
-								}
+				
+						<MockedProvider
+							cache={
+								new InMemoryCache({
+									addTypename: false
+								})
+							}
+						>
+							<Formik
+								initialErrors={{
+									test: 'can not be test'
+								}}
+								initialTouched={{test: true}}
+								initialValues={{test: 'red'}}
+								onSubmit={jest.fn()}
 							>
-								<Formik
-									initialErrors={{
-										test: 'can not be test'
-									}}
-									initialTouched={{test: true}}
-									initialValues={{test: 'red'}}
-									onSubmit={jest.fn()}
-								>
-									<Form>
-										<Field component={Select} name='test'>
-											<Select.Item value='red'>
-												{'red'}
-											</Select.Item>
-										</Field>
-									</Form>
-								</Formik>
-							</MockedProvider>
-						
-				</MemoryRouter>
+								<Form>
+									<Field component={Select} name='test'>
+										<Select.Item value='red'>
+											{'red'}
+										</Select.Item>
+									</Field>
+								</Form>
+							</Formik>
+						</MockedProvider>
+					
 			</Provider>
 		);
 

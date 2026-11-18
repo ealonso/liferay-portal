@@ -4,7 +4,6 @@ import React from 'react';
 import WorkspaceListItem from '../ListItem';
 import {cleanup, fireEvent, render} from '@testing-library/react';
 import {ProjectStates} from 'shared/util/constants';
-import {MemoryRouter} from 'react-router-dom';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
 
 jest.unmock('react-dom');
@@ -14,12 +13,10 @@ describe('WorkspaceListItem', () => {
 
 	it('should render', () => {
 		const {container} = render(
-			<MemoryRouter>
-				<WorkspaceListItem
-					accountName=''
-					projectState={ProjectStates.Ready}
-				/>
-			</MemoryRouter>
+			<WorkspaceListItem
+				accountName=''
+				projectState={ProjectStates.Ready}
+			/>
 		);
 
 		expect(container).toMatchSnapshot();
@@ -31,9 +28,7 @@ describe('WorkspaceListItem', () => {
 		);
 
 		const {container, queryByText} = render(
-			<MemoryRouter>
-				<WorkspaceListItem projectState={ProjectStates.Unavailable} />
-			</MemoryRouter>
+			<WorkspaceListItem projectState={ProjectStates.Unavailable} />
 		);
 
 		const button = queryByText('Workspace unavailable; click to reload.');
@@ -53,12 +48,10 @@ describe('WorkspaceListItem', () => {
 
 	it('should render a workspace with projects you can join', () => {
 		const {queryByText} = render(
-			<MemoryRouter>
-				<WorkspaceListItem
-					isJoinableProjects
-					projectState={ProjectStates.Ready}
-				/>
-			</MemoryRouter>
+			<WorkspaceListItem
+				isJoinableProjects
+				projectState={ProjectStates.Ready}
+			/>
 		);
 
 		expect(queryByText('Request Access')).toBeTruthy();
@@ -66,21 +59,17 @@ describe('WorkspaceListItem', () => {
 
 	it('should render a workspace with a deactivated project', () => {
 		const {queryByText} = render(
-			<MemoryRouter>
-				<WorkspaceListItem projectState={ProjectStates.Deactivated} />
-			</MemoryRouter>
+			<WorkspaceListItem projectState={ProjectStates.Deactivated} />
 		);
 		expect(queryByText('Activate')).toBeTruthy();
 	});
 
 	it('should render contact sales and the Analytics Cloud limit message when hasLimitReached and ldpEnabled is false', () => {
 		const {getByText} = render(
-			<MemoryRouter>
-				<WorkspaceListItem
-					hasLimitReached
-					projectState={ProjectStates.Ready}
-				/>
-			</MemoryRouter>
+			<WorkspaceListItem
+				hasLimitReached
+				projectState={ProjectStates.Ready}
+			/>
 		);
 
 		expect(
@@ -94,13 +83,11 @@ describe('WorkspaceListItem', () => {
 
 	it('should render the Liferay Data Platform limit message when hasLimitReached and ldpEnabled is true', () => {
 		const {getByText} = render(
-			<MemoryRouter>
-				<WorkspaceListItem
-					hasLimitReached
-					ldpEnabled
-					projectState={ProjectStates.Ready}
-				/>
-			</MemoryRouter>
+			<WorkspaceListItem
+				hasLimitReached
+				ldpEnabled
+				projectState={ProjectStates.Ready}
+			/>
 		);
 
 		expect(

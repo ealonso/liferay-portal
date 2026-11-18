@@ -1,7 +1,6 @@
 import DistributionCard from '../index';
 import mockStore from 'test/mock-store';
 import React from 'react';
-import {BrowserRouter} from 'react-router-dom';
 import {cleanup, render} from '@testing-library/react';
 import {fetchDistributionTabs} from 'shared/actions/preferences';
 import {Provider} from 'react-redux';
@@ -22,12 +21,10 @@ describe('DistributionCard', () => {
 
 		const {getByText} = render(
 			<Provider store={mockStore()}>
-				<BrowserRouter>
-					<DistributionCard
-						distributionKey='individualsDashboard'
-						fetchDistribution={() => Promise.resolve()}
-					/>
-				</BrowserRouter>
+				<DistributionCard
+					distributionKey='individualsDashboard'
+					fetchDistribution={() => Promise.resolve()}
+				/>
 			</Provider>
 		);
 
@@ -41,13 +38,11 @@ describe('DistributionCard', () => {
 
 		const {getByText} = render(
 			<Provider store={mockStore()}>
-				<BrowserRouter>
-					<DistributionCard
-						distributionKey='individualsDashboard'
-						fetchDistribution={() => Promise.resolve()}
-						noResultsRenderer={() => <div>{'empty state'}</div>}
-					/>
-				</BrowserRouter>
+				<DistributionCard
+					distributionKey='individualsDashboard'
+					fetchDistribution={() => Promise.resolve()}
+					noResultsRenderer={() => <div>{'empty state'}</div>}
+				/>
 			</Provider>
 		);
 
@@ -59,14 +54,12 @@ describe('DistributionCard', () => {
 
 		const {getByText} = render(
 			<Provider store={mockStore()}>
-				<BrowserRouter>
-					<DistributionCard
-						distributionKey='individualsDashboard'
-						fetchDistribution={() => Promise.resolve()}
-						groupId='123'
-						showAddDataSource
-					/>
-				</BrowserRouter>
+				<DistributionCard
+					distributionKey='individualsDashboard'
+					fetchDistribution={() => Promise.resolve()}
+					groupId='123'
+					showAddDataSource
+				/>
 			</Provider>
 		);
 
@@ -83,13 +76,11 @@ describe('DistributionCard', () => {
 
 		const {getByText} = render(
 			<Provider store={mockStore()}>
-				<BrowserRouter>
-					<DistributionCard
-						distributionKey='123'
-						fetchDistribution={() => Promise.resolve()}
-						id='123'
-					/>
-				</BrowserRouter>
+				<DistributionCard
+					distributionKey='123'
+					fetchDistribution={() => Promise.resolve()}
+					id='123'
+				/>
 			</Provider>
 		);
 

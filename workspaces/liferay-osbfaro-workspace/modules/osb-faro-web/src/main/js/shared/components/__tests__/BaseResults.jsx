@@ -4,7 +4,6 @@ import React from 'react';
 import {cleanup, fireEvent, render, waitFor} from '@testing-library/react';
 import {noop, times} from 'lodash';
 import {SelectionProvider} from 'shared/context/selection';
-import {MemoryRouter} from 'react-router';
 
 jest.unmock('react-dom');
 
@@ -14,9 +13,7 @@ const INDIVIDUALS = times(TOTAL, i => data.mockIndividual(i));
 
 const DefaultComponent = props => (
 	<SelectionProvider>
-		<MemoryRouter>
-			<BaseResults {...props} />
-		</MemoryRouter>
+		<BaseResults {...props} />
 	</SelectionProvider>
 );
 

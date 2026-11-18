@@ -4,7 +4,6 @@ import React from 'react';
 import {ApolloProvider} from '@apollo/client';
 import {fireEvent, render} from '@testing-library/react';
 import {getVisitorsListCard} from '../VisitorsListCard';
-import {MemoryRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
 
 jest.unmock('react-dom');
@@ -39,9 +38,7 @@ describe('getVisitorsListCard', () => {
 			const {getByTestId, getByText} = render(
 				<Provider store={mockStore()}>
 					<ApolloProvider client={client}>
-						<MemoryRouter>
-							<VisitorsListCard router={MOCK_ROUTER} />
-						</MemoryRouter>
+						<VisitorsListCard router={MOCK_ROUTER} />
 					</ApolloProvider>
 				</Provider>
 			);

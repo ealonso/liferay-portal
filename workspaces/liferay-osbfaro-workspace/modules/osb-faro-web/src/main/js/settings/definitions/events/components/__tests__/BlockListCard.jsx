@@ -3,12 +3,11 @@ import BlockListCard from '../BlockListCard';
 import mockStore from 'test/mock-store';
 import React from 'react';
 import {cleanup, render, screen} from '@testing-library/react';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {mockBlockedCustomEventDefinitionsReq} from 'test/graphql-data';
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
-import {Routes} from 'shared/util/router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -16,22 +15,11 @@ const mockGroupId = '23';
 
 const Wrapper = ({children, mocks = []}) => (
 	<Provider store={mockStore()}>
-		<MemoryRouter
-			initialEntries={[
-				`/workspace/${mockGroupId}/settings/definitions/events/block-list`
-			]}
-		>
-			<RouterRoutes>
-				<Route
-					element={
-						<MockedProvider addTypename={false} mocks={mocks}>
-							{children}
-						</MockedProvider>
-					}
-					path={`${Routes.SETTINGS_DEFINITIONS_EVENTS_BLOCK_LIST}/*`}
-				/>
-			</RouterRoutes>
-		</MemoryRouter>
+		<WorkspacePage groupId={mockGroupId} params={{tab: 'block-list'}}>
+			<MockedProvider addTypename={false} mocks={mocks}>
+				{children}
+			</MockedProvider>
+		</WorkspacePage>
 	</Provider>
 );
 

@@ -10,17 +10,6 @@ import {Provider} from 'react-redux';
 
 jest.unmock('react-dom');
 
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		channelId: '456',
-		groupId: '2000',
-		query: {
-			rangeKey: '30'
-		}
-	})
-}));
-
 jest.mock('shared/hooks/useTimeZone', () => ({
 	useTimeZone: () => ({
 		timeZoneId: 'UTC'

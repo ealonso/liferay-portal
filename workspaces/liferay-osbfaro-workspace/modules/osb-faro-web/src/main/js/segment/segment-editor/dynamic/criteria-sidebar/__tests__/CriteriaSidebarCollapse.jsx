@@ -19,10 +19,6 @@ jest.mock('shared/hooks/useCurrentUser', () => ({
 	useCurrentUser: () => ({isAdmin: () => true})
 }));
 
-jest.mock('react-router-dom', () => ({
-	useParams: () => ({groupId: '12345'})
-}));
-
 const mockLiferayLanguage = key => {
 	const messages = {
 		'connect-a-data-source-containing-account-data':
@@ -210,10 +206,7 @@ describe('CriteriaSidebarCollapse', () => {
 		const connectLink = getByRole('link', {
 			name: /connect-data-source/i
 		});
-		expect(connectLink).toHaveAttribute(
-			'href',
-			'/workspace/12345/settings/data-source'
-		);
+		expect(connectLink).toHaveAttribute('href', '/data-sources');
 	});
 
 	it('should not render Account EmptyState when there are properties, even if propertyKey is Account', () => {

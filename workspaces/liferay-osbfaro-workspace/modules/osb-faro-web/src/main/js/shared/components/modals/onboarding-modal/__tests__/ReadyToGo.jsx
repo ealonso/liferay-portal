@@ -1,6 +1,5 @@
 import React from 'react';
 import ReadyToGo from '../ReadyToGo';
-import {BrowserRouter} from 'react-router-dom';
 import {cleanup, fireEvent, render} from '@testing-library/react';
 import {noop} from 'lodash';
 
@@ -11,9 +10,7 @@ describe('ReadyToGo', () => {
 
 	it('renders', () => {
 		const {container} = render(
-			<BrowserRouter>
-				<ReadyToGo groupId='123' onClose={noop} />
-			</BrowserRouter>
+			<ReadyToGo groupId='123' onClose={noop} />
 		);
 
 		expect(container).toMatchSnapshot();
@@ -23,9 +20,7 @@ describe('ReadyToGo', () => {
 		const spy = jest.fn();
 
 		const {queryByText} = render(
-			<BrowserRouter>
-				<ReadyToGo groupId='123' onClose={spy} />
-			</BrowserRouter>
+			<ReadyToGo groupId='123' onClose={spy} />
 		);
 
 		expect(spy).not.toBeCalled();

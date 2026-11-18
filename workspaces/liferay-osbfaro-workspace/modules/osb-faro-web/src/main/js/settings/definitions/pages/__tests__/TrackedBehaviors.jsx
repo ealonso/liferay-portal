@@ -3,17 +3,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {cleanup, render} from '@testing-library/react';
 import {Provider} from 'react-redux';
-import {MemoryRouter} from 'react-router';
 import {TrackedBehaviors} from '../TrackedBehaviors';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		groupId: '23'
-	})
-}));
 
 ReactDOM.createPortal = jest.fn();
 
@@ -23,9 +16,9 @@ describe('TrackedBehaviorsList', () => {
 	it('should render', () => {
 		const {container} = render(
 			<Provider store={mockStore()}>
-				<MemoryRouter>
+				<WorkspacePage>
 					<TrackedBehaviors groupId='23' />
-				</MemoryRouter>
+				</WorkspacePage>
 			</Provider>
 		);
 

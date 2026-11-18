@@ -2,7 +2,6 @@ import ActivityStreamCard from '../ActivityStreamCard';
 import mockStore from 'test/mock-store';
 import React from 'react';
 import {act, fireEvent, render} from '@testing-library/react';
-import {MemoryRouter, Route, Routes} from 'react-router-dom';
 import {
 	mockAccountEventMetricsReq,
 	mockAccountEventsTrendReq,
@@ -12,6 +11,7 @@ import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
 import {RangeKeyTimeRanges} from 'shared/util/constants';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -43,28 +43,21 @@ interface WrapperProps {
 
 const Wrapper: React.FC<WrapperProps> = ({accountName, mocks}) => (
 	<Provider store={mockStore()}>
-		<MemoryRouter initialEntries={['/workspace/liferay.com']}>
-			<Routes>
-				<Route
-					element={
-						<MockedProvider mocks={mocks}>
-							<ActivityStreamCard
-								accountId="abc"
-								accountName={accountName}
-								channelId="123123"
-								interval="D"
-								rangeSelectors={{
-									rangeEnd: null,
-									rangeKey: RangeKeyTimeRanges.Last30Days,
-									rangeStart: null,
-								}}
-							/>
-						</MockedProvider>
-					}
-					path="/workspace/:groupId"
+		<WorkspacePage groupId="liferay.com">
+			<MockedProvider mocks={mocks}>
+				<ActivityStreamCard
+					accountId="abc"
+					accountName={accountName}
+					channelId="123123"
+					interval="D"
+					rangeSelectors={{
+						rangeEnd: null,
+						rangeKey: RangeKeyTimeRanges.Last30Days,
+						rangeStart: null,
+					}}
 				/>
-			</Routes>
-		</MemoryRouter>
+			</MockedProvider>
+		</WorkspacePage>
 	</Provider>
 );
 

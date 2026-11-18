@@ -3,19 +3,12 @@ import CampaignDetail from '../CampaignDetail';
 import mockStore from 'test/mock-store';
 import React from 'react';
 import {ChannelContext} from 'shared/context/channel';
-import {MemoryRouter} from 'react-router-dom';
 import {mockChannelContext} from 'test/mock-channel-context';
 import {Provider} from 'react-redux';
 import {render, waitFor} from '@testing-library/react';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
-
-let params: Record<string, string> = {};
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => params,
-}));
 
 let lastAccountDropdownProps: any;
 let lastDropdownRangeKeyProps: any;
@@ -52,13 +45,20 @@ jest.mock('../../components/CampaignUtmParameters', () => ({
 
 const fetchCampaign = API.campaigns.fetchCampaign as jest.Mock;
 
-const renderCampaignDetail = (initialEntry = '/') =>
+const renderCampaignDetail = (query = '') =>
 	render(
 		<Provider store={mockStore()}>
 			<ChannelContext.Provider value={mockChannelContext() as any}>
-				<MemoryRouter initialEntries={[initialEntry]}>
+				<WorkspacePage
+					channelId="123"
+					friendlyURL="/campaign"
+					params={{
+						...Object.fromEntries(new URLSearchParams(query)),
+						id: '7',
+					}}
+				>
 					<CampaignDetail />
-				</MemoryRouter>
+				</WorkspacePage>
 			</ChannelContext.Provider>
 		</Provider>
 	);
@@ -73,8 +73,6 @@ describe('CampaignDetail', () => {
 
 		lastAccountDropdownProps = undefined;
 		lastDropdownRangeKeyProps = undefined;
-
-		params = {channelId: '123', groupId: '23', id: '7'};
 	});
 
 	it('should ask the endpoint for the campaign the route names', async () => {
@@ -102,14 +100,14 @@ describe('CampaignDetail', () => {
 	});
 
 	it('should trail the breadcrumb back through Campaigns, keeping the range', () => {
-		const {container} = renderCampaignDetail('/?rangeKey=7');
+		const {container} = renderCampaignDetail('?rangeKey=7');
 
 		const hrefs = Array.from(
 			container.querySelectorAll('.breadcrumb a'),
 			(anchor) => anchor.getAttribute('href')
 		);
 
-		expect(hrefs).toContain('/workspace/23/123/campaigns?rangeKey=7');
+		expect(hrefs).toContain('/campaigns?rangeKey=7');
 	});
 
 	it('should render the range selector in the sub header', () => {
@@ -135,21 +133,21 @@ describe('CampaignDetail', () => {
 	});
 
 	it('should show the account the URL carries in the selector', () => {
-		renderCampaignDetail('/?accountId=9&accountName=Acme');
+		renderCampaignDetail('?accountId=9&accountName=Acme');
 
 		expect(lastAccountDropdownProps.initialAccountId).toBe('9');
 		expect(lastAccountDropdownProps.initialAccountName).toBe('Acme');
 	});
 
 	it('should read the range from the URL', () => {
-		renderCampaignDetail('/?rangeKey=7');
+		renderCampaignDetail('?rangeKey=7');
 
 		expect(lastDropdownRangeKeyProps.rangeSelectors.rangeKey).toBe('7');
 	});
 
 	it('should keep a custom range on the way back to Campaigns', () => {
 		const {container} = renderCampaignDetail(
-			'/?rangeEnd=2026-10-20&rangeKey=CUSTOM&rangeStart=2026-10-01'
+			'?rangeEnd=2026-10-20&rangeKey=CUSTOM&rangeStart=2026-10-01'
 		);
 
 		const hrefs = Array.from(
@@ -158,29 +156,29 @@ describe('CampaignDetail', () => {
 		);
 
 		expect(hrefs).toContain(
-			'/workspace/23/123/campaigns?rangeEnd=2026-10-20&rangeKey=CUSTOM&rangeStart=2026-10-01'
+			'/campaigns?rangeEnd=2026-10-20&rangeKey=CUSTOM&rangeStart=2026-10-01'
 		);
 	});
 
 	it('should keep the account on the way back to Campaigns', () => {
 		const {container} = renderCampaignDetail(
-			'/?accountId=9&accountName=Acme&rangeKey=7'
+			'?accountId=9&accountName=Acme&rangeKey=7'
 		);
 
 		const href = Array.from(
 			container.querySelectorAll('.breadcrumb a'),
 			(anchor) => anchor.getAttribute('href')!
-		).find((href) => href.startsWith('/workspace/23/123/campaigns?'))!;
+		).find((href) => href.startsWith('/campaigns?'))!;
 
-		const params = new URL(href, 'http://localhost').searchParams;
+		const searchParams = new URL(href, 'http://localhost').searchParams;
 
-		expect(params.get('accountId')).toBe('9');
-		expect(params.get('accountName')).toBe('Acme');
-		expect(params.get('rangeKey')).toBe('7');
+		expect(searchParams.get('accountId')).toBe('9');
+		expect(searchParams.get('accountName')).toBe('Acme');
+		expect(searchParams.get('rangeKey')).toBe('7');
 	});
 
 	it('should leave the account off the way back when none is selected', () => {
-		const {container} = renderCampaignDetail('/?rangeKey=7');
+		const {container} = renderCampaignDetail('?rangeKey=7');
 
 		const hrefs = Array.from(
 			container.querySelectorAll('.breadcrumb a'),

@@ -3,13 +3,9 @@ import {AssignedPropertiesTable} from '../AssignedPropertiesTable';
 import {DataSourceStatuses, DataSourceTypes} from 'shared/util/constants';
 import {fireEvent, render, screen} from '@testing-library/react';
 import {fromJS} from 'immutable';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({groupId: '23'}),
-}));
 
 let mockSelectChannelsModalProps: any;
 
@@ -69,10 +65,12 @@ const defaultProps = {
 
 const openSelectChannelsModal = (providerType: DataSourceTypes) => {
 	render(
-		<AssignedPropertiesTable
-			{...defaultProps}
-			dataSource={mockDataSource(providerType)}
-		/>
+		<WorkspacePage>
+			<AssignedPropertiesTable
+				{...defaultProps}
+				dataSource={mockDataSource(providerType)}
+			/>
+		</WorkspacePage>
 	);
 
 	expect(screen.queryByTestId('select-channels-modal')).toBeNull();

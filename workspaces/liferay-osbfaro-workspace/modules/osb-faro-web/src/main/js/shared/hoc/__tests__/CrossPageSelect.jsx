@@ -10,11 +10,9 @@ import React from 'react';
 import {act, cleanup, fireEvent, render} from '@testing-library/react';
 import {createOrderIOMap, NAME} from 'shared/util/pagination';
 import {inputSearchText, selectAllAndToggle} from 'test/helpers';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {OrderedMap} from 'immutable';
 import {Provider} from 'react-redux';
 import {range} from 'lodash';
-import {Routes} from 'shared/util/router';
 import {SelectionProvider} from 'shared/context/selection';
 
 jest.unmock('react-dom');
@@ -43,22 +41,9 @@ const defaultProps = {
 
 const DefaultComponent = props => (
 	<Provider store={mockStore()}>
-		<MemoryRouter
-			initialEntries={[
-				'/workspace/23/settings/definitions/events/custom'
-			]}
-		>
-			<RouterRoutes>
-				<Route
-					element={
-						<SelectionProvider>
-							<CrossPageSelect {...defaultProps} {...props} />
-						</SelectionProvider>
-					}
-					path={`${Routes.SETTINGS_DEFINITIONS_EVENTS_CUSTOM}/*`}
-				/>
-			</RouterRoutes>
-		</MemoryRouter>
+		<SelectionProvider>
+			<CrossPageSelect {...defaultProps} {...props} />
+		</SelectionProvider>
 	</Provider>
 );
 

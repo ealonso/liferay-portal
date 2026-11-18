@@ -3,7 +3,6 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import {cleanup, render, screen} from '@testing-library/react';
 import {fromJS} from 'immutable';
-import {MemoryRouter} from 'react-router-dom';
 import {noop} from 'lodash';
 import {Provider} from 'react-redux';
 import {updateProject} from 'shared/actions/projects';
@@ -52,14 +51,12 @@ const defaultStore = mockStore(
 
 const WrapperComponent = ({store = defaultStore, ...props}: any) => (
 	<Provider store={store}>
-		<MemoryRouter>
-			<ConfigureWorkspace
-				groupId={mockGroupId}
-				onClose={noop}
-				onNext={noop}
-				{...props}
-			/>
-		</MemoryRouter>
+		<ConfigureWorkspace
+			groupId={mockGroupId}
+			onClose={noop}
+			onNext={noop}
+			{...props}
+		/>
 	</Provider>
 );
 

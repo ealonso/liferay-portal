@@ -12,7 +12,7 @@ import {
 import {fromJS, List, Map} from 'immutable';
 import {Property} from 'shared/util/records';
 import {render, waitFor} from '@testing-library/react';
-import {StaticRouter} from 'react-router';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -93,12 +93,12 @@ describe('AccountDisplay', () => {
 
 		const renderLifecycleCriterion = criterion =>
 			render(
-				<StaticRouter>
+				<WorkspacePage>
 					<AccountDisplay
 						criterion={criterion}
 						property={lifecycleProperty}
 					/>
-				</StaticRouter>
+				</WorkspacePage>
 			);
 
 		beforeEach(() => {

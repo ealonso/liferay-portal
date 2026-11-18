@@ -8,7 +8,6 @@ import {
 } from '@testing-library/react';
 import {columns, FrontendDataSet, useSnapshots} from '../FrontendDataSet';
 import {EConfigInURLBehavior} from '@liferay/frontend-data-set-web';
-import {Routes} from 'shared/util/router';
 import {warmFrontendDataSet} from 'test/warm-frontend-data-set';
 
 jest.unmock('react-dom');
@@ -159,30 +158,42 @@ describe('columns.dateRenderer', () => {
 });
 
 describe('columns.nameAndLinkRenderer', () => {
-	it('should generate an href that includes the channelId path segment', () => {
+	it('should link to the page of the item', () => {
 		render(
 			columns.nameAndLinkRenderer({
-				channelId: '123',
-				groupId: '23',
 				itemData: {id: 'abc'},
-				route: Routes.CONTACTS_ACCOUNT,
+				url: '/account',
 				value: 'Acme Corp',
 			})
 		);
 
 		expect(screen.getByRole('link')).toHaveAttribute(
 			'href',
-			'/workspace/23/123/contacts/accounts/abc'
+			'/account?id=abc'
+		);
+	});
+
+	it('should add the query values to the link', () => {
+		render(
+			columns.nameAndLinkRenderer({
+				itemData: {id: 'abc'},
+				queryValues: {rangeKey: '30'},
+				url: '/account',
+				value: 'Acme Corp',
+			})
+		);
+
+		expect(screen.getByRole('link')).toHaveAttribute(
+			'href',
+			'/account?id=abc&rangeKey=30'
 		);
 	});
 
 	it('should use value as the link text when provided', () => {
 		render(
 			columns.nameAndLinkRenderer({
-				channelId: '123',
-				groupId: '23',
 				itemData: {id: 'abc'},
-				route: Routes.CONTACTS_ACCOUNT,
+				url: '/account',
 				value: 'Acme Corp',
 			})
 		);
@@ -193,10 +204,8 @@ describe('columns.nameAndLinkRenderer', () => {
 	it('should fall back to itemData.id as the link text when value is empty', () => {
 		render(
 			columns.nameAndLinkRenderer({
-				channelId: '123',
-				groupId: '23',
 				itemData: {id: 'abc'},
-				route: Routes.CONTACTS_ACCOUNT,
+				url: '/account',
 				value: '',
 			})
 		);

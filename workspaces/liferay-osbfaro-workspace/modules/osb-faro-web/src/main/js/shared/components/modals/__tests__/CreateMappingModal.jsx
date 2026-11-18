@@ -4,7 +4,6 @@ import CreateMappingModal from '../CreateMappingModal';
 import mockStore from 'test/mock-store';
 import React from 'react';
 import {InMemoryCache} from '@apollo/client';
-import {MemoryRouter, Route, Routes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {noop} from 'lodash';
 import {Provider} from 'react-redux';
@@ -23,25 +22,16 @@ describe('CreateMappingModal', () => {
 	it('should render', async () => {
 		render(
 			<Provider store={mockStore()}>
-				<MemoryRouter initialEntries={['/workspace/23']}>
-					<Routes>
-						<Route
-							element={
-								<MockedProvider
-									cache={
-										new InMemoryCache({
-											addTypename: false
-										})
-									}
-									mocks={[]}
-								>
-									<TestModal groupId='23' onClose={noop} />
-								</MockedProvider>
-							}
-							path='/workspace/:groupId'
-						/>
-					</Routes>
-				</MemoryRouter>
+				<MockedProvider
+					cache={
+						new InMemoryCache({
+							addTypename: false
+						})
+					}
+					mocks={[]}
+				>
+					<TestModal groupId='23' onClose={noop} />
+				</MockedProvider>
 			</Provider>
 		);
 

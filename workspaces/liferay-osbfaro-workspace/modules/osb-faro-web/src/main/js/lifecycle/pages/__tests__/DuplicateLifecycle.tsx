@@ -5,13 +5,12 @@ import React from 'react';
 import {Alert} from 'shared/types';
 import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import {ILifecycleStage} from 'shared/api/lifecycle';
-import {MemoryRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
-import {Routes, toRoute} from 'shared/util/router';
 import {useLifecycleAccountData} from 'lifecycle/hooks/useLifecycleAccountData';
 import {useRequest} from 'shared/hooks/useRequest';
 import {useUnsavedChangesPrompt} from 'shared/hooks/useUnsavedChangesPrompt';
 import {AccountDataStatus} from 'lifecycle/utils/types';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -39,29 +38,12 @@ jest.mock('shared/actions/alerts', () => ({
 	addAlert: jest.fn((alert) => alert),
 }));
 
-const mockPush = jest.fn();
-
-const mockReplace = jest.fn();
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		channelId: '123',
-		groupId: '23',
-		sourceLifecycleId: 'erc-9',
-	}),
-}));
-
 jest.mock('shared/hooks/useUnsavedChangesPrompt', () => ({
 	useUnsavedChangesPrompt: jest.fn(),
 }));
 
 jest.mock('shared/hooks/useTimeZone', () => ({
 	useTimeZone: () => ({timeZoneId: 'UTC'}),
-}));
-
-jest.mock('shared/hooks/useHistoryAdapter', () => ({
-	useHistoryAdapter: () => ({push: mockPush, replace: mockReplace}),
 }));
 
 const mockedUseRequest = useRequest as jest.Mock;
@@ -122,22 +104,40 @@ const mockRequests = (props: any) => {
 const renderPage = () =>
 	render(
 		<Provider store={mockStore()}>
-			<MemoryRouter>
+			<WorkspacePage
+				channelId="123"
+				groupId="23"
+				params={{sourceLifecycleId: 'erc-9'}}
+			>
 				<DuplicateLifecycle />
-			</MemoryRouter>
+			</WorkspacePage>
 		</Provider>
 	);
 
 const clickCreate = () =>
 	fireEvent.click(screen.getByRole('button', {name: /create lifecycle/i}));
 
-const sourceURL = toRoute(Routes.LIFECYCLE_DASHBOARD, {
-	channelId: '123',
-	groupId: '23',
-	lifecycleId: 'erc-9',
-});
+const sourceURL = '/lifecycle?lifecycleId=erc-9';
+
+const originalLocation = window.location;
+
+const replace = jest.fn();
 
 describe('DuplicateLifecycle', () => {
+	beforeAll(() => {
+		Object.defineProperty(window, 'location', {
+			configurable: true,
+			value: {...originalLocation, assign: jest.fn(), replace},
+		});
+	});
+
+	afterAll(() => {
+		Object.defineProperty(window, 'location', {
+			configurable: true,
+			value: originalLocation,
+		});
+	});
+
 	beforeEach(() => {
 		jest.clearAllMocks();
 
@@ -273,13 +273,13 @@ describe('DuplicateLifecycle', () => {
 
 		renderPage();
 
-		expect(mockedPrompt).toHaveBeenLastCalledWith(false, expect.anything());
+		expect(mockedPrompt).toHaveBeenLastCalledWith(false);
 
 		fireEvent.change(screen.getByLabelText(/^name/i), {
 			target: {value: 'Renamed Hub'},
 		});
 
-		expect(mockedPrompt).toHaveBeenLastCalledWith(true, expect.anything());
+		expect(mockedPrompt).toHaveBeenLastCalledWith(true);
 		expect(API.lifecycle.createLifecycle).not.toHaveBeenCalled();
 	});
 
@@ -352,12 +352,8 @@ describe('DuplicateLifecycle', () => {
 		clickCreate();
 
 		await waitFor(() =>
-			expect(mockReplace).toHaveBeenCalledWith(
-				toRoute(Routes.LIFECYCLE_DASHBOARD, {
-					channelId: '123',
-					groupId: '23',
-					lifecycleId: 'erc-10',
-				})
+			expect(replace).toHaveBeenCalledWith(
+				'/lifecycle?lifecycleId=erc-10'
 			)
 		);
 
@@ -389,7 +385,7 @@ describe('DuplicateLifecycle', () => {
 			)
 		);
 
-		expect(mockReplace).not.toHaveBeenCalled();
+		expect(replace).not.toHaveBeenCalled();
 		expect(screen.getByLabelText(/^name/i)).toHaveValue(
 			'Growth and Retention Hub (1)'
 		);

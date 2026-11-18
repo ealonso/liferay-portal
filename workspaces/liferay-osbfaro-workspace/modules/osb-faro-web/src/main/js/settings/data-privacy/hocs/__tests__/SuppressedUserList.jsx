@@ -4,12 +4,11 @@ import SuppressedUserList from '../SuppressedUserList';
 import {cleanup, render} from '@testing-library/react';
 import {GDPRRequestStatuses} from 'shared/util/constants';
 import {InMemoryCache} from '@apollo/client';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockSuppressedUsersListReq} from 'test/graphql-data';
 import {Provider} from 'react-redux';
-import {Routes} from 'shared/util/router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -34,37 +33,26 @@ const mockItems = [
 
 const WrappedComponent = props => (
 	<Provider store={mockStore()}>
-		<MemoryRouter
-			initialEntries={[
-				'/workspace/23/settings/data-privacy/suppressed-users?delta=5&page=1'
-			]}
-		>
-			<RouterRoutes>
-				<Route
-					element={
-						<MockedProvider
-							cache={
-								new InMemoryCache({
-									addTypename: false,
-									freezeResults: false
-								})
-							}
-							mocks={[mockSuppressedUsersListReq(mockItems)]}
-						>
-							<SuppressedUserList
-								currentUser={{isAdmin: () => true}}
-								router={{
-									params: {groupId: '23'},
-									query: {delta: '5', page: '1'}
-								}}
-								{...props}
-							/>
-						</MockedProvider>
-					}
-					path={`${Routes.SETTINGS_DATA_PRIVACY_SUPPRESSED_USERS}/*`}
+		<WorkspacePage params={{delta: '5', page: '1'}}>
+			<MockedProvider
+				cache={
+					new InMemoryCache({
+						addTypename: false,
+						freezeResults: false
+					})
+				}
+				mocks={[mockSuppressedUsersListReq(mockItems)]}
+			>
+				<SuppressedUserList
+					currentUser={{isAdmin: () => true}}
+					router={{
+						params: {groupId: '23'},
+						query: {delta: '5', page: '1'}
+					}}
+					{...props}
 				/>
-			</RouterRoutes>
-		</MemoryRouter>
+			</MockedProvider>
+		</WorkspacePage>
 	</Provider>
 );
 

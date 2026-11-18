@@ -8,18 +8,10 @@ import {createOrderIOMap, NAME} from 'shared/util/pagination';
 import {Map, Set} from 'immutable';
 import {RangeKeyTimeRanges} from 'shared/util/constants';
 import {fireEvent, render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		channelId: '123',
-		groupId: '23',
-	}),
-}));
 
 describe('Individuals List', () => {
 	beforeEach(() => {
@@ -80,9 +72,9 @@ describe('Individuals List', () => {
 		);
 
 		const {getByText} = render(
-			<MemoryRouter>
+			<WorkspacePage channelId="123" groupId="23">
 				<IndividualsList />
-			</MemoryRouter>
+			</WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(document.body);
@@ -99,9 +91,9 @@ describe('Individuals List', () => {
 		);
 
 		render(
-			<MemoryRouter>
+			<WorkspacePage channelId="123" groupId="23">
 				<IndividualsList />
-			</MemoryRouter>
+			</WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(document.body);
@@ -124,9 +116,9 @@ describe('Individuals List', () => {
 		);
 
 		const {getByText} = render(
-			<MemoryRouter>
+			<WorkspacePage channelId="123" groupId="23">
 				<IndividualsList />
-			</MemoryRouter>
+			</WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(document.body);
@@ -152,9 +144,9 @@ describe('Individuals List', () => {
 		);
 
 		render(
-			<MemoryRouter>
+			<WorkspacePage channelId="123" groupId="23">
 				<IndividualsList campaignId="7" />
-			</MemoryRouter>
+			</WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(document.body);
@@ -172,9 +164,9 @@ describe('Individuals List', () => {
 		);
 
 		const {getByText, queryByText} = render(
-			<MemoryRouter>
+			<WorkspacePage channelId="123" groupId="23">
 				<IndividualsList campaignId="7" onClearFilters={jest.fn()} />
-			</MemoryRouter>
+			</WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(document.body);
@@ -185,7 +177,7 @@ describe('Individuals List', () => {
 		).toBeInTheDocument();
 		expect(getByText('Clear Filters')).toBeInTheDocument();
 		expect(
-			queryByText('No Individuals Synced from Data Sources')
+			queryByText('No Individuals Have Been Synced from Data Sources')
 		).toBeNull();
 	});
 
@@ -198,12 +190,12 @@ describe('Individuals List', () => {
 		);
 
 		const {getByText} = render(
-			<MemoryRouter>
+			<WorkspacePage channelId="123" groupId="23">
 				<IndividualsList
 					campaignId="7"
 					onClearFilters={onClearFilters}
 				/>
-			</MemoryRouter>
+			</WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(document.body);
@@ -221,9 +213,9 @@ describe('Individuals List', () => {
 		);
 
 		render(
-			<MemoryRouter>
+			<WorkspacePage channelId="123" groupId="23">
 				<IndividualsList />
-			</MemoryRouter>
+			</WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(document.body);
@@ -262,9 +254,9 @@ describe('Individuals List', () => {
 			});
 
 		render(
-			<MemoryRouter>
+			<WorkspacePage channelId="123" groupId="23">
 				<IndividualsList />
-			</MemoryRouter>
+			</WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(document.body);
@@ -302,9 +294,9 @@ describe('Individuals List', () => {
 			});
 
 		render(
-			<MemoryRouter>
+			<WorkspacePage channelId="123" groupId="23">
 				<IndividualsList />
-			</MemoryRouter>
+			</WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(document.body);
@@ -342,9 +334,9 @@ describe('Individuals List', () => {
 			});
 
 		render(
-			<MemoryRouter>
+			<WorkspacePage channelId="123" groupId="23">
 				<IndividualsList />
-			</MemoryRouter>
+			</WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(document.body);
@@ -364,9 +356,9 @@ describe('Individuals List', () => {
 		);
 
 		render(
-			<MemoryRouter>
+			<WorkspacePage channelId="123" groupId="23">
 				<IndividualsList />
-			</MemoryRouter>
+			</WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(document.body);

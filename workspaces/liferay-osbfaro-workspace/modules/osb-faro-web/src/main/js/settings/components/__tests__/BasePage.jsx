@@ -3,16 +3,9 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import {cleanup, render} from '@testing-library/react';
 import {Provider} from 'react-redux';
-import {MemoryRouter} from 'react-router';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		groupId: '23'
-	})
-}));
 
 const mockBreadcrumbItems = [
 	{
@@ -35,9 +28,9 @@ describe('BasePage', () => {
 	it('should render', () => {
 		const {container} = render(
 			<Provider store={mockStore()}>
-				<MemoryRouter>
+				<WorkspacePage>
 					<BasePage />
-				</MemoryRouter>
+				</WorkspacePage>
 			</Provider>
 		);
 
@@ -47,9 +40,9 @@ describe('BasePage', () => {
 	it('should render with a description', () => {
 		const {getByText} = render(
 			<Provider store={mockStore()}>
-				<MemoryRouter>
+				<WorkspacePage>
 					<BasePage pageDescription='testPageDescription' />
-				</MemoryRouter>
+				</WorkspacePage>
 			</Provider>
 		);
 
@@ -59,9 +52,9 @@ describe('BasePage', () => {
 	it('should render with a breadcrumb', () => {
 		const {getByText} = render(
 			<Provider store={mockStore()}>
-				<MemoryRouter>
+				<WorkspacePage>
 					<BasePage breadcrumbItems={mockBreadcrumbItems} />
-				</MemoryRouter>
+				</WorkspacePage>
 			</Provider>
 		);
 
@@ -71,9 +64,9 @@ describe('BasePage', () => {
 	it('should render with a page action', () => {
 		const {getByText} = render(
 			<Provider store={mockStore()}>
-				<MemoryRouter>
+				<WorkspacePage>
 					<BasePage groupId='23' pageActions={mockPageActions} />
-				</MemoryRouter>
+				</WorkspacePage>
 			</Provider>
 		);
 
@@ -83,9 +76,9 @@ describe('BasePage', () => {
 	it('should render with a title', () => {
 		const {getByText} = render(
 			<Provider store={mockStore()}>
-				<MemoryRouter>
+				<WorkspacePage>
 					<BasePage groupId='23' pageTitle='testPageTitle' />
-				</MemoryRouter>
+				</WorkspacePage>
 			</Provider>
 		);
 
@@ -95,13 +88,13 @@ describe('BasePage', () => {
 	it('should render with an inline title with subtitle', () => {
 		const {getByText} = render(
 			<Provider store={mockStore()}>
-				<MemoryRouter>
+				<WorkspacePage>
 					<BasePage
 						groupId='23'
 						pageTitle='testPageTitle'
 						subTitle='mysubtitle'
 					/>
-				</MemoryRouter>
+				</WorkspacePage>
 			</Provider>
 		);
 

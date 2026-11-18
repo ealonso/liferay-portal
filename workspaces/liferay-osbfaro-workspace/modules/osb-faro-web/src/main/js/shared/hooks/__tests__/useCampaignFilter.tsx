@@ -1,50 +1,73 @@
 import React from 'react';
-import {act, renderHook} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
+import {renderHook} from '@testing-library/react';
 import {useCampaignFilter} from '../useCampaignFilter';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
-const renderFilter = (initialEntry = '/') =>
+const renderFilter = (params: {[name: string]: string} = {}) =>
 	renderHook(() => useCampaignFilter(), {
 		wrapper: ({children}: {children?: React.ReactNode}) => (
-			<MemoryRouter initialEntries={[initialEntry]}>
-				{children}
-			</MemoryRouter>
+			<WorkspacePage params={params}>{children}</WorkspacePage>
 		),
 	});
 
 describe('useCampaignFilter', () => {
+	const {location} = window;
 
-	// A memory router does not move the browser location, which is what the
-	// write builds on, so put it back after every test.
+	const assign = jest.fn();
 
-	afterEach(() => window.history.pushState({}, '', '/'));
+	const mockLocation = (search: string) => {
+		Object.defineProperty(window, 'location', {
+			configurable: true,
+			value: {
+				assign,
+				href: `http://localhost/campaigns${search}`,
+			},
+		});
+	};
 
-	it('should read the campaign from the URL', () => {
-		const {result} = renderFilter('/?campaignId=7&campaignName=Spring');
+	afterEach(() => {
+		assign.mockReset();
+
+		Object.defineProperty(window, 'location', {
+			configurable: true,
+			value: location,
+		});
+	});
+
+	it('should read the campaign from the page params', () => {
+		const {result} = renderFilter({
+			campaignId: '7',
+			campaignName: 'Spring',
+		});
 
 		expect(result.current.campaignId).toBe('7');
 		expect(result.current.campaignName).toBe('Spring');
 	});
 
 	it('should write the selected campaign to the URL', () => {
+		mockLocation('');
+
 		const {result} = renderFilter();
 
-		act(() => result.current.setCampaign({id: '7', name: 'Spring'}));
+		result.current.setCampaign({id: '7', name: 'Spring'});
 
-		expect(result.current.campaignId).toBe('7');
-		expect(result.current.campaignName).toBe('Spring');
+		expect(assign).toHaveBeenCalledWith(
+			'/campaigns?campaignId=7&campaignName=Spring'
+		);
 	});
 
 	it('should clear the campaign from the URL', () => {
-		window.history.pushState({}, '', '/?campaignId=7&campaignName=Spring');
+		mockLocation('?campaignId=7&campaignName=Spring&rangeKey=30');
 
-		const {result} = renderFilter('/?campaignId=7&campaignName=Spring');
+		const {result} = renderFilter({
+			campaignId: '7',
+			campaignName: 'Spring',
+		});
 
-		act(() => result.current.setCampaign(null));
+		result.current.setCampaign(null);
 
-		expect(result.current.campaignId).toBeUndefined();
-		expect(result.current.campaignName).toBeUndefined();
+		expect(assign).toHaveBeenCalledWith('/campaigns?rangeKey=30');
 	});
 });

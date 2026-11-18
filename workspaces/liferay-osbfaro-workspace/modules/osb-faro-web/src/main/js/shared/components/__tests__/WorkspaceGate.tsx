@@ -22,7 +22,7 @@ jest.mock('shared/pages/ErrorPage', () => () => 'ErrorPage');
 import * as API from 'shared/api';
 import * as data from 'test/data';
 import mockStore, {mockStoreData} from 'test/mock-store';
-import React, {useEffect} from 'react';
+import React from 'react';
 import WorkspaceGate from '../WorkspaceGate';
 import {
 	ActionType,
@@ -32,17 +32,12 @@ import {
 import {Channel} from 'shared/components/channels-menu';
 import {fireEvent, render, screen} from '@testing-library/react';
 import {InMemoryCache} from '@apollo/client';
-import {
-	Link,
-	MemoryRouter,
-	Route,
-	Routes as RouterRoutes,
-} from 'react-router-dom';
 import {mockDataSourcesReq} from 'test/graphql-data';
 import {MockedProvider} from '@apollo/client/testing';
 import {ProjectStates} from 'shared/util/constants';
 import {Provider} from 'react-redux';
 import {useDataSources} from 'shared/context/dataSources';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -51,39 +46,13 @@ const CHANNELS = [
 	data.mockChannel(2, 0, {id: '2'}),
 ] as unknown as Channel[];
 
-const mountSegmentsList = jest.fn();
-
 const renderedChannels: (Channel | null)[] = [];
 
 const SegmentsList: React.FC = () => {
 	const {selectedChannel} = useChannelContext();
 
-	useEffect(() => {
-		mountSegmentsList();
-	}, []);
-
-	return (
-		<>
-			<p>{`segments list of ${selectedChannel?.name}`}</p>
-
-			<Link to="/workspace/23/2/contacts/segments/create">
-				{'create segment'}
-			</Link>
-
-			<Link to="/workspace/23/1/contacts/segments">
-				{'switch to channel 1'}
-			</Link>
-		</>
-	);
+	return <p>{`segments list of ${selectedChannel?.name}`}</p>;
 };
-
-const SegmentEditor: React.FC = () => (
-	<>
-		<p>{'segment editor'}</p>
-
-		<Link to="/workspace/23/2/contacts/segments">{'back to segments'}</Link>
-	</>
-);
 
 const WorkspaceHome: React.FC = () => {
 	const {selectedChannel} = useChannelContext();
@@ -123,8 +92,16 @@ const OnboardingConnection: React.FC = () => {
 };
 
 const renderGate = (
-	path: string,
-	{selectedChannel = null}: {selectedChannel?: Channel | null} = {}
+	children: React.ReactNode,
+	{
+		channelId = '',
+		groupId = '23',
+		selectedChannel = null,
+	}: {
+		channelId?: string;
+		groupId?: string;
+		selectedChannel?: Channel | null;
+	} = {}
 ) =>
 	render(
 		<Provider store={mockStore(mockStoreData)}>
@@ -133,35 +110,9 @@ const renderGate = (
 					cache={new InMemoryCache({addTypename: false})}
 					mocks={[mockDataSourcesReq()]}
 				>
-					<MemoryRouter initialEntries={[path]}>
-						<RouterRoutes>
-							<Route path="workspace/:groupId/*">
-								<Route element={<WorkspaceGate />}>
-									<Route element={<WorkspaceHome />} index />
-
-									<Route
-										element={<SegmentsList />}
-										path=":channelId?/contacts/segments"
-									/>
-
-									<Route
-										element={<SegmentEditor />}
-										path=":channelId?/contacts/segments/create"
-									/>
-
-									<Route
-										element={<p>{'segment link'}</p>}
-										path=":channelId?/contacts/segments/:id/*"
-									/>
-
-									<Route
-										element={<OnboardingConnection />}
-										path=":channelId?/sites"
-									/>
-								</Route>
-							</Route>
-						</RouterRoutes>
-					</MemoryRouter>
+					<WorkspacePage channelId={channelId} groupId={groupId}>
+						<WorkspaceGate>{children}</WorkspaceGate>
+					</WorkspacePage>
 				</MockedProvider>
 			</ChannelProvider>
 		</Provider>
@@ -192,67 +143,30 @@ describe('WorkspaceGate', () => {
 	});
 
 	it('renders the page for a valid channel', async () => {
-		renderGate('/workspace/23/2/contacts/segments');
+		renderGate(<SegmentsList />, {channelId: '2'});
 
 		expect(
 			await screen.findByText('segments list of Channel 2')
 		).toBeInTheDocument();
 	});
 
-	it('renders the error page when the URL leaves out the channel', async () => {
-		renderGate('/workspace/23/contacts/segments');
+	it('renders the page when the page leaves out the channel', async () => {
+		renderGate(<SegmentsList />);
 
-		expect(await screen.findByText('ErrorPage')).toBeInTheDocument();
-	});
-
-	it('renders the error page for the segment editor without a channel', async () => {
-		renderGate('/workspace/23/contacts/segments/create');
-
-		expect(await screen.findByText('ErrorPage')).toBeInTheDocument();
+		expect(await screen.findByText(/segments list/)).toBeInTheDocument();
+		expect(screen.queryByText('ErrorPage')).toBeNull();
 	});
 
 	it('renders the workspace home without a channel', async () => {
-		renderGate('/workspace/23');
+		renderGate(<WorkspaceHome />);
 
 		expect(await screen.findByText('workspace home')).toBeInTheDocument();
 	});
 
 	it('renders a segment link without a channel', async () => {
-		renderGate('/workspace/23/contacts/segments/456');
+		renderGate(<p>{'segment link'}</p>);
 
 		expect(await screen.findByText('segment link')).toBeInTheDocument();
-	});
-
-	it('keeps the channels loaded when moving to another page', async () => {
-		renderGate('/workspace/23/2/contacts/segments');
-
-		fireEvent.click(await screen.findByText('create segment'));
-
-		expect(screen.getByText('segment editor')).toBeInTheDocument();
-		expect(API.channels.fetchAll).toHaveBeenCalledTimes(1);
-	});
-
-	it('keeps the page mounted when switching channels', async () => {
-		renderGate('/workspace/23/2/contacts/segments');
-
-		fireEvent.click(await screen.findByText('switch to channel 1'));
-
-		expect(
-			await screen.findByText('segments list of Channel 1')
-		).toBeInTheDocument();
-		expect(mountSegmentsList).toHaveBeenCalledTimes(1);
-	});
-
-	it('opens the workspace modals once for all of its pages', async () => {
-		renderGate('/workspace/23/2/contacts/segments');
-
-		fireEvent.click(await screen.findByText('create segment'));
-		fireEvent.click(screen.getByText('back to segments'));
-
-		expect(
-			await screen.findByText('segments list of Channel 2')
-		).toBeInTheDocument();
-		expect(API.individualSegment.searchUnassigned).toHaveBeenCalledTimes(1);
 	});
 
 	it('clears the channel of the previous workspace before rendering one without channels', async () => {
@@ -260,13 +174,13 @@ describe('WorkspaceGate', () => {
 			Promise.resolve({items: []})
 		);
 
-		renderGate('/workspace/23', {selectedChannel: CHANNELS[1]});
+		renderGate(<WorkspaceHome />, {selectedChannel: CHANNELS[1]});
 
 		expect(await screen.findByText('workspace home')).toBeInTheDocument();
 		expect(renderedChannels).not.toContain(CHANNELS[1]);
 	});
 
-	it('reloads the channels once when the URL channel is missing from them', async () => {
+	it('reloads the channels once when the page channel is missing from them', async () => {
 		const newChannel = data.mockChannel(3, 0, {
 			id: '3',
 		}) as unknown as Channel;
@@ -277,7 +191,7 @@ describe('WorkspaceGate', () => {
 				Promise.resolve({items: [...CHANNELS, newChannel]})
 			);
 
-		renderGate('/workspace/23/3/contacts/segments');
+		renderGate(<SegmentsList />, {channelId: '3'});
 
 		expect(
 			await screen.findByText('segments list of Channel 3')
@@ -290,7 +204,7 @@ describe('WorkspaceGate', () => {
 			Promise.resolve({items: []})
 		);
 
-		renderGate('/workspace/23/sites');
+		renderGate(<OnboardingConnection />);
 
 		expect(
 			await screen.findByText('data sources loading')
@@ -306,7 +220,7 @@ describe('WorkspaceGate', () => {
 	});
 
 	it('renders the error page for an unknown channel', async () => {
-		renderGate('/workspace/23/999/contacts/segments');
+		renderGate(<SegmentsList />, {channelId: '999'});
 
 		expect(await screen.findByText('ErrorPage')).toBeInTheDocument();
 		expect(API.channels.fetchAll).toHaveBeenCalledTimes(2);
@@ -317,13 +231,13 @@ describe('WorkspaceGate', () => {
 			Promise.reject({})
 		);
 
-		renderGate('/workspace/23/2/contacts/segments');
+		renderGate(<SegmentsList />, {channelId: '2'});
 
 		expect(await screen.findByText('ErrorPage')).toBeInTheDocument();
 	});
 
 	it('renders the project state screen when the workspace is not ready', async () => {
-		renderGate('/workspace/25/1/contacts/segments');
+		renderGate(<SegmentsList />, {channelId: '1', groupId: '25'});
 
 		expect(
 			await screen.findByText(/WorkspacesErrorDisplay/)
@@ -338,7 +252,7 @@ describe('WorkspaceGate', () => {
 			)
 		);
 
-		renderGate('/workspace/26/1/contacts/segments');
+		renderGate(<SegmentsList />, {channelId: '1', groupId: '26'});
 
 		expect(
 			await screen.findByText('ActivatingDisplay')
@@ -350,7 +264,7 @@ describe('WorkspaceGate', () => {
 			Promise.reject({status: 404})
 		);
 
-		renderGate('/workspace/27/1/contacts/segments');
+		renderGate(<SegmentsList />, {channelId: '1', groupId: '27'});
 
 		expect(
 			await screen.findByText('WorkspaceNotFound')
@@ -358,7 +272,7 @@ describe('WorkspaceGate', () => {
 	});
 
 	it('does not load the channels until the workspace is ready', async () => {
-		renderGate('/workspace/25/1/contacts/segments');
+		renderGate(<SegmentsList />, {channelId: '1', groupId: '25'});
 
 		await screen.findByText(/WorkspacesErrorDisplay/);
 

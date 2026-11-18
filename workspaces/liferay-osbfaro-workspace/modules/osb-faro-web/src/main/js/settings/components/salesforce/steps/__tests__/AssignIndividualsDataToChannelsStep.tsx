@@ -2,6 +2,7 @@ import React from 'react';
 import {AssignIndividualsDataToPropertiesStep} from '../AssignIndividualsDataToChannelsStep';
 import {DataSourceTypes} from 'shared/util/constants';
 import {fireEvent, render, screen} from '@testing-library/react';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -16,15 +17,6 @@ jest.mock('shared/components/modals/SelectChannelsModal', () => ({
 
 		return <div data-testid="select-channels-modal" />;
 	},
-}));
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({groupId: '23'}),
-}));
-
-jest.mock('shared/hooks/useHistoryAdapter', () => ({
-	useHistoryAdapter: () => ({push: jest.fn()}),
 }));
 
 jest.mock('settings/components/base-page/WizardPageContext', () => ({
@@ -46,7 +38,8 @@ const defaultProps = {
 
 const openSelectChannelsModal = () => {
 	render(
-		<AssignIndividualsDataToPropertiesStep {...(defaultProps as any)} />
+		<AssignIndividualsDataToPropertiesStep {...(defaultProps as any)} />,
+		{wrapper: WorkspacePage}
 	);
 
 	expect(screen.queryByTestId('select-channels-modal')).toBeNull();

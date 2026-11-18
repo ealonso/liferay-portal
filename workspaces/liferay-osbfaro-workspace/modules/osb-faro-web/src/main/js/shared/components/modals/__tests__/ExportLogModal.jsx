@@ -3,7 +3,6 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import {act, fireEvent, render, screen, waitFor} from '@testing-library/react';
 import {InMemoryCache} from '@apollo/client';
-import {MemoryRouter, Route, Routes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockPreferenceReq} from 'test/graphql-data';
 import {noop} from 'lodash';
@@ -64,25 +63,16 @@ const TestModal = props => {
 
 const Wrapper = ({children, mocks = [mockPreferenceReq()]}) => (
 	<Provider store={mockStore()}>
-		<MemoryRouter initialEntries={['/workspace/123/456/2000']}>
-			<Routes>
-				<Route
-					element={
-						<MockedProvider
-							cache={
-								new InMemoryCache({
-									addTypename: false
-								})
-							}
-							mocks={mocks}
-						>
-							{children}
-						</MockedProvider>
-					}
-					path='/workspace/:groupId/:channelId/:assetId'
-				/>
-			</Routes>
-		</MemoryRouter>
+		<MockedProvider
+			cache={
+				new InMemoryCache({
+					addTypename: false
+				})
+			}
+			mocks={mocks}
+		>
+			{children}
+		</MockedProvider>
 	</Provider>
 );
 

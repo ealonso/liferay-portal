@@ -2,34 +2,22 @@ import * as data from 'test/data';
 import GlobalAttributeList from '../GlobalAttributeList';
 import React from 'react';
 import {AttributeTypes} from 'event-analysis/utils/types';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockEventAttributeDefinitionsReq} from 'test/graphql-data';
 import {render} from '@testing-library/react';
-import {Routes} from 'shared/util/router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
 const mockGroupId = '23';
 
 const Wrapper = ({children, mocks = []}) => (
-	<MemoryRouter
-		initialEntries={[
-			`/workspace/${mockGroupId}/settings/definitions/event-attributes/global?delta=1`
-		]}
-	>
-		<RouterRoutes>
-			<Route
-				element={
-					<MockedProvider addTypename={false} mocks={mocks}>
-						{children}
-					</MockedProvider>
-				}
-				path={`${Routes.SETTINGS_DEFINITIONS_EVENT_ATTRIBUTES_GLOBAL}/*`}
-			/>
-		</RouterRoutes>
-	</MemoryRouter>
+	<WorkspacePage groupId={mockGroupId} params={{delta: '1'}}>
+		<MockedProvider addTypename={false} mocks={mocks}>
+			{children}
+		</MockedProvider>
+	</WorkspacePage>
 );
 
 describe('GlobalAttributeList', () => {

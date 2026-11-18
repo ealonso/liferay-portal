@@ -4,7 +4,7 @@ import React from 'react';
 import {cleanup, render} from '@testing-library/react';
 import {List} from 'immutable';
 import {Provider} from 'react-redux';
-import {MemoryRouter} from 'react-router';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -21,9 +21,9 @@ jest.mock('segment/segment-editor/dynamic', () => ({
 	default: ({type}) => <div data-testid='segment-type'>{type}</div>
 }));
 
-const renderEdit = ({location = '/', segment} = {}) =>
+const renderEdit = ({params = {}, segment} = {}) =>
 	render(
-		<MemoryRouter initialEntries={[location]}>
+		<WorkspacePage params={params}>
 			<Provider store={mockStore()}>
 				<DynamicSegmentEdit
 					groupId='23'
@@ -32,7 +32,7 @@ const renderEdit = ({location = '/', segment} = {}) =>
 					segment={segment}
 				/>
 			</Provider>
-		</MemoryRouter>
+		</WorkspacePage>
 	);
 
 describe('DynamicSegmentEdit', () => {
@@ -47,7 +47,7 @@ describe('DynamicSegmentEdit', () => {
 	});
 
 	it('should use the type query param when there is no existing segment', () => {
-		const {getByTestId} = renderEdit({location: '/?type=REAL_TIME'});
+		const {getByTestId} = renderEdit({params: {type: 'REAL_TIME'}});
 
 		expect(getByTestId('segment-type').textContent).toBe('REAL_TIME');
 	});

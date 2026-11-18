@@ -6,7 +6,6 @@ import React from 'react';
 import UserList from '../UserList';
 import {ClayIconSpriteContext} from '@clayui/icon';
 import {cleanup, fireEvent, render, screen} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
 
@@ -55,11 +54,9 @@ const mockUsers = {
 
 const Wrapper = ({children, store = mockStore()}) => (
 	<Provider store={store}>
-		<MemoryRouter>
-			<ClayIconSpriteContext.Provider value='/o/osb-faro-web/dist/sprite.svg'>
-				{children}
-			</ClayIconSpriteContext.Provider>
-		</MemoryRouter>
+		<ClayIconSpriteContext.Provider value='/o/osb-faro-web/dist/sprite.svg'>
+			{children}
+		</ClayIconSpriteContext.Provider>
 	</Provider>
 );
 

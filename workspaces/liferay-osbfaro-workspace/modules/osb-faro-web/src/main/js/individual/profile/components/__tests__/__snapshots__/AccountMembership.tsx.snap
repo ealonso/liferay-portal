@@ -81,12 +81,13 @@ exports[`Account Membership should render the snapshot 1`] = `
                   >
                     Account Name
                   </span>
-                  <span
+                  <a
                     class="font-weight-semi-bold text-break text-dark"
+                    href="/account?id=001xx000003DGbYAAW"
                     style="word-break: break-all;"
                   >
                     Acme Corporation
-                  </span>
+                  </a>
                 </div>
               </div>
               <div

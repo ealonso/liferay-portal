@@ -3,13 +3,12 @@ import Interests from '../Interests';
 import mockStore from 'test/mock-store';
 import React from 'react';
 import {cleanup, render} from '@testing-library/react';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockEmptyState, mockSuccessState} from 'test/__mocks__/mock-objects';
 import {mockIndividualInterestsReq} from 'test/graphql-data';
 import {Provider} from 'react-redux';
-import {Routes} from 'shared/util/router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -27,20 +26,9 @@ const WrappedComponent = () => (
 		]}
 	>
 		<Provider store={mockStore()}>
-			<MemoryRouter
-				initialEntries={[
-					'/workspace/123/456/contacts/individuals/interests'
-				]}
-			>
-				<RouterRoutes>
-					<Route
-						element={
-							<Interests />
-						}
-						path={`${Routes.CONTACTS_INDIVIDUALS_INTERESTS}/*`}
-					/>
-				</RouterRoutes>
-			</MemoryRouter>
+			<WorkspacePage channelId='456' groupId='123'>
+				<Interests />
+			</WorkspacePage>
 		</Provider>
 	</MockedProvider>
 );

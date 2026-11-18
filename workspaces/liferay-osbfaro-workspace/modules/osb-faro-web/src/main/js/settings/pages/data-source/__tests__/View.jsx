@@ -4,12 +4,12 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import {CredentialTypes} from 'shared/util/constants';
 import {DataSource} from 'shared/util/records';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
 import {useRequest} from 'shared/hooks/useRequest';
 import {View} from '../View';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('react-dom');
 
@@ -19,18 +19,9 @@ jest.mock('shared/hooks/useRequest', () => ({
 
 const DefaultComponent = ({dataSource}) => (
 	<Provider store={mockStore()}>
-		<MemoryRouter
-			initialEntries={['/workspace/23/settings/data-source/24']}
-		>
-			<RouterRoutes>
-				<Route
-					element={
-						<View dataSource={dataSource} groupId='23' id='24' />
-					}
-					path='/workspace/:groupId/settings/data-source/:id/*'
-				/>
-			</RouterRoutes>
-		</MemoryRouter>
+		<WorkspacePage params={{id: '24'}}>
+			<View dataSource={dataSource} groupId='23' id='24' />
+		</WorkspacePage>
 	</Provider>
 );
 

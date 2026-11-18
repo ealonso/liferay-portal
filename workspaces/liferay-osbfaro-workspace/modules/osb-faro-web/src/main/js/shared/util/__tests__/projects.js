@@ -3,7 +3,6 @@ import {fromJS} from 'immutable';
 import {getBasicProjects, getSingleProjectRoute} from '../projects';
 import {PLANS, SubscriptionNames} from 'shared/util/subscriptions';
 import {Project} from 'shared/util/records';
-import {Routes, toRoute} from 'shared/util/router';
 
 const corpProjectUuid = 'corpProjectUuid';
 
@@ -36,6 +35,7 @@ const mockProjects = [
 					name: SubscriptionNames.LiferayAnalyticsCloudBasic,
 				}),
 				name: 'Project C',
+				url: '/web/project-c',
 			})
 		)
 	),
@@ -64,18 +64,14 @@ describe('projects', () => {
 		it('should return the homepage route for a single project that is configured', () => {
 			const route = getSingleProjectRoute(mockProjects[2]);
 
-			expect(route).toEqual(
-				toRoute(Routes.WORKSPACE_WITH_ID, {groupId: 125})
-			);
+			expect(route).toEqual('/web/project-c');
 		});
 
 		it('should return the create workspace route for a single project that is unconfigured', () => {
 			const route = getSingleProjectRoute(mockProjects[0]);
 
 			expect(route).toEqual(
-				toRoute(Routes.WORKSPACE_ADD_WITH_CORP_PROJECT_UUID, {
-					corpProjectUuid,
-				})
+				'/add-workspace?corpProjectUuid=corpProjectUuid'
 			);
 		});
 	});
