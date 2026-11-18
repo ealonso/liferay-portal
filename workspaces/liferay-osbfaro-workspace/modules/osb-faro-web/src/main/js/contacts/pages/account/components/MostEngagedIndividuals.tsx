@@ -3,20 +3,18 @@ import ClayLink from '@clayui/link';
 import IndividualsDataSet from './IndividualsDataSet';
 import React from 'react';
 import {DropdownRangeKey} from 'shared/components/dropdown-range-key/DropdownRangeKey';
-import {pickBy} from 'lodash';
+import {isString, pickBy} from 'lodash';
 import {Text} from '@clayui/core';
-import {useParams} from 'react-router-dom';
 import {useQueryRangeSelectors} from 'shared/hooks/useQueryRangeSelectors';
 import {useRangeSelectorChange} from 'shared/hooks/useRangeSelectorChange';
+import {usePageConfig} from 'shared/context/pageConfig';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
 
 const MostEngagedIndividuals: React.FC = () => {
-	const {channelId, groupId, id} = useParams<{
-		channelId: string;
-		groupId: string;
-		id: string;
-	}>();
+	const {
+		accountProfileURL,
+		params: {id},
+	} = usePageConfig();
 
 	const rangeSelectors = useQueryRangeSelectors();
 
@@ -50,12 +48,11 @@ const MostEngagedIndividuals: React.FC = () => {
 						className="button-root rounded-lg"
 						displayType="primary"
 						href={setUriQueryValues(
-							pickBy(rangeSelectors),
-							toRoute(Routes.CONTACTS_ACCOUNT_PROFILE, {
-								channelId,
-								groupId,
+							{
+								...pickBy(rangeSelectors, isString),
 								id,
-							})
+							},
+							accountProfileURL
 						)}
 						small
 					>
