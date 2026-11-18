@@ -1,68 +1,23 @@
-import ConfirmationModal from 'shared/components/ConfirmationModal';
-import React, {useEffect, useRef} from 'react';
-import {useBlocker} from 'react-router-dom';
-import {useModal} from '@clayui/modal';
+import {useEffect} from 'react';
 
 /**
- * Blocks the navigation while there are unsaved changes and asks the user
- * whether to leave. The caller renders the returned modal.
+ * Asks the browser to confirm leaving the page while there are unsaved
+ * changes.
  */
-export function useUnsavedChangesPrompt(
-	when: boolean,
-	message?: string
-): React.ReactNode {
-	const modal = useModal();
-
-	const blocker = useBlocker(
-		({currentLocation, nextLocation}) =>
-			when && currentLocation.pathname !== nextLocation.pathname
-	);
-
+export function useUnsavedChangesPrompt(when: boolean): void {
 	useEffect(() => {
-		if (blocker.state === 'blocked') {
-			modal.onOpenChange(true);
-		}
-	}, [blocker.state]);
-
-	// The modal can also be dismissed with Esc or a click outside, which
-	// leaves the navigation blocked unless it is reset when it closes.
-
-	const wasOpenRef = useRef(false);
-
-	useEffect(() => {
-		if (wasOpenRef.current && !modal.open && blocker.state === 'blocked') {
-			blocker.reset?.();
+		if (!when) {
+			return;
 		}
 
-		wasOpenRef.current = modal.open;
-	}, [modal.open]);
+		const handleBeforeUnload = (event: BeforeUnloadEvent) =>
+			event.preventDefault();
 
-	if (!modal.open) {
-		return null;
-	}
+		window.addEventListener('beforeunload', handleBeforeUnload);
 
-	return (
-		<ConfirmationModal
-			cancelMessage={Liferay.Language.get('stay-on-page')}
-			closeAfterSubmit={false}
-			message={message}
-			observer={modal.observer}
-			onClose={() => {
-				modal.onOpenChange(false);
-
-				blocker.reset?.();
-			}}
-			onSubmit={() => {
-				modal.onOpenChange(false);
-
-				blocker.proceed?.();
-			}}
-			submitButtonDisplay="warning"
-			submitMessage={Liferay.Language.get('leave-page')}
-			title={Liferay.Language.get('unsaved-changes')}
-			type="warning"
-		/>
-	);
+		return () =>
+			window.removeEventListener('beforeunload', handleBeforeUnload);
+	}, [when]);
 }
 
 export default useUnsavedChangesPrompt;

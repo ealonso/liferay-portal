@@ -1,7 +1,7 @@
 import Constants, {
-	TimeIntervals,
 	INDIVIDUALS,
 	SEGMENTS,
+	TimeIntervals,
 } from 'shared/util/constants';
 import sendRequest from 'shared/util/request';
 import {buildOrderByFields, NAME} from 'shared/util/pagination';

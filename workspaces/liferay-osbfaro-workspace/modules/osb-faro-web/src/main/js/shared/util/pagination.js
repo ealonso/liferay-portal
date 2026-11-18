@@ -1,7 +1,7 @@
 import FaroConstants, {
-	OrderByDirections,
 	ACCOUNTS,
 	INDIVIDUALS,
+	OrderByDirections,
 	SEGMENTS,
 	USERS,
 } from 'shared/util/constants';

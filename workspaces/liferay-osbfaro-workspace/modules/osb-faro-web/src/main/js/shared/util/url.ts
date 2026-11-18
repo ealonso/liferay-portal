@@ -1,5 +1,3 @@
-import Constants from 'shared/util/constants';
-
 function createURL(href: string): URL {
 	try {
 		return new URL(href);
@@ -20,8 +18,6 @@ function addParam(url: URL, key: string, value: unknown): void {
 		url.searchParams.append(key, String(value));
 	}
 }
-
-const {cur: defaultCur, orderDefault} = Constants.pagination;
 
 /**
  * Represents the query filter parameters as an Immutable Map
@@ -91,35 +87,6 @@ export function removeUriQueryParam(href: string, ...names: string[]) {
 	for (const name of names) {
 		uri.searchParams.delete(name);
 	}
-
-	return `${uri.pathname}${uri.search}`;
-}
-
-export function removePageParam(newPath: string, href = window.location.href) {
-	const uri = createURL(href);
-
-	if (newPath) {
-		uri.pathname = newPath;
-	}
-
-	uri.searchParams.delete('page');
-
-	return `${uri.pathname}${uri.search}`;
-}
-
-export function resetPaginationParams(
-	newPath: string,
-	href = window.location.href
-) {
-	const uri = createURL(href);
-
-	if (newPath) {
-		uri.pathname = newPath;
-	}
-
-	addParam(uri, 'page', defaultCur);
-	addParam(uri, 'orderBy', orderDefault);
-	addParam(uri, 'query', '');
 
 	return `${uri.pathname}${uri.search}`;
 }

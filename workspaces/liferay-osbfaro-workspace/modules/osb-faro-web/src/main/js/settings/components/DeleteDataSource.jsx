@@ -12,8 +12,7 @@ import Sheet from 'shared/components/Sheet';
 import TextTruncate from 'shared/components/TextTruncate';
 import {connect} from 'react-redux';
 import {DataSource} from 'shared/util/records';
-import {EntityTypes} from 'shared/util/constants';
-import {getRouteName} from 'shared/util/router';
+import {EntityTypes, INDIVIDUALS, SEGMENTS} from 'shared/util/constants';
 import {getTypeLangKey, sub} from 'shared/util/lang';
 import {
 	individualsListColumns,
@@ -21,8 +20,9 @@ import {
 } from 'shared/util/table-columns';
 import {noop} from 'lodash/fp';
 import {PropTypes} from 'prop-types';
-import {Routes, toRoute} from 'shared/util/router';
 import {toLocale} from 'shared/util/numbers';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 /**
  * Get the API for the specific entityType.
@@ -290,10 +290,7 @@ export class DeleteDataSource extends React.Component {
 									button
 									className='button-root'
 									displayType='secondary'
-									href={toRoute(Routes.SETTINGS_DATA_SOURCE, {
-										groupId,
-										id
-									})}
+									href={setUriQueryValues({id}, config.dataSourceURL)}
 								>
 									{Liferay.Language.get('cancel')}
 								</ClayLink>
@@ -315,7 +312,11 @@ export class DeleteDataSource extends React.Component {
 								dataSourceFn={getDataSourceFn(entityModalType)}
 								dataSourceParams={{dataSourceId: id, groupId}}
 								entityLabel={getTypeLangKey(entityModalType)}
-								entityType={getRouteName(entityModalType)}
+								entityType={
+									entityModalType === EntityTypes.Individual
+										? INDIVIDUALS
+										: SEGMENTS
+								}
 								observer={observer}
 								rowIdentifier='id'
 								title={getEntityTitle(entityModalType, name)}

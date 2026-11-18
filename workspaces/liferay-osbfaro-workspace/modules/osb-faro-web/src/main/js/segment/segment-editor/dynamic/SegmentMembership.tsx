@@ -14,10 +14,10 @@ import {
 import {ClayToggle} from '@clayui/form';
 import {Criteria} from './utils/types';
 import {
-	SegmentCategories,
-	SegmentTypes,
 	ACCOUNTS,
 	INDIVIDUALS,
+	SegmentCategories,
+	SegmentTypes,
 } from 'shared/util/constants';
 import {sub} from 'shared/util/lang';
 import {Text} from '@clayui/core';
@@ -238,12 +238,7 @@ const SegmentMembership: React.FC<ISegmentMembershipProps> = ({
 					{...(isAccountSegment && {initialDelta: 20})}
 					columns={
 						isAccountSegment
-							? [
-									accountsListColumns.getAccountName({
-										channelId,
-										groupId,
-									}),
-								]
+							? [accountsListColumns.getAccountName()]
 							: [
 									{
 										...individualsListColumns.name,

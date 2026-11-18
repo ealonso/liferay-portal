@@ -1,4 +1,4 @@
-import Constants, {TimeIntervals, PAGES} from 'shared/util/constants';
+import Constants, {PAGES, TimeIntervals} from 'shared/util/constants';
 import moment from 'moment';
 import sendRequest from 'shared/util/request';
 import {
