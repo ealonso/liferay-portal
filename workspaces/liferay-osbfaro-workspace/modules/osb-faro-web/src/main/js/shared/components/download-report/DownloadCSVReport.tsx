@@ -10,8 +10,8 @@ import {sub} from 'shared/util/lang';
 import {toLocale} from 'shared/util/numbers';
 import {useDispatch} from 'react-redux';
 import {useModal} from '@clayui/modal';
-import {useParams} from 'react-router-dom';
 import {useUnsafeQueryRangeSelectors} from 'shared/hooks/useUnsafeQueryRangeSelectors';
+import {config} from 'shared/util/config';
 
 export interface IDownloadReport {
 	assetId?: string;
@@ -51,7 +51,7 @@ const DownloadCSVReport: React.FC<IDownloadReport> = ({
 	});
 	const {observer, onOpenChange, open} = useModal();
 	const rangeSelectors = useUnsafeQueryRangeSelectors();
-	const {channelId, groupId} = useParams();
+	const {channelId, groupId} = config;
 
 	return (
 		<div className="download-report">

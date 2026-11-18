@@ -13,17 +13,17 @@ import {SectionHeader} from 'shared/components/SectionHeader';
 import {useAccountFilter} from 'shared/hooks/useAccountFilter';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useDataSources} from 'shared/context/dataSources';
-import {useParams} from 'react-router-dom';
 import {useRangeQueryValues} from 'shared/hooks/useRangeQueryValues';
 import {useRangeSelectorChange} from 'shared/hooks/useRangeSelectorChange';
 import {useRequest} from 'shared/hooks/useRequest';
+import {config} from 'shared/util/config';
 
 const Campaigns: React.FC = () => {
 	const {accountId, accountName, setAccount} = useAccountFilter();
 	const currentUser = useCurrentUser();
 	const {selectedChannel} = useContext(ChannelContext);
 
-	const {channelId, groupId} = useParams();
+	const {channelId, groupId} = config;
 
 	const {empty: noDataSources, loading: dataSourcesLoading} =
 		useDataSources();
@@ -65,7 +65,6 @@ const Campaigns: React.FC = () => {
 									'please-contact-an-administrator-to-connect-a-data-source-containing-campaign-data'
 								)
 					}
-					groupId={groupId!}
 					title={Liferay.Language.get('no-campaign-data-available')}
 				/>
 			);

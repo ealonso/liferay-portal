@@ -8,9 +8,9 @@ import {isFinite} from 'lodash';
 import {ReportContainer} from 'shared/components/download-report/DownloadPDFReport';
 import {sub} from 'shared/util/lang';
 import {toThousands} from 'shared/util/numbers';
-import {useParams} from 'react-router-dom';
 import {validContactsConfig} from 'shared/util/data-sources';
 import {withRequest} from 'shared/hoc';
+import {config} from 'shared/util/config';
 
 const EnrichedProfilesBody = ({count}: {count: number}) => (
 	<Card.Body className="d-flex flex-column">
@@ -53,10 +53,7 @@ interface IEnrichedProfilesCardProps extends React.HTMLAttributes<HTMLElement> {
 const EnrichedProfilesCard: React.FC<IEnrichedProfilesCardProps> = ({
 	dataSources,
 }) => {
-	const {channelId = '', groupId = ''} = useParams<{
-		channelId: string;
-		groupId: string;
-	}>();
+	const {channelId = '', groupId = ''} = config;
 	const contactsConfigured =
 		!dataSources || dataSources.some(validContactsConfig);
 

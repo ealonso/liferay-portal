@@ -3,7 +3,7 @@ import FilterPicker, {IFilterPickerItem} from './FilterPicker';
 import React, {useMemo} from 'react';
 import {getSafeDecodedURIComponent, getSafeTouchpoint} from 'shared/util/util';
 import {IPaginatedDataSourceParams} from 'shared/hooks/usePaginatedRequest';
-import {useParams} from 'react-router-dom';
+import {config} from 'shared/util/config';
 
 interface IAccountDropdownProps {
 	assetType?: string;
@@ -24,19 +24,9 @@ const AccountDropdown: React.FC<IAccountDropdownProps> = ({
 	onFilterChange,
 	rangeQueryValues,
 }) => {
-	const {
-		assetId = '',
-		channelId,
-		groupId,
-		title = '',
-		touchpoint = '',
-	} = useParams<{
-		assetId: string;
-		channelId: string;
-		groupId: string;
-		title: string;
-		touchpoint: string;
-	}>();
+	const {channelId, groupId} = config;
+
+	const {assetId = '', title = '', touchpoint = ''} = config.params;
 
 	// The account comes from the URL, which may name one that is not on the
 	// fetched page, so it is passed as the selection rather than looked up.

@@ -1,7 +1,5 @@
 import React from 'react';
-import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
-import {useLocation, useParams} from 'react-router-dom';
-import {useQueryParams} from 'shared/hooks/useQueryParams';
+import {config} from 'shared/util/config';
 
 interface IBundleRouterProps {
 	componentProps?: Record<string, unknown>;
@@ -14,31 +12,18 @@ const BundleRouter = ({
 	data: Component,
 	destructured = true,
 }: IBundleRouterProps) => {
-	const history = useHistoryAdapter();
-	const location = useLocation();
-	const params = useParams();
-	const query = useQueryParams();
+	const params = {
+		...config.params,
+		channelId: config.channelId,
+		groupId: config.groupId,
+	};
+	const query = config.params;
 
 	if (destructured) {
-		return (
-			<Component
-				history={history}
-				location={location}
-				{...query}
-				{...params}
-				{...componentProps}
-			/>
-		);
+		return <Component {...query} {...params} {...componentProps} />;
 	}
 
-	return (
-		<Component
-			history={history}
-			location={location}
-			router={{params, query}}
-			{...componentProps}
-		/>
-	);
+	return <Component router={{params, query}} {...componentProps} />;
 };
 
 export default BundleRouter;

@@ -7,7 +7,7 @@ import {ConnectorAuthStep} from 'settings/components/3rd-party-connector/steps/C
 import {ConnectorConfig} from 'settings/components/3rd-party-connector/types';
 import {getConnectorConfig} from 'settings/components/3rd-party-connector/registry';
 import {updateConnector} from 'shared/api/connector';
-import {useParams} from 'react-router-dom';
+import {config as pageConfig} from 'shared/util/config';
 
 const buildSteps = (config: ConnectorConfig): Step[] => [
 	{
@@ -45,7 +45,7 @@ const buildSteps = (config: ConnectorConfig): Step[] => [
 ];
 
 const ConnectConnector = () => {
-	const {id = ''} = useParams<{id: string}>();
+	const {id = ''} = pageConfig.params;
 
 	const config = getConnectorConfig(id);
 

@@ -9,7 +9,6 @@ import {pickBy} from 'lodash';
 import {RangeSelectors} from 'shared/types';
 import {setUriQueryValues} from 'shared/util/url';
 import {Text} from '@clayui/core';
-import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
 
 export enum ReportType {
 	CSV = 'CSV',
@@ -43,7 +42,6 @@ export const DownloadReportModal: React.FC<IDownloadReportModal> = ({
 	showDateRange = true,
 	type,
 }) => {
-	const history = useHistoryAdapter();
 	const [openAlert, setOpenAlert] = useState(true);
 	const [submitDisabled, setSubmitDisabled] = useState(false);
 	const [rangeSelectors, setRangeSelectors] = useState<
@@ -115,7 +113,7 @@ export const DownloadReportModal: React.FC<IDownloadReportModal> = ({
 									}
 
 									if (rangeSelectors) {
-										history.push(
+										window.location.assign(
 											setUriQueryValues(
 												pickBy({
 													downloadReport: true,

@@ -28,9 +28,9 @@ import {sub} from 'shared/util/lang';
 import {Text} from '@clayui/core';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useDisconnectDataSource} from '../data-source/utils';
-import {useParams} from 'react-router-dom';
 import {useRequest} from 'shared/hooks/useRequest';
 import {withSelectionProvider} from 'shared/context/selection';
+import {config} from 'shared/util/config';
 
 const connector = connect(null, {
 	addAlert,
@@ -49,10 +49,9 @@ const MarketoCampaignOverview: React.FC<IMarketoCampaignOverviewProps> = ({
 	const [loading, setLoading] = useState(false);
 	const [dataSource, setDataSource] = useState(initialDataSource);
 
-	const {groupId = '', id = ''} = useParams<{
-		groupId: string;
-		id: string;
-	}>();
+	const {groupId = ''} = config;
+
+	const {id = ''} = config.params;
 	const currentUser = useCurrentUser();
 
 	type ConnectionAlert = {
@@ -137,7 +136,7 @@ const MarketoCampaignOverview: React.FC<IMarketoCampaignOverviewProps> = ({
 	return (
 		<BasePage
 			breadcrumbItems={[
-				breadcrumbs.getDataSources({groupId}),
+				breadcrumbs.getDataSources(),
 				breadcrumbs.getDataSourceName({
 					active: true,
 					label: dataSource.name ?? '',

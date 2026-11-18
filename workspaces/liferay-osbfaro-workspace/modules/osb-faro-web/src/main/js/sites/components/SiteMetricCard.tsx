@@ -15,12 +15,12 @@ import {
 	SitesMetricQuery,
 	SitesTabsQuery,
 } from 'shared/components/metric-card/queries';
-import {useParams} from 'react-router-dom';
+import {config} from 'shared/util/config';
 
 type TChartData = typeof getSiteMetricsChartData;
 
 const SitesMetricCard: React.FC<IGenericMetricBaseCardProps> = (props) => {
-	const {channelId} = useParams();
+	const {channelId} = config;
 
 	const metrics: Metric[] = [
 		CompositeMetric,

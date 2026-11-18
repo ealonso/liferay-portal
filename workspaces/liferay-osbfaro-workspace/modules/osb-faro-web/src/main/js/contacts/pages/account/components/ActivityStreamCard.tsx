@@ -33,13 +33,13 @@ import {
 import {mapListResultsToProps} from 'shared/util/mappers';
 import {SessionEntityTypes} from 'shared/util/constants';
 import {toThousands} from 'shared/util/numbers';
-import {useParams} from 'react-router-dom';
 import {useCampaignTouchesByDay} from 'shared/hooks/useCampaignTouchesByDay';
 import {useQuery} from '@apollo/client';
 import {useSelectedPoint} from 'shared/hooks/useSelectedPoint';
 import {useStatefulPagination} from 'shared/hooks/useStatefulPagination';
 import {useTimeZone} from 'shared/hooks/useTimeZone';
 import {getDateRangeLabel, getDateRangeLabelFromDate} from 'shared/util/date';
+import {config} from 'shared/util/config';
 
 interface IActivityStreamCardProps {
 	accountId: string;
@@ -68,7 +68,7 @@ const AccountActivityStreamCard: React.FC<IActivityStreamCardProps> = ({
 
 	const {timeZoneId} = useTimeZone();
 
-	const {groupId} = useParams<{groupId: string}>();
+	const {groupId} = config;
 
 	const handleChangeSelection = (index: number | null) => {
 		resetPage();

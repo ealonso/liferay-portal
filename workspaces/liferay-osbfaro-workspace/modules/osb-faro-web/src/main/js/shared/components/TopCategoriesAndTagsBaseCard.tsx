@@ -17,8 +17,8 @@ import {getSafeRangeSelectors} from 'shared/util/util';
 import {RangeSelectors, SafeRangeSelectors} from 'shared/types';
 import {Text} from '@clayui/core';
 import {toThousands} from 'shared/util/numbers';
-import {useParams} from 'react-router-dom';
 import {useRequest} from 'shared/hooks/useRequest';
+import {config} from 'shared/util/config';
 
 export interface ITopCategory {
 	downloadsMetric?: {value: number};
@@ -190,10 +190,7 @@ interface ITopCategoriesAndTagsWithDataProps
 const TopCategoriesAndTagsWithData: React.FC<
 	ITopCategoriesAndTagsWithDataProps
 > = ({dataSourceFn, dataSourceParams, rangeSelectors, skipRequest}) => {
-	const {channelId = '', groupId = ''} = useParams<{
-		channelId: string;
-		groupId: string;
-	}>();
+	const {channelId = '', groupId = ''} = config;
 
 	const [activeTab, setActiveTab] = useState(0);
 	const [groupBy, setGroupBy] = useState<GroupByMetric>(

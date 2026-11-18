@@ -13,9 +13,9 @@ import {IAccountLifecycleStatus} from 'shared/api/lifecycle';
 import {sub} from 'shared/util/lang';
 import {Text} from '@clayui/core';
 import {useLifecycleSelection} from 'shared/hooks/useLifecycleSelection';
-import {useParams} from 'react-router-dom';
 import {useRequest} from 'shared/hooks/useRequest';
 import {sortBy} from 'lodash';
+import {config} from 'shared/util/config';
 
 interface LifecycleStatusProps {
 	className?: string;
@@ -24,15 +24,9 @@ interface LifecycleStatusProps {
 const AT_RISK_STAGE_NAME = 'At Risk';
 
 const LifecycleStatus: React.FC<LifecycleStatusProps> = ({className}) => {
-	const {
-		channelId,
-		groupId = '',
-		id: accountId = '',
-	} = useParams<{
-		channelId: string;
-		groupId: string;
-		id: string;
-	}>();
+	const {channelId, groupId = ''} = config;
+
+	const {id: accountId = ''} = config.params;
 
 	const {
 		lifecycles,

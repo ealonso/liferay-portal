@@ -26,13 +26,13 @@ import {DataSourceTypes, OrderByDirections} from 'shared/util/constants';
 import {fetchDataSource} from 'shared/actions/data-sources';
 import {get, noop, upperFirst} from 'lodash';
 import {getDefaultChannel} from 'shared/components/channels-menu';
-import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
 import {Text} from '@clayui/core';
 import {useInterval} from 'shared/hooks/useInterval';
 import {useLazyQuery} from '@apollo/client';
 import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
-import {withHistory} from 'shared/hoc';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 const TIMEOUT_INTERVAL = 5000;
 
@@ -75,9 +75,6 @@ interface IConnectDXPWrapperProps {
 		groupId: string;
 		id: string;
 	}) => DataSource;
-	history: {
-		push: (path: string) => void;
-	};
 	isUpgrading: boolean;
 	onDxpConnected: (dxpConnected: boolean) => void;
 	onPrevious?: () => void;
@@ -92,7 +89,6 @@ const ConnectDXP: React.FC<IConnectDXPWrapperProps & IConnectDXPProps> = ({
 	dxpConnected,
 	fetchDataSource,
 	groupId,
-	history,
 	onClose,
 	onDxpConnected,
 	onNext,
@@ -165,7 +161,9 @@ const ConnectDXP: React.FC<IConnectDXPWrapperProps & IConnectDXPProps> = ({
 		API.channels.fetchAll({groupId}).then(({items}) => {
 			const channelId = get(items, [0, 'id']);
 
-			history.push(toRoute(Routes.SITES, {channelId, groupId}));
+			window.location.assign(
+				setUriQueryValues({channelId}, config.sitesURL)
+			);
 
 			channelDispatch?.({
 				payload: getDefaultChannel(channelId, items),
@@ -191,10 +189,10 @@ const ConnectDXP: React.FC<IConnectDXPWrapperProps & IConnectDXPProps> = ({
 		const id = get(data, ['dataSources', 0, 'id'], null);
 
 		if (id) {
-			return toRoute(Routes.SETTINGS_DATA_SOURCE, {groupId, id});
+			return setUriQueryValues({id}, config.dataSourceURL);
 		}
 
-		return toRoute(Routes.SETTINGS_DATA_SOURCE_LIST, {groupId});
+		return config.dataSourcesURL;
 	};
 
 	return (
@@ -522,7 +520,6 @@ const TokenInput: FC<ITokenInputProps> = ({token}) => {
 };
 
 export default compose<any>(
-	withHistory,
 	connect(null, {
 		fetchDataSource,
 	})

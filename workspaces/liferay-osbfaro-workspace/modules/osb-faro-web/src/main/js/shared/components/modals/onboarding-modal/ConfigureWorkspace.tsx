@@ -12,10 +12,9 @@ import Loading, {Align} from 'shared/components/Loading';
 import React, {useRef, useState} from 'react';
 import {addAlert} from 'shared/actions/alerts';
 import {Alert} from 'shared/types';
-import {compose, withHistory} from 'shared/hoc';
+import {compose} from 'shared/hoc';
 import {connect, ConnectedProps, useStore} from 'react-redux';
 import {FormikHelpers} from 'formik';
-import {Routes, toRoute} from 'shared/util/router';
 import {sequence} from 'shared/util/promise';
 import {sub} from 'shared/util/lang';
 import {Text} from '@clayui/core';
@@ -26,6 +25,7 @@ import {
 	validateEmailDomain,
 	validateEmailDomainArr,
 } from 'shared/util/email-validators';
+import {config} from 'shared/util/config';
 
 const {faroURL} = Constants;
 
@@ -40,9 +40,6 @@ interface IConfigureWorkspaceProps extends PropsFromRedux {
 	emailAddressDomains: string[];
 	emailAddressDomainsLoading: boolean;
 	groupId: string;
-	history: {
-		replace: (value: any) => void;
-	};
 	onClose: () => void;
 	onNext?: (increment?: number) => void;
 }
@@ -53,7 +50,6 @@ const ConfigureWorkspaceWithEmailAddressDomains: React.FC<
 	addAlert,
 	emailAddressDomains: initialEmailAddressDomains,
 	groupId,
-	history,
 	onNext,
 	updateProject,
 }) => {
@@ -101,11 +97,7 @@ const ConfigureWorkspaceWithEmailAddressDomains: React.FC<
 				}
 
 				if (values.friendlyURL !== groupId) {
-					history.replace(
-						toRoute(Routes.SETTINGS_WORKSPACE, {
-							groupId: values.friendlyURL || project.groupId,
-						})
-					);
+					window.location.replace(config.workspaceSettingsURL);
 				}
 
 				addAlert({
@@ -337,4 +329,4 @@ const ConfigureWorkspace: React.FC<IConfigureWorkspaceProps> = (props) => {
 	);
 };
 
-export default compose(connector, withHistory)(ConfigureWorkspace) as any;
+export default compose(connector)(ConfigureWorkspace) as any;

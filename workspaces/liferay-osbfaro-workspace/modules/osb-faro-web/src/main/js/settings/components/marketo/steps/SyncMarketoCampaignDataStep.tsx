@@ -5,9 +5,9 @@ import {addAlert} from 'shared/actions/alerts';
 import {Alert} from 'shared/types';
 import {Text} from '@clayui/core';
 import {updateMarketoCampaign} from 'shared/api/data-source';
-import {useParams} from 'react-router-dom';
 import {useWizardPage} from '../../base-page/WizardPageContext';
 import {WizardPageButtonGroup} from 'settings/components/base-page/WizardPageButtonGroup';
+import {config} from 'shared/util/config';
 
 interface ISyncMarketoCampaignDataStepProps {
 	onNext: () => void;
@@ -20,7 +20,7 @@ const SyncMarketoCampaignDataStep = ({
 }: ISyncMarketoCampaignDataStepProps) => {
 	const [loading, setLoading] = useState(false);
 	const {dataSource} = useWizardPage();
-	const {groupId = ''} = useParams<{groupId: string}>();
+	const {groupId = ''} = config;
 	const [enabledIndividuals, setEnabledIndividuals] = useState(false);
 
 	useEffect(() => {

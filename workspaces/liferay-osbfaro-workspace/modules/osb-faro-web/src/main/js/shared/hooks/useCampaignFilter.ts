@@ -1,6 +1,5 @@
 import {setUriQueryValues} from 'shared/util/url';
 import {config} from 'shared/util/config';
-import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
 
 type Campaign = {
 	id: string;
@@ -21,13 +20,12 @@ interface ICampaignFilter {
 
 export const useCampaignFilter = (): ICampaignFilter => {
 	const {campaignId, campaignName} = config.params;
-	const history = useHistoryAdapter();
 
 	return {
 		campaignId,
 		campaignName,
 		setCampaign: (campaign) =>
-			history.push(
+			window.location.assign(
 				setUriQueryValues({
 					campaignId: campaign?.id ?? null,
 					campaignName: campaign?.name ?? null,

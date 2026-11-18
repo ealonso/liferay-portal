@@ -1,17 +1,14 @@
 import {pickBy} from 'lodash';
 import {RangeSelectors} from 'shared/types';
 import {removeUriQueryParam, setUriQueryValues} from 'shared/util/url';
-import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
 
 export const useRangeSelectorChange = () => {
-	const history = useHistoryAdapter();
-
 	const handleRangeSelectorChange = ({
 		rangeEnd,
 		rangeKey,
 		rangeStart,
 	}: RangeSelectors) => {
-		history.push(
+		window.location.assign(
 			setUriQueryValues(
 				pickBy({rangeEnd, rangeKey, rangeStart}),
 				removeUriQueryParam(

@@ -9,7 +9,7 @@ import {isMissingDataValue} from 'shared/util/data-value';
 import {sub} from 'shared/util/lang';
 import {Text} from '@clayui/core';
 import {useLifecycleSelection} from 'shared/hooks/useLifecycleSelection';
-import {useParams} from 'react-router-dom';
+import {config} from 'shared/util/config';
 
 /**
  * Read-only summary of an account's firmographics, rendered as a single
@@ -45,10 +45,7 @@ const AccountInfoBar: React.FC<IAccountInfoBarProps> = ({
 	industry,
 	lifecycleStages,
 }) => {
-	const {channelId, groupId = ''} = useParams<{
-		channelId: string;
-		groupId: string;
-	}>();
+	const {channelId, groupId = ''} = config;
 
 	const {lifecycles, selectedLifecycleId, setSelectedLifecycleId} =
 		useLifecycleSelection({channelId, groupId});

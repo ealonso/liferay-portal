@@ -8,7 +8,6 @@ import {CREATE_DATE} from 'shared/util/pagination';
 import {DataSourceTypes, OrderByDirections} from 'shared/util/constants';
 import {ReviewSyncedDataFragment} from '../ReviewSyncedDataFragment';
 import {updateSearchParams} from 'settings/components/base-page/utis';
-import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
 import {useInterval} from 'shared/hooks/useInterval';
 import {useLazyQuery} from '@apollo/client';
 import {WizardPageButtonGroup} from 'settings/components/base-page/WizardPageButtonGroup';
@@ -21,7 +20,6 @@ interface IReviewSyncedDataStepProps {
 }
 
 const ReviewSyncedDataStep = ({onNext, onPrev}: IReviewSyncedDataStepProps) => {
-	const history = useHistoryAdapter();
 	const [dataSource, setDataSource] = useState<DataSource>({
 		contactsSyncDetails: {selected: false},
 		id: '',
@@ -61,7 +59,7 @@ const ReviewSyncedDataStep = ({onNext, onPrev}: IReviewSyncedDataStepProps) => {
 			onSubmit={async (event) => {
 				event.preventDefault();
 
-				updateSearchParams(history, 'dataSourceId', dataSource.id);
+				updateSearchParams('dataSourceId', dataSource.id);
 
 				onNext();
 			}}
@@ -74,7 +72,7 @@ const ReviewSyncedDataStep = ({onNext, onPrev}: IReviewSyncedDataStepProps) => {
 			<WizardPageButtonGroup
 				nextButtonLabel={Liferay.Language.get('continue')}
 				onCancel={() => {
-					updateSearchParams(history, 'dataSourceId', dataSource.id);
+					updateSearchParams('dataSourceId', dataSource.id);
 
 					onPrev();
 				}}

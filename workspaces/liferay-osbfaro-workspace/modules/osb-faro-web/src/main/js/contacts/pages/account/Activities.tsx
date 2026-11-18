@@ -9,7 +9,7 @@ import {
 	DEFAULT_CHART_VIEW,
 } from 'shared/components/ChartViewSelector';
 import {Interval, RangeSelectors} from 'shared/types';
-import {useParams} from 'react-router-dom';
+import {config} from 'shared/util/config';
 
 interface IActivitiesProps {
 	accountName?: string;
@@ -18,11 +18,9 @@ interface IActivitiesProps {
 const Activities: React.FC<IActivitiesProps> = ({accountName}) => {
 	const {selectedChannel} = useContext(ChannelContext);
 
-	const {channelId: routeChannelId = '', id = ''} = useParams<{
-		channelId: string;
-		groupId: string;
-		id: string;
-	}>();
+	const {channelId: routeChannelId = ''} = config;
+
+	const {id = ''} = config.params;
 
 	const [chartView, setChartView] = useState<ChartView>(DEFAULT_CHART_VIEW);
 

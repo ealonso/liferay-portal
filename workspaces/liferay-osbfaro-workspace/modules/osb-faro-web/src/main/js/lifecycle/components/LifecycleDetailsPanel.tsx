@@ -21,10 +21,10 @@ import {
 import {PageActions} from 'shared/components/base-page/Header';
 import {SidePanel, Text} from '@clayui/core';
 import {useLifecycleActions} from 'lifecycle/hooks/useLifecycleActions';
-import {useParams} from 'react-router-dom';
 import {useRequest} from 'shared/hooks/useRequest';
 import {useTimeZone} from 'shared/hooks/useTimeZone';
 import {sortBy} from 'lodash';
+import {config} from 'shared/util/config';
 
 interface IField {
 	label: string;
@@ -135,7 +135,7 @@ const LifecycleDetailsPanel: React.FC<ILifecycleDetailsPanelProps> = ({
 	onDelete,
 	onView,
 }) => {
-	const {groupId} = useParams();
+	const {groupId} = config;
 
 	const [activeTab, setActiveTab] = useState(0);
 

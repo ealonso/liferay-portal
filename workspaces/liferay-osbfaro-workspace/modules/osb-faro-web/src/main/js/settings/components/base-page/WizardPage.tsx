@@ -7,12 +7,10 @@ import URLConstants from 'shared/util/url-constants';
 import {addAlert} from 'shared/actions/alerts';
 import {connect, ConnectedProps} from 'react-redux';
 import {Heading, Text} from '@clayui/core';
-import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
-import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
-import {useParams} from 'react-router-dom';
-import {useQueryParams} from 'shared/hooks/useQueryParams';
+import {updateSearchParams} from './utis';
 import {useWizardPage, WizardPageProvider} from './WizardPageContext';
+import {config} from 'shared/util/config';
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -42,28 +40,13 @@ function getSafeStepFromURL(steps: Step[], initStep: string | null) {
 	return step;
 }
 
-function updateSearchParams(
-	history: ReturnType<typeof useHistoryAdapter>,
-	key: string,
-	value: any
-) {
-	const params = new URLSearchParams(window.location.search);
-	params.set(key, String(value));
-
-	history.push({
-		pathname: window.location.pathname,
-		search: params.toString(),
-	});
-}
-
 interface IWizardStepsProps extends PropsFromRedux {
 	steps: Step[];
 }
 
 const WizardSteps = ({addAlert, steps}: IWizardStepsProps) => {
-	const {groupId = ''} = useParams<{groupId: string}>();
-	const history = useHistoryAdapter();
-	const params = useQueryParams();
+	const {groupId = ''} = config;
+	const params = config.params;
 	const {loadingContext, refetchDataSource} = useWizardPage();
 
 	const [stepIndex, setStepIndex] = useState(
@@ -73,10 +56,14 @@ const WizardSteps = ({addAlert, steps}: IWizardStepsProps) => {
 	const currentStep = steps[stepIndex];
 
 	const handleSetStep = async (newStepIndex: number) => {
-		updateSearchParams(history, 'stepIndex', newStepIndex);
+		updateSearchParams('stepIndex', newStepIndex);
 
-		if (params.dataSourceId) {
-			refetchDataSource(params.dataSourceId);
+		const searchParams = new URLSearchParams(window.location.search);
+
+		const dataSourceId = searchParams.get('dataSourceId');
+
+		if (dataSourceId) {
+			refetchDataSource(dataSourceId);
 		}
 
 		setStepIndex(newStepIndex);
@@ -149,7 +136,6 @@ const connector = connect(null, {
 });
 
 const WizardPage = ({children}: {children: React.ReactNode}) => {
-	const {groupId = ''} = useParams<{groupId: string}>();
 
 	// TODO: Trick to add background white on wizad mode, remove it on revamping.
 
@@ -169,9 +155,7 @@ const WizardPage = ({children}: {children: React.ReactNode}) => {
 		<WizardPageProvider>
 			<div className="wizard-page">
 				<BaseEditPage.Toolbar
-					backURL={toRoute(Routes.SETTINGS_DATA_SOURCE_LIST, {
-						groupId,
-					})}
+					backURL={config.dataSourcesURL}
 					className="mb-4"
 					title={Liferay.Language.get('data-sources')}
 				/>

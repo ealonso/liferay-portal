@@ -17,10 +17,10 @@ import {
 import {RangeSelectors} from 'shared/types';
 import {SANKEY_WIDTH, SECONDARY_NODE_COLOR} from './utils';
 import {TitleKey, Type} from './types';
-import {useParams} from 'react-router-dom';
 import {useQuery} from '@apollo/client';
 import {useResize} from 'shared/hooks/useResize';
 import {v4 as uuidv4} from 'uuid';
+import {config} from 'shared/util/config';
 
 type pagePathNode = {
 	external: boolean;
@@ -105,11 +105,9 @@ interface IPagePathCardProps {
 const PagePathCard: React.FC<IPagePathCardProps> = ({rangeSelectors}) => {
 	const cardRef = useRef(null);
 	const {accountId, segmentId} = useContext(BasePage.Context);
-	const {channelId, title, touchpoint} = useParams<{
-		channelId: string;
-		title: string;
-		touchpoint: string;
-	}>();
+	const {channelId} = config;
+
+	const {title, touchpoint} = config.params;
 	const {data, error, loading} = useQuery(PagePathQuery, {
 		variables: {
 			canonicalUrl: getSafeTouchpoint(touchpoint ?? ''),

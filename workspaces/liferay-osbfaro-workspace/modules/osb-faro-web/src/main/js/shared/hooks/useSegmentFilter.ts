@@ -1,6 +1,5 @@
 import {setUriQueryValues} from 'shared/util/url';
 import {config} from 'shared/util/config';
-import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
 
 type Segment = {
 	id: string;
@@ -21,13 +20,12 @@ interface ISegmentFilter {
 
 export const useSegmentFilter = (): ISegmentFilter => {
 	const {segmentId, segmentName} = config.params;
-	const history = useHistoryAdapter();
 
 	return {
 		segmentId,
 		segmentName,
 		setSegment: (segment) =>
-			history.push(
+			window.location.assign(
 				setUriQueryValues({
 					segmentId: segment?.id ?? null,
 					segmentName: segment?.name ?? null,

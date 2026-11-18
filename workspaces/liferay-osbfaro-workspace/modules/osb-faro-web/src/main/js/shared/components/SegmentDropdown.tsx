@@ -7,7 +7,7 @@ import {
 	getDefaultSortOrder,
 	NAME,
 } from 'shared/util/pagination';
-import {useParams} from 'react-router-dom';
+import {config} from 'shared/util/config';
 
 interface ISegmentDropdownProps {
 	className?: string;
@@ -46,10 +46,7 @@ const SegmentDropdown: React.FC<ISegmentDropdownProps> = ({
 	loading,
 	onFilterChange,
 }) => {
-	const {channelId, groupId} = useParams<{
-		channelId: string;
-		groupId: string;
-	}>();
+	const {channelId, groupId} = config;
 
 	// The segment comes from the URL, which may name one that is not on the
 	// fetched page, so it is passed as the selection rather than looked up.

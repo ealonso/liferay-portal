@@ -3,8 +3,7 @@ import {addAlert} from 'shared/actions/alerts';
 import {Alert} from 'shared/types';
 import {DataSource} from 'shared/util/records';
 import {fetch} from 'shared/api/data-source';
-import {useParams} from 'react-router-dom';
-import {useQueryParams} from 'shared/hooks/useQueryParams';
+import {config} from 'shared/util/config';
 
 interface IWizardPageContext {
 	dataSource: DataSource | null;
@@ -55,8 +54,8 @@ async function fetchDataSource({
 export const useWizardPage = () => useContext(WizardPageContext);
 
 export const WizardPageProvider = ({children}: {children: React.ReactNode}) => {
-	const {groupId = ''} = useParams<{groupId: string}>();
-	const {dataSourceId} = useQueryParams();
+	const {groupId = ''} = config;
+	const {dataSourceId} = config.params;
 	const [dataSource, setDataSource] = useState<DataSource | null>(null);
 	const [loading, setLoading] = useState(false);
 

@@ -13,7 +13,6 @@ import {autoCancel, hasRequest} from 'shared/util/request-decorator';
 import {hasChanges} from 'shared/util/react';
 import {paginationConfig, paginationDefaults} from 'shared/util/pagination';
 import {setUriFilterValues, setUriQueryValues} from 'shared/util/url';
-import {withHistory} from 'shared/hoc';
 
 const {cur: defaultPage} = Constants.pagination;
 
@@ -100,7 +99,6 @@ const ResultsContent = React.memo(function ResultsContent({
 	});
 });
 
-@withHistory
 @hasRequest
 export default class BaseResults extends React.Component {
 	static contextType = SelectionContext;
@@ -327,7 +325,6 @@ export default class BaseResults extends React.Component {
 	handleClearAllFilters() {
 		const {
 			filterBy,
-			history,
 			onFilterByChange,
 			onQueryChange,
 			onSearchValueChange
@@ -343,7 +340,7 @@ export default class BaseResults extends React.Component {
 			onQueryChange && onQueryChange('');
 			onFilterByChange && onFilterByChange(emptyFilterBy);
 		} else {
-			history.push(
+			window.location.assign(
 				setUriFilterValues(
 					emptyFilterBy,
 					setUriQueryValues({page: defaultPage, query: ''})

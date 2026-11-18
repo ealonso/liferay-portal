@@ -20,7 +20,6 @@ import {noop} from 'lodash';
 import {OrderParams} from 'shared/util/records';
 import {setUriFilterValues, setUriQueryValues} from 'shared/util/url';
 import {toLocale} from 'shared/util/numbers';
-import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
 
 const {cur: defaultPage} = Constants.pagination;
 
@@ -102,8 +101,6 @@ const SearchToolbar: React.FC<ISearchToolbarProps> = ({
 	showSearch = true,
 	total = 0,
 }) => {
-	const history = useHistoryAdapter();
-
 	const itemsSelected = selectEntirePage || selectEntirePageIndeterminate;
 
 	const activeFilters = filterBy.some(
@@ -133,7 +130,7 @@ const SearchToolbar: React.FC<ISearchToolbarProps> = ({
 				onFilterByChange(emptyFilterBy as unknown as FilterByType);
 		}
 		else {
-			history.push(
+			window.location.assign(
 				setUriFilterValues(
 					emptyFilterBy as unknown as Parameters<
 						typeof setUriFilterValues
@@ -149,7 +146,7 @@ const SearchToolbar: React.FC<ISearchToolbarProps> = ({
 			onFilterByChange(value);
 		}
 		else {
-			history.push(
+			window.location.assign(
 				setUriFilterValues(
 					value as unknown as Parameters<
 						typeof setUriFilterValues
@@ -169,7 +166,7 @@ const SearchToolbar: React.FC<ISearchToolbarProps> = ({
 			);
 		}
 		else {
-			history.push(
+			window.location.assign(
 				setUriQueryValues(
 					{
 						[field]:
@@ -196,7 +193,7 @@ const SearchToolbar: React.FC<ISearchToolbarProps> = ({
 			);
 		}
 		else {
-			history.push(
+			window.location.assign(
 				setUriQueryValues(
 					{
 						field,
@@ -212,7 +209,7 @@ const SearchToolbar: React.FC<ISearchToolbarProps> = ({
 	const handleSearchSubmit = (query: string) => {
 		onQueryChange
 			? onQueryChange(query)
-			: history.push(
+			: window.location.assign(
 					setUriQueryValues({
 						page: defaultPage,
 						query,

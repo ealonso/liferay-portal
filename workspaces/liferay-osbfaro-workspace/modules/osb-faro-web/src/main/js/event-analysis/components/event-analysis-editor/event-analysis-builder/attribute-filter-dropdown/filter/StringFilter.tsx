@@ -9,8 +9,8 @@ import {
 	STRING_OPERATOR_LABELS_MAP,
 	STRING_OPTIONS,
 } from 'event-analysis/utils/utils';
-import {useParams} from 'react-router-dom';
 import {useStatefulPagination} from 'shared/hooks/useStatefulPagination';
+import {config} from 'shared/util/config';
 
 type EventAttributeValuesData = {
 	eventAttributeValues: EventAttributeValues;
@@ -40,7 +40,7 @@ const StringFilter: React.FC<IFilterProps> = ({
 		return {operator: Operators.Contains, value: ''};
 	};
 
-	const {channelId} = useParams();
+	const {channelId} = config;
 
 	const {delta, page} = useStatefulPagination();
 

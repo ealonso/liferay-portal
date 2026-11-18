@@ -39,9 +39,9 @@ import {revoke} from 'shared/api/api-tokens';
 import {Text} from '@clayui/core';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useDisconnectDataSource} from '../data-source/utils';
-import {useParams} from 'react-router-dom';
 import {useRequest} from 'shared/hooks/useRequest';
 import {withSelectionProvider} from 'shared/context/selection';
+import {config as pageConfig} from 'shared/util/config';
 
 const connector = connect(null, {
 	addAlert,
@@ -63,10 +63,9 @@ const ConnectorOverview: React.FC<IConnectorOverviewProps> = ({
 	const [dataSource, setDataSource] = useState(initialDataSource);
 	const [token, setToken] = useState('');
 
-	const {groupId = '', id = ''} = useParams<{
-		groupId: string;
-		id: string;
-	}>();
+	const {groupId = ''} = pageConfig;
+
+	const {id = ''} = pageConfig.params;
 	const currentUser = useCurrentUser();
 
 	const endpointURL = `${window.location.origin}${config.endpointPath}`;
@@ -178,7 +177,7 @@ const ConnectorOverview: React.FC<IConnectorOverviewProps> = ({
 	return (
 		<BasePage
 			breadcrumbItems={[
-				breadcrumbs.getDataSources({groupId}),
+				breadcrumbs.getDataSources(),
 				breadcrumbs.getDataSourceName({
 					active: true,
 					label: dataSource.name ?? '',

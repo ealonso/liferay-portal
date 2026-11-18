@@ -32,11 +32,11 @@ import {Individual} from 'shared/util/records';
 import {Interval, RangeSelectors} from 'shared/types';
 import {mapListResultsToProps} from 'shared/util/mappers';
 import {SessionEntityTypes} from 'shared/util/constants';
-import {useParams} from 'react-router-dom';
 import {useCampaignTouchesByDay} from 'shared/hooks/useCampaignTouchesByDay';
 import {useQuery} from '@apollo/client';
 import {useSelectedPoint} from 'shared/hooks/useSelectedPoint';
 import {getDateRangeLabel, getDateRangeLabelFromDate} from 'shared/util/date';
+import {config} from 'shared/util/config';
 
 interface IProfileCardWithDataCDPProps
 	extends React.HTMLAttributes<HTMLElement> {
@@ -74,7 +74,7 @@ const ProfileCardWithDataCDP: React.FC<IProfileCardWithDataCDPProps> = ({
 	const {hasSelectedPoint, onPointSelect, selectedPoint} = useSelectedPoint();
 	const [searchValue, setSearchValue] = useState<string>('');
 
-	const {groupId} = useParams<{groupId: string}>();
+	const {groupId} = config;
 
 	const safeRangeSelectors = getSafeRangeSelectors(rangeSelectors);
 

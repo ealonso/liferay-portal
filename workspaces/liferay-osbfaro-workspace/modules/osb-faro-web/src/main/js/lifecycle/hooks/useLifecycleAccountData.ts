@@ -4,9 +4,9 @@ import {
 	IAccountMetric,
 } from 'contacts/pages/account/utils/types';
 import {useDataSources} from 'shared/context/dataSources';
-import {useParams} from 'react-router-dom';
 import {useRequest} from 'shared/hooks/useRequest';
 import {AccountDataStatus} from 'lifecycle/utils/types';
+import {config} from 'shared/util/config';
 
 interface IUseLifecycleAccountData {
 	refetch: () => void;
@@ -14,7 +14,7 @@ interface IUseLifecycleAccountData {
 }
 
 export const useLifecycleAccountData = (): IUseLifecycleAccountData => {
-	const {channelId, groupId} = useParams();
+	const {channelId, groupId} = config;
 
 	const {empty: noDataSources, loading: dataSourcesLoading} =
 		useDataSources();

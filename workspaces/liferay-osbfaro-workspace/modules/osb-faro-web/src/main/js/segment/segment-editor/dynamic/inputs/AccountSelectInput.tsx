@@ -15,7 +15,7 @@ import {Item} from '@clayui/multi-select/lib/types';
 import {Option, Picker} from '@clayui/core';
 import {sortBy} from 'lodash';
 import {useChannelLifecycles} from 'shared/hooks/useChannelLifecycles';
-import {useParams} from 'react-router-dom';
+import {config} from 'shared/util/config';
 
 interface IAccountSelectProps extends ISegmentEditorCustomInputBase {
 	groupId: string;
@@ -30,7 +30,7 @@ const AccountSelectInput: React.FC<IAccountSelectProps> = ({
 	property,
 	value,
 }) => {
-	const {channelId} = useParams();
+	const {channelId} = config;
 
 	const [addingStages, setAddingStages] = useState(false);
 

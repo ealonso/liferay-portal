@@ -1,4 +1,5 @@
 import BasePage from 'settings/components/base-page/BasePage';
+import {config} from 'shared/util/config';
 
 import ClayLayout from '@clayui/layout';
 
@@ -9,7 +10,6 @@ import {GenericBarsCard} from 'settings/components/usage-overview/GenericBarsCar
 import {GenericDonutChart} from 'settings/components/usage-overview/GenericDonutChart';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
-import {useParams} from 'react-router-dom';
 
 export type Resource = {
 	capacity: string;
@@ -18,7 +18,7 @@ export type Resource = {
 
 export const UsageOverviewExternal = () => {
 	const currentUser = useCurrentUser();
-	const {groupId = ''} = useParams<{groupId: string}>();
+	const {groupId = ''} = config;
 	const isLDP = useLDPEnabled({groupId});
 
 	let pageActions: {

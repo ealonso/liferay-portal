@@ -10,8 +10,8 @@ import {
 	mapResultToProps,
 } from '../hocs/mappers/site-metrics-query';
 import {ReportContainer} from 'shared/components/download-report/DownloadPDFReport';
-import {useParams} from 'react-router-dom';
 import {withError} from 'shared/hoc';
+import {config} from 'shared/util/config';
 
 const ChartWithData = compose<any>(
 	graphql(IndividualSiteMetricsQuery, {
@@ -22,7 +22,7 @@ const ChartWithData = compose<any>(
 )(ActiveIndividualsChart);
 
 const ActiveIndividualsCard = () => {
-	const {channelId} = useParams();
+	const {channelId} = config;
 
 	return (
 		<BaseCard

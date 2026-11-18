@@ -23,10 +23,9 @@ import {
 	RECOMMENDATION_UPDATE_MUTATION,
 } from '../../queries/RecommendationMutation';
 import {Router} from 'shared/types';
-import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
 import {useMutation} from '@apollo/client';
-import {withHistory} from 'shared/hoc';
+import {config} from 'shared/util/config';
 
 const STEPS: {component: React.ComponentType<any>; title: string}[] = [
 	{
@@ -53,9 +52,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface IRecommendationStepCardProps extends PropsFromRedux {
 	cancelHref: string;
-	history: {
-		push: (value: string) => void;
-	};
 	job?: Job;
 	jobType?: JobTypes;
 	router: Router;
@@ -64,7 +60,6 @@ interface IRecommendationStepCardProps extends PropsFromRedux {
 const RecommendationStepCard: React.FC<IRecommendationStepCardProps> = ({
 	addAlert,
 	cancelHref,
-	history,
 	job,
 	jobType,
 	router,
@@ -172,11 +167,7 @@ const RecommendationStepCard: React.FC<IRecommendationStepCardProps> = ({
 						) as string,
 					});
 
-					history.push(
-						toRoute(Routes.SETTINGS_RECOMMENDATIONS, {
-							groupId,
-						})
-					);
+					window.location.assign(config.recommendationsURL);
 				}
 			)
 			.catch(() => {
@@ -321,4 +312,4 @@ const RecommendationStepCard: React.FC<IRecommendationStepCardProps> = ({
 	);
 };
 
-export default compose<any>(withHistory, connector)(RecommendationStepCard);
+export default compose<any>(connector)(RecommendationStepCard);

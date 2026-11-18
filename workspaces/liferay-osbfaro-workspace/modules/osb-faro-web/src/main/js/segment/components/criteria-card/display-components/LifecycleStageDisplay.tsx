@@ -6,7 +6,7 @@ import {
 } from 'segment/segment-editor/dynamic/utils/custom-inputs';
 import {sub} from 'shared/util/lang';
 import {useChannelLifecycles} from 'shared/hooks/useChannelLifecycles';
-import {useParams} from 'react-router-dom';
+import {config} from 'shared/util/config';
 
 interface ILifecycleStageDisplayProps {
 	propertyLabel: string;
@@ -17,10 +17,7 @@ const LifecycleStageDisplay: React.FC<ILifecycleStageDisplayProps> = ({
 	propertyLabel,
 	value,
 }) => {
-	const {channelId, groupId = ''} = useParams<{
-		channelId: string;
-		groupId: string;
-	}>();
+	const {channelId, groupId = ''} = config;
 
 	const {lifecycles, loading} = useChannelLifecycles({channelId, groupId});
 

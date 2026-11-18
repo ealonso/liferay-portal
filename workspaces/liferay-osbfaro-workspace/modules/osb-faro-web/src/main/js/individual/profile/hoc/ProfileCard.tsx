@@ -4,7 +4,6 @@ import React from 'react';
 import {Individual} from 'shared/util/records';
 import {pickBy} from 'lodash';
 import {removeUriQueryParam, setUriQueryValues} from 'shared/util/url';
-import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
 import {useStatefulPagination} from 'shared/hooks/useStatefulPagination';
 
 const DEFAULT_SESSIONS_DELTA = 50;
@@ -18,7 +17,6 @@ interface IProfileCardProps extends React.HTMLAttributes<HTMLElement> {
 }
 
 const ProfileCard: React.FC<IProfileCardProps> = ({tabId, ...props}) => {
-	const history = useHistoryAdapter();
 	const {
 		delta,
 		onDeltaChange,
@@ -57,7 +55,7 @@ const ProfileCard: React.FC<IProfileCardProps> = ({tabId, ...props}) => {
 						onDeltaChange={onDeltaChange}
 						onPageChange={onPageChange}
 						onQueryChange={(query) => {
-							history.push(
+							window.location.assign(
 								setUriQueryValues(
 									pickBy({query}),
 									removeUriQueryParam(
@@ -70,7 +68,7 @@ const ProfileCard: React.FC<IProfileCardProps> = ({tabId, ...props}) => {
 							onQueryChange(query);
 						}}
 						onRangeSelectorsChange={(rangeSelectors) => {
-							history.push(
+							window.location.assign(
 								setUriQueryValues(
 									pickBy(rangeSelectors),
 									removeUriQueryParam(

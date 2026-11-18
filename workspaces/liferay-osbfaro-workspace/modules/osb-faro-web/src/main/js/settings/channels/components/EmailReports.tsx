@@ -10,7 +10,7 @@ import {Alert} from 'shared/types';
 import {connect, ConnectedProps} from 'react-redux';
 import {sub} from 'shared/util/lang';
 import {useModal} from '@clayui/modal';
-import {useParams} from 'react-router-dom';
+import {config} from 'shared/util/config';
 
 export enum Frequency {
 	Daily = 'daily',
@@ -50,7 +50,7 @@ const EmailReports: React.FC<IEmailReportsProps> = ({
 	className,
 	sitesSynced = false,
 }) => {
-	const {groupId} = useParams();
+	const {groupId} = config;
 	const [report, setReport] = useState<Report | null>(null);
 
 	const emailReportsModal = useModal();

@@ -6,7 +6,7 @@ import React from 'react';
 import RouteNotFound from 'shared/components/RouteNotFound';
 import {DataSourceTypes} from 'shared/util/constants';
 import {getConnectorConfig} from 'settings/components/3rd-party-connector/registry';
-import {useParams} from 'react-router-dom';
+import {config} from 'shared/util/config';
 
 const PAGE_MAP = {
 	[DataSourceTypes.Liferay]: ConnectLiferayDXP,
@@ -15,7 +15,7 @@ const PAGE_MAP = {
 };
 
 const DataSourceOnboarding = () => {
-	const {id = ''} = useParams<{id: string}>();
+	const {id = ''} = config.params;
 
 	const normalizedId = id.toUpperCase();
 

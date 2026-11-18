@@ -2,7 +2,7 @@ import * as API from 'shared/api';
 import FilterPicker, {IFilterPickerItem} from './FilterPicker';
 import React, {useMemo} from 'react';
 import {IPaginatedDataSourceParams} from 'shared/hooks/usePaginatedRequest';
-import {useParams} from 'react-router-dom';
+import {config} from 'shared/util/config';
 
 interface ICampaignDropdownProps {
 	className?: string;
@@ -17,10 +17,7 @@ const CampaignDropdown: React.FC<ICampaignDropdownProps> = ({
 	initialCampaignName,
 	onFilterChange,
 }) => {
-	const {channelId, groupId} = useParams<{
-		channelId: string;
-		groupId: string;
-	}>();
+	const {channelId, groupId} = config;
 
 	// The campaign comes from the URL, which may name one that is not on the
 	// fetched page, so it is passed as the selection rather than looked up.

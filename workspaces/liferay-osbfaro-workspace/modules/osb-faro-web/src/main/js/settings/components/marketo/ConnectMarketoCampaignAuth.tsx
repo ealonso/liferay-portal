@@ -13,8 +13,8 @@ import {DataSourceStatuses} from 'shared/util/constants';
 import {FormikProps} from 'formik';
 import {sequence} from 'shared/util/promise';
 import {sub} from 'shared/util/lang';
-import {useParams} from 'react-router-dom';
 import {validateMarketoDomain, validateRequired} from 'shared/util/validators';
+import {config} from 'shared/util/config';
 
 /**
  * Maps the HTTP status code of a failed connect request to a user-friendly
@@ -64,7 +64,7 @@ interface IConnectMarketoCampaignAuthProps {
 const ConnectMarketoCampaignAuth: React.FC<
 	IConnectMarketoCampaignAuthProps
 > = ({addAlert, buttonProps, dataSource, disabled, onCancel, onSubmit}) => {
-	const {groupId = ''} = useParams<{groupId: string}>();
+	const {groupId = ''} = config;
 
 	const [missingFields, setMissingFields] = useState<string[]>([]);
 	const [showClientId, setShowClientId] = useState(false);

@@ -29,8 +29,8 @@ import {sub} from 'shared/util/lang';
 import {Text} from '@clayui/core';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useDisconnectDataSource} from '../data-source/utils';
-import {useParams} from 'react-router-dom';
 import {useRequest} from 'shared/hooks/useRequest';
+import {config} from 'shared/util/config';
 
 const TIMEOUT_INTERVAL = 5000;
 
@@ -50,7 +50,9 @@ const LiferayOverview: React.FC<ILiferayeOverviewProps> = ({
 }) => {
 	const [dataSource, setDataSource] = useState(initialDataSource);
 	const [, setLoading] = useState(false);
-	const {groupId = '', id = ''} = useParams<{groupId: string; id: string}>();
+	const {groupId = ''} = config;
+
+	const {id = ''} = config.params;
 	const currentUser = useCurrentUser();
 	const [token, setToken] = useState('');
 
@@ -167,7 +169,7 @@ const LiferayOverview: React.FC<ILiferayeOverviewProps> = ({
 	return (
 		<BasePage
 			breadcrumbItems={[
-				breadcrumbs.getDataSources({groupId}),
+				breadcrumbs.getDataSources(),
 				breadcrumbs.getDataSourceName({
 					active: true,
 					label: dataSource.name || '',

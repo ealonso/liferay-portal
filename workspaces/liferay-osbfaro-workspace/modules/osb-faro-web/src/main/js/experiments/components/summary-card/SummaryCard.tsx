@@ -6,8 +6,8 @@ import {SummaryNoWinnerCard} from './SummaryNoWinnerCard';
 import {SummaryRunningCard} from './SummaryRunningCard';
 import {SummaryTerminatedCard} from './SummaryTerminatedCard';
 import {SummaryWinnerCard} from './SummaryWinnerCard';
-import {useParams} from 'react-router-dom';
 import {useStore} from 'react-redux';
+import {config} from 'shared/util/config';
 
 const Component: Record<
 	string,
@@ -25,7 +25,7 @@ const Component: Record<
 };
 
 export const SummaryCard = ({experiment}: {experiment: IExperiment}) => {
-	const {groupId} = useParams<{groupId: string}>();
+	const {groupId} = config;
 	const store = useStore();
 	const timeZoneId = store
 		.getState()

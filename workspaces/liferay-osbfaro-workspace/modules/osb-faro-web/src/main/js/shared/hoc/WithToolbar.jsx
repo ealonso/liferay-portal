@@ -3,7 +3,6 @@ import FaroConstants, {RangeKeyTimeRanges} from 'shared/util/constants';
 import PropTypes from 'prop-types';
 import React from 'react';
 import SearchToolbar from 'shared/components/search-toolbar';
-import withHistory from './WithHistory';
 import {DropdownRangeKey} from 'shared/components/dropdown-range-key/DropdownRangeKey';
 import {get} from 'lodash';
 import {hasChanges} from 'shared/util/react';
@@ -31,7 +30,6 @@ export default configs => WrappedComponent => {
 		static propTypes = {
 			alwaysShowSearch: PropTypes.bool,
 			disableSearch: PropTypes.bool,
-			history: PropTypes.object,
 			onRangeSelectorsChange: PropTypes.func,
 			onSearchValueChange: PropTypes.func,
 			onSelectEntirePage: PropTypes.func,
@@ -73,13 +71,13 @@ export default configs => WrappedComponent => {
 
 		@autobind
 		handleRangeSelectorsChange(rangeSelectors) {
-			const {history, onRangeSelectorsChange} = this.props;
+			const {onRangeSelectorsChange} = this.props;
 
 			const {rangeEnd, rangeKey, rangeStart} = rangeSelectors;
 
 			onRangeSelectorsChange
 				? onRangeSelectorsChange(rangeSelectors)
-				: history.push(
+				: window.location.assign(
 						setUriQueryValues(
 							pickBy({
 								page: DEFAULT_CUR,
@@ -197,5 +195,5 @@ export default configs => WrappedComponent => {
 		}
 	}
 
-	return withHistory(WithToolbarBar);
+	return WithToolbarBar;
 };

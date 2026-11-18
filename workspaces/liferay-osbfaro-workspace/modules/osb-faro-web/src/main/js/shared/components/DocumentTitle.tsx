@@ -3,7 +3,7 @@ import ldpFaviconURL from '../../../images/favicons/ldp_favicon.svg?url';
 import React from 'react';
 import {useEffect} from 'react';
 import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
-import {useParams} from 'react-router-dom';
+import {config} from 'shared/util/config';
 
 interface IDocumentTitleProps {
 	ldpEnabled?: boolean;
@@ -16,7 +16,7 @@ const DocumentTitle: React.FC<IDocumentTitleProps> = ({
 	loadingLDPEnabled,
 	title,
 }) => {
-	const {groupId = ''} = useParams<{groupId?: string}>();
+	const {groupId = ''} = config;
 	const routeLDPEnabled = useLDPEnabled({groupId});
 
 	const LDPEnabled = ldpEnabled ?? routeLDPEnabled;

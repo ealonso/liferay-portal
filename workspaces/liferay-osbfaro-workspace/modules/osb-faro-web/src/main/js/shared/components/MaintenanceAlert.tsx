@@ -8,7 +8,7 @@ import {Project} from 'shared/util/records';
 import {ProjectStates} from 'shared/util/constants';
 import {setMaintenanceSeen} from 'shared/actions/maintenance-seen';
 import {sub} from 'shared/util/lang';
-import {useParams} from 'react-router-dom';
+import {config} from 'shared/util/config';
 
 interface IMaintenanceAlertProps {
 	alertDismissed: boolean;
@@ -111,7 +111,7 @@ const ConnectedMaintenanceAlert = connect(mapState, {setMaintenanceSeen})(
 );
 
 const MaintenanceAlertWithParams = (props: any) => {
-	const {groupId} = useParams<{groupId: string}>();
+	const {groupId} = config;
 
 	return <ConnectedMaintenanceAlert {...props} groupId={groupId} />;
 };

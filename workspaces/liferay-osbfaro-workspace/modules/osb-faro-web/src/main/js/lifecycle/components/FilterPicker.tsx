@@ -8,7 +8,7 @@ import {
 	PaginatedDataSourceFn,
 } from 'shared/hooks/usePaginatedRequest';
 import {useLifecycle} from '../context/LifecycleContext';
-import {useParams} from 'react-router-dom';
+import {config} from 'shared/util/config';
 
 // Field values are plain strings, so each one is its own id and name.
 
@@ -32,7 +32,7 @@ const FilterPicker = ({
 }: IProps) => {
 	const {filters, updateFilters} = useLifecycle();
 
-	const {channelId, groupId} = useParams();
+	const {channelId, groupId} = config;
 
 	const selectedValue = filters[filterKey];
 
