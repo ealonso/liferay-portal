@@ -31,17 +31,17 @@ import {
 import {getPluralMessage} from 'shared/util/lang';
 import {mapListResultsToProps} from 'shared/util/mappers';
 import {NameCell} from 'shared/components/table/cell-components';
-import {Routes, toRoute} from 'shared/util/router';
 import {Sizes} from 'shared/util/constants';
 import {useMutation, useQuery} from '@apollo/client';
 import {useModal} from '@clayui/modal';
-import {useParams} from 'react-router-dom';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
 import {useQueryRangeSelectors} from 'shared/hooks/useQueryRangeSelectors';
 import {
 	useSelectionContext,
 	withSelectionProvider,
 } from 'shared/context/selection';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 const connector = connect(null, {addAlert});
 
@@ -61,10 +61,7 @@ const EventAnalysisListCard: React.FC<EventAnalysisListCardProps> = ({
 		initialOrderIOMap: createOrderIOMap(NAME),
 	});
 
-	const {channelId = '', groupId = ''} = useParams<{
-		channelId: string;
-		groupId: string;
-	}>();
+	const {channelId = ''} = config;
 	const rangeSelectors = useQueryRangeSelectors();
 
 	const paginationVariables = getGraphQLVariablesFromPagination({
@@ -231,11 +228,10 @@ const EventAnalysisListCard: React.FC<EventAnalysisListCardProps> = ({
 							cellRenderer: NameCell,
 							cellRendererProps: {
 								routeFn: ({data: {id}}: {data: {id: string}}) =>
-									toRoute(Routes.EVENT_ANALYSIS_EDIT, {
-										channelId,
-										groupId,
-										id,
-									}),
+									setUriQueryValues(
+										{id},
+										config.editEventAnalysisURL
+									),
 							},
 							className: 'table-cell-expand',
 							label: Liferay.Language.get('name'),

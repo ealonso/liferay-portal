@@ -14,15 +14,14 @@ import {
 } from 'experiments/queries/ExperimentQuery';
 import {getActions} from 'experiments/util/experiments';
 import {getSafeDecodedURIComponent} from 'shared/util/util';
-import {Routes} from 'shared/util/router';
 import {SessionsCard} from 'experiments/components/SessionsCard';
 import {Status} from 'experiments/components/summary-card/types';
 import {SummaryCard} from 'experiments/components/summary-card/SummaryCard';
 import {useChannelContext} from 'shared/context/channel';
 import {useModal} from '@clayui/modal';
-import {useParams} from 'react-router-dom';
 import {useQuery} from '@apollo/client';
 import {VariantCard} from 'experiments/components/variant-card/VariantCard';
+import {config} from 'shared/util/config';
 
 const ExperimentActions = ({
 	experiment,
@@ -63,7 +62,9 @@ const ExperimentActions = ({
 };
 
 const ExperimentOverviewPage = () => {
-	const {channelId, id} = useParams<{channelId: string; id: string}>();
+	const {channelId} = config;
+
+	const {id} = config.params;
 
 	const {data, error, loading} = useQuery(EXPERIMENT_STATUS_QUERY, {
 		fetchPolicy: 'no-cache',
@@ -90,15 +91,9 @@ const ExperimentOverviewPage = () => {
 };
 
 const ExperimentOverviewContent = ({status}: {status: string}) => {
-	const {
-		channelId = '',
-		groupId = '',
-		id = '',
-	} = useParams<{
-		channelId: string;
-		groupId: string;
-		id: string;
-	}>();
+	const {channelId = '', groupId = ''} = config;
+
+	const {id = ''} = config.params;
 	const {selectedChannel} = useChannelContext();
 
 	let Query = EXPERIMENT_QUERY;
@@ -129,7 +124,7 @@ const ExperimentOverviewContent = ({status}: {status: string}) => {
 									label:
 										selectedChannel && selectedChannel.name,
 								}),
-								breadcrumbs.getTests({channelId, groupId}),
+								breadcrumbs.getTests(),
 								breadcrumbs.getEntityName({
 									label: data.experiment.name,
 								}),
@@ -160,22 +155,7 @@ const ExperimentOverviewContent = ({status}: {status: string}) => {
 
 							<ExperimentActions experiment={data.experiment} />
 
-							<BasePage.Header.NavBar
-								items={[
-									{
-										exact: true,
-										label: Liferay.Language.get('report'),
-										route: Routes.TESTS_OVERVIEW,
-									},
-								]}
-								routeParams={{
-									channelId,
-									groupId,
-									id,
-									title: data.experiment.name,
-									touchpoint: data.experiment.pageURL,
-								}}
-							/>
+							<BasePage.Header.NavBar />
 						</BasePage.Header>
 
 						<BasePage.Body>

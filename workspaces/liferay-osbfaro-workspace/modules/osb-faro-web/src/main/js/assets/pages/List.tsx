@@ -24,13 +24,11 @@ import {InfoPanel} from 'assets/components/InfoPanel';
 import {pickBy} from 'lodash';
 import {RangeSelectors} from 'shared/types';
 import {removeUriQueryParam, setUriQueryValues} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
 import {toThousands} from 'shared/util/numbers';
 import {useChannelContext} from 'shared/context/channel';
-import {useLocation, useParams} from 'react-router-dom';
-import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
 import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
 import {useQueryRangeSelectors} from 'shared/hooks/useQueryRangeSelectors';
+import {config} from 'shared/util/config';
 
 const {cur: DEFAULT_CUR} = FaroConstants.pagination;
 
@@ -39,8 +37,6 @@ const OBJECT_TYPES = Object.values(AssetObjectTypes);
 const getAssetURL = ({
 	accountId,
 	accountName,
-	channelId,
-	groupId,
 	itemData,
 	rangeSelectorParams,
 	segmentId,
@@ -49,8 +45,6 @@ const getAssetURL = ({
 }: {
 	accountId?: string | null;
 	accountName?: string | null;
-	channelId: string;
-	groupId: string;
 	itemData: any;
 	rangeSelectorParams: string;
 	segmentId?: string | null;
@@ -79,19 +73,21 @@ const getAssetURL = ({
 		queryParams.set('segmentName', segmentName);
 	}
 
-	return `${toRoute(Routes.ASSETS_DASHBOARD_OVERVIEW, {
-		assetId: itemData.id,
-		assetType: slug,
-		channelId,
-		groupId,
-		touchpoint: 'Any',
-		...(itemData.assetType && {
-			type: itemData.assetType,
-		}),
-		...(assetTitle && {
-			title: assetTitle,
-		}),
-	})}?${queryParams.toString()}`;
+	return setUriQueryValues(
+		{
+			...Object.fromEntries(queryParams),
+			assetId: itemData.id,
+			assetType: slug,
+			touchpoint: 'Any',
+			...(itemData.assetType && {
+				type: itemData.assetType,
+			}),
+			...(assetTitle && {
+				title: assetTitle,
+			}),
+		},
+		config.assetURL
+	);
 };
 
 const columns = {
@@ -102,16 +98,12 @@ const columns = {
 		({
 			accountId,
 			accountName,
-			channelId,
-			groupId,
 			rangeSelectorParams,
 			segmentId,
 			segmentName,
 		}: {
 			accountId?: string | null;
 			accountName?: string | null;
-			channelId: string;
-			groupId: string;
 			rangeSelectorParams: string;
 			segmentId?: string | null;
 			segmentName?: string | null;
@@ -120,8 +112,6 @@ const columns = {
 			const URL = getAssetURL({
 				accountId,
 				accountName,
-				channelId,
-				groupId,
 				itemData,
 				rangeSelectorParams,
 				segmentId,
@@ -211,22 +201,18 @@ const TABLE_FIELDS = [
 ];
 
 const List = () => {
-	const history = useHistoryAdapter();
-	const {search} = useLocation();
 	const {selectedChannel} = useChannelContext();
-	const {channelId, groupId} = useParams();
+	const {channelId, groupId} = config;
 	const initialRangeSelectors = useQueryRangeSelectors();
 	const LDPEnabled = useLDPEnabled({groupId: groupId!});
 
-	const searchParams = new URLSearchParams(search);
-	const accountId = searchParams.get('accountId');
-	const accountName = searchParams.get('accountName');
-	const orderBy = searchParams.get('orderBy');
-	const segmentId = searchParams.get('segmentId');
-	const segmentName = searchParams.get('segmentName');
+	const queryParams = config.params;
+
+	const {accountId, accountName, orderBy, segmentId, segmentName} =
+		queryParams;
 
 	const objectType = OBJECT_TYPES.find(
-		(value) => value === searchParams.get('objectType')
+		(value) => value === queryParams.objectType
 	);
 
 	const [rangeSelectors, setRangeSelectors] = useState<RangeSelectors>(
@@ -418,7 +404,7 @@ const List = () => {
 						bordered
 						legacy={false}
 						onRangeSelectorChange={(rangeSelectors) => {
-							history.push(
+							window.location.assign(
 								setUriQueryValues(
 									pickBy({
 										page: DEFAULT_CUR,
@@ -482,8 +468,6 @@ const List = () => {
 							assetTitleRenderer: columns.assetTitleRenderer({
 								accountId,
 								accountName,
-								channelId: channelId!,
-								groupId: groupId!,
 								rangeSelectorParams: linkRangeSelectorParams,
 								segmentId,
 								segmentName,
@@ -546,12 +530,10 @@ const List = () => {
 								icon: 'view',
 								label: Liferay.Language.get('view'),
 								onClick: ({itemData}: {itemData: any}) => {
-									history.push(
+									window.location.assign(
 										getAssetURL({
 											accountId,
 											accountName,
-											channelId: channelId!,
-											groupId: groupId!,
 											itemData,
 											rangeSelectorParams:
 												linkRangeSelectorParams,

@@ -13,9 +13,10 @@ import {getSafeDecodedURIComponent, isBlank} from './util';
 import {AssetTypes, TimeIntervals} from 'shared/util/constants';
 import {PayloadLayout} from 'shared/util/payloadTables';
 import {RangeSelectors} from 'shared/types';
-import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
 import {UserSession, UserSessionEvent} from 'shared/queries/UserSessionQuery';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 export const CHART_ID = 'individualActivity';
 
@@ -303,11 +304,12 @@ export const formatEvents = (
 						...(campaignEntityId &&
 							channelId &&
 							groupId && {
-								campaignUrl: toRoute(Routes.CAMPAIGNS_DETAIL, {
-									channelId,
-									groupId,
-									id: campaignEntityId,
-								}),
+								campaignUrl: setUriQueryValues(
+									{
+										id: campaignEntityId,
+									},
+									config.campaignURL
+								),
 							}),
 					},
 				}),
@@ -535,9 +537,11 @@ export const buildTouchIndividualUrls = (
 			campaigns.forEach(({touches}) =>
 				touches.forEach(({individualId}) => {
 					if (individualId) {
-						urls[individualId] = toRoute(
-							Routes.CONTACTS_INDIVIDUAL,
-							{channelId, groupId, id: individualId}
+						urls[individualId] = setUriQueryValues(
+							{
+								id: individualId,
+							},
+							config.individualURL
 						);
 					}
 				})
@@ -560,11 +564,10 @@ export const buildCampaignUrls = (
 	return Object.values(campaignDays).reduce<Record<string, string>>(
 		(urls, {campaigns}) => {
 			campaigns.forEach(({campaignId}) => {
-				urls[campaignId] = toRoute(Routes.CAMPAIGNS_DETAIL, {
-					channelId,
-					groupId,
-					id: campaignId,
-				});
+				urls[campaignId] = setUriQueryValues(
+					{id: campaignId},
+					config.campaignURL
+				);
 			});
 
 			return urls;

@@ -1,9 +1,10 @@
 import {AssetTypes} from 'shared/util/constants';
 import {getAssetDescriptorByRESTType} from 'assets/descriptors';
+import {isString, pickBy} from 'lodash';
 import {RangeSelectors} from 'shared/types';
 import {UserSessionEvent} from 'shared/queries/UserSessionQuery';
+import {config} from 'shared/util/config';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
 
 /**
  * Maps an event's `applicationId` to the trailing `:type` segment value and the
@@ -45,22 +46,6 @@ const getProperty = (
 ): string | undefined =>
 	event.properties?.find((property) => property.name === name)?.value;
 
-const buildQuery = (rangeSelectors?: RangeSelectors): string => {
-	if (!rangeSelectors) {
-		return '';
-	}
-
-	const {rangeEnd, rangeKey, rangeStart} = rangeSelectors;
-
-	const params = [
-		rangeKey != null && `rangeKey=${rangeKey}`,
-		rangeStart && `rangeStart=${rangeStart}`,
-		rangeEnd && `rangeEnd=${rangeEnd}`,
-	].filter(Boolean);
-
-	return params.length ? `?${params.join('&')}` : '';
-};
-
 /**
  * Builds the dashboard link for an activity-stream event's title. Shared by the
  * account and individual timelines (the event behavior is not account-specific).
@@ -97,17 +82,27 @@ export const getEventDashboardUrl = (
 		return undefined;
 	}
 
-	// One statement of how a dashboard link is assembled: the route, the date
+	// One statement of how a dashboard link is assembled: the page, the date
 	// range, then the account. The account params are left off entirely when
 	// there is no account context, so the individual timeline never gains them.
 
-	const link = (route: string, params: object): string => {
-		const href = `${toRoute(route, params)}${buildQuery(rangeSelectors)}`;
-
-		return accountId || accountName
-			? setUriQueryValues({accountId, accountName}, href)
-			: href;
-	};
+	const link = (url: string, params: object): string =>
+		setUriQueryValues(
+			{
+				...params,
+				...pickBy(
+					{
+						accountId,
+						accountName,
+						rangeEnd: rangeSelectors?.rangeEnd,
+						rangeKey: rangeSelectors?.rangeKey,
+						rangeStart: rangeSelectors?.rangeStart,
+					},
+					isString
+				),
+			},
+			url
+		);
 
 	const assetApplication = ASSET_APPLICATIONS[event.applicationId];
 
@@ -120,11 +115,9 @@ export const getEventDashboardUrl = (
 
 		const title = event.assetTitle || event.pageTitle;
 
-		return link(Routes.ASSETS_DASHBOARD_OVERVIEW, {
+		return link(config.assetURL, {
 			assetId,
 			assetType: getAssetDescriptorByRESTType(assetApplication.type).slug,
-			channelId,
-			groupId,
 			touchpoint: 'Any',
 			type: assetApplication.type,
 			...(title && {title}),
@@ -141,11 +134,9 @@ export const getEventDashboardUrl = (
 
 		const title = event.assetTitle || event.pageTitle;
 
-		return link(Routes.ASSETS_DASHBOARD_OVERVIEW, {
+		return link(config.assetURL, {
 			assetId,
 			assetType: 'object-entry',
-			channelId,
-			groupId,
 			touchpoint: 'Any',
 			type,
 			...(title && {title}),
@@ -155,9 +146,7 @@ export const getEventDashboardUrl = (
 	if (event.applicationId === AssetTypes.WebPage && event.canonicalUrl) {
 		const title = event.pageTitle || event.assetTitle;
 
-		return link(Routes.SITES_TOUCHPOINTS_OVERVIEW, {
-			channelId,
-			groupId,
+		return link(config.pageOverviewURL, {
 			touchpoint: event.canonicalUrl,
 			...(title && {title}),
 		});

@@ -22,11 +22,9 @@ import {getSafeRangeSelectors} from 'shared/util/util';
 import {ITopAsset, TopAssetMetric} from 'shared/api/assets';
 import {RangeSelectors, SafeRangeSelectors} from 'shared/types';
 import {toThousands} from 'shared/util/numbers';
-import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
-import {useParams} from 'react-router-dom';
 import {useRequest} from 'shared/hooks/useRequest';
+import {config} from 'shared/util/config';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
 
 const TABS = ['content', 'files'] as const;
 
@@ -70,11 +68,6 @@ const TopAssetsTabContent: React.FC<ITopAssetsTabContentProps> = ({
 	routeQueries,
 	setGroupBy,
 }) => {
-	const {channelId = '', groupId = ''} = useParams<{
-		channelId: string;
-		groupId: string;
-	}>();
-
 	const groupByLabel = getGroupByLabels()[groupBy];
 	const selectedMetric = GROUP_BY_TO_METRIC[groupBy];
 
@@ -129,14 +122,12 @@ const TopAssetsTabContent: React.FC<ITopAssetsTabContentProps> = ({
 							});
 
 							const href = setUriQueryValues(
-								routeQueries,
-								toRoute(Routes.ASSETS_DASHBOARD_OVERVIEW, {
+								{
+									...routeQueries,
 									assetId: asset.id,
 									assetType: getAssetDescriptorByRESTType(
 										asset.assetType
 									).slug,
-									channelId,
-									groupId,
 									touchpoint: 'overview',
 									...(asset.assetType && {
 										type: asset.assetType,
@@ -144,7 +135,8 @@ const TopAssetsTabContent: React.FC<ITopAssetsTabContentProps> = ({
 									...(asset.assetTitle && {
 										title: asset.assetTitle,
 									}),
-								})
+								},
+								config.assetURL
 							);
 
 							return (
@@ -235,11 +227,7 @@ const TopAssetsWithData: React.FC<ITopAssetsWithDataProps> = ({
 	showViewAll,
 	skipRequest,
 }) => {
-	const history = useHistoryAdapter();
-	const {channelId = '', groupId = ''} = useParams<{
-		channelId: string;
-		groupId: string;
-	}>();
+	const {channelId = '', groupId = ''} = config;
 
 	const [activeTab, setActiveTab] = useState(0);
 	const [groupBy, setGroupBy] = useState<GroupByMetric>(
@@ -332,17 +320,14 @@ const TopAssetsWithData: React.FC<ITopAssetsWithDataProps> = ({
 						borderless
 						className="ml-auto rounded-lg"
 						onClick={() =>
-							history.push(
+							window.location.assign(
 								setUriQueryValues(
 									{
 										...routeQueries,
 										objectType,
 										orderBy: selectedMetric,
 									},
-									toRoute(Routes.ASSETS, {
-										channelId,
-										groupId,
-									})
+									config.assetsURL
 								)
 							)
 						}

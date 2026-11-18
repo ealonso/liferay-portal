@@ -27,7 +27,6 @@ import {DEFAULT_RANGE_SELECTORS} from 'shared/hooks/useQueryRangeSelectors';
 import {getSafeRangeSelectors} from 'shared/util/util';
 import {hasChanges} from 'shared/util/react';
 import {omit} from 'lodash';
-import {Routes, toRoute} from 'shared/util/router';
 import {SortableChipTypes} from '../components/event-analysis-editor/event-analysis-builder/SortableChipTypes';
 import {useAttributes} from '../components/event-analysis-editor/context/attributes';
 import {useChannelContext} from 'shared/context/channel';
@@ -36,10 +35,9 @@ import {useDataSources} from 'shared/context/dataSources';
 import {useDispatch} from 'react-redux';
 import {useModal} from '@clayui/modal';
 import {useField} from 'formik';
-import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
 import {useMutation} from '@apollo/client';
-import {useParams} from 'react-router-dom';
 import {useReportContainer} from 'shared/components/download-report/DownloadReportContext';
+import {config} from 'shared/util/config';
 
 enum MessageKeys {
 	NameCannotBeBlank = 'name-cannot-be-blank',
@@ -107,15 +105,11 @@ const BaseEventAnalysisPage: React.FC<IBaseEventAnalysisPageProps> = ({
 
 	const dataSourceStates = useDataSources();
 
-	const history = useHistoryAdapter();
-
 	const {selectedChannel} = useChannelContext();
 
-	const {
-		channelId = '',
-		groupId = '',
-		id: eventAnalysisId,
-	} = useParams<{channelId: string; groupId: string; id: string}>();
+	const {channelId = ''} = config;
+
+	const {id: eventAnalysisId} = config.params;
 
 	const [compareToPrevious, setCompareToPrevious] = useState<boolean>(
 		initialCompareToPrevious ?? false
@@ -181,12 +175,7 @@ const BaseEventAnalysisPage: React.FC<IBaseEventAnalysisPageProps> = ({
 
 				loadingModal.onOpenChange(false);
 
-				history.push(
-					toRoute(Routes.EVENT_ANALYSIS, {
-						channelId,
-						groupId,
-					})
-				);
+				window.location.assign(config.eventsURL);
 
 				dispatch(
 					addAlert({
@@ -318,10 +307,7 @@ const BaseEventAnalysisPage: React.FC<IBaseEventAnalysisPageProps> = ({
 								eventChanged ||
 								rangeSelectorsChanged;
 
-							const listURL = toRoute(Routes.EVENT_ANALYSIS, {
-								channelId,
-								groupId,
-							});
+							const listURL = config.eventsURL;
 
 							return (
 								<>
