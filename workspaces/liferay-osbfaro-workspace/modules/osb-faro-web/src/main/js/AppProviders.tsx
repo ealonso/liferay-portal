@@ -1,7 +1,6 @@
 import ChannelProvider from 'shared/context/channel';
 import client from 'shared/apollo/client';
 import React, {useEffect, useState} from 'react';
-import RouterLink from 'shared/components/RouterLink';
 import store from 'shared/store';
 import UnassignedSegmentsProvider from 'shared/context/unassignedSegments';
 import {
@@ -11,7 +10,6 @@ import {
 
 import {ClayIconSpriteContext} from '@clayui/icon';
 import {CLAY_ICONS_SPRITEMAP} from 'shared/components/Icon';
-import {ClayLinkContext} from '@clayui/link';
 import {ClayTooltipProvider} from '@clayui/tooltip';
 import {OnboardingContext} from 'shared/context/onboarding';
 import {Provider} from 'react-redux';
@@ -48,32 +46,30 @@ const AppProviders: React.FC<IAppProvidersProps> = ({children}) => {
 					<ClayIconSpriteContext.Provider
 						value={CLAY_ICONS_SPRITEMAP}
 					>
-						<ClayLinkContext.Provider value={RouterLink}>
-							<UnassignedSegmentsProvider>
-								<OnboardingContext.Provider
-									value={{
-										onboardingTriggered,
-										setOnboardingTriggered: () => {
-											try {
-												window.sessionStorage.setItem(
-													ONBOARDING_TRIGGERED_KEY,
-													'true'
-												);
-											}
-											catch (error) {}
+						<UnassignedSegmentsProvider>
+							<OnboardingContext.Provider
+								value={{
+									onboardingTriggered,
+									setOnboardingTriggered: () => {
+										try {
+											window.sessionStorage.setItem(
+												ONBOARDING_TRIGGERED_KEY,
+												'true'
+											);
+										}
+										catch (error) {}
 
-											setOnboardingTriggered(true);
-										},
-									}}
-								>
-									<ChannelProvider>
-										<ClayTooltipProvider>
-											<div>{children}</div>
-										</ClayTooltipProvider>
-									</ChannelProvider>
-								</OnboardingContext.Provider>
-							</UnassignedSegmentsProvider>
-						</ClayLinkContext.Provider>
+										setOnboardingTriggered(true);
+									},
+								}}
+							>
+								<ChannelProvider>
+									<ClayTooltipProvider>
+										<div>{children}</div>
+									</ClayTooltipProvider>
+								</ChannelProvider>
+							</OnboardingContext.Provider>
+						</UnassignedSegmentsProvider>
 					</ClayIconSpriteContext.Provider>
 				</Provider>
 			</ApolloProviderHooks>
