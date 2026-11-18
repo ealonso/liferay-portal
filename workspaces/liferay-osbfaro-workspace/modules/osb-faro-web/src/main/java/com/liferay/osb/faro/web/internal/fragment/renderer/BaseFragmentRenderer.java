@@ -14,7 +14,10 @@ import com.liferay.osb.faro.web.internal.util.FaroFragmentRendererUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.GroupConstants;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HashMapBuilder;
@@ -106,14 +109,24 @@ public abstract class BaseFragmentRenderer implements FragmentRenderer {
 					() -> {
 						Map<String, String> pageURLs = new HashMap<>();
 
-						for (Layout layout :
-								layoutLocalService.getLayouts(
-									themeDisplay.getScopeGroupId(), false)) {
+						Group group = groupLocalService.getGroup(
+							themeDisplay.getCompanyId(), GroupConstants.GUEST);
 
-							pageURLs.put(
-								layout.getFriendlyURL(),
-								portal.getLayoutRelativeURL(
-									layout, themeDisplay));
+						for (long groupId :
+								new long[] {
+									group.getGroupId(),
+									themeDisplay.getScopeGroupId()
+								}) {
+
+							for (Layout layout :
+									layoutLocalService.getLayouts(
+										groupId, false)) {
+
+								pageURLs.put(
+									layout.getFriendlyURL(),
+									portal.getLayoutRelativeURL(
+										layout, themeDisplay));
+							}
 						}
 
 						return pageURLs;
@@ -193,6 +206,9 @@ public abstract class BaseFragmentRenderer implements FragmentRenderer {
 
 		return null;
 	}
+
+	@Reference
+	protected GroupLocalService groupLocalService;
 
 	@Reference
 	protected LayoutLocalService layoutLocalService;
