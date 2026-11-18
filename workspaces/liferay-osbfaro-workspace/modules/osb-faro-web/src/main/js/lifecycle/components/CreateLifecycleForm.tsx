@@ -5,11 +5,10 @@ import Loading from 'shared/components/Loading';
 import React from 'react';
 import {buildCreateLifecyclePayload} from 'lifecycle/utils/lifecyclePayload';
 import {IStageConfig} from 'lifecycle/utils/stageConfiguration';
-import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
 import {useLifecycleSettingsForm} from 'lifecycle/hooks/useLifecycleSettingsForm';
-import {useParams} from 'react-router-dom';
 import {usePageConfig} from 'shared/context/pageConfig';
+import {setUriQueryValues} from 'shared/util/url';
 
 interface ICreateLifecycleFormProps {
 	description: string;
@@ -24,9 +23,7 @@ const CreateLifecycleForm: React.FC<ICreateLifecycleFormProps> = ({
 	segmentId,
 	stageConfigs: initialStageConfigs,
 }) => {
-	const {currentUser} = usePageConfig();
-
-	const {channelId, groupId} = useParams();
+	const {channelId, currentUser, groupId, lifecycleURL} = usePageConfig();
 
 	const form = useLifecycleSettingsForm({
 		description,
@@ -63,11 +60,12 @@ const CreateLifecycleForm: React.FC<ICreateLifecycleFormProps> = ({
 			),
 			redirect: ({externalReferenceCode}) => ({
 				replace: true,
-				url: toRoute(Routes.LIFECYCLE_DASHBOARD, {
-					channelId,
-					groupId,
-					lifecycleId: externalReferenceCode,
-				}),
+				url: setUriQueryValues(
+					{
+						lifecycleId: externalReferenceCode,
+					},
+					lifecycleURL
+				),
 			}),
 			run: () =>
 				API.lifecycle.createLifecycle(

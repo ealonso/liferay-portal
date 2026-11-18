@@ -6,13 +6,11 @@ import {addAlert} from 'shared/actions/alerts';
 import {Alert} from 'shared/types';
 import {getLifecycleSaveErrorMessage} from 'lifecycle/utils/lifecycleErrors';
 import {ILifecycle} from 'shared/api/lifecycle';
-import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
 import {useDispatch} from 'react-redux';
-import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
 import {useModal} from '@clayui/modal';
-import {useParams} from 'react-router-dom';
 import {usePageConfig} from 'shared/context/pageConfig';
+import {setUriQueryValues} from 'shared/util/url';
 
 interface ILifecycleAction {
 	className?: string;
@@ -42,17 +40,20 @@ export const useLifecycleActions = ({
 	onShowDetails,
 	onView,
 }: IUseLifecycleActionsOptions): IUseLifecycleActionsResult => {
-	const {currentUser} = usePageConfig();
+	const {
+		currentUser,
+		editLifecycleURL,
+		groupId,
+		lifecycleURL,
+		lifecyclesURL,
+		params: {lifecycleId: openLifecycleId},
+	} = usePageConfig();
 
 	const deleteModal = useModal();
 
 	const notificationsModal = useModal();
 
 	const dispatch = useDispatch();
-
-	const history = useHistoryAdapter();
-
-	const {channelId, groupId, lifecycleId: openLifecycleId} = useParams();
 
 	if (!lifecycle) {
 		return {
@@ -109,9 +110,7 @@ export const useLifecycleActions = ({
 				);
 
 				if (lifecycleERC === openLifecycleId) {
-					history.replace(
-						toRoute(Routes.LIFECYCLE, {channelId, groupId})
-					);
+					window.location.replace(lifecyclesURL);
 				}
 				else {
 					onDelete?.(lifecycle);
@@ -135,12 +134,13 @@ export const useLifecycleActions = ({
 						icon: {symbol: 'view'},
 						label: Liferay.Language.get('view'),
 						onClick: () => {
-							history.push(
-								toRoute(Routes.LIFECYCLE_DASHBOARD, {
-									channelId,
-									groupId,
-									lifecycleId: lifecycleERC,
-								})
+							Liferay.Util.navigate(
+								setUriQueryValues(
+									{
+										lifecycleId: lifecycleERC,
+									},
+									lifecycleURL
+								)
 							);
 
 							onView();
@@ -154,24 +154,26 @@ export const useLifecycleActions = ({
 						icon: {symbol: 'pencil'},
 						label: Liferay.Language.get('edit'),
 						onClick: () =>
-							history.push(
-								toRoute(Routes.LIFECYCLE_EDIT, {
-									channelId,
-									groupId,
-									lifecycleId: lifecycleERC,
-								})
+							Liferay.Util.navigate(
+								setUriQueryValues(
+									{
+										lifecycleId: lifecycleERC,
+									},
+									editLifecycleURL
+								)
 							),
 					},
 					{
 						icon: {symbol: 'copy'},
 						label: Liferay.Language.get('duplicate'),
 						onClick: () =>
-							history.push(
-								toRoute(Routes.LIFECYCLE_DUPLICATE, {
-									channelId,
-									groupId,
-									sourceLifecycleId: lifecycleERC,
-								})
+							Liferay.Util.navigate(
+								setUriQueryValues(
+									{
+										sourceLifecycleId: lifecycleERC,
+									},
+									editLifecycleURL
+								)
 							),
 					},
 				]

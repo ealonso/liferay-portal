@@ -2,7 +2,7 @@ import * as breadcrumbs from 'shared/util/breadcrumbs';
 import BasePage from 'shared/components/base-page';
 import React, {useContext} from 'react';
 import {ChannelContext} from 'shared/context/channel';
-import {useParams} from 'react-router-dom';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface ILifecyclesPageProps {
 	children: React.ReactNode;
@@ -15,24 +15,26 @@ const LifecyclesPage: React.FC<ILifecyclesPageProps> = ({
 	documentTitle = Liferay.Language.get('lifecycles'),
 	showTitle = true,
 }) => {
+	const config = usePageConfig();
+
 	const {selectedChannel} = useContext(ChannelContext);
 
-	const {channelId, groupId} = useParams();
+	const {channelId, groupId} = config;
 
 	return (
 		<BasePage documentTitle={documentTitle}>
 			<BasePage.Header
 				breadcrumbs={[
-					breadcrumbs.getHome({
-						channelId: channelId!,
-						groupId: groupId!,
-						label: selectedChannel?.name,
-					}),
-					{
-						...breadcrumbs.getLifecycles({
+					breadcrumbs.getHome(
+						{
 							channelId: channelId!,
 							groupId: groupId!,
-						}),
+							label: selectedChannel?.name,
+						},
+						config
+					),
+					{
+						...breadcrumbs.getLifecycles(config),
 						active: true,
 					},
 				]}

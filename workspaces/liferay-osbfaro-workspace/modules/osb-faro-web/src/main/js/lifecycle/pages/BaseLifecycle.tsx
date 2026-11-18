@@ -30,9 +30,7 @@ import {
 	ConfigureLifecycleEmptyState,
 	LifecycleAccountDataEmptyState,
 } from 'lifecycle/components/LifecycleEmptyStates';
-import {useNavigate, useParams} from 'react-router-dom';
 import {RangeKeyTimeRanges} from 'shared/util/constants';
-import {Routes, toRoute} from 'shared/util/router';
 import {SectionHeader} from 'shared/components/SectionHeader';
 import {useLifecycleAccountData} from 'lifecycle/hooks/useLifecycleAccountData';
 import {useLifecycleActions} from 'lifecycle/hooks/useLifecycleActions';
@@ -41,6 +39,7 @@ import {useSegmentFilter} from 'shared/hooks/useSegmentFilter';
 import {noop} from 'lodash';
 import {AccountDataStatus} from 'lifecycle/utils/types';
 import {usePageConfig} from 'shared/context/pageConfig';
+import {setUriQueryValues} from 'shared/util/url';
 
 const ProcessingLifecycleEmptyState = () => (
 	<div className="card mt-4 py-8">
@@ -56,9 +55,9 @@ const ProcessingLifecycleEmptyState = () => (
 );
 
 const LifecycleOverview = () => {
-	const {filters, lifecycleId} = useLifecycle();
+	const {groupId} = usePageConfig();
 
-	const {groupId} = useParams();
+	const {filters, lifecycleId} = useLifecycle();
 
 	const {data: overviewData, loading: overviewLoading} = useRequest({
 		dataSourceFn: API.lifecycle.fetchOverviewMetrics,
@@ -82,9 +81,9 @@ const LifecycleStagesSection = ({
 	description,
 	name,
 }: ILifecycleStagesSectionProps) => {
-	const {filters, lifecycleId} = useLifecycle();
+	const {groupId} = usePageConfig();
 
-	const {groupId} = useParams();
+	const {filters, lifecycleId} = useLifecycle();
 
 	const {segmentId} = useSegmentFilter();
 
@@ -115,9 +114,9 @@ const LifecycleStagesSection = ({
 };
 
 const LifecycleAccounts = () => {
-	const {filters, lifecycleId, stageSelectionNonce} = useLifecycle();
+	const {channelId, groupId} = usePageConfig();
 
-	const {channelId, groupId} = useParams();
+	const {filters, lifecycleId, stageSelectionNonce} = useLifecycle();
 
 	const {segmentId, segmentName} = useSegmentFilter();
 
@@ -146,12 +145,17 @@ const LifecycleAccounts = () => {
 };
 
 const BaseLifecycle = () => {
-	const {currentUser} = usePageConfig();
+	const config = usePageConfig();
+
+	const {
+		channelId,
+		currentUser,
+		editLifecycleURL,
+		groupId,
+		lifecycleURL,
+		params: {lifecycleId: lifecycleIdParam},
+	} = config;
 	const {selectedChannel} = useContext(ChannelContext);
-
-	const navigate = useNavigate();
-
-	const {channelId, groupId, lifecycleId: lifecycleIdParam} = useParams();
 
 	const {refetch: refetchAccountData, status: accountDataStatus} =
 		useLifecycleAccountData();
@@ -190,16 +194,11 @@ const BaseLifecycle = () => {
 
 	useEffect(() => {
 		if (!lifecycleIdParam && lifecycleId) {
-			navigate(
-				toRoute(Routes.LIFECYCLE_DASHBOARD, {
-					channelId,
-					groupId,
-					lifecycleId,
-				}),
-				{replace: true}
+			window.location.replace(
+				setUriQueryValues({lifecycleId}, lifecycleURL)
 			);
 		}
-	}, [channelId, groupId, lifecycleId, lifecycleIdParam, navigate]);
+	}, [lifecycleId, lifecycleIdParam]);
 
 	const switchButtonRef = useRef<HTMLButtonElement>(null);
 
@@ -259,9 +258,11 @@ const BaseLifecycle = () => {
 			button: true,
 			className: 'rounded-lg',
 			displayType: 'primary',
-			href: toRoute(Routes.LIFECYCLE_CREATE, {channelId, groupId}),
+			href: setUriQueryValues(
+				{backLifecycleId: lifecycleId},
+				editLifecycleURL
+			),
 			label: Liferay.Language.get('new-lifecycle'),
-			state: {lifecycleId},
 		},
 	];
 
@@ -283,7 +284,6 @@ const BaseLifecycle = () => {
 			<LifecyclesPage>
 				<LifecycleAccountDataEmptyState
 					authorized={authorized}
-					groupId={groupId!}
 					onReload={refetchAccountData}
 					status={accountDataStatus}
 				/>
@@ -297,10 +297,7 @@ const BaseLifecycle = () => {
 				{defaultLifecyclesError ? (
 					<ErrorDisplay onReload={refetchDefaultLifecycles} spacer />
 				) : (
-					<ConfigureLifecycleEmptyState
-						channelId={channelId!}
-						groupId={groupId!}
-					/>
+					<ConfigureLifecycleEmptyState />
 				)}
 			</LifecyclesPage>
 		);
@@ -318,15 +315,15 @@ const BaseLifecycle = () => {
 			>
 				<BasePage.Header
 					breadcrumbs={[
-						breadcrumbs.getHome({
-							channelId: channelId!,
-							groupId: groupId!,
-							label: selectedChannel?.name,
-						}),
-						breadcrumbs.getLifecycles({
-							channelId: channelId!,
-							groupId: groupId!,
-						}),
+						breadcrumbs.getHome(
+							{
+								channelId: channelId!,
+								groupId: groupId!,
+								label: selectedChannel?.name,
+							},
+							config
+						),
+						breadcrumbs.getLifecycles(config),
 						...(lifecycle?.name
 							? [
 									breadcrumbs.getEntityName({

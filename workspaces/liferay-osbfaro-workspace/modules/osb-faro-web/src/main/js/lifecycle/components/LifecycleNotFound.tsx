@@ -2,11 +2,10 @@ import ClayEmptyState from '@clayui/empty-state';
 import ClayLink from '@clayui/link';
 import LifecyclesPage from 'lifecycle/components/LifecyclesPage';
 import React from 'react';
-import {Routes, toRoute} from 'shared/util/router';
-import {useParams} from 'react-router-dom';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const LifecycleNotFound = () => {
-	const {channelId, groupId} = useParams();
+	const {lifecyclesURL} = usePageConfig();
 
 	return (
 		<LifecyclesPage
@@ -27,10 +26,7 @@ const LifecycleNotFound = () => {
 					<ClayLink
 						button
 						displayType="secondary"
-						href={toRoute(Routes.LIFECYCLE, {
-							channelId,
-							groupId,
-						})}
+						href={lifecyclesURL}
 					>
 						{Liferay.Language.get('go-to-lifecycles')}
 					</ClayLink>
