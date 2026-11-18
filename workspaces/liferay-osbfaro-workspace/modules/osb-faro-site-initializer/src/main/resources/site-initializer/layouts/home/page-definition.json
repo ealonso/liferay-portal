@@ -18,14 +18,14 @@
 			{
 				"definition": {
 					"fragment": {
-						"key": "com.liferay.osb.faro.web.internal.fragment.renderer.FaroFragmentRenderer"
+						"key": "com.liferay.osb.faro.web.internal.fragment.renderer.FaroWorkspacesFragmentRenderer"
 					},
 					"fragmentConfig": {
 					},
 					"fragmentFields": [
 					]
 				},
-				"id": "a0fd9420-4b0b-4e19-88d0-3fd06a2ff123",
+				"id": "5eed67b6-b06d-4443-a971-d28d49ba1995",
 				"type": "Fragment"
 			}
 		],

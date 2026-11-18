@@ -11,10 +11,7 @@ import URLConstants from 'shared/util/url-constants';
 import {autoCancel, hasRequest} from 'shared/util/request-decorator';
 import {ProjectStates} from 'shared/util/constants';
 import {PropTypes} from 'prop-types';
-import {Routes, toRoute} from 'shared/util/router';
-import {withHistory} from 'shared/hoc';
 
-@withHistory
 @hasRequest
 export default class WorkspaceListItem extends React.Component {
 	static propTypes = {
@@ -24,7 +21,6 @@ export default class WorkspaceListItem extends React.Component {
 		disabled: PropTypes.bool,
 		groupId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 		hasLimitReached: PropTypes.bool,
-		history: PropTypes.object,
 		href: PropTypes.string,
 		isJoinableProjects: PropTypes.bool,
 		ldpEnabled: PropTypes.bool,
@@ -51,7 +47,7 @@ export default class WorkspaceListItem extends React.Component {
 
 	@autobind
 	handleActivate() {
-		const {groupId, history} = this.props;
+		const {groupId, href} = this.props;
 
 		this.setState({loading: true});
 
@@ -63,9 +59,7 @@ export default class WorkspaceListItem extends React.Component {
 						loading: false
 					},
 					() => {
-						history.push(
-							toRoute(Routes.WORKSPACE_WITH_ID, {groupId})
-						);
+						window.location.assign(href);
 					}
 				);
 			})

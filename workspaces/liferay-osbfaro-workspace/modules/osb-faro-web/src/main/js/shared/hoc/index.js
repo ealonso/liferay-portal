@@ -3,14 +3,12 @@ export {compose} from 'redux';
 export {default as withPolling} from './WithPolling';
 
 export {default as optional} from './Optional';
-export {default as redirectIf} from './RedirectIf';
 export {default as withAction} from './WithAction';
 export {default as withBaseResults} from './WithBaseResults';
 export {default as withCurrentUser} from './WithCurrentUser';
 export {default as withDataSource} from './WithDataSource';
 export {default as withFilters} from './WithFilters';
 export {default as withHelpWidget} from './WithHelpWidget';
-export {default as withHistory} from './WithHistory';
 export {default as withIndividual} from './WithIndividual';
 export {default as withInterval} from './WithInterval';
 export {default as withPaginationBar} from './WithPaginationBar';

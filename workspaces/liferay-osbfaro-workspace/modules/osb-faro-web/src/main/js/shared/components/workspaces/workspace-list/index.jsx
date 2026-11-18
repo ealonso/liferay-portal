@@ -10,7 +10,8 @@ import {
 import {noop} from 'lodash';
 import {Project} from 'shared/util/records';
 import {PropTypes} from 'prop-types';
-import {Routes, toRoute} from 'shared/util/router';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 const isSubscriptionLimitReached = subscription => {
 	if (
@@ -56,20 +57,15 @@ export default class WorkspaceList extends React.Component {
 		isJoinableProjects: PropTypes.bool
 	};
 
-	getRoute({corpProjectUuid, friendlyURL, groupId, state}) {
-		if (friendlyURL) {
-			return toRoute(Routes.WORKSPACE_WITH_ID, {
-				groupId: friendlyURL.replace('/', '')
-			});
-		} else if (!!groupId && state !== DataSourceStates.Unconfigured) {
-			return toRoute(Routes.WORKSPACE_WITH_ID, {
-				groupId
-			});
+	getRoute({corpProjectUuid, friendlyURL, groupId, state, url}) {
+		if (
+			friendlyURL ||
+			(!!groupId && state !== DataSourceStates.Unconfigured)
+		) {
+			return url;
 		}
 
-		return toRoute(Routes.WORKSPACE_ADD_WITH_CORP_PROJECT_UUID, {
-			corpProjectUuid
-		});
+		return setUriQueryValues({corpProjectUuid}, config.addWorkspaceURL);
 	}
 
 	render() {

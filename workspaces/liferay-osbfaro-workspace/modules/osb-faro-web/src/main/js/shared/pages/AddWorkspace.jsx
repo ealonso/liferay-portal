@@ -5,7 +5,7 @@ import React from 'react';
 import WorkspacesBasePage from 'shared/components/workspaces/BasePage';
 import {addAlert} from 'shared/actions/alerts';
 import {Alert} from 'shared/types';
-import {compose, optional, redirectIf, withProject} from 'shared/hoc';
+import {compose, optional, withProject} from 'shared/hoc';
 import {
 	configureProject,
 	createProject,
@@ -15,8 +15,6 @@ import {connect} from 'react-redux';
 import {DataSourceStates} from 'shared/util/constants';
 import {Project} from '../util/records';
 import {PropTypes} from 'prop-types';
-import {Navigate} from 'react-router-dom';
-import {Routes, toRoute} from 'shared/util/router';
 
 export const routingFn = ({project}) => {
 	if (
@@ -24,23 +22,26 @@ export const routingFn = ({project}) => {
 		project.groupId &&
 		project.state !== DataSourceStates.Unconfigured
 	) {
-		return toRoute(Routes.WORKSPACE_WITH_ID, {groupId: project.groupId});
+		return project.url;
 	} else {
 		return null;
 	}
 };
 
 export class AddWorkspace extends React.Component {
-	state = {
-		redirectToWorkspace: false
-	};
-
 	static propTypes = {
 		addAlert: PropTypes.func,
 		createProject: PropTypes.func,
-		history: PropTypes.object.isRequired,
 		project: PropTypes.instanceOf(Project)
 	};
+
+	componentDidMount() {
+		const route = routingFn(this.props);
+
+		if (route) {
+			window.location.replace(route);
+		}
+	}
 
 	@autobind
 	handleSubmit({
@@ -79,18 +80,13 @@ export class AddWorkspace extends React.Component {
 				: createTrialProject;
 
 		return createFn(params)
-			.then(({payload: {friendlyURL, groupId}}) => {
-				this.setState({
-					friendlyURL: friendlyURL
-						? friendlyURL.replace('/', '')
-						: groupId,
-					redirectToWorkspace: true
-				});
-
+			.then(({payload: {url}}) => {
 				addAlert({
 					alertType: Alert.Types.Success,
 					message: Liferay.Language.get('success')
 				});
+
+				window.location.replace(url);
 			})
 			.catch(error => {
 				if (!error.field) {
@@ -106,33 +102,25 @@ export class AddWorkspace extends React.Component {
 	}
 
 	render() {
-		const {
-			props: {className, project},
-			state: {friendlyURL, redirectToWorkspace}
-		} = this;
+		const {className, project} = this.props;
+
+		if (routingFn(this.props)) {
+			return null;
+		}
 
 		return (
 			<div
 				className={getCN('add-workspace-root', className)}
 				key='AddWorkspace'
 			>
-				{redirectToWorkspace ? (
-					<Navigate
-						replace
-						to={toRoute(Routes.WORKSPACE_WITH_ID, {
-							groupId: friendlyURL
-						})}
+				<WorkspacesBasePage
+					title={Liferay.Language.get('create-workspace')}
+				>
+					<AddWorkspaceForm
+						onSubmit={this.handleSubmit}
+						project={project}
 					/>
-				) : (
-					<WorkspacesBasePage
-						title={Liferay.Language.get('create-workspace')}
-					>
-						<AddWorkspaceForm
-							onSubmit={this.handleSubmit}
-							project={project}
-						/>
-					</WorkspacesBasePage>
-				)}
+				</WorkspacesBasePage>
 			</div>
 		);
 	}
@@ -145,6 +133,5 @@ export default compose(
 		createProject,
 		createTrialProject
 	}),
-	optional(withProject, {idPropName: 'corpProjectUuid'}),
-	redirectIf(routingFn)
+	optional(withProject, {idPropName: 'corpProjectUuid'})
 )(AddWorkspace);

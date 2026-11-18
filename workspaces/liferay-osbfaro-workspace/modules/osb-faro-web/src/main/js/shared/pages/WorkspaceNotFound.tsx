@@ -4,7 +4,7 @@ import getCN from 'classnames';
 import React from 'react';
 import Sheet from 'shared/components/Sheet';
 import WorkspacesBasePage from 'shared/components/workspaces/BasePage';
-import {Routes} from 'shared/util/router';
+import {config} from 'shared/util/config';
 
 const WorkspaceNotFound: React.FC<React.HTMLAttributes<HTMLElement>> = ({
 	className,
@@ -34,7 +34,7 @@ const WorkspaceNotFound: React.FC<React.HTMLAttributes<HTMLElement>> = ({
 						button
 						className="button-root"
 						displayType="secondary"
-						href={Routes.WORKSPACES}
+						href={config.workspacesURL}
 					>
 						{Liferay.Language.get('go-back-to-your-workspaces')}
 					</ClayLink>
