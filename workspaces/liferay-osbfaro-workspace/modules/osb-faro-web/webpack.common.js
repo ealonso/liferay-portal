@@ -42,7 +42,7 @@ const config = {
 		'external-scripts': resolveModule('external-scripts.js'),
 		individuals: getComponentEntry('individuals'),
 		lifecycles: getComponentEntry('lifecycles'),
-		main: resolveModule('main.jsx'),
+		main: path.resolve(__dirname, 'src', 'main', 'css', 'main.scss'),
 		segments: getComponentEntry('segments'),
 		settings: getComponentEntry('settings'),
 		sites: getComponentEntry('sites'),

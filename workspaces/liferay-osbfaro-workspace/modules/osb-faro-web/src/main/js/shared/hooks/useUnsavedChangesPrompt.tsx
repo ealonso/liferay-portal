@@ -1,11 +1,16 @@
 import ConfirmationModal from 'shared/components/ConfirmationModal';
-import React, {useEffect, useRef} from 'react';
-import {useBlocker} from 'react-router-dom';
+import React, {useEffect, useRef, useState} from 'react';
 import {useModal} from '@clayui/modal';
+
+interface IBeforeNavigateEvent {
+	originalEvent: Event;
+	path: string;
+}
 
 /**
  * Blocks the navigation while there are unsaved changes and asks the user
- * whether to leave. The caller renders the returned modal.
+ * whether to leave. The caller renders the returned modal. Reloading or
+ * closing the page falls back to the browser prompt.
  */
 export function useUnsavedChangesPrompt(
 	when: boolean,
@@ -13,29 +18,43 @@ export function useUnsavedChangesPrompt(
 ): React.ReactNode {
 	const modal = useModal();
 
-	const blocker = useBlocker(
-		({currentLocation, nextLocation}) =>
-			when && currentLocation.pathname !== nextLocation.pathname
-	);
+	const leavingRef = useRef(false);
+
+	const [path, setPath] = useState<string | null>(null);
 
 	useEffect(() => {
-		if (blocker.state === 'blocked') {
+		if (!when) {
+			return;
+		}
+
+		const handleBeforeNavigate = (event: IBeforeNavigateEvent) => {
+			if (leavingRef.current) {
+				return;
+			}
+
+			event.originalEvent.preventDefault();
+
+			setPath(event.path);
+
 			modal.onOpenChange(true);
-		}
-	}, [blocker.state]);
+		};
 
-	// The modal can also be dismissed with Esc or a click outside, which
-	// leaves the navigation blocked unless it is reset when it closes.
+		const handleBeforeUnload = (event: BeforeUnloadEvent) => {
+			if (!leavingRef.current) {
+				event.preventDefault();
+			}
+		};
 
-	const wasOpenRef = useRef(false);
+		Liferay.on('beforeNavigate', handleBeforeNavigate);
 
-	useEffect(() => {
-		if (wasOpenRef.current && !modal.open && blocker.state === 'blocked') {
-			blocker.reset?.();
-		}
+		window.addEventListener('beforeunload', handleBeforeUnload);
 
-		wasOpenRef.current = modal.open;
-	}, [modal.open]);
+		return () => {
+			Liferay.detach('beforeNavigate', handleBeforeNavigate);
+
+			window.removeEventListener('beforeunload', handleBeforeUnload);
+		};
+	}, [when]);
 
 	if (!modal.open) {
 		return null;
@@ -47,15 +66,15 @@ export function useUnsavedChangesPrompt(
 			closeAfterSubmit={false}
 			message={message}
 			observer={modal.observer}
-			onClose={() => {
-				modal.onOpenChange(false);
-
-				blocker.reset?.();
-			}}
+			onClose={() => modal.onOpenChange(false)}
 			onSubmit={() => {
 				modal.onOpenChange(false);
 
-				blocker.proceed?.();
+				if (path) {
+					leavingRef.current = true;
+
+					Liferay.Util.navigate(path);
+				}
 			}}
 			submitButtonDisplay="warning"
 			submitMessage={Liferay.Language.get('leave-page')}

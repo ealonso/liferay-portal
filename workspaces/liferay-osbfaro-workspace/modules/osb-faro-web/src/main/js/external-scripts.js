@@ -1,6 +1,6 @@
 /**
  * The external scripts the app appends at load. The AI Hub chatbot is absent:
- * it is provisioned per workspace, so `RootLayout` drives it by route.
+ * it is provisioned per workspace, so `AppShell` drives it by workspace.
  */
 
 import {appendScript} from 'shared/util/external-script';
