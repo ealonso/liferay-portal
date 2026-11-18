@@ -8,10 +8,10 @@ import {sub} from 'shared/util/lang';
 
 const {faroURL} = Constants;
 
-const SuccessDisplay = ({friendlyURL}: {friendlyURL: string}) => {
+const SuccessDisplay = ({url}: {url: string}) => {
 	const link = (
-		<ClayLink href={`${faroURL}/workspace${friendlyURL}`} key="link">
-			{`${faroURL}/workspace${friendlyURL}`}
+		<ClayLink href={`${faroURL}${url}`} key="link">
+			{`${faroURL}${url}`}
 		</ClayLink>
 	);
 
