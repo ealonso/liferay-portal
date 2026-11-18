@@ -3,21 +3,22 @@ import ClayLink from '@clayui/link';
 import EmptyState from 'shared/components/workspaces/EmptyState';
 import JoinableWorkspacesWrapper from 'shared/components/workspaces/JoinableWorkspacesWrapper';
 import Loading from 'shared/components/Loading';
-import React from 'react';
+import React, {useEffect} from 'react';
 import URLConstants from 'shared/util/url-constants';
 import WorkspaceList from 'shared/components/workspaces/workspace-list';
 import WorkspacesBasePage from 'shared/components/workspaces/BasePage';
 import {ENABLE_ADD_TRIAL_WORKSPACE} from 'shared/util/constants';
 import {PLANS} from 'shared/util/subscriptions';
 import {isString} from 'lodash';
-import {Navigate} from 'react-router-dom';
-import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
 import {
 	useFetchJoinableProjects,
 	useFetchProjects,
 } from 'shared/hooks/useProjects';
 import {useIncidentAlert} from 'shared/hooks/useIncidentAlert';
+import {Config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 type ProjectLike = {
 	corpProjectUuid?: string;
@@ -26,11 +27,17 @@ type ProjectLike = {
 	[key: string]: any;
 };
 
-export const routingFn = ({projects}: {projects: ProjectLike[]}) => {
+export const routingFn = (
+	{projects}: {projects: ProjectLike[]},
+	config: Config
+) => {
 	if (projects.length === 1 && !projects[0].groupId) {
-		return toRoute(Routes.WORKSPACE_ADD_WITH_CORP_PROJECT_UUID, {
-			corpProjectUuid: projects[0].corpProjectUuid,
-		});
+		return setUriQueryValues(
+			{
+				corpProjectUuid: projects[0].corpProjectUuid,
+			},
+			config.addWorkspaceURL
+		);
 	}
 
 	return null;
@@ -47,6 +54,8 @@ const WorkspacesContent = ({
 	loadingJoinableProjects: boolean;
 	projects: ProjectLike[];
 }) => {
+	const {addWorkspaceURL} = usePageConfig();
+
 	if (loading) {
 		return <Loading spacer />;
 	}
@@ -95,7 +104,7 @@ const WorkspacesContent = ({
 						button
 						className="button-root"
 						displayType="secondary"
-						href={toRoute(Routes.WORKSPACE_ADD_TRIAL)}
+						href={addWorkspaceURL}
 						small
 					>
 						{Liferay.Language.get('start-free-trial')}
@@ -107,6 +116,8 @@ const WorkspacesContent = ({
 };
 
 const Workspaces: any = () => {
+	const config = usePageConfig();
+
 	const {data: projects, loading} = useFetchProjects();
 
 	const {
@@ -117,6 +128,14 @@ const Workspaces: any = () => {
 
 	const {data: joinableProjects, loading: loadingJoinableProjects} =
 		useFetchJoinableProjects();
+
+	const route = routingFn({projects}, config);
+
+	useEffect(() => {
+		if (isString(route)) {
+			window.location.assign(route);
+		}
+	}, [route]);
 
 	const ldpEnabled = projects.some((project) => project.ldpEnabled);
 
@@ -146,10 +165,8 @@ const Workspaces: any = () => {
 		return '';
 	};
 
-	const route = routingFn({projects});
-
 	if (isString(route)) {
-		return <Navigate to={route} />;
+		return null;
 	}
 
 	return (

@@ -6,12 +6,14 @@ import getCN from 'classnames';
 import React from 'react';
 import {DisplayType} from 'shared/types';
 import {ENABLE_ADD_TRIAL_WORKSPACE, FaroEnv} from 'shared/util/constants';
-import {Routes, toRoute} from 'shared/util/router';
 import {useModal} from '@clayui/modal';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 type IEmptyStateProps = React.HTMLAttributes<HTMLElement>;
 
 const EmptyState: React.FC<IEmptyStateProps> = ({className, ...otherProps}) => {
+	const {addWorkspaceURL} = usePageConfig();
+
 	const contactSalesModal = useModal();
 
 	return (
@@ -41,7 +43,7 @@ const EmptyState: React.FC<IEmptyStateProps> = ({className, ...otherProps}) => {
 				<div className="col-xl-6">
 					<CardEmpty
 						buttonProps={{
-							href: toRoute(Routes.WORKSPACE_ADD_TRIAL),
+							href: addWorkspaceURL,
 							label: Liferay.Language.get('start-free-trial'),
 						}}
 						description={Liferay.Language.get(

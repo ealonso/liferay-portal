@@ -1,7 +1,6 @@
 import * as API from 'shared/api';
-import {Routes} from 'shared/util/router';
 
-export const OAUTH_CALLBACK_URL = `${location.origin}${Routes.OAUTH_RECEIVE}`;
+export const OAUTH_CALLBACK_URL = `${location.origin}/oauth/receive`;
 
 export const OAUTH_ERROR_CODES = [
 	'invalid_client',

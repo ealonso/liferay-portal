@@ -1,30 +1,28 @@
 import Loading from 'shared/components/Loading';
-import React from 'react';
+import React, {useEffect} from 'react';
 import WorkspaceList from 'shared/components/workspaces/workspace-list';
 import WorkspacesBasePage from 'shared/components/workspaces/BasePage';
 import {getBasicProjects, getSingleProjectRoute} from 'shared/util/projects';
 import {isString} from 'lodash';
-import {Navigate} from 'react-router-dom';
 import {sub} from 'shared/util/lang';
 import {useFetchProjects} from 'shared/hooks/useProjects';
-import {setUriQueryValue} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
+import {Config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 import {usePageConfig} from 'shared/context/pageConfig';
 
 const checkDisabled = ({configured}: {configured: boolean}) => configured;
 
-export const routingFn = ({projects}: {projects: any[]}) => {
+export const routingFn = ({projects}: {projects: any[]}, config: Config) => {
 	const basicProjects = getBasicProjects(projects);
 
 	if (basicProjects.length === 1) {
-		return getSingleProjectRoute(basicProjects[0]);
+		return getSingleProjectRoute(basicProjects[0], config);
 	}
 
 	if (!basicProjects.some((basicProject) => !basicProject.get('groupId'))) {
-		return setUriQueryValue(
-			toRoute(Routes.WORKSPACES),
-			'allBasicConfigured',
-			true
+		return setUriQueryValues(
+			{allBasicConfigured: 'true'},
+			config.workspacesURL
 		);
 	}
 
@@ -32,17 +30,25 @@ export const routingFn = ({projects}: {projects: any[]}) => {
 };
 
 const SelectWorkspaceAccount = () => {
-	const {currentUser} = usePageConfig();
+	const config = usePageConfig();
+
+	const {currentUser} = config;
 	const {data: projects, loading} = useFetchProjects();
+
+	const route = loading ? null : routingFn({projects}, config);
+
+	useEffect(() => {
+		if (isString(route)) {
+			window.location.assign(route);
+		}
+	}, [route]);
 
 	if (loading) {
 		return <Loading />;
 	}
 
-	const route = routingFn({projects});
-
 	if (isString(route)) {
-		return <Navigate to={route} />;
+		return null;
 	}
 
 	return (
