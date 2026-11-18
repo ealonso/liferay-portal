@@ -9,9 +9,9 @@ import {
 import {getVisitorType} from 'contacts/pages/account/components/IndividualsDataSet';
 import {pickBy} from 'lodash';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes} from 'shared/util/router';
 import {useAccountFilter} from 'shared/hooks/useAccountFilter';
 import {useRangeQueryValues} from 'shared/hooks/useRangeQueryValues';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface IIndividualsTouchedDataSetProps {
 	campaignId: string;
@@ -63,6 +63,8 @@ const IndividualsTouchedDataSet: React.FC<IIndividualsTouchedDataSetProps> = ({
 	channelId,
 	groupId,
 }) => {
+	const {individualURL} = usePageConfig();
+
 	const {accountId} = useAccountFilter();
 	const {apiRangeParams, routeRangeParams} = useRangeQueryValues();
 
@@ -81,11 +83,9 @@ const IndividualsTouchedDataSet: React.FC<IIndividualsTouchedDataSetProps> = ({
 					value: string;
 				}) =>
 					columns.nameAndLinkRenderer({
-						channelId,
-						groupId,
 						itemData,
 						queryValues: routeRangeParams,
-						route: Routes.CONTACTS_INDIVIDUAL,
+						url: individualURL,
 						value,
 					}),
 				lastActiveRenderer: ({value}: {value: string}) =>

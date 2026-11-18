@@ -18,8 +18,8 @@ import {buildViews} from './utils';
 import {IAccountLifecycleStage} from 'shared/api/lifecycle';
 import {ICatalogField} from 'shared/api/catalog';
 import {RangeKeyTimeRanges} from 'shared/util/constants';
-import {Routes} from 'shared/util/router';
 import {useLifecycleStageFilterItems} from 'shared/hooks/useLifecycleStageFilterItems';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface IAccountsDataSetProps {
 	accountLifecycleId?: string;
@@ -66,6 +66,8 @@ const AccountsDataSet: React.FC<IAccountsDataSetProps> = ({
 	segmentName,
 	stageSelectionNonce,
 }) => {
+	const {accountURL} = usePageConfig();
+
 	const {
 		items: lifecycleStageItems,
 		lifecycleStages,
@@ -161,10 +163,8 @@ const AccountsDataSet: React.FC<IAccountsDataSetProps> = ({
 						value: string;
 					}) =>
 						columns.nameAndLinkRenderer({
-							channelId,
-							groupId,
 							itemData,
-							route: Routes.CONTACTS_ACCOUNT,
+							url: accountURL,
 							value,
 						}),
 					activitiesCountRenderer: columns.countRenderer,

@@ -2,7 +2,6 @@ import DataValue from 'shared/components/DataValue';
 import getCN from 'classnames';
 import React from 'react';
 import TextTruncate from 'shared/components/TextTruncate';
-import {Link} from 'react-router-dom';
 import {noop} from 'lodash';
 
 interface INameProps {
@@ -83,9 +82,9 @@ const Name: React.FC<INameProps> = ({
 						{disabled || !url ? (
 							titleContent
 						) : (
-							<Link className="text-truncate" to={url}>
+							<a className="text-truncate" href={url}>
 								{titleContent}
-							</Link>
+							</a>
 						)}
 					</div>
 

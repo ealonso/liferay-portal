@@ -4,7 +4,6 @@ import Popover from 'shared/components/Popover';
 import React from 'react';
 import ReactDOM from 'react-dom';
 import {isEllipisActive} from 'shared/util/util';
-import {Link} from 'react-router-dom';
 import {PropTypes} from 'prop-types';
 
 /**
@@ -78,15 +77,15 @@ class TableData extends React.Component {
 
 	renderUrl({title, url}) {
 		return (
-			<Link
+			<a
 				onBlur={this.handleMouseOut}
 				onFocus={this.handleMouseOver}
 				onMouseOut={this.handleMouseOut}
 				onMouseOver={this.handleMouseOver}
-				to={url}
+				href={url}
 			>
 				{this.renderTitle(title)}
-			</Link>
+			</a>
 		);
 	}
 

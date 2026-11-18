@@ -1,7 +1,7 @@
 import ClayLink from '@clayui/link';
 import getCN from 'classnames';
 import React from 'react';
-import {Routes, toRoute} from 'shared/util/router';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface IErrorPageProps {
 	className?: string;
@@ -14,30 +14,34 @@ interface IErrorPageProps {
 
 const ErrorPage: React.FC<IErrorPageProps> = ({
 	className,
-	href = toRoute(Routes.BASE),
+	href,
 	linkLabel = Liferay.Language.get('go-to-home'),
 	message = Liferay.Language.get(
 		'the-page-you-are-looking-for-does-not-exist'
 	),
 	subtitle = Liferay.Language.get('page-was-not-found'),
 	title = '404',
-}) => (
-	<div className={getCN('error-page-root', 'page-container', className)}>
-		<h1>{title}</h1>
+}) => {
+	const {workspacesURL} = usePageConfig();
 
-		<h3>{subtitle}</h3>
+	return (
+		<div className={getCN('error-page-root', 'page-container', className)}>
+			<h1>{title}</h1>
 
-		<p>{message}</p>
+			<h3>{subtitle}</h3>
 
-		<ClayLink
-			button
-			className="button-root"
-			displayType="secondary"
-			href={href}
-		>
-			{linkLabel}
-		</ClayLink>
-	</div>
-);
+			<p>{message}</p>
+
+			<ClayLink
+				button
+				className="button-root"
+				displayType="secondary"
+				href={href ?? workspacesURL}
+			>
+				{linkLabel}
+			</ClayLink>
+		</div>
+	);
+};
 
 export default ErrorPage;

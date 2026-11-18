@@ -1,7 +1,6 @@
 import ClayIcon from 'shared/components/Icon';
 import getCN from 'classnames';
 import React from 'react';
-import {Link} from 'react-router-dom';
 import {PropTypes} from 'prop-types';
 
 class ProgressTimeline extends React.Component {
@@ -13,9 +12,9 @@ class ProgressTimeline extends React.Component {
 
 	wrapWithLink(content, href, i) {
 		return (
-			<Link key={i} to={href}>
+			<a key={i} href={href}>
 				{content}
-			</Link>
+			</a>
 		);
 	}
 

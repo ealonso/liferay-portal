@@ -6,9 +6,8 @@ import {
 	pagination,
 } from 'shared/components/FrontendDataSet';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes} from 'shared/util/router';
-import {useParams} from 'react-router-dom';
 import {useRangeQueryValues} from 'shared/hooks/useRangeQueryValues';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const FDS_ID = 'account-individuals-dataset';
 
@@ -58,12 +57,9 @@ const IndividualsDataSet: React.FC<IIndividualsDataSetProps> = ({
 	const {
 		channelId = '',
 		groupId = '',
-		id = '',
-	} = useParams<{
-		channelId: string;
-		groupId: string;
-		id: string;
-	}>();
+		individualURL,
+		params: {id = ''},
+	} = usePageConfig();
 
 	const {apiRangeParams, routeRangeParams} = useRangeQueryValues();
 
@@ -85,11 +81,9 @@ const IndividualsDataSet: React.FC<IIndividualsDataSetProps> = ({
 					value: string;
 				}) =>
 					columns.nameAndLinkRenderer({
-						channelId,
-						groupId,
 						itemData,
 						queryValues: routeRangeParams,
-						route: Routes.CONTACTS_INDIVIDUAL,
+						url: individualURL,
 						value,
 					}),
 				jobTitleRenderer: ({

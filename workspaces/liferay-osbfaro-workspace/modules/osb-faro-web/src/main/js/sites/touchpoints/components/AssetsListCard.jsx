@@ -2,10 +2,10 @@ import BasePage from 'shared/components/base-page';
 import React from 'react';
 import Table from 'shared/components/table';
 import TextTruncate from 'shared/components/TextTruncate';
-import {Link} from 'react-router-dom';
 import {pickBy} from 'lodash';
 import {PropTypes} from 'prop-types';
 import {toAssetOverviewRoute} from 'assets/descriptors';
+import withPageConfig from 'shared/hoc/WithPageConfig';
 
 const CLASSNAME = 'analytics-assets-list';
 
@@ -57,16 +57,16 @@ class AssetsListCard extends React.Component {
 		return toAssetOverviewRoute(
 			assetType,
 			{
-				...params,
 				assetId,
-				title
+				title,
+				touchpoint: params.touchpoint
 			},
 			pickBy({
 				...query,
 				rangeEnd: rangeSelectors.rangeEnd,
 				rangeKey: rangeSelectors.rangeKey,
 				rangeStart: rangeSelectors.rangeStart
-			})
+			}), this.props.pageConfig
 		);
 	}
 
@@ -79,12 +79,12 @@ class AssetsListCard extends React.Component {
 
 		return (
 			<td className='table-cell-expand'>
-				<Link
+				<a
 					className='font-weight-semibold text-truncate-inline text-dark'
-					to={url}
+					href={url}
 				>
 					<TextTruncate title={title} />
-				</Link>
+				</a>
 			</td>
 		);
 	}
@@ -139,4 +139,4 @@ class AssetsListCard extends React.Component {
 	}
 }
 
-export default AssetsListCard;
+export default withPageConfig(AssetsListCard);

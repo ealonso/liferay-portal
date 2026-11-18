@@ -14,10 +14,10 @@ import {
 import {ClayToggle} from '@clayui/form';
 import {Criteria} from './utils/types';
 import {
-	SegmentCategories,
-	SegmentTypes,
 	ACCOUNTS,
 	INDIVIDUALS,
+	SegmentCategories,
+	SegmentTypes,
 } from 'shared/util/constants';
 import {sub} from 'shared/util/lang';
 import {Text} from '@clayui/core';
@@ -26,6 +26,7 @@ import {useField} from 'formik';
 import {useModal} from '@clayui/modal';
 import {useRequest} from 'shared/hooks/useRequest';
 import {validateSegmentInputs} from './utils/utils';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 type MembersParams = {
 	channelId: string;
@@ -124,6 +125,8 @@ const SegmentMembership: React.FC<ISegmentMembershipProps> = ({
 	segmentCategory,
 	segmentType,
 }) => {
+	const config = usePageConfig();
+
 	const previewModal = useModal();
 
 	const criteriaValid = !!criteria && validateSegmentInputs(criteria);
@@ -238,12 +241,7 @@ const SegmentMembership: React.FC<ISegmentMembershipProps> = ({
 					{...(isAccountSegment && {initialDelta: 20})}
 					columns={
 						isAccountSegment
-							? [
-									accountsListColumns.getAccountName({
-										channelId,
-										groupId,
-									}),
-								]
+							? [accountsListColumns.getAccountName(config)]
 							: [
 									{
 										...individualsListColumns.name,

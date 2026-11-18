@@ -9,9 +9,9 @@ import {
 	pagination,
 } from 'shared/components/FrontendDataSet';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes} from 'shared/util/router';
 import {useAccountFilter} from 'shared/hooks/useAccountFilter';
 import {useRangeQueryValues} from 'shared/hooks/useRangeQueryValues';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface ICampaignsDataSetProps {
 	channelId: string;
@@ -55,6 +55,8 @@ const CampaignsDataSet: React.FC<ICampaignsDataSetProps> = ({
 	channelId,
 	groupId,
 }) => {
+	const {campaignURL} = usePageConfig();
+
 	const {accountId, accountName, accountQueryValues} = useAccountFilter();
 	const {apiRangeParams, routeRangeParams} = useRangeQueryValues();
 
@@ -74,14 +76,12 @@ const CampaignsDataSet: React.FC<ICampaignsDataSetProps> = ({
 						value: string;
 					}) =>
 						columns.nameAndLinkRenderer({
-							channelId,
-							groupId,
 							itemData,
 							queryValues: {
 								...routeRangeParams,
 								...accountQueryValues,
 							},
-							route: Routes.CAMPAIGNS_DETAIL,
+							url: campaignURL,
 							value,
 						}),
 					countRenderer: columns.countRenderer,

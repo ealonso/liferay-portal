@@ -3,7 +3,6 @@ import React from 'react';
 import withCurrentUser from './WithCurrentUser';
 import {compose} from 'redux';
 import {PropTypes} from 'prop-types';
-import {Routes, toRoute} from '../util/router';
 import {User} from '../util/records';
 import {UserRoleNames} from 'shared/util/constants';
 
@@ -40,7 +39,6 @@ const withPermission = roles =>
 						return (
 							<ErrorPage
 								className={className}
-								href={toRoute(Routes.BASE)}
 								message={Liferay.Language.get(
 									'you-do-not-have-permission-to-view-this-resource'
 								)}

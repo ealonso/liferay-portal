@@ -39,13 +39,8 @@ import {getSafeDecodedURIComponent} from './util';
 import {SegmentTypes} from './constants';
 import {sub} from 'shared/util/lang';
 import {formatPercentFromRatio, toLocale, toRounded} from 'shared/util/numbers';
+import {Config} from 'shared/util/config';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
-
-type ChannelGroupParams = {
-	channelId: string | undefined;
-	groupId: string | undefined;
-};
 
 type CellRendererProps = {
 	className?: string;
@@ -69,23 +64,23 @@ export const accountsListColumns = {
 		label: Liferay.Language.get('email'),
 		sortable: false,
 	},
-	getAccountName: ({channelId, groupId}: ChannelGroupParams) => ({
+	getAccountName: (config: Config) => ({
 		accessor: 'accountName',
 		cellRenderer: NameCell,
 		cellRendererProps: {
 			nameKey: 'accountName',
 			routeFn: ({data: {id}}: {data: {id: string}}) =>
-				toRoute(Routes.CONTACTS_ACCOUNT, {channelId, groupId, id}),
+				setUriQueryValues({id}, config.accountURL),
 		},
 		className: 'table-cell-expand',
 		label: Liferay.Language.get('account'),
 	}),
-	getName: ({channelId, groupId}: ChannelGroupParams) => ({
+	getName: (config: Config) => ({
 		accessor: 'name',
 		cellRenderer: NameCell,
 		cellRendererProps: {
 			routeFn: ({data: {id}}: {data: {id: string}}) =>
-				toRoute(Routes.CONTACTS_ACCOUNT, {channelId, groupId, id}),
+				setUriQueryValues({id}, config.accountURL),
 		},
 		className: 'table-cell-expand',
 		label: Liferay.Language.get('name'),
@@ -206,16 +201,12 @@ export const attributeListColumns = {
 		className: 'table-cell-expand-small text-truncate',
 		label: Liferay.Language.get('display-name'),
 	},
-	getName: ({channelId, groupId}: ChannelGroupParams) => ({
+	getName: (config: Config) => ({
 		accessor: 'name',
 		cellRenderer: NameCell,
 		cellRendererProps: {
 			routeFn: ({data: {id}}: {data: {id: string}}) =>
-				toRoute(Routes.SETTINGS_DEFINITIONS_EVENT_ATTRIBUTES_VIEW, {
-					attributeId: id,
-					channelId,
-					groupId,
-				}),
+				setUriQueryValues({attributeId: id}, config.eventAttributeURL),
 		},
 		className: 'table-cell-expand-small',
 		label: Liferay.Language.get('attribute-name'),
@@ -354,12 +345,12 @@ export const IndividualsListCDPColumns = {
 		label: Liferay.Language.get('first-seen'),
 		sortable: true,
 	},
-	getNameEmail: ({channelId, groupId}: ChannelGroupParams) => ({
+	getNameEmail: (config: Config) => ({
 		accessor: 'name',
 		cellRenderer: MemberCell,
 		cellRendererProps: {
 			routeFn: ({data: {id}}: {data: {id: string}}) =>
-				toRoute(Routes.CONTACTS_INDIVIDUAL, {channelId, groupId, id}),
+				setUriQueryValues({id}, config.individualURL),
 		},
 		className: 'table-cell-expand',
 		label: `${Liferay.Language.get('individual')} | ${Liferay.Language.get(
@@ -404,10 +395,9 @@ export const changesListColumns = {
 			formatDateToTimeZone(value, getCustomDateFormat(), timeZoneId),
 		label: Liferay.Language.get('first-seen'),
 	}),
-	getIndividualName: ({channelId, groupId}: ChannelGroupParams) => ({
+	getIndividualName: () => ({
 		accessor: 'individualName',
 		cellRenderer: IndividualLinkCell,
-		cellRendererProps: {channelId, groupId},
 		label: Liferay.Language.get('name'),
 		title: true,
 	}),
@@ -563,10 +553,9 @@ export const definitionsListColumns = {
  * Details List Columns
  */
 export const detailsListColumns = {
-	getDataSourceName: (groupId: string | undefined) => ({
+	getDataSourceName: () => ({
 		accessor: 'dataSourceName',
 		cellRenderer: SourceCell,
-		cellRendererProps: {groupId},
 		label: Liferay.Language.get('data-source'),
 	}),
 	getDateModified: (timeZoneId: string | undefined) => ({
@@ -647,7 +636,7 @@ export const eventListColumns = {
 		),
 		label: Liferay.Language.get('last-seen'),
 	}),
-	getName: ({groupId}: {groupId: string}) => ({
+	getName: (config: Config) => ({
 		accessor: 'name',
 		cellRenderer: ({className, data, ...otherProps}: CellRendererProps) => (
 			<NameCell
@@ -660,10 +649,7 @@ export const eventListColumns = {
 		),
 		cellRendererProps: {
 			routeFn: ({data: {id}}: {data: {id: string}}) =>
-				toRoute(Routes.SETTINGS_DEFINITIONS_EVENTS_VIEW, {
-					eventId: id,
-					groupId,
-				}),
+				setUriQueryValues({eventId: id}, config.eventDefinitionURL),
 		},
 		className: 'table-cell-expand-small',
 		label: Liferay.Language.get('event-name'),
@@ -760,31 +746,30 @@ export const individualsListColumns = {
 			formatDateToTimeZone(data, getCustomDateFormat(), timeZoneId),
 		label: Liferay.Language.get('last-activity'),
 	}),
-	getName: ({channelId, groupId}: ChannelGroupParams) => ({
+	getName: () => ({
 		accessor: 'name',
 		cellRenderer: IndividualLinkCell,
-		cellRendererProps: {channelId, groupId},
 		label: Liferay.Language.get('name'),
 		title: true,
 	}),
-	getNameEmail: ({channelId, groupId}: ChannelGroupParams) => ({
+	getNameEmail: (config: Config) => ({
 		accessor: 'name',
 		cellRenderer: NameCell,
 		cellRendererProps: {
 			renderSecondaryInfo: (data: any) => get(data, 'properties.email'),
 			routeFn: ({data: {id}}: {data: {id: string}}) =>
-				toRoute(Routes.CONTACTS_INDIVIDUAL, {channelId, groupId, id}),
+				setUriQueryValues({id}, config.individualURL),
 		},
 		className: 'table-cell-expand',
 		label: Liferay.Language.get('name-email'),
 	}),
-	getNameJobTitle: ({channelId, groupId}: ChannelGroupParams) => ({
+	getNameJobTitle: (config: Config) => ({
 		cellRenderer: NameCell,
 		cellRendererProps: {
 			renderSecondaryInfo: (data: any) =>
 				get(data, 'properties.jobTitle'),
 			routeFn: ({data: {id}}: {data: {id: string}}) =>
-				toRoute(Routes.CONTACTS_INDIVIDUAL, {channelId, groupId, id}),
+				setUriQueryValues({id}, config.individualURL),
 		},
 		className: 'name',
 		label: Liferay.Language.get('individual'),
@@ -829,27 +814,11 @@ export const interestListColumns = {
 		sortable: false,
 	}),
 	getName: ({
-		channelId,
-		groupId,
-		id,
 		maxWidth,
-		routeFn = ({data: {name}}: {data: {name: string}}) =>
-			name &&
-			toRoute(Routes.CONTACTS_INTEREST_DETAILS, {
-				channelId,
-				groupId,
-				id,
-				interestId: name,
-				type,
-			}),
-		type,
+		routeFn,
 	}: {
-		channelId: string | undefined;
-		groupId: string | undefined;
-		id: string | undefined;
 		maxWidth?: number | null;
-		routeFn?: (props: {data: {name: string}}) => string | undefined;
-		type: string;
+		routeFn: (props: {data: {name: string}}) => string | undefined;
 	}) => ({
 		accessor: 'name',
 		cellRenderer: NameCell,
@@ -957,11 +926,7 @@ export const metricsListColumns = {
 		),
 		label: Liferay.Language.get('added'),
 	}),
-	getNameEmail: ({
-		channelId,
-		groupId,
-		route,
-	}: ChannelGroupParams & {route: string}) => ({
+	getNameEmail: ({url}: {url: string}) => ({
 		accessor: 'name',
 		cellRenderer: NameCell,
 		cellRendererProps: {
@@ -969,58 +934,10 @@ export const metricsListColumns = {
 				<TextTruncate title={email} />
 			),
 			routeFn: ({data: {id}}: {data: {id: string}}) =>
-				toRoute(route, {
-					channelId,
-					groupId,
-					id,
-				}),
+				setUriQueryValues({id}, url),
 		},
 		className: 'table-cell-expand',
 		label: Liferay.Language.get('name-email'),
-		sortable: false,
-	}),
-	getTitleId: ({
-		channelId,
-		groupId,
-		label,
-		rangeSelectors,
-		route,
-	}: ChannelGroupParams & {
-		label: React.ReactNode;
-		rangeSelectors: Record<string, any>;
-		route: string;
-	}) => ({
-		accessor: 'assetTitle',
-		cellRenderer: NameCell,
-		cellRendererProps: {
-			nameKey: 'assetTitle',
-			renderSecondaryInfo: ({assetId}: {assetId: string}) => (
-				<TextTruncate title={assetId} />
-			),
-			routeFn: ({
-				data: {assetId, assetTitle, id},
-			}: {
-				data: {assetId?: string; assetTitle?: string; id?: string};
-			}) => {
-				if (assetId) {
-					return setUriQueryValues(
-						pickBy(rangeSelectors),
-						toRoute(route, {
-							assetId,
-							channelId,
-							groupId,
-							touchpoint: 'Any',
-							...(assetTitle && {
-								title: assetTitle,
-							}),
-							...(id && {id}),
-						})
-					);
-				}
-			},
-		},
-		className: 'table-cell-expand',
-		label,
 		sortable: false,
 	}),
 	impressionMadeMetric: {
@@ -1113,23 +1030,22 @@ export const organizationsListColumns = [
  */
 
 export const sitePagesListColumns = {
-	getTitleUrl: ({
-		accountId,
-		accountName,
-		channelId,
-		groupId,
-		rangeSelectors,
-		route,
-		segmentId,
-		segmentName,
-	}: ChannelGroupParams & {
-		accountId?: string | null;
-		accountName?: string | null;
-		rangeSelectors: Record<string, any>;
-		route: string;
-		segmentId?: string | null;
-		segmentName?: string | null;
-	}) => ({
+	getTitleUrl: (
+		{
+			accountId,
+			accountName,
+			rangeSelectors,
+			segmentId,
+			segmentName,
+		}: {
+			accountId?: string | null;
+			accountName?: string | null;
+			rangeSelectors: Record<string, any>;
+			segmentId?: string | null;
+			segmentName?: string | null;
+		},
+		config: Config
+	) => ({
 		accessor: 'assetTitle',
 		cellRenderer: NameCell,
 		cellRendererProps: {
@@ -1143,21 +1059,18 @@ export const sitePagesListColumns = {
 				data: {assetId: string; assetTitle?: string};
 			}) =>
 				setUriQueryValues(
-					pickBy({
-						accountId,
-						accountName,
-						segmentId,
-						segmentName,
-						...rangeSelectors,
-					}),
-					toRoute(route, {
-						channelId,
-						groupId,
-						touchpoint: assetId,
-						...(assetTitle && {
-							title: assetTitle,
+					{
+						...pickBy({
+							accountId,
+							accountName,
+							segmentId,
+							segmentName,
+							...rangeSelectors,
 						}),
-					})
+						title: assetTitle,
+						touchpoint: assetId,
+					},
+					config.pageOverviewURL
 				),
 		},
 		className: 'table-cell-expand',
@@ -1177,11 +1090,7 @@ export const pagesListColumns = {
 		className: 'table-cell-expand text-truncate',
 		label: Liferay.Language.get('url'),
 	},
-	getTitleUrl: ({
-		channelId,
-		groupId,
-		route,
-	}: ChannelGroupParams & {route: string}) => ({
+	getTitleUrl: (config: Config) => ({
 		accessor: 'title',
 		cellRenderer: NameCell,
 		cellRendererProps: {
@@ -1194,13 +1103,14 @@ export const pagesListColumns = {
 			}: {
 				data: {dataSourceId: string; title: string; url: string};
 			}) =>
-				toRoute(route, {
-					channelId,
-					groupId,
-					siteId: dataSourceId,
-					title,
-					touchpoint: url,
-				}),
+				setUriQueryValues(
+					{
+						siteId: dataSourceId,
+						title,
+						touchpoint: url,
+					},
+					config.pageOverviewURL
+				),
 		},
 		label: Liferay.Language.get('page-title'),
 	}),
@@ -1256,16 +1166,12 @@ export const segmentsListColumns = {
 		),
 		label: Liferay.Language.get('date-created'),
 	}),
-	getName: ({channelId, groupId}: ChannelGroupParams) => ({
+	getName: (config: Config) => ({
 		accessor: 'name',
 		cellRenderer: NameCell,
 		cellRendererProps: {
 			routeFn: ({data: {id}}: {data: {id: string}}) =>
-				toRoute(Routes.CONTACTS_SEGMENT, {
-					channelId,
-					groupId,
-					id,
-				}),
+				setUriQueryValues({id}, config.segmentURL),
 		},
 		className: 'table-cell-expand',
 		label: Liferay.Language.get('name'),

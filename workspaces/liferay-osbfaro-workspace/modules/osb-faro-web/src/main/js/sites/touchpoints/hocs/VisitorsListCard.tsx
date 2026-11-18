@@ -21,8 +21,8 @@ import {
 import {createOrderIOMap, NAME, VIEWS_METRIC} from 'shared/util/pagination';
 import {graphql} from '@apollo/client/react/hoc';
 import {RangeSelectors} from 'shared/types';
-import {Routes} from 'shared/util/router';
 import {Sizes} from 'shared/util/constants';
+import {Config} from 'shared/util/config';
 
 const withAccountsData = () =>
 	graphql(
@@ -49,13 +49,9 @@ const AccountsTableWithData = withBaseResults(withAccountsData, {
 		symbol: 'ac_satellite',
 	},
 	emptyTitle: Liferay.Language.get('no-accounts-were-found'),
-	getColumns: ({
-		router: {
-			params: {channelId, groupId},
-		},
-	}: any) => [
+	getColumns: ({pageConfig}: {pageConfig: Config}) => [
 		{
-			...accountsListColumns.getName({channelId, groupId}),
+			...accountsListColumns.getName(pageConfig),
 			sortable: false,
 		},
 	],
@@ -88,16 +84,8 @@ const IndividualsTableWithData = withBaseResults(withIndividualsData, {
 		symbol: 'ac_satellite',
 	},
 	emptyTitle: Liferay.Language.get('no-visitors-data-was-found'),
-	getColumns: ({
-		router: {
-			params: {channelId, groupId},
-		},
-	}: any) => [
-		metricsListColumns.getNameEmail({
-			channelId,
-			groupId,
-			route: Routes.CONTACTS_INDIVIDUAL,
-		}),
+	getColumns: ({pageConfig}: {pageConfig: Config}) => [
+		metricsListColumns.getNameEmail({url: pageConfig.individualURL}),
 
 		{
 			accessor: 'accountName',
