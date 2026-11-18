@@ -3,14 +3,11 @@ import LifecyclesPage from 'lifecycle/components/LifecyclesPage';
 import React from 'react';
 import {LifecycleAccountDataEmptyState} from 'lifecycle/components/LifecycleEmptyStates';
 import {useLifecycleAccountData} from 'lifecycle/hooks/useLifecycleAccountData';
-import {useParams} from 'react-router-dom';
 import {AccountDataStatus} from 'lifecycle/utils/types';
 import {usePageConfig} from 'shared/context/pageConfig';
 
 const CreateLifecycle = () => {
 	const {currentUser} = usePageConfig();
-
-	const {groupId} = useParams();
 
 	const {refetch: refetchAccountData, status: accountDataStatus} =
 		useLifecycleAccountData();
@@ -22,7 +19,6 @@ const CreateLifecycle = () => {
 			>
 				<LifecycleAccountDataEmptyState
 					authorized={currentUser.isAdmin()}
-					groupId={groupId!}
 					onReload={refetchAccountData}
 					status={accountDataStatus}
 				/>

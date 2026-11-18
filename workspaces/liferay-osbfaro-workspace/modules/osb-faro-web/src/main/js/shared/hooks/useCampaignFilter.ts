@@ -1,6 +1,5 @@
 import {setUriQueryValues} from 'shared/util/url';
 import {usePageConfig} from 'shared/context/pageConfig';
-import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
 
 type Campaign = {
 	id: string;
@@ -24,13 +23,11 @@ export const useCampaignFilter = (): ICampaignFilter => {
 		params: {campaignId, campaignName},
 	} = usePageConfig();
 
-	const history = useHistoryAdapter();
-
 	return {
 		campaignId,
 		campaignName,
 		setCampaign: (campaign) =>
-			history.push(
+			Liferay.Util.navigate(
 				setUriQueryValues({
 					campaignId: campaign?.id ?? null,
 					campaignName: campaign?.name ?? null,

@@ -6,15 +6,13 @@ import {Alert} from 'shared/types';
 import {CopyInputValue} from '../../CopyInputValue';
 import {DataSourceStatuses} from 'shared/util/constants';
 import {disconnect, fetchToken} from 'shared/api/data-source';
-import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
 import {Text} from '@clayui/core';
 import {updateSearchParams} from 'settings/components/base-page/utis';
-import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
 import {useModal} from '@clayui/modal';
-import {useQueryParams} from 'shared/hooks/useQueryParams';
 import {useWizardPage} from '../../base-page/WizardPageContext';
 import {WizardPageButtonGroup} from 'settings/components/base-page/WizardPageButtonGroup';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface IConnectLiferayDXPStepProps {
 	addAlert: Alert.AddAlert;
@@ -27,10 +25,13 @@ const ConnectLiferayDXPStep = ({
 	groupId,
 	onNext,
 }: IConnectLiferayDXPStepProps) => {
+	const {
+		dataSourcesURL,
+		params: {dataSourceId},
+	} = usePageConfig();
+
 	const {dataSource, refetchDataSource} = useWizardPage();
 	const modal = useModal();
-	const {dataSourceId} = useQueryParams();
-	const history = useHistoryAdapter();
 
 	const [token, setToken] = useState('');
 
@@ -117,11 +118,7 @@ const ConnectLiferayDXPStep = ({
 				<WizardPageButtonGroup
 					nextButtonLabel={Liferay.Language.get('continue')}
 					onCancel={() => {
-						history.push(
-							toRoute(Routes.SETTINGS_DATA_SOURCE_LIST, {
-								groupId,
-							})
-						);
+						Liferay.Util.navigate(dataSourcesURL);
 					}}
 					prevButtonLabel={Liferay.Language.get('cancel')}
 				/>
@@ -185,7 +182,7 @@ const ConnectLiferayDXPStep = ({
 							id: dataSourceId,
 						});
 
-						updateSearchParams(history, 'dataSourceId', '');
+						updateSearchParams('dataSourceId', '');
 
 						refetchDataSource(dataSourceId);
 					}}

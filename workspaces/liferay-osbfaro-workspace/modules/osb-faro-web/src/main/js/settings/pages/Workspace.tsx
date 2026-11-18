@@ -4,17 +4,12 @@ import BasePage from 'settings/components/base-page/BasePage';
 import React from 'react';
 import {addAlert} from 'shared/actions/alerts';
 import {Alert} from 'shared/types';
-import {compose, withHistory, withQuery} from 'shared/hoc';
+import {compose, withQuery} from 'shared/hoc';
 import {connect, ConnectedProps} from 'react-redux';
 import {Project} from 'shared/util/records';
-import {Routes, toRoute} from 'shared/util/router';
 import {updateProject} from 'shared/actions/projects';
 import {withProject} from 'shared/hoc/WithProject';
 import {usePageConfig} from 'shared/context/pageConfig';
-
-type History = {
-	push: (path: string) => void;
-};
 
 const connector = connect(null, {
 	addAlert,
@@ -29,18 +24,16 @@ interface IWorkspaceProps
 	emailAddressDomains: string[];
 	groupId: string;
 	project: Project;
-	history: History;
 }
 
 export const Workspace: React.FC<IWorkspaceProps> = ({
 	addAlert,
 	emailAddressDomains,
 	groupId,
-	history,
 	project,
 	updateProject,
 }) => {
-	const {currentUser} = usePageConfig();
+	const {currentUser, workspaceSettingsURL} = usePageConfig();
 
 	const handleSubmit = ({
 		emailAddressDomains,
@@ -61,11 +54,7 @@ export const Workspace: React.FC<IWorkspaceProps> = ({
 		)
 			.then(() => {
 				if (friendlyURL !== groupId) {
-					history.push(
-						toRoute(Routes.SETTINGS_WORKSPACE, {
-							groupId: friendlyURL || project.groupId,
-						})
-					);
+					Liferay.Util.navigate(workspaceSettingsURL);
 				}
 
 				addAlert({
@@ -108,7 +97,6 @@ export const Workspace: React.FC<IWorkspaceProps> = ({
 
 export default compose<React.ComponentType<any>>(
 	connector,
-	withHistory,
 	withProject(true),
 	withQuery(
 		({groupId}: {groupId: string}) =>

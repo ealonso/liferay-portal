@@ -26,13 +26,12 @@ import {DataSourceTypes, OrderByDirections} from 'shared/util/constants';
 import {fetchDataSource} from 'shared/actions/data-sources';
 import {get, noop, upperFirst} from 'lodash';
 import {getDefaultChannel} from 'shared/components/channels-menu';
-import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
 import {Text} from '@clayui/core';
 import {useInterval} from 'shared/hooks/useInterval';
 import {useLazyQuery} from '@apollo/client';
-import {withHistory} from 'shared/hoc';
 import {usePageConfig} from 'shared/context/pageConfig';
+import {setUriQueryValues} from 'shared/util/url';
 
 const TIMEOUT_INTERVAL = 5000;
 
@@ -75,9 +74,6 @@ interface IConnectDXPWrapperProps {
 		groupId: string;
 		id: string;
 	}) => DataSource;
-	history: {
-		push: (path: string) => void;
-	};
 	isUpgrading: boolean;
 	onDxpConnected: (dxpConnected: boolean) => void;
 	onPrevious?: () => void;
@@ -92,13 +88,13 @@ const ConnectDXP: React.FC<IConnectDXPWrapperProps & IConnectDXPProps> = ({
 	dxpConnected,
 	fetchDataSource,
 	groupId,
-	history,
 	onClose,
 	onDxpConnected,
 	onNext,
 	onboarding,
 }) => {
-	const {ldpEnabled} = usePageConfig();
+	const {dataSourceURL, dataSourcesURL, ldpEnabled, sitesURL} =
+		usePageConfig();
 
 	const {channelDispatch} = useChannelContext();
 	const [token, setToken] = useState<string>('');
@@ -166,7 +162,7 @@ const ConnectDXP: React.FC<IConnectDXPWrapperProps & IConnectDXPProps> = ({
 		API.channels.fetchAll({groupId}).then(({items}) => {
 			const channelId = get(items, [0, 'id']);
 
-			history.push(toRoute(Routes.SITES, {channelId, groupId}));
+			Liferay.Util.navigate(setUriQueryValues({channelId}, sitesURL));
 
 			channelDispatch?.({
 				payload: getDefaultChannel(channelId, items),
@@ -192,10 +188,10 @@ const ConnectDXP: React.FC<IConnectDXPWrapperProps & IConnectDXPProps> = ({
 		const id = get(data, ['dataSources', 0, 'id'], null);
 
 		if (id) {
-			return toRoute(Routes.SETTINGS_DATA_SOURCE, {groupId, id});
+			return setUriQueryValues({id}, dataSourceURL);
 		}
 
-		return toRoute(Routes.SETTINGS_DATA_SOURCE_LIST, {groupId});
+		return dataSourcesURL;
 	};
 
 	return (
@@ -523,7 +519,6 @@ const TokenInput: FC<ITokenInputProps> = ({token}) => {
 };
 
 export default compose<any>(
-	withHistory,
 	connect(null, {
 		fetchDataSource,
 	})

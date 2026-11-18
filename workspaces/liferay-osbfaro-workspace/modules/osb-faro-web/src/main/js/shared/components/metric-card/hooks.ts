@@ -1,4 +1,5 @@
 import {DocumentNode, useQuery} from '@apollo/client';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 import {fetchPolicyDefinition} from 'shared/util/graphql';
 import {getFilters, RawFilters} from 'shared/util/filter';
@@ -8,21 +9,14 @@ import {
 	getSafeTouchpoint,
 } from 'shared/util/util';
 import {ICommonVariables, Interval, RangeSelectors} from 'shared/types';
-import {useParams} from 'react-router-dom';
 
 export const useAssetVariables = (variables: ICommonVariables) => {
-	const {type, ...commonVariables} = variables;
 	const {
-		assetId = '',
 		channelId = '',
-		title = '',
-		touchpoint = '',
-	} = useParams<{
-		assetId: string;
-		channelId: string;
-		title: string;
-		touchpoint: string;
-	}>();
+		params: {assetId = '', title = '', touchpoint = ''},
+	} = usePageConfig();
+
+	const {type, ...commonVariables} = variables;
 
 	return {
 		assetId: getSafeDecodedURIComponent(assetId),

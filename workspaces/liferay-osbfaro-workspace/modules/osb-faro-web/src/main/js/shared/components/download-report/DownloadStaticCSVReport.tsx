@@ -10,7 +10,7 @@ import {DownloadReportButton} from './DownloadReportButton';
 import {sub} from 'shared/util/lang';
 import {toLocale} from 'shared/util/numbers';
 import {useDispatch} from 'react-redux';
-import {useParams} from 'react-router-dom';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface IDownloadStaticCSVReport {
 	bordered?: boolean;
@@ -47,10 +47,11 @@ export const DownloadStaticCSVReport: React.FC<IDownloadStaticCSVReport> = ({
 	type,
 	typeLang,
 }) => {
+	const {channelId, groupId} = usePageConfig();
+
 	const dispatch = useDispatch();
 	const generateURL = useDownloadCSV({objectType, segmentId, type});
 	const {observer, onOpenChange, open} = useModal();
-	const {channelId, groupId} = useParams();
 
 	return (
 		<>

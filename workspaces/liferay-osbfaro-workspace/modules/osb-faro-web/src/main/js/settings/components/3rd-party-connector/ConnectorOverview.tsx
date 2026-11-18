@@ -38,7 +38,6 @@ import {getConnectorStatusDisplay} from './getConnectorStatusDisplay';
 import {revoke} from 'shared/api/api-tokens';
 import {Text} from '@clayui/core';
 import {useDisconnectDataSource} from '../data-source/utils';
-import {useParams} from 'react-router-dom';
 import {useRequest} from 'shared/hooks/useRequest';
 import {withSelectionProvider} from 'shared/context/selection';
 import {usePageConfig} from 'shared/context/pageConfig';
@@ -59,15 +58,17 @@ const ConnectorOverview: React.FC<IConnectorOverviewProps> = ({
 	config,
 	dataSource: initialDataSource,
 }) => {
+	const pageConfig = usePageConfig();
+
 	const [loading, setLoading] = useState(false);
 	const [dataSource, setDataSource] = useState(initialDataSource);
 	const [token, setToken] = useState('');
 
-	const {groupId = '', id = ''} = useParams<{
-		groupId: string;
-		id: string;
-	}>();
-	const {currentUser} = usePageConfig();
+	const {
+		currentUser,
+		groupId = '',
+		params: {id = ''},
+	} = pageConfig;
 
 	const endpointURL = `${window.location.origin}${config.endpointPath}`;
 
@@ -178,11 +179,14 @@ const ConnectorOverview: React.FC<IConnectorOverviewProps> = ({
 	return (
 		<BasePage
 			breadcrumbItems={[
-				breadcrumbs.getDataSources({groupId}),
-				breadcrumbs.getDataSourceName({
-					active: true,
-					label: dataSource.name ?? '',
-				}),
+				breadcrumbs.getDataSources(pageConfig),
+				breadcrumbs.getDataSourceName(
+					{
+						active: true,
+						label: dataSource.name ?? '',
+					},
+					pageConfig
+				),
 			]}
 			documentTitle={Liferay.Language.get('configure-data-source')}
 		>

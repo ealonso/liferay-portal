@@ -18,7 +18,7 @@ import {
 	SegmentActivationScheduleTypes,
 } from 'shared/util/constants';
 import {sub} from 'shared/util/lang';
-import {useParams} from 'react-router-dom';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const sanitizeActivation = (activation: any) => {
 	if (!activation) return null;
@@ -253,9 +253,12 @@ const ConnectedActivationConfigurationModal = connector(
 const SegmentActivationCard: React.FC<
 	ISegmentActivationCardProps & PropsFromRedux
 > = ({addAlert, segmentActivation}) => {
-	const {observer, onOpenChange, open} = useModal();
+	const {
+		groupId,
+		params: {id: segmentId},
+	} = usePageConfig();
 
-	const {groupId, id: segmentId} = useParams();
+	const {observer, onOpenChange, open} = useModal();
 
 	const [localActivation, setLocalActivation] = useState(() =>
 		sanitizeActivation(segmentActivation)

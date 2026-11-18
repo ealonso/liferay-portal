@@ -13,9 +13,9 @@ import {IAccountLifecycleStatus} from 'shared/api/lifecycle';
 import {sub} from 'shared/util/lang';
 import {Text} from '@clayui/core';
 import {useLifecycleSelection} from 'shared/hooks/useLifecycleSelection';
-import {useParams} from 'react-router-dom';
 import {useRequest} from 'shared/hooks/useRequest';
 import {sortBy} from 'lodash';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface LifecycleStatusProps {
 	className?: string;
@@ -27,12 +27,8 @@ const LifecycleStatus: React.FC<LifecycleStatusProps> = ({className}) => {
 	const {
 		channelId,
 		groupId = '',
-		id: accountId = '',
-	} = useParams<{
-		channelId: string;
-		groupId: string;
-		id: string;
-	}>();
+		params: {id: accountId = ''},
+	} = usePageConfig();
 
 	const {
 		lifecycles,

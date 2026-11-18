@@ -15,22 +15,21 @@ import {
 } from './utils/types';
 import {IAccount} from './components/AccountInfo';
 import {SectionHeader} from 'shared/components/SectionHeader';
-import {useParams} from 'react-router-dom';
 import {useRequest} from 'shared/hooks/useRequest';
-import {useQueryParams} from 'shared/hooks/useQueryParams';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface IOverviewProps {
 	account?: IAccount;
 }
 
 const Overview: React.FC<IOverviewProps> = ({account}) => {
-	const {channelId, groupId, id} = useParams<{
-		channelId: string;
-		groupId: string;
-		id: string;
-	}>();
+	const config = usePageConfig();
 
-	const query = useQueryParams();
+	const {channelId, groupId} = config;
+
+	const {id} = config.params;
+
+	const query = config.params;
 
 	const {data, error, loading, refetch} = useRequest({
 		dataSourceFn: API.accounts.fetchAccountIndividualMetrics,

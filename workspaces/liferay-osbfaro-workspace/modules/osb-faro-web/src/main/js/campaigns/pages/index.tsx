@@ -12,19 +12,17 @@ import {DropdownRangeKey} from 'shared/components/dropdown-range-key/DropdownRan
 import {SectionHeader} from 'shared/components/SectionHeader';
 import {useAccountFilter} from 'shared/hooks/useAccountFilter';
 import {useDataSources} from 'shared/context/dataSources';
-import {useParams} from 'react-router-dom';
 import {useRangeQueryValues} from 'shared/hooks/useRangeQueryValues';
 import {useRangeSelectorChange} from 'shared/hooks/useRangeSelectorChange';
 import {useRequest} from 'shared/hooks/useRequest';
 import {usePageConfig} from 'shared/context/pageConfig';
 
 const Campaigns: React.FC = () => {
-	const {currentUser} = usePageConfig();
+	const config = usePageConfig();
 
 	const {accountId, accountName, setAccount} = useAccountFilter();
+	const {channelId, currentUser, groupId} = config;
 	const {selectedChannel} = useContext(ChannelContext);
-
-	const {channelId, groupId} = useParams();
 
 	const {empty: noDataSources, loading: dataSourcesLoading} =
 		useDataSources();
@@ -66,7 +64,6 @@ const Campaigns: React.FC = () => {
 									'please-contact-an-administrator-to-connect-a-data-source-containing-campaign-data'
 								)
 					}
-					groupId={groupId!}
 					title={Liferay.Language.get('no-campaign-data-available')}
 				/>
 			);
@@ -91,11 +88,14 @@ const Campaigns: React.FC = () => {
 		<BasePage documentTitle={title}>
 			<BasePage.Header
 				breadcrumbs={[
-					breadcrumbs.getHome({
-						channelId: channelId!,
-						groupId: groupId!,
-						label: selectedChannel?.name,
-					}),
+					breadcrumbs.getHome(
+						{
+							channelId: channelId!,
+							groupId: groupId!,
+							label: selectedChannel?.name,
+						},
+						config
+					),
 				]}
 				groupId={groupId!}
 			>

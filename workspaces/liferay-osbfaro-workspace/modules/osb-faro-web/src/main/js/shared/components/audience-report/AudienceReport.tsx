@@ -4,6 +4,7 @@ import HTMLBarChart from 'shared/components/HTMLBarChart';
 import InfoPopover, {IInfoPopoverProps} from 'shared/components/InfoPopover';
 import React from 'react';
 import {DocumentNode, useQuery} from '@apollo/client';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 import {fetchPolicyDefinition} from 'shared/util/graphql';
 import {formatData} from './util';
@@ -15,7 +16,6 @@ import {
 } from 'shared/util/util';
 import {IAudienceReportBaseCardProps, Name, TData} from './types';
 import {RangeSelectors} from 'shared/types';
-import {useParams} from 'react-router-dom';
 
 const AudienceReportTitle: React.FC<IInfoPopoverProps> = ({content, title}) => (
 	<div className="d-inline-flex gap">
@@ -117,7 +117,10 @@ function AudienceReport<TRawData>({
 	segmentId,
 	...otherProps
 }: IAudienceReportProps<TRawData>) {
-	const {assetId, channelId, title, touchpoint} = useParams();
+	const {
+		channelId,
+		params: {assetId, title, touchpoint},
+	} = usePageConfig();
 
 	const variables = {
 		assetId,

@@ -10,7 +10,7 @@ import StatesRenderer from 'shared/components/states-renderer/StatesRenderer';
 import {Text} from '@clayui/core';
 import {DataValueType, isMissingDataValue} from 'shared/util/data-value';
 import {IAccountLifecycleStage} from 'shared/api/lifecycle';
-import {useParams} from 'react-router-dom';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 export interface IAccount {
 	accountName?: string;
@@ -87,8 +87,11 @@ const AccountInfo: React.FC<IAccountInfoProps> = ({
 	className,
 	loading,
 }) => {
+	const {
+		params: {id: accountId},
+	} = usePageConfig();
+
 	const [isDetailsModalOpen, setIsDetailsModalOpen] = useState(false);
-	const {id: accountId} = useParams<{id: string}>();
 
 	const getValue = (key: keyof typeof infoFields) => account?.[key];
 

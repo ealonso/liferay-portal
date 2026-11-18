@@ -12,10 +12,9 @@ import ConfirmationModal from 'shared/components/ConfirmationModal';
 import React, {useRef} from 'react';
 import {addAlert} from 'shared/actions/alerts';
 import {Alert} from 'shared/types';
-import {compose, withHistory} from 'shared/hoc';
+import {compose} from 'shared/hoc';
 import {connect} from 'react-redux';
 import {FieldArray, FormikTouched, FormikValues} from 'formik';
-import {Routes, toRoute} from 'shared/util/router';
 import {sequence} from 'shared/util/promise';
 import {useModal} from '@clayui/modal';
 import {useMutation, useQuery} from '@apollo/client';
@@ -27,10 +26,6 @@ const SEARCH_QUERY_STRINGS_KEY = 'search-query-strings';
 
 interface ISearchCardProps {
 	addAlert: Alert.AddAlert;
-	groupId: string;
-	history: {
-		push: (path: string) => void;
-	};
 }
 
 const renderAddButton = (
@@ -62,12 +57,9 @@ const renderAddButton = (
 const removeSpecialCharacters = (originalValue: string): string =>
 	originalValue.split('=')[0].replace(/[^\w\s]/gi, '');
 
-export const SearchCard: React.FC<ISearchCardProps> = ({
-	addAlert,
-	groupId,
-	history,
-}) => {
-	const {currentUser} = usePageConfig();
+export const SearchCard: React.FC<ISearchCardProps> = ({addAlert}) => {
+	const {currentUser, definitionsURL} = usePageConfig();
+
 	const exitModal = useModal();
 	const {
 		data: searchQueryStringsData,
@@ -112,7 +104,7 @@ export const SearchCard: React.FC<ISearchCardProps> = ({
 					),
 				});
 
-				history.push(toRoute(Routes.SETTINGS_DEFINITIONS, {groupId}));
+				Liferay.Util.navigate(definitionsURL);
 			})
 			.catch(() => {
 				currentForm.setSubmitting(false);
@@ -127,7 +119,7 @@ export const SearchCard: React.FC<ISearchCardProps> = ({
 	const handleCancel = (touchedFields: FormikTouched<FormikValues>): void => {
 		Object.keys(touchedFields).length > 0
 			? exitModal.onOpenChange(true)
-			: history.push(toRoute(Routes.SETTINGS_DEFINITIONS, {groupId}));
+			: Liferay.Util.navigate(definitionsURL);
 	};
 
 	const handleBlur = (
@@ -324,9 +316,7 @@ export const SearchCard: React.FC<ISearchCardProps> = ({
 					observer={exitModal.observer}
 					onClose={() => exitModal.onOpenChange(false)}
 					onSubmit={() => {
-						history.push(
-							toRoute(Routes.SETTINGS_DEFINITIONS, {groupId})
-						);
+						Liferay.Util.navigate(definitionsURL);
 					}}
 					submitButtonDisplay="warning"
 					submitMessage={Liferay.Language.get('exit')}
@@ -338,4 +328,4 @@ export const SearchCard: React.FC<ISearchCardProps> = ({
 	);
 };
 
-export default compose<any>(withHistory, connect(null, {addAlert}))(SearchCard);
+export default compose<any>(connect(null, {addAlert}))(SearchCard);

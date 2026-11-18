@@ -1,7 +1,7 @@
 import FilterPicker from 'shared/components/FilterPicker';
 import React from 'react';
 import {fetchPageExperience} from 'shared/api/experiences';
-import {useParams} from 'react-router-dom';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface IExperienceDropdownProps {
 	className?: string;
@@ -12,7 +12,11 @@ const ExperienceDropdown: React.FC<IExperienceDropdownProps> = ({
 	className,
 	onChange,
 }) => {
-	const {channelId, groupId, title, touchpoint} = useParams();
+	const {
+		channelId,
+		groupId,
+		params: {title, touchpoint},
+	} = usePageConfig();
 
 	return (
 		<FilterPicker

@@ -13,7 +13,6 @@ import {
 } from 'lifecycle/utils/lifecyclePayload';
 import {useLifecycleAccountData} from 'lifecycle/hooks/useLifecycleAccountData';
 import {useLifecycleSettingsForm} from 'lifecycle/hooks/useLifecycleSettingsForm';
-import {useParams} from 'react-router-dom';
 import {useRequest} from 'shared/hooks/useRequest';
 import {AccountDataStatus} from 'lifecycle/utils/types';
 import {usePageConfig} from 'shared/context/pageConfig';
@@ -23,7 +22,7 @@ interface IEditLifecycleFormProps {
 }
 
 const EditLifecycleForm: React.FC<IEditLifecycleFormProps> = ({lifecycle}) => {
-	const {groupId} = useParams();
+	const {groupId} = usePageConfig();
 
 	const form = useLifecycleSettingsForm({
 		description: lifecycle.description ?? '',
@@ -84,9 +83,11 @@ const EditLifecycleForm: React.FC<IEditLifecycleFormProps> = ({lifecycle}) => {
 };
 
 const EditLifecycle = () => {
-	const {currentUser} = usePageConfig();
-
-	const {groupId, lifecycleId} = useParams();
+	const {
+		currentUser,
+		groupId,
+		params: {lifecycleId},
+	} = usePageConfig();
 
 	const {refetch: refetchAccountData, status: accountDataStatus} =
 		useLifecycleAccountData();
@@ -113,7 +114,6 @@ const EditLifecycle = () => {
 			<LifecyclesPage>
 				<LifecycleAccountDataEmptyState
 					authorized={currentUser.isAdmin()}
-					groupId={groupId!}
 					onReload={refetchAccountData}
 					status={accountDataStatus}
 				/>

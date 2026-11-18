@@ -1,4 +1,5 @@
 import BasePage from 'settings/components/base-page/BasePage';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 import ClayLayout from '@clayui/layout';
 
@@ -7,7 +8,6 @@ import React from 'react';
 import {compose, withProject} from 'shared/hoc';
 import {GenericBarsCard} from 'settings/components/usage-overview/GenericBarsCard';
 import {GenericDonutChart} from 'settings/components/usage-overview/GenericDonutChart';
-import {usePageConfig} from 'shared/context/pageConfig';
 
 export type Resource = {
 	capacity: string;

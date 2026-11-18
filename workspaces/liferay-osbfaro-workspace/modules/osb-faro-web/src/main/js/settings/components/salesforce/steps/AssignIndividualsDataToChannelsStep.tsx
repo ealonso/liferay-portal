@@ -10,14 +10,13 @@ import {Alert} from 'shared/types';
 import {ClayCheckbox} from '@clayui/form';
 import {DataSource} from 'shared/util/records';
 import {getChannelsAutoSelectFilter} from 'shared/util/data-sources';
-import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
 import {Text} from '@clayui/core';
 import {useModal} from '@clayui/modal';
-import {useParams} from 'react-router-dom';
-import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
 import {useWizardPage} from 'settings/components/base-page/WizardPageContext';
 import {WizardPageButtonGroup} from 'settings/components/base-page/WizardPageButtonGroup';
+import {usePageConfig} from 'shared/context/pageConfig';
+import {setUriQueryValues} from 'shared/util/url';
 
 interface IAssignIndividualsDataToPropertiesStepProps {
 	addAlert: Alert.AddAlert;
@@ -32,8 +31,8 @@ const AssignIndividualsDataToPropertiesStep = ({
 	onSubmit,
 	updateDataSourceFn,
 }: IAssignIndividualsDataToPropertiesStepProps) => {
-	const history = useHistoryAdapter();
-	const {groupId = ''} = useParams<{groupId: string}>();
+	const {dataSourceURL, groupId = ''} = usePageConfig();
+
 	const [selectedItems, setSelectedItems] = useState<string[]>([]);
 	const [allChannelsSelected, setAllChannelsSelected] = useState(false);
 	const {dataSource} = useWizardPage();
@@ -86,11 +85,8 @@ const AssignIndividualsDataToPropertiesStep = ({
 
 					onSubmit(dataSource);
 
-					history.push(
-						toRoute(Routes.SETTINGS_DATA_SOURCE, {
-							groupId,
-							id: dataSource.id,
-						})
+					Liferay.Util.navigate(
+						setUriQueryValues({id: dataSource.id}, dataSourceURL)
 					);
 				}
 				catch (error) {

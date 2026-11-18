@@ -1,7 +1,7 @@
 import * as API from 'shared/api';
 import React from 'react';
-import {useParams} from 'react-router-dom';
 import {useRequest} from 'shared/hooks/useRequest';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface IAssetTypeDisplayProps {
 	objectDefinitionName: string;
@@ -10,10 +10,7 @@ interface IAssetTypeDisplayProps {
 const AssetTypeDisplay: React.FC<IAssetTypeDisplayProps> = ({
 	objectDefinitionName,
 }) => {
-	const {channelId = '', groupId = ''} = useParams<{
-		channelId: string;
-		groupId: string;
-	}>();
+	const {channelId = '', groupId = ''} = usePageConfig();
 
 	const {data, loading} = useRequest<
 		{

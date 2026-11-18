@@ -2,8 +2,8 @@ import * as API from 'shared/api';
 import ErrorPage from 'shared/pages/ErrorPage';
 import Loading from 'shared/components/Loading';
 import React, {useEffect, useState} from 'react';
-import {Routes, toRoute} from 'shared/util/router';
-import {useNavigate, useParams} from 'react-router-dom';
+import {usePageConfig} from 'shared/context/pageConfig';
+import {setUriQueryValues} from 'shared/util/url';
 
 interface ISegmentLinkRedirectProps {
 	children: React.ReactNode;
@@ -18,18 +18,11 @@ const SegmentLinkRedirect: React.FC<ISegmentLinkRedirectProps> = ({
 	children,
 }) => {
 	const {
-		'*': subpath,
 		channelId,
 		groupId = '',
-		id = '',
-	} = useParams<{
-		'*': string;
-		'channelId'?: string;
-		'groupId': string;
-		'id': string;
-	}>();
-
-	const navigate = useNavigate();
+		params: {'*': subpath, id = ''},
+		segmentURL,
+	} = usePageConfig();
 
 	const [error, setError] = useState(false);
 
@@ -55,13 +48,14 @@ const SegmentLinkRedirect: React.FC<ISegmentLinkRedirectProps> = ({
 					return;
 				}
 
-				navigate(
-					toRoute(Routes.CONTACTS_SEGMENT, {
-						channelId: segment.channelId,
-						groupId,
-						id: segment.id,
-					}),
-					{replace: true}
+				window.location.replace(
+					setUriQueryValues(
+						{
+							channelId: segment.channelId,
+							id: segment.id,
+						},
+						segmentURL
+					)
 				);
 			})
 			.catch(() => {
@@ -73,7 +67,7 @@ const SegmentLinkRedirect: React.FC<ISegmentLinkRedirectProps> = ({
 		return () => {
 			ignore = true;
 		};
-	}, [groupId, id, navigate, redirect]);
+	}, [groupId, id, redirect]);
 
 	if (!redirect) {
 		return <>{children}</>;

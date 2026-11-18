@@ -122,7 +122,7 @@ const SegmentProfile = ({renderContent}) => {
 		deleteSegments({
 			ids: [id],
 			name: segmentDetails.name,
-			onSuccess: () => window.location.assign(segmentsURL)
+			onSuccess: () => Liferay.Util.navigate(segmentsURL)
 		});
 	};
 

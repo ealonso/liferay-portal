@@ -31,7 +31,12 @@ import {
 	XAxis,
 	YAxis
 } from 'recharts';
-import {compose, withSelectedPoint, withStatefulPagination} from 'shared/hoc';
+import {
+	compose,
+	withPageConfig,
+	withSelectedPoint,
+	withStatefulPagination,
+} from 'shared/hoc';
 import {
 	Conjunctions,
 	RelationalOperators
@@ -134,13 +139,13 @@ export class Distribution extends React.Component {
 		fieldMappingFieldName: PropTypes.string,
 		groupId: PropTypes.string.isRequired,
 		hasSelectedPoint: PropTypes.bool,
-		history: PropTypes.object.isRequired,
 		id: PropTypes.string,
 		knownIndividualCount: PropTypes.number,
 		loading: PropTypes.bool,
 		noResultsRenderer: PropTypes.func,
 		numberOfBins: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 		onPointSelect: PropTypes.func.isRequired,
+		pageConfig: PropTypes.object.isRequired,
 		pageContainer: PropTypes.bool,
 		selectedContext: PropTypes.string,
 		selectedPoint: PropTypes.number,
@@ -259,7 +264,7 @@ export class Distribution extends React.Component {
 
 	@autoCancel
 	fetchFieldMappings() {
-		const {fieldMappingFieldName, groupId, history} = this.props;
+		const {fieldMappingFieldName, groupId} = this.props;
 
 		const fieldMappingFn = fieldMappingFieldName
 			? () =>
@@ -272,7 +277,7 @@ export class Distribution extends React.Component {
 		return fieldMappingFn()
 			.then(fieldMapping => {
 				if (!fieldMappingFieldName) {
-					history.replace(
+					window.location.replace(
 						setUriQueryValues({
 							fieldMappingFieldName: fieldMapping.id
 						})
@@ -373,8 +378,6 @@ export class Distribution extends React.Component {
 	handleNumberOfBinsChange(event) {
 		const {name, value} = event.target;
 
-		const {history} = this.props;
-
 		const {errors} = this._formRef.current;
 
 		const numberOfBins = Number(value);
@@ -382,7 +385,7 @@ export class Distribution extends React.Component {
 		const curNumberOfBins = this.getNumberOfBins();
 
 		if (value && curNumberOfBins !== numberOfBins && !errors[name]) {
-			history.replace(setUriQueryValues({numberOfBins}));
+			window.location.replace(setUriQueryValues({numberOfBins}));
 		}
 	}
 
@@ -390,7 +393,7 @@ export class Distribution extends React.Component {
 	handleBreakdownSelect(fieldMapping) {
 		const {id, rawType} = fieldMapping;
 
-		const {fieldMappingFieldName, history} = this.props;
+		const {fieldMappingFieldName} = this.props;
 
 		const histogram = rawType === FieldTypes.Number;
 
@@ -402,11 +405,11 @@ export class Distribution extends React.Component {
 		});
 
 		if (fieldMappingFieldName !== id) {
-			history.replace(setUriQueryValues({fieldMappingFieldName: id}));
+			window.location.replace(setUriQueryValues({fieldMappingFieldName: id}));
 		}
 
 		if (histogram) {
-			history.replace(
+			window.location.replace(
 				setUriQueryValues({numberOfBins: DEFAULT_NUMBER_OF_BINS})
 			);
 		}
@@ -457,7 +460,6 @@ export class Distribution extends React.Component {
 	render() {
 		const {
 			props: {
-				channelId,
 				delta,
 				error,
 				fieldDistributionIList,
@@ -468,6 +470,7 @@ export class Distribution extends React.Component {
 				noResultsRenderer,
 				orderIOMap,
 				page,
+				pageConfig,
 				pageContainer,
 				query,
 				selectedPoint
@@ -790,14 +793,8 @@ export class Distribution extends React.Component {
 							columns={[
 								fieldMappingSelected.context ===
 								FieldContexts.Demographics
-									? individualsListColumns.getName({
-											channelId,
-											groupId
-									  })
-									: accountsListColumns.getName({
-											channelId,
-											groupId
-									  }),
+									? individualsListColumns.getName()
+									: accountsListColumns.getName(pageConfig),
 								{
 									accessor: `properties.${fieldMappingSelected.name}`,
 									label: fieldMappingSelected.name,
@@ -830,6 +827,7 @@ export class Distribution extends React.Component {
 }
 
 export default compose(
+	withPageConfig,
 	withSelectedPoint,
 	connect(
 		(

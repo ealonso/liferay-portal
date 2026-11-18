@@ -33,13 +33,13 @@ import {
 import {mapListResultsToProps} from 'shared/util/mappers';
 import {SessionEntityTypes} from 'shared/util/constants';
 import {toThousands} from 'shared/util/numbers';
-import {useParams} from 'react-router-dom';
 import {useCampaignTouchesByDay} from 'shared/hooks/useCampaignTouchesByDay';
 import {useQuery} from '@apollo/client';
 import {useSelectedPoint} from 'shared/hooks/useSelectedPoint';
 import {useStatefulPagination} from 'shared/hooks/useStatefulPagination';
 import {useTimeZone} from 'shared/hooks/useTimeZone';
 import {getDateRangeLabel, getDateRangeLabelFromDate} from 'shared/util/date';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface IActivityStreamCardProps {
 	accountId: string;
@@ -58,6 +58,8 @@ const AccountActivityStreamCard: React.FC<IActivityStreamCardProps> = ({
 	interval,
 	rangeSelectors,
 }) => {
+	const config = usePageConfig();
+
 	const {hasSelectedPoint, onPointSelect, selectedPoint} = useSelectedPoint();
 
 	const [keywords, setKeywords] = useState<string>('');
@@ -68,7 +70,7 @@ const AccountActivityStreamCard: React.FC<IActivityStreamCardProps> = ({
 
 	const {timeZoneId} = useTimeZone();
 
-	const {groupId} = useParams<{groupId: string}>();
+	const {groupId} = config;
 
 	const handleChangeSelection = (index: number | null) => {
 		resetPage();
@@ -169,6 +171,7 @@ const AccountActivityStreamCard: React.FC<IActivityStreamCardProps> = ({
 				({eventsByUserSessions}) => ({
 					items: mergeCampaignDays(
 						formatAccountSessions(
+							config,
 							eventsByUserSessions?.userSessions ?? [],
 							{
 								accountId,
@@ -216,7 +219,7 @@ const AccountActivityStreamCard: React.FC<IActivityStreamCardProps> = ({
 
 	const individualUrls = useMemo(
 		() =>
-			buildTouchIndividualUrls(campaignTouches.days, {
+			buildTouchIndividualUrls(config, campaignTouches.days, {
 				channelId,
 				groupId,
 			}),
@@ -224,7 +227,11 @@ const AccountActivityStreamCard: React.FC<IActivityStreamCardProps> = ({
 	);
 
 	const campaignUrls = useMemo(
-		() => buildCampaignUrls(campaignTouches.days, {channelId, groupId}),
+		() =>
+			buildCampaignUrls(config, campaignTouches.days, {
+				channelId,
+				groupId,
+			}),
 		[campaignTouches.days, channelId, groupId]
 	);
 

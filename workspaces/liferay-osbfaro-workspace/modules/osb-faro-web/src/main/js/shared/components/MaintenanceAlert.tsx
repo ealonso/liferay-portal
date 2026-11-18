@@ -8,7 +8,6 @@ import {Project} from 'shared/util/records';
 import {ProjectStates} from 'shared/util/constants';
 import {setMaintenanceSeen} from 'shared/actions/maintenance-seen';
 import {sub} from 'shared/util/lang';
-import {useParams} from 'react-router-dom';
 import {usePageConfig} from 'shared/context/pageConfig';
 
 interface IMaintenanceAlertProps {
@@ -110,8 +109,7 @@ const ConnectedMaintenanceAlert = connect(mapState, {setMaintenanceSeen})(
 );
 
 const MaintenanceAlertWithParams = (props: any) => {
-	const {currentUser} = usePageConfig();
-	const {groupId} = useParams<{groupId: string}>();
+	const {currentUser, groupId} = usePageConfig();
 
 	return (
 		<ConnectedMaintenanceAlert

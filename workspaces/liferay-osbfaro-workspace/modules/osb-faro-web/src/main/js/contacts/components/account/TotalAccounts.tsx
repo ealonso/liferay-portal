@@ -9,8 +9,8 @@ import {
 } from '../../pages/account/utils/types';
 import {sub} from 'shared/util/lang';
 import {toThousands} from 'shared/util/numbers';
-import {useParams} from 'react-router';
 import {useRequest} from 'shared/hooks/useRequest';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const renderAccountValue = (metric?: Metric) =>
 	sub(
@@ -27,9 +27,7 @@ const TotalAccounts = ({
 	campaignId?: string;
 	groupId: string;
 }) => {
-	const {channelId} = useParams<{
-		channelId: string;
-	}>();
+	const {channelId} = usePageConfig();
 	const {data, loading} = useRequest({
 		dataSourceFn: API.accounts.fetchMetrics,
 		variables: {

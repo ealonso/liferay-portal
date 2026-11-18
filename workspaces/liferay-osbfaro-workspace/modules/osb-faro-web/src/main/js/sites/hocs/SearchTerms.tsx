@@ -22,10 +22,10 @@ import {pickBy} from 'lodash';
 import {setUriQueryValues} from 'shared/util/url';
 import {sub} from 'shared/util/lang';
 import {useChannelContext} from 'shared/context/channel';
-import {useParams} from 'react-router-dom';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
 import {useQueryRangeSelectors} from 'shared/hooks/useQueryRangeSelectors';
-import {withHistory, withPaginationBar, withTableData} from 'shared/hoc';
+import {withPaginationBar, withTableData} from 'shared/hoc';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const {
 	pagination: {cur: defaultPage, delta: defaultDelta},
@@ -90,13 +90,11 @@ const TableWithData = withTableData(withData, {
 	rowIdentifier: 'name',
 });
 
-const SearchTerms = ({history}: {history: {push: (path: string) => void}}) => {
+const SearchTerms = () => {
+	const {channelId, groupId} = usePageConfig();
+
 	const {accountId, segmentId} = useContext(BasePage.Context);
 	const {selectedChannel} = useChannelContext();
-	const {channelId, groupId} = useParams<{
-		channelId: string;
-		groupId: string;
-	}>();
 	const {delta, orderIOMap, page} = useQueryPagination({
 		initialOrderIOMap: createOrderIOMap(COUNT),
 	});
@@ -116,7 +114,7 @@ const SearchTerms = ({history}: {history: {push: (path: string) => void}}) => {
 		rangeKey: number | string | null;
 		rangeStart?: string | null;
 	}) => {
-		history.push(
+		Liferay.Util.navigate(
 			setUriQueryValues(
 				pickBy({
 					page: defaultPage,
@@ -162,4 +160,4 @@ const SearchTerms = ({history}: {history: {push: (path: string) => void}}) => {
 	);
 };
 
-export default withHistory(SearchTerms);
+export default SearchTerms;

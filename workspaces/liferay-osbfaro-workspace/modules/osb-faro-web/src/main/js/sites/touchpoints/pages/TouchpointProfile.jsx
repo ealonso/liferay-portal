@@ -114,7 +114,7 @@ function TouchpointProfile({className, renderContent, router}) {
 						<ExperienceDropdown
 							groupId={groupId}
 							onChange={experienceId => {
-								window.location.assign(setUriQueryValues({experienceId}));
+								Liferay.Util.navigate(setUriQueryValues({experienceId}));
 
 								setExperienceId(experienceId);
 							}}
@@ -125,7 +125,7 @@ function TouchpointProfile({className, renderContent, router}) {
 						<DropdownRangeKey
 							legacy={false}
 							onRangeSelectorChange={rangeSelectors => {
-								window.location.assign(
+								Liferay.Util.navigate(
 									setUriQueryValues(
 										pickBy({
 											...rangeSelectors
