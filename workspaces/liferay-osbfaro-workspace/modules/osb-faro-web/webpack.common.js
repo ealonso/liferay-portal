@@ -24,14 +24,9 @@ const POLYFILLS = [
 ];
 
 function getComponentEntry(name) {
-	const appName = `${name.charAt(0).toUpperCase()}${name.slice(1)}App`;
-
 	return {
 		filename: '../__liferay__/[name].js',
-		import: [
-			...POLYFILLS,
-			resolveModule(`fragments/${name}/${appName}.tsx`),
-		],
+		import: [...POLYFILLS, resolveModule(`fragments/${name}/index.ts`)],
 		library: {
 			type: 'module',
 		},
@@ -47,7 +42,7 @@ const config = {
 		'external-scripts': resolveModule('external-scripts.js'),
 		individuals: getComponentEntry('individuals'),
 		lifecycles: getComponentEntry('lifecycles'),
-		main: [...POLYFILLS, resolveModule('main.jsx')],
+		main: resolveModule('main.jsx'),
 		segments: getComponentEntry('segments'),
 		settings: getComponentEntry('settings'),
 		sites: getComponentEntry('sites'),
