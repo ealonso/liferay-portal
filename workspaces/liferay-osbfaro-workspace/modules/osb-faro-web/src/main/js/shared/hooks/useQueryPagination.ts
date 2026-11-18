@@ -3,7 +3,7 @@ import {FilterByType, Pagination} from 'shared/types';
 import {Map, OrderedMap, Set} from 'immutable';
 import {OrderParams} from 'shared/util/records';
 import {pick} from 'lodash';
-import {useQueryParams} from 'shared/hooks/useQueryParams';
+import {config} from 'shared/util/config';
 
 const {
 	delta: defaultDelta,
@@ -36,7 +36,7 @@ export const useQueryPagination = ({
 		query = initialQuery,
 		sortOrder,
 		...otherParams
-	} = useQueryParams();
+	} = config.params;
 
 	const getFilterByFromFields = (): FilterByType => {
 		const filterProps = pick(otherParams, filterFields as string[]);

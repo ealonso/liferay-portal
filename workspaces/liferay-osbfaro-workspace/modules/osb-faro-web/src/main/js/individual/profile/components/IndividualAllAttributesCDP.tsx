@@ -12,10 +12,10 @@ import {
 } from 'shared/components/table/cell-components';
 import {formatDateToTimeZone, getCustomDateFormat} from 'shared/util/date';
 import {SectionHeader} from 'shared/components/SectionHeader';
-import {useQueryParams} from 'shared/hooks/useQueryParams';
 import {useRequest} from 'shared/hooks/useRequest';
 import {withEmpty} from 'cerebro-shared/hocs/utils';
 import {withError, withLoading} from 'shared/hoc/util';
+import {config} from 'shared/util/config';
 
 /**
  * Details List Columns for CDP
@@ -94,7 +94,7 @@ const IndividualDetailsCDP = ({
 	individualId: string;
 	showEmptyState: boolean;
 }) => {
-	const {query} = useQueryParams();
+	const {query} = config.params;
 
 	const response = useRequest({
 		dataSourceFn: API.individuals.fetchDetails,

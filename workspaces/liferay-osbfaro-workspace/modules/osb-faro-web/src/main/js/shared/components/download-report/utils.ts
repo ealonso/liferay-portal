@@ -2,10 +2,10 @@ import moment from 'moment';
 import {buildOrderByFields} from 'shared/util/pagination';
 import {DEFAULT_DATE_FORMAT} from 'shared/util/date';
 import {DEFAULT_RANGE_SELECTORS} from 'shared/hooks/useQueryRangeSelectors';
-import {RangeKeyTimeRanges, INDIVIDUALS} from 'shared/util/constants';
+import {INDIVIDUALS, RangeKeyTimeRanges} from 'shared/util/constants';
 import {RangeSelectors} from 'shared/types';
 import {useEffect, useState} from 'react';
-import {useParams} from 'react-router-dom';
+import {config} from 'shared/util/config';
 
 export function formatDate(date: string | Date) {
 	return moment(date).format(DEFAULT_DATE_FORMAT);
@@ -41,17 +41,15 @@ export function useDownloadCSV({
 	segmentId?: string;
 	type: CSVType;
 }) {
-	const {channelId, groupId, title} = useParams();
+	const {channelId, groupId} = config;
+
+	const {field, query: pageQuery, sortOrder, title} = config.params;
 
 	return (
 		rangeSelectors: RangeSelectors = DEFAULT_RANGE_SELECTORS as unknown as RangeSelectors,
 		overrides: {filter?: string; query?: string} = {}
 	) => {
-		const searchParams = new URLSearchParams(location.search);
-
-		const field = searchParams.get('field');
-		const query = overrides.query ?? searchParams.get('query');
-		const sortOrder = searchParams.get('sortOrder');
+		const query = overrides.query ?? pageQuery;
 		const resolvedFilter = overrides.filter ?? filter;
 
 		let url = `/o/faro/main/${groupId}/reports/export/csv/${type}?channelId=${channelId}`;

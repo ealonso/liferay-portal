@@ -5,7 +5,7 @@ import TopAssets from './TopAssets';
 import TopCategoriesAndTags from './TopCategoriesAndTags';
 import TopPagesCard from './TopPagesCard';
 import {SectionHeader} from 'shared/components/SectionHeader';
-import {useQueryParams} from 'shared/hooks/useQueryParams';
+import {config} from 'shared/util/config';
 
 interface IEngagementSummaryProps {
 	channelId: string;
@@ -33,7 +33,7 @@ const EngagementSummary: React.FC<IEngagementSummaryProps> = ({
 	loading,
 	showEmptyState,
 }) => {
-	const query = useQueryParams();
+	const query = config.params;
 
 	const sectionContent = (
 		<BasePage.Context.Provider

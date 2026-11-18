@@ -12,8 +12,8 @@ import {DropdownRangeKeyLegacy} from './DropdownRangeKeyLegacy';
 import {formatTimeRange, getFilteredItems, getSelectedItem} from './utils';
 import {MomentDateRange} from 'shared/components/DateRangeInput';
 import {RangeKeyTimeRanges} from 'shared/util/constants';
-import {useLocation} from 'react-router-dom';
 import {useRetentionPeriod} from 'shared/hooks/useRetentionPeriod';
+import {config} from 'shared/util/config';
 
 export const DropdownRangeKeyContent: React.FC<
 	DropdownRangeKeyIProps & {data: Data}
@@ -47,7 +47,7 @@ export const DropdownRangeKeyContent: React.FC<
 	const [seeMore, setSeeMore] = useState(false);
 	const [showDatePicker, setShowDatePicker] = useState(false);
 	const firstExtraItemRef = useRef<HTMLElement | null>(null);
-	const location = useLocation();
+	const {downloadReport, rangeEnd, rangeKey, rangeStart} = config.params;
 	const retentionPeriod = useRetentionPeriod();
 	const timeRange = formatTimeRange(data.timeRange);
 	const filterArgs = {
@@ -77,20 +77,16 @@ export const DropdownRangeKeyContent: React.FC<
 	}
 
 	useEffect(() => {
-		const query = new URLSearchParams(location.search);
-
-		if (query.get('downloadReport')) {
+		if (downloadReport) {
 			if (onRangeSelectorChange) {
 				onRangeSelectorChange({
-					rangeEnd: query.get('rangeEnd') || '',
-					rangeKey: query.get(
-						'rangeKey'
-					) as any as RangeKeyTimeRanges,
-					rangeStart: query.get('rangeStart') || '',
+					rangeEnd: rangeEnd || '',
+					rangeKey: rangeKey as RangeKeyTimeRanges,
+					rangeStart: rangeStart || '',
 				});
 			}
 		}
-	}, [location.search]);
+	}, [downloadReport, rangeEnd, rangeKey, rangeStart]);
 
 	useEffect(() => {
 		if (customDateRange && customDateRange.end && customDateRange.start) {
