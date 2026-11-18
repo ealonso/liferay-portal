@@ -14,7 +14,6 @@ import {
 } from 'experiments/queries/ExperimentQuery';
 import {getActions} from 'experiments/util/experiments';
 import {getSafeDecodedURIComponent} from 'shared/util/util';
-import {Routes} from 'shared/util/router';
 import {SessionsCard} from 'experiments/components/SessionsCard';
 import {Status} from 'experiments/components/summary-card/types';
 import {SummaryCard} from 'experiments/components/summary-card/SummaryCard';
@@ -160,22 +159,7 @@ const ExperimentOverviewContent = ({status}: {status: string}) => {
 
 							<ExperimentActions experiment={data.experiment} />
 
-							<BasePage.Header.NavBar
-								items={[
-									{
-										exact: true,
-										label: Liferay.Language.get('report'),
-										route: Routes.TESTS_OVERVIEW,
-									},
-								]}
-								routeParams={{
-									channelId,
-									groupId,
-									id,
-									title: data.experiment.name,
-									touchpoint: data.experiment.pageURL,
-								}}
-							/>
+							<BasePage.Header.NavBar />
 						</BasePage.Header>
 
 						<BasePage.Body>

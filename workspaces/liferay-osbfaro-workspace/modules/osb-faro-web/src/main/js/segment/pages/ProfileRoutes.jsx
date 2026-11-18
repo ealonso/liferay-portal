@@ -288,10 +288,7 @@ export const SegmentProfileRoutes = () => {
 				</BasePage.Row>
 
 				{isBatch && (
-					<BasePage.Header.NavBar
-						items={NAV_ITEMS}
-						routeParams={{channelId, groupId, id}}
-					/>
+					<BasePage.Header.NavBar />
 				)}
 			</BasePage.Header>
 

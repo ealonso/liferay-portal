@@ -13,7 +13,6 @@ import {getAssetDescriptorBySlug} from 'assets/descriptors';
 import {getSafeDecodedURIComponent} from 'shared/util/util';
 import {pickBy} from 'lodash';
 import {Router} from 'shared/types';
-import {Routes} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
 import {useAccountFilter} from 'shared/hooks/useAccountFilter';
 import {useChannelContext} from 'shared/context/channel';
@@ -54,7 +53,6 @@ const AssetDashboard: React.FC<{
 			groupId = '',
 			tabId,
 			title = '',
-			touchpoint,
 			type = '',
 		},
 	} = router;
@@ -62,29 +60,6 @@ const AssetDashboard: React.FC<{
 	const descriptor = getAssetDescriptorBySlug(slug);
 
 	const LDPEnabled = useLDPEnabled({groupId});
-
-	const NAV_ITEMS = [
-		{
-			exact: true,
-			label: Liferay.Language.get('overview'),
-			route: Routes.ASSETS_DASHBOARD_OVERVIEW,
-		},
-		...(LDPEnabled
-			? [
-					{
-						exact: true,
-						label: Liferay.Language.get('visitors'),
-						route: Routes.ASSETS_DASHBOARD_ACCOUNTS,
-					},
-				]
-			: [
-					{
-						exact: true,
-						label: Liferay.Language.get('known-individuals'),
-						route: Routes.ASSETS_DASHBOARD_KNOWN_INDIVIDUALS,
-					},
-				]),
-	];
 
 	const [filters] = useState({});
 
@@ -149,19 +124,7 @@ const AssetDashboard: React.FC<{
 					/>
 				)}
 
-				<BasePage.Header.NavBar
-					items={NAV_ITEMS}
-					routeParams={{
-						assetId,
-						assetType: slug,
-						channelId,
-						groupId,
-						title,
-						touchpoint,
-						type,
-					}}
-					routeQueries={routeQueries}
-				/>
+				<BasePage.Header.NavBar />
 			</BasePage.Header>
 
 			{tabId !== ACCOUNTS_TAB_ID &&

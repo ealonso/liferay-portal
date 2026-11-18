@@ -104,10 +104,7 @@ const Dashboard: React.FC<React.HTMLAttributes<HTMLDivElement>> = () => {
 					title={Liferay.Language.get('individuals')}
 				/>
 
-				<BasePage.Header.NavBar
-					items={NAV_ITEMS}
-					routeParams={{channelId, groupId}}
-				/>
+				<BasePage.Header.NavBar />
 			</BasePage.Header>
 
 			{matchedRoute === Routes.CONTACTS_INDIVIDUALS && (

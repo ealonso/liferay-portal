@@ -26,24 +26,6 @@ const Overview = lazy(
 	() => import(/* webpackChunkName: "Overview" */ './Overview')
 );
 
-const NAV_ITEMS = [
-	{
-		exact: true,
-		label: Liferay.Language.get('overview'),
-		route: Routes.CONTACTS_ACCOUNT_OVERVIEW,
-	},
-	{
-		exact: true,
-		label: Liferay.Language.get('activities'),
-		route: Routes.CONTACTS_ACCOUNT_ACTIVITIES,
-	},
-	{
-		exact: true,
-		label: Liferay.Language.get('profile'),
-		route: Routes.CONTACTS_ACCOUNT_PROFILE,
-	},
-];
-
 const AccountProfileRoutes = () => {
 	const {selectedChannel} = useContext(ChannelContext);
 
@@ -104,10 +86,7 @@ const AccountProfileRoutes = () => {
 					<BasePage.Header.TitleSection title={accountName} />
 				</BasePage.Row>
 
-				<BasePage.Header.NavBar
-					items={NAV_ITEMS}
-					routeParams={{channelId, groupId, id}}
-				/>
+				<BasePage.Header.NavBar />
 			</BasePage.Header>
 
 			<BasePage.Body>

@@ -145,10 +145,7 @@ export const IndividualProfileRoutesCDP = ({
 					title={entityName}
 				/>
 
-				<BasePage.Header.NavBar
-					items={NAV_ITEMS_CDP}
-					routeParams={{channelId, groupId, id}}
-				/>
+				<BasePage.Header.NavBar />
 			</BasePage.Header>
 
 			{getMatchedRoute(NAV_ITEMS_CDP) === Routes.CONTACTS_INDIVIDUAL &&

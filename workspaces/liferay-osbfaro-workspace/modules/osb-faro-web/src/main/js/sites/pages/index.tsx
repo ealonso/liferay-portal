@@ -14,7 +14,6 @@ import StatesRenderer from 'shared/components/states-renderer/StatesRenderer';
 import URLConstants from 'shared/util/url-constants';
 import {CSVType} from 'shared/components/download-report/utils';
 import {getMatchedRoute, Routes, toRoute} from 'shared/util/router';
-import {pickBy} from 'lodash';
 import {Route, Routes as RouterRoutes, useParams} from 'react-router-dom';
 import {Router} from 'shared/types';
 import {useAccountFilter} from 'shared/hooks/useAccountFilter';
@@ -124,16 +123,7 @@ export const Dashboard: React.FC<IDashboardProps> = ({router}) => {
 					}
 				/>
 
-				<BasePage.Header.NavBar
-					items={NAV_ITEMS}
-					routeParams={{channelId, groupId}}
-					routeQueries={pickBy({
-						accountId,
-						accountName,
-						segmentId,
-						segmentName,
-					})}
-				/>
+				<BasePage.Header.NavBar />
 			</BasePage.Header>
 
 			<BasePage.SubHeader>

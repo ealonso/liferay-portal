@@ -138,10 +138,7 @@ export const IndividualProfileRoutes = ({
 					title={entityName}
 				/>
 
-				<BasePage.Header.NavBar
-					items={NAV_ITEMS}
-					routeParams={{channelId, groupId, id}}
-				/>
+				<BasePage.Header.NavBar />
 			</BasePage.Header>
 
 			{getMatchedRoute(NAV_ITEMS) === Routes.CONTACTS_INDIVIDUAL &&

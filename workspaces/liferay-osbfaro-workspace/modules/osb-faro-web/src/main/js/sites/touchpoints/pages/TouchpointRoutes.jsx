@@ -157,22 +157,7 @@ function TouchpointRoutes({className, router}) {
 					title={decodedTitle}
 				/>
 
-				<BasePage.Header.NavBar
-					items={NAV_ITEMS}
-					routeParams={{
-						channelId,
-						groupId,
-						title,
-						touchpoint
-					}}
-					routeQueries={pickBy({
-						...rangeSelectors,
-						accountId,
-						accountName,
-						segmentId,
-						segmentName
-					})}
-				/>
+				<BasePage.Header.NavBar />
 			</BasePage.Header>
 
 			{matchedRoute === Routes.SITES_TOUCHPOINTS_OVERVIEW && (
