@@ -8,9 +8,9 @@ interface IProjectStateDisplayProps {
 	children?: React.ReactNode;
 	className?: string;
 	project: {
-		friendlyURL?: string;
 		groupId: string;
 		state: string;
+		url: string;
 	};
 }
 
@@ -19,7 +19,7 @@ const ProjectStateDisplay: React.FC<IProjectStateDisplayProps> = ({
 	className,
 	project,
 }) => {
-	const {friendlyURL, groupId, state} = project;
+	const {groupId, state, url} = project;
 
 	if (state === ProjectStates.Ready || state === ProjectStates.Scheduled) {
 		return <>{children}</>;
@@ -39,7 +39,7 @@ const ProjectStateDisplay: React.FC<IProjectStateDisplayProps> = ({
 		return <ActivatingDisplay groupId={groupId} />;
 	}
 
-	return <SuccessDisplay friendlyURL={friendlyURL || `/${groupId}`} />;
+	return <SuccessDisplay url={url} />;
 };
 
 export default ProjectStateDisplay;
