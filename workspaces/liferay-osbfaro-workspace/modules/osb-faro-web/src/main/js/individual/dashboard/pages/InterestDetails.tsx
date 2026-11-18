@@ -3,18 +3,18 @@ import ClayIcon from 'shared/components/Icon';
 import ClayLink from '@clayui/link';
 import InterestDetails from 'shared/components/InterestDetails';
 import React from 'react';
-import {isNil, pickBy} from 'lodash';
 import {Router} from 'shared/types';
+import {usePageConfig} from 'shared/context/pageConfig';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
 
 interface IInterestDetailsProps extends React.HTMLAttributes<HTMLDivElement> {
 	router: Router;
 }
 
 const InterestDetailsPage: React.FC<IInterestDetailsProps> = ({router}) => {
+	const {individualsInterestsURL} = usePageConfig();
+
 	const {
-		params: {channelId, groupId},
 		query: {rangeKey},
 	} = router;
 
@@ -29,12 +29,8 @@ const InterestDetailsPage: React.FC<IInterestDetailsProps> = ({router}) => {
 					button
 					displayType="secondary"
 					href={setUriQueryValues(
-						pickBy({rangeKey}, (param) => !isNil(param)),
-
-						toRoute(Routes.CONTACTS_INDIVIDUALS_INTERESTS, {
-							channelId,
-							groupId,
-						})
+						{rangeKey},
+						individualsInterestsURL
 					)}
 				>
 					<ClayIcon

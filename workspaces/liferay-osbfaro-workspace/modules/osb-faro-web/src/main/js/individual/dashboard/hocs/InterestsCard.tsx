@@ -14,15 +14,18 @@ import {compositionListColumns} from 'shared/util/table-columns';
 import {COUNT} from 'shared/util/pagination';
 import {OrderByDirections} from 'shared/util/constants';
 import {ReportContainer} from 'shared/components/download-report/DownloadPDFReport';
-import {Routes, toRoute} from 'shared/util/router';
-import {useParams} from 'react-router-dom';
 import {useQuery} from '@apollo/client';
+import {usePageConfig} from 'shared/context/pageConfig';
+import {setUriQueryValues} from 'shared/util/url';
 
 const InterestsCard: React.FC<React.HTMLAttributes<HTMLElement>> = () => {
-	const {channelId = '', groupId = ''} = useParams<{
-		channelId: string;
-		groupId: string;
-	}>();
+	const {
+		channelId = '',
+		groupId = '',
+		individualsInterestURL,
+		individualsInterestsURL,
+	} = usePageConfig();
+
 	const {
 		data = {
 			individualInterests: {compositions: [], maxCount: 0, totalCount: 0},
@@ -56,11 +59,7 @@ const InterestsCard: React.FC<React.HTMLAttributes<HTMLElement>> = () => {
 			maxWidth: 200,
 			routeFn: ({data: {name}}: {data: {name: string}}) =>
 				name &&
-				toRoute(Routes.CONTACTS_INDIVIDUALS_INTEREST_DETAILS, {
-					channelId,
-					groupId,
-					interestId: name,
-				}),
+				setUriQueryValues({interestId: name}, individualsInterestURL),
 			sortable: false,
 		}),
 		compositionListColumns.getRelativeMetricBar({
@@ -137,10 +136,7 @@ const InterestsCard: React.FC<React.HTMLAttributes<HTMLElement>> = () => {
 					button
 					className="button-root"
 					displayType="secondary"
-					href={toRoute(Routes.CONTACTS_INDIVIDUALS_INTERESTS, {
-						channelId,
-						groupId,
-					})}
+					href={individualsInterestsURL}
 					small
 				>
 					{Liferay.Language.get('view-all-interests')}

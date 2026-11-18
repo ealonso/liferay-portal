@@ -6,10 +6,12 @@ import getCN from 'classnames';
 import ListGroup from 'shared/components/list-group';
 import React from 'react';
 import URLConstants from 'shared/util/url-constants';
+import withPageConfig from 'shared/hoc/WithPageConfig';
 import {compose, withEmpty, withRequest} from 'shared/hoc';
 import {createOrderIOMap, NAME} from 'shared/util/pagination';
 import {PropTypes} from 'prop-types';
-import {Routes, toRoute} from 'shared/util/router';
+import {setUriQueryValues} from 'shared/util/url';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const ITEMS_PER_CARD = 6;
 
@@ -24,7 +26,10 @@ function fetchInterestData({channelId, groupId, id}) {
 	});
 }
 
-export const InterestsList = ({channelId, groupId, id, interests}) => (
+export const InterestsList = ({id, interests}) => {
+	const {individualInterestURL} = usePageConfig();
+
+	return (
 	<ListGroup className='results-container' noBorder>
 		{interests.map(({name}) => (
 			<ListGroup.Item className='interest' key={name}>
@@ -32,15 +37,10 @@ export const InterestsList = ({channelId, groupId, id, interests}) => (
 					{name ? (
 						<ClayLink
 							decoration='none'
-							href={toRoute(
-								Routes.CONTACTS_INDIVIDUAL_INTEREST_DETAILS,
-								{
-									channelId,
-									groupId,
-									id,
-									interestId: name
-								}
-							)}
+							href={setUriQueryValues({
+								id,
+								interestId: name
+							}, individualInterestURL)}
 						>
 							{name}
 						</ClayLink>
@@ -51,13 +51,13 @@ export const InterestsList = ({channelId, groupId, id, interests}) => (
 			</ListGroup.Item>
 		))}
 	</ListGroup>
-);
+	);
+};
 
 const ListWithInterests = compose(
 	withRequest(
 		fetchInterestData,
 		data => ({
-			channelId: data.channelId,
 			interests: data.items,
 			total: data.total
 		}),
@@ -88,11 +88,12 @@ const ListWithInterests = compose(
 	})
 )(InterestsList);
 
-export default class InterestsCard extends React.PureComponent {
+class InterestsCard extends React.PureComponent {
 	static propTypes = {
 		channelId: PropTypes.string,
 		entity: PropTypes.object.isRequired,
-		groupId: PropTypes.string.isRequired
+		groupId: PropTypes.string.isRequired,
+		pageConfig: PropTypes.object.isRequired
 	};
 
 	render() {
@@ -101,7 +102,8 @@ export default class InterestsCard extends React.PureComponent {
 				channelId,
 				className,
 				entity: {id},
-				groupId
+				groupId,
+				pageConfig
 			}
 		} = this;
 
@@ -127,11 +129,7 @@ export default class InterestsCard extends React.PureComponent {
 						button
 						className='button-root'
 						displayType='secondary'
-						href={toRoute(Routes.CONTACTS_INDIVIDUAL_INTERESTS, {
-							channelId,
-							groupId,
-							id
-						})}
+						href={setUriQueryValues({id}, pageConfig.individualInterestsURL)}
 						small
 					>
 						{Liferay.Language.get('view-all-interests')}
@@ -146,3 +144,5 @@ export default class InterestsCard extends React.PureComponent {
 		);
 	}
 }
+
+export default withPageConfig(InterestsCard);

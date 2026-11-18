@@ -12,10 +12,11 @@ import {
 	mapPropsToOptions,
 } from 'contacts/hoc/mappers/interests-query';
 import {graphql, OperationOption} from '@apollo/client/react/hoc';
-import {Routes, toRoute} from 'shared/util/router';
-import {useParams} from 'react-router-dom';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
 import {withBaseResults} from 'shared/hoc';
+import {Config} from 'shared/util/config';
+import {usePageConfig} from 'shared/context/pageConfig';
+import {setUriQueryValues} from 'shared/util/url';
 
 const withData = () =>
 	graphql(IndividualInterestsQuery, {
@@ -25,14 +26,12 @@ const withData = () =>
 
 const TableWithData = withBaseResults(withData, {
 	getColumns: ({
-		channelId,
-		groupId,
 		maxCount,
+		pageConfig,
 		totalCount,
 	}: {
-		channelId: string;
-		groupId: string;
 		maxCount: number;
+		pageConfig: Config;
 		totalCount: number;
 	}) => [
 		compositionListColumns.getName({
@@ -40,11 +39,10 @@ const TableWithData = withBaseResults(withData, {
 			maxWidth: 200,
 			routeFn: ({data: {name}}: {data: {name: string}}) =>
 				name &&
-				toRoute(Routes.CONTACTS_INDIVIDUALS_INTEREST_DETAILS, {
-					channelId,
-					groupId,
-					interestId: name,
-				}),
+				setUriQueryValues(
+					{interestId: name},
+					pageConfig.individualsInterestURL
+				),
 			sortable: true,
 		}),
 		compositionListColumns.getRelativeMetricBar({
@@ -63,10 +61,8 @@ const TableWithData = withBaseResults(withData, {
 });
 
 const Interests: React.FC<React.HTMLAttributes<HTMLElement>> = () => {
-	const {channelId = '', groupId = ''} = useParams<{
-		channelId: string;
-		groupId: string;
-	}>();
+	const {channelId = '', groupId = ''} = usePageConfig();
+
 	const {delta, orderIOMap, page, query} = useQueryPagination({
 		initialOrderIOMap: createOrderIOMap(COUNT),
 	});

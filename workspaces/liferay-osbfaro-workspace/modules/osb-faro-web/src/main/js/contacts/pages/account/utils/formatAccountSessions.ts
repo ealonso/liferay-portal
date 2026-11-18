@@ -10,8 +10,9 @@ import {
 	VerticalTimelineIndividual,
 	VerticalTimelineSession,
 } from 'shared/util/activities';
-import {Routes, toRoute} from 'shared/util/router';
 import {UserSessionEvent} from 'shared/queries/UserSessionQuery';
+import {Config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 const ANONYMOUS_KEY = '__anonymous__';
 
@@ -28,7 +29,8 @@ const ANONYMOUS_KEY = '__anonymous__';
  */
 const getIndividual = (
 	{individualId, jobTitle, userId, userName}: AccountUserSession,
-	{channelId, groupId}: EventDashboardContext
+	{channelId, groupId}: EventDashboardContext,
+	config: Config
 ): VerticalTimelineIndividual => {
 	const isAnonymous = !individualId;
 
@@ -43,11 +45,10 @@ const getIndividual = (
 		...(linkId &&
 			channelId &&
 			groupId && {
-				individualUrl: toRoute(Routes.CONTACTS_INDIVIDUAL, {
-					channelId,
-					groupId,
-					id: linkId,
-				}),
+				individualUrl: setUriQueryValues(
+					{id: linkId},
+					config.individualURL
+				),
 			}),
 		isAnonymous,
 		...(jobTitle && {jobTitle}),
@@ -56,7 +57,8 @@ const getIndividual = (
 
 const toSessionItem = (
 	session: AccountUserSession,
-	context: EventDashboardContext
+	context: EventDashboardContext,
+	config: Config
 ): VerticalTimelineSession => {
 
 	// Assigned rather than cast, so a field the account query stops selecting
@@ -75,7 +77,12 @@ const toSessionItem = (
 		browserName: session.browserName,
 		device: session.deviceType,
 		endTime: session.completeDate,
-		nestedItems: groupEventsByPage(events, session.userAgent, context),
+		nestedItems: groupEventsByPage(
+			config,
+			events,
+			session.userAgent,
+			context
+		),
 		noTimestamps: isWebhookUserAgent(session.userAgent),
 		session: true,
 		time: session.createDate,
@@ -93,6 +100,7 @@ const toSessionItem = (
  * than a list of raw events.
  */
 export const formatAccountSessions = (
+	config: Config,
 	sessions: AccountUserSession[] = [],
 	context: EventDashboardContext = {}
 ): TimelineDay[] =>
@@ -113,10 +121,12 @@ export const formatAccountSessions = (
 			);
 
 			sessionsByIndividual.forEach((individualSessions) => {
-				items.push(getIndividual(individualSessions[0], context));
+				items.push(
+					getIndividual(individualSessions[0], context, config)
+				);
 
 				individualSessions.forEach((session) =>
-					items.push(toSessionItem(session, context))
+					items.push(toSessionItem(session, context, config))
 				);
 			});
 
