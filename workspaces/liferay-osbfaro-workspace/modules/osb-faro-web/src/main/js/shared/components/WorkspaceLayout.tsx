@@ -5,7 +5,6 @@ import LDPLayout, {LDPElement} from 'shared/components/LDPLayout';
 import Loading from 'shared/components/Loading';
 import React, {lazy, Suspense} from 'react';
 import SegmentLinkRedirect from 'shared/components/SegmentLinkRedirect';
-import SidebarLayout from 'shared/components/SidebarLayout';
 import WorkspaceGate from 'shared/components/WorkspaceGate';
 import WorkspaceHomeRedirect from 'shared/components/WorkspaceHomeRedirect';
 import {compose} from 'redux';
@@ -296,7 +295,7 @@ const WorkspaceLayer = ({groupId}: {groupId: string}) => {
 							</Route>
 						</Route>
 
-						<Route element={<SidebarLayout />}>
+						<Route>
 							<Route element={<WorkspaceHomeRedirect />} index />
 
 							<Route
