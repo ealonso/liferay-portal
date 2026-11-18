@@ -20,11 +20,11 @@ import {OAUTH_CALLBACK_URL} from 'shared/util/oauth';
 import {sequence} from 'shared/util/promise';
 import {sub} from 'shared/util/lang';
 import {Text} from '@clayui/core';
-import {useParams} from 'react-router-dom';
 import {
 	validateRequired,
 	validateSalesforceDomain,
 } from 'shared/util/validators';
+import {config} from 'shared/util/config';
 
 /**
  * The salesforceAuthErrorMessage function aims to map all the errors returned
@@ -116,7 +116,7 @@ const ConnectSalesforceAuth: React.FC<IConnectSalesforceAuthProps> = ({
 	onCancel,
 	onSubmit,
 }) => {
-	const {groupId = ''} = useParams<{groupId: string}>();
+	const {groupId = ''} = config;
 
 	const [isUrlCopied, setIsUrlCopied] = useState(false);
 	const [copyTitle, setCopyTitle] = useState(
