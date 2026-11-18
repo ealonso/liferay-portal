@@ -2,7 +2,8 @@ import BasePage from 'settings/components/base-page/BasePage';
 import BlockListCard from '../components/BlockListCard';
 import React from 'react';
 import {getDefinitions} from 'shared/util/breadcrumbs';
-import {Routes, toRoute} from 'shared/util/router';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 interface IBlockListProps {
 	groupId: string;
@@ -11,11 +12,12 @@ interface IBlockListProps {
 const BlockList: React.FC<IBlockListProps> = ({groupId, ...otherProps}) => (
 	<BasePage
 		breadcrumbItems={[
-			getDefinitions({groupId}),
+			getDefinitions(),
 			{
-				href: toRoute(Routes.SETTINGS_DEFINITIONS_EVENTS_CUSTOM, {
-					groupId,
-				}),
+				href: setUriQueryValues(
+					{tab: 'custom'},
+					config.eventDefinitionsURL
+				),
 				label: Liferay.Language.get('events'),
 			},
 			{active: true, label: Liferay.Language.get('block-list')},

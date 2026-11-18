@@ -14,13 +14,13 @@ import {applyTimeZone, formatRelativeTime} from 'shared/util/date';
 import {createOrderIOMap} from 'shared/util/pagination';
 import {getDefinitions} from 'shared/util/breadcrumbs';
 import {omit} from 'lodash';
-import {Routes, toRoute} from 'shared/util/router';
 import {Sizes} from 'shared/util/constants';
 import {sub} from 'shared/util/lang';
 import {useModal} from '@clayui/modal';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {User} from 'shared/util/records';
 import {useTimeZone} from 'shared/hooks/useTimeZone';
+import {config} from 'shared/util/config';
 
 const SearchableEntityTableHOC = withStatefulPagination(
 	SearchableEntityTable,
@@ -79,7 +79,7 @@ const IndividualAttributes: React.FC<IIndividualAttributesProps> = ({
 	return (
 		<BasePage
 			breadcrumbItems={[
-				getDefinitions({groupId}),
+				getDefinitions(),
 				{
 					active: true,
 					label: Liferay.Language.get('individual-attributes'),
@@ -153,12 +153,7 @@ const IndividualAttributes: React.FC<IIndividualAttributesProps> = ({
 											button
 											className="button-root"
 											displayType="primary"
-											href={toRoute(
-												Routes.SETTINGS_DATA_SOURCE_LIST,
-												{
-													groupId,
-												}
-											)}
+											href={config.dataSourcesURL}
 										>
 											{Liferay.Language.get(
 												'connect-data-source'

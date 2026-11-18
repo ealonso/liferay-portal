@@ -3,21 +3,16 @@ import Card from 'shared/components/Card';
 import ClayLink from '@clayui/link';
 import ClayList from '@clayui/list';
 import React from 'react';
-import {DEVELOPER_MODE, ACCOUNTS} from 'shared/util/constants';
-import {Routes, toRoute} from 'shared/util/router';
+import {DEVELOPER_MODE} from 'shared/util/constants';
 import {ENABLE_BLOCKLIST_KEYWORDS} from 'shared/util/feature-flags';
-
-interface IOverviewProps {
-	groupId: string;
-}
+import {config} from 'shared/util/config';
 
 type ListItem = {
 	header: string;
 	items: {
 		description: string;
-		route: string;
-		routeParams?: object;
 		title: string;
+		url: string;
 	}[];
 };
 
@@ -31,8 +26,8 @@ const items = (devMode: boolean = false): (ListItem | null)[] => [
 				description: Liferay.Language.get(
 					'view-and-manage-the-data-model-of-your-individuals.-this-data-is-mapped-from-your-dxp,-salesforce,-or-csv-datasources'
 				),
-				route: Routes.SETTINGS_DEFINITIONS_INDIVIDUAL_ATTRIBUTES,
 				title: Liferay.Language.get('individuals'),
+				url: config.individualAttributesURL,
 			},
 			...(devMode
 				? [
@@ -40,9 +35,8 @@ const items = (devMode: boolean = false): (ListItem | null)[] => [
 							description: Liferay.Language.get(
 								'view-and-manage-the-data-model-of-your-accounts.-this-data-is-automatically-mapped-from-a-salesforce-datasource'
 							),
-							route: Routes.CONTACTS_LIST_ENTITY,
-							routeParams: {type: ACCOUNTS},
 							title: Liferay.Language.get('accounts'),
+							url: config.accountsURL,
 						},
 					]
 				: []),
@@ -57,8 +51,8 @@ const items = (devMode: boolean = false): (ListItem | null)[] => [
 							description: Liferay.Language.get(
 								'view-and-manage-the-tracked-behaviors-in-analytics-cloud.-you-will-also-find-instructions-for-tagging-non-liferay-assets-to-track-them-in-analytics-cloud'
 							),
-							route: Routes.SETTINGS_DEFINITIONS_BEHAVIORS,
 							title: Liferay.Language.get('behaviors'),
+							url: config.behaviorsURL,
 						},
 					]
 				: []),
@@ -66,22 +60,22 @@ const items = (devMode: boolean = false): (ListItem | null)[] => [
 				description: Liferay.Language.get(
 					'view-and-manage-your-default-events-custom-events-and-event-attributes'
 				),
-				route: Routes.SETTINGS_DEFINITIONS_EVENTS_DEFAULT,
 				title: Liferay.Language.get('events'),
+				url: config.eventDefinitionsURL,
 			},
 			{
 				description: Liferay.Language.get(
 					'view-and-manage-the-data-model-of-your-event-attributes.-event-attributes-provide-additional-context-to-your-events'
 				),
-				route: Routes.SETTINGS_DEFINITIONS_EVENT_ATTRIBUTES_GLOBAL,
 				title: Liferay.Language.get('event-attributes'),
+				url: config.eventAttributesURL,
 			},
 			{
 				description: Liferay.Language.get(
 					'define-the-search-query-parameters-specific-to-your-properties'
 				),
-				route: Routes.SETTINGS_DEFINITIONS_SEARCH,
 				title: Liferay.Language.get('search'),
+				url: config.definitionsSearchURL,
 			},
 		],
 	},
@@ -94,15 +88,15 @@ const items = (devMode: boolean = false): (ListItem | null)[] => [
 						description: Liferay.Language.get(
 							'view-and-manage-the-blocked-keywords-for-interest-analysis.-blocked-keywords-will-affect-content-recommendations-feature-available-in-liferay-dxp'
 						),
-						route: Routes.SETTINGS_DEFINITIONS_INTEREST_TOPICS,
 						title: Liferay.Language.get('interests'),
+						url: config.interestTopicsURL,
 					},
 				],
 			}
 		: null,
 ];
 
-export const Overview: React.FC<IOverviewProps> = ({groupId}) => (
+export const Overview: React.FC = () => (
 	<BasePage
 		className="definitions-overview-root"
 		pageDescription={Liferay.Language.get(
@@ -126,35 +120,22 @@ export const Overview: React.FC<IOverviewProps> = ({groupId}) => (
 
 									{items
 										.filter(Boolean)
-										.map(
-											({
-												description,
-												route,
-												routeParams = {},
-												title,
-											}) => (
-												<ClayList.Item key={title}>
-													<ClayList.ItemTitle>
-														<ClayLink
-															decoration="none"
-															href={toRoute(
-																route,
-																{
-																	groupId,
-																	...routeParams,
-																}
-															)}
-														>
-															{title}
-														</ClayLink>
-													</ClayList.ItemTitle>
+										.map(({description, title, url}) => (
+											<ClayList.Item key={title}>
+												<ClayList.ItemTitle>
+													<ClayLink
+														decoration="none"
+														href={url}
+													>
+														{title}
+													</ClayLink>
+												</ClayList.ItemTitle>
 
-													<ClayList.ItemText>
-														{description}
-													</ClayList.ItemText>
-												</ClayList.Item>
-											)
-										)}
+												<ClayList.ItemText>
+													{description}
+												</ClayList.ItemText>
+											</ClayList.Item>
+										))}
 								</React.Fragment>
 							))}
 					</ClayList>

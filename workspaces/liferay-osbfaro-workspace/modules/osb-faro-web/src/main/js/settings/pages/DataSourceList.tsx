@@ -32,15 +32,14 @@ import {
 import {getConnectorStatusDisplay} from 'settings/components/3rd-party-connector/getConnectorStatusDisplay';
 import {getDataSourceDisplayObject} from 'shared/util/data-sources';
 import {isLDPPlan} from 'shared/util/subscriptions';
-import {Link, useParams} from 'react-router-dom';
-import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
-import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
 import {useRequest} from 'shared/hooks/useRequest';
 import {useSubscriptionName} from 'shared/hooks/useSubscriptionName';
 import {useTimeZone} from 'shared/hooks/useTimeZone';
+import {config as pageConfig} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 interface StandaloneDataSourceDescriptor {
 	label: string;
@@ -85,9 +84,9 @@ export const DataSourceName: React.FC<IDataSourceNameProps> = ({
 			) ? (
 				<span className="text-truncate">{data.name}</span>
 			) : (
-				<Link className="text-truncate" to={hrefFormatter(data)}>
+				<a className="text-truncate" href={hrefFormatter(data)}>
 					{data.name}
-				</Link>
+				</a>
 			)}
 		</div>
 	</td>
@@ -118,8 +117,7 @@ export const disableRow = ({state}: {state: DataSourceStates}): boolean =>
 const getAlertMessage = (
 	dataSource: {[key: string]: any},
 	currentUser: {isAdmin: () => boolean},
-	count: number,
-	groupId: string
+	count: number
 ) => {
 	const admin = currentUser.isAdmin();
 
@@ -134,15 +132,12 @@ const getAlertMessage = (
 			),
 			[
 				<b key="NAME">{name}</b>,
-				<Link
+				<a
+					href={setUriQueryValues({id}, pageConfig.dataSourceURL)}
 					key="REAUTHORIZE"
-					to={toRoute(Routes.SETTINGS_DATA_SOURCE, {
-						groupId,
-						id,
-					})}
 				>
 					{Liferay.Language.get('reauthorize').toLowerCase()}
-				</Link>,
+				</a>,
 			],
 			false
 		);
@@ -221,8 +216,7 @@ interface IDataSourceListProps extends React.HTMLAttributes<HTMLElement> {}
 
 const DataSourceList: React.FC<IDataSourceListProps> = ({className}) => {
 	const currentUser = useCurrentUser();
-	const history = useHistoryAdapter();
-	const {groupId = ''} = useParams<{groupId: string}>();
+	const {groupId = ''} = pageConfig;
 	const [alerts, setAlerts] = useState<
 		{
 			iconSymbol: string;
@@ -260,8 +254,7 @@ const DataSourceList: React.FC<IDataSourceListProps> = ({className}) => {
 					message: getAlertMessage(
 						invalidDataSources?.items[0],
 						currentUser,
-						invalidDataSources?.total,
-						groupId
+						invalidDataSources?.total
 					),
 					title: Liferay.Language.get('warning'),
 					type: AlertTypes.Warning,
@@ -295,11 +288,11 @@ const DataSourceList: React.FC<IDataSourceListProps> = ({className}) => {
 	).map((config) => ({
 		label: config.displayName,
 		onClick: () => {
-			history.push(
-				toRoute(Routes.SETTINGS_DATA_SOURCE_ONBOARDING, {
-					groupId,
-					id: config.type,
-				})
+			window.location.assign(
+				setUriQueryValues(
+					{id: config.type},
+					pageConfig.dataSourceOnboardingURL
+				)
 			);
 		},
 	}));
@@ -309,11 +302,11 @@ const DataSourceList: React.FC<IDataSourceListProps> = ({className}) => {
 	).map(({label, type}) => ({
 		label,
 		onClick: () => {
-			history.push(
-				toRoute(Routes.SETTINGS_DATA_SOURCE_ONBOARDING, {
-					groupId,
-					id: type,
-				})
+			window.location.assign(
+				setUriQueryValues(
+					{id: type},
+					pageConfig.dataSourceOnboardingURL
+				)
 			);
 		},
 	}));
@@ -400,10 +393,12 @@ const DataSourceList: React.FC<IDataSourceListProps> = ({className}) => {
 							cellRenderer: DataSourceName,
 							cellRendererProps: {
 								hrefFormatter: (dataSource: {id: string}) =>
-									toRoute(Routes.SETTINGS_DATA_SOURCE, {
-										groupId,
-										id: dataSource.id,
-									}),
+									setUriQueryValues(
+										{
+											id: dataSource.id,
+										},
+										pageConfig.dataSourceURL
+									),
 							},
 							label: Liferay.Language.get('data-source-name'),
 						},

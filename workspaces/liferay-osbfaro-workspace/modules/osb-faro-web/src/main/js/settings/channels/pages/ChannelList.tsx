@@ -30,9 +30,7 @@ import {formatDateToTimeZone, getCustomDateFormat} from 'shared/util/date';
 import {FormikHelpers} from 'formik';
 import {getPluralMessage, sub} from 'shared/util/lang';
 import {IPagination} from 'shared/types';
-import {Link} from 'react-router-dom';
 import {RootState} from 'shared/store';
-import {Routes, toRoute} from 'shared/util/router';
 import {Sizes} from 'shared/util/constants';
 import {updateDefaultChannelId} from 'shared/actions/preferences';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
@@ -40,6 +38,8 @@ import {useModal} from '@clayui/modal';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
 import {useRequest} from 'shared/hooks/useRequest';
 import {useTimeZone} from 'shared/hooks/useTimeZone';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 type ChannelNameFn = (attrs: {
 	data: {id: string; name: string};
@@ -53,9 +53,9 @@ type FormValues = {
 const ChannelName: ChannelNameFn = ({data, hrefFormatter}) => (
 	<td className="table-cell-expand" key={data.id}>
 		<div className="table-title text-truncate">
-			<Link to={hrefFormatter(data)}>
+			<a href={hrefFormatter(data)}>
 				<TextTruncate title={data.name} />
-			</Link>
+			</a>
 		</div>
 	</td>
 );
@@ -76,16 +76,12 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface IChannelListProps extends IPagination, PropsFromRedux {
 	groupId: string;
-	history: {
-		push: (href: string) => void;
-	};
 }
 
 const ChannelList: React.FC<IChannelListProps> = ({
 	addAlert,
 	defaultChannelId,
 	groupId,
-	history,
 	updateDefaultChannelId,
 }) => {
 	const {selectedItems, selectionDispatch} = useSelectionContext();
@@ -182,11 +178,8 @@ const ChannelList: React.FC<IChannelListProps> = ({
 
 				addChannelModal.onOpenChange(false);
 
-				history.push(
-					toRoute(Routes.SETTINGS_CHANNELS_VIEW, {
-						groupId,
-						id,
-					})
+				window.location.assign(
+					setUriQueryValues({id}, config.propertyURL)
 				);
 			})
 			.catch(({field, message}) => {
@@ -331,10 +324,10 @@ const ChannelList: React.FC<IChannelListProps> = ({
 								cellRenderer: ChannelName,
 								cellRendererProps: {
 									hrefFormatter: ({id}: {id: string}) =>
-										toRoute(Routes.SETTINGS_CHANNELS_VIEW, {
-											groupId,
-											id,
-										}),
+										setUriQueryValues(
+											{id},
+											config.propertyURL
+										),
 								},
 								className: 'table-cell-expand',
 								label: Liferay.Language.get('property-name'),

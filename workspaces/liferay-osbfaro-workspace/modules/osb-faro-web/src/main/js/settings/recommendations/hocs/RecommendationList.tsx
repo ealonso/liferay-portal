@@ -42,12 +42,12 @@ import {NameCell} from 'shared/components/table/cell-components';
 import {RECOMMENDATION_DELETE_MUTATION} from '../queries/RecommendationMutation';
 import {RootState} from 'shared/store';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
 import {useModal} from '@clayui/modal';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useMutation, useQuery} from '@apollo/client';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
+import {config} from 'shared/util/config';
 
 const {
 	pagination: {cur: defaultPage},
@@ -69,17 +69,11 @@ const connector = connect(
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface IRecommendationListProps extends PropsFromRedux {
-	groupId: string;
-	history: {
-		push: (value: string) => void;
-	};
 	router: Router;
 }
 
 const RecommendationList: React.FC<IRecommendationListProps> = ({
 	addAlert,
-	groupId,
-	history,
 	timeZoneId,
 }: IRecommendationListProps) => {
 	const {selectedItems, selectionDispatch} = useSelectionContext();
@@ -149,7 +143,7 @@ const RecommendationList: React.FC<IRecommendationListProps> = ({
 
 				refetch?.();
 
-				history.push(
+				window.location.assign(
 					setUriQueryValues(
 						{
 							field: NAME,
@@ -157,9 +151,7 @@ const RecommendationList: React.FC<IRecommendationListProps> = ({
 							page: defaultPage,
 							sortOrder: OrderByDirections.Descending,
 						},
-						toRoute(Routes.SETTINGS_RECOMMENDATIONS, {
-							groupId,
-						})
+						config.recommendationsURL
 					)
 				);
 			})
@@ -208,10 +200,7 @@ const RecommendationList: React.FC<IRecommendationListProps> = ({
 						<ClayLink
 							button
 							className="nav-btn"
-							href={toRoute(
-								Routes.SETTINGS_RECOMMENDATIONS_CREATE_ITEM_SIMILARITY_MODEL,
-								{groupId}
-							)}
+							href={config.editRecommendationURL}
 						>
 							{Liferay.Language.get('new-model')}
 						</ClayLink>
@@ -231,12 +220,9 @@ const RecommendationList: React.FC<IRecommendationListProps> = ({
 							cellRenderer: NameCell,
 							cellRendererProps: {
 								routeFn: ({data: {id}}: {data: {id: string}}) =>
-									toRoute(
-										Routes.SETTINGS_RECOMMENDATION_MODEL_VIEW,
-										{
-											groupId,
-											jobId: id,
-										}
+									setUriQueryValues(
+										{jobId: id},
+										config.recommendationURL
 									),
 							},
 							className: 'table-cell-expand',

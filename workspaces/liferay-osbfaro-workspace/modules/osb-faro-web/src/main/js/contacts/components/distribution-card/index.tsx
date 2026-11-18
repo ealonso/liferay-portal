@@ -185,9 +185,7 @@ class DistributionCard extends React.Component<
 					/>
 				)}
 
-				{!loading && showAddDataSource && (
-					<AddDataSource groupId={groupId} />
-				)}
+				{!loading && showAddDataSource && <AddDataSource />}
 
 				{(!error || showAddProperty) && !showAddDataSource && (
 					<>

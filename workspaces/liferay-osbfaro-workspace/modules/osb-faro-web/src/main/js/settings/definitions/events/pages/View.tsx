@@ -15,10 +15,9 @@ import {useQuery} from '@apollo/client';
 
 interface IViewProps extends React.HTMLAttributes<HTMLElement> {
 	eventId: string;
-	groupId: string;
 }
 
-const View: React.FC<IViewProps> = ({eventId, groupId}) => {
+const View: React.FC<IViewProps> = ({eventId}) => {
 	const result = useQuery<EventDefinitionData, EventDefinitionVariables>(
 		EVENT_DEFINITION_QUERY,
 		{
@@ -50,8 +49,8 @@ const View: React.FC<IViewProps> = ({eventId, groupId}) => {
 				}) => (
 					<BasePage
 						breadcrumbItems={[
-							getDefinitions({groupId}),
-							getEvents({groupId}),
+							getDefinitions(),
+							getEvents(),
 							{active: true, label: displayName || name},
 						]}
 						pageActions={viewEventPageActions}
@@ -65,7 +64,6 @@ const View: React.FC<IViewProps> = ({eventId, groupId}) => {
 						<EventDetailsCard
 							eventAttributes={eventAttributeDefinitions ?? []}
 							eventName={name}
-							groupId={groupId}
 						/>
 					</BasePage>
 				)}

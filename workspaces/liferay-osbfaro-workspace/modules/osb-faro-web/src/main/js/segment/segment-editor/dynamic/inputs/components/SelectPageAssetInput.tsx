@@ -163,11 +163,11 @@ const getCountColumn = (action?: string, actionLabel?: string) => {
 // list from the same activity/asset endpoint (which keys items by the same id
 // the activityKey stores).
 
-const getColumns = (groupId: string, countColumn: {[key: string]: any}) => [
+const getColumns = (countColumn: {[key: string]: any}) => [
 	activityAssetsListColumns.nameUrl,
 	countColumn,
 	{
-		...detailsListColumns.getDataSourceName(groupId),
+		...detailsListColumns.getDataSourceName(),
 		className: 'table-cell-expand',
 		sortable: false,
 	},
@@ -466,7 +466,7 @@ const SelectPageAssetInput: React.FC<ISelectPageAssetInputProps> = ({
 		const countColumn = getCountColumn(action, actionLabel);
 
 		return {
-			columns: getColumns(groupId, countColumn),
+			columns: getColumns(countColumn),
 			dataSourceFn,
 			initialOrderIOMap: createOrderIOMap(COUNT),
 			initialSelectedItems: selectedItems,

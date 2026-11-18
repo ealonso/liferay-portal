@@ -2,13 +2,9 @@ import Card from 'shared/components/Card';
 import ClayLink from '@clayui/link';
 import NoResultsDisplay from 'shared/components/NoResultsDisplay';
 import React from 'react';
-import {Routes, toRoute} from 'shared/util/router';
+import {config} from 'shared/util/config';
 
-interface IAddDataSourceProps {
-	groupId: string;
-}
-
-const AddDataSource: React.FC<IAddDataSourceProps> = ({groupId}) => (
+const AddDataSource: React.FC = () => (
 	<>
 		<Card.Header>
 			<Card.Title>{Liferay.Language.get('distribution')}</Card.Title>
@@ -26,7 +22,7 @@ const AddDataSource: React.FC<IAddDataSourceProps> = ({groupId}) => (
 					button
 					className="button-root"
 					displayType="primary"
-					href={toRoute(Routes.SETTINGS_DATA_SOURCE_LIST, {groupId})}
+					href={config.dataSourcesURL}
 				>
 					{Liferay.Language.get('add-data-source')}
 				</ClayLink>

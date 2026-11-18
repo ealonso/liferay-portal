@@ -15,7 +15,6 @@ import {CATALOG_FIELDS_MAX_PAGE_SIZE} from 'shared/api/catalog';
 import {isNil} from 'lodash/fp';
 import {RangeKeyTimeRanges, Sizes} from 'shared/util/constants';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
 import {SectionHeader} from 'shared/components/SectionHeader';
 import {useCampaignFilter} from 'shared/hooks/useCampaignFilter';
 import {useChannelContext} from 'shared/context/channel';
@@ -23,6 +22,7 @@ import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useDispatch} from 'react-redux';
 import {useLifecycleDetails} from 'lifecycle/hooks/useLifecycleDetails';
 import {useRequest} from 'shared/hooks/useRequest';
+import {config} from 'shared/util/config';
 
 interface IListProps {
 	channelId: string;
@@ -107,12 +107,7 @@ const List: React.FC<IListProps> = ({channelId, groupId}) => {
 								button
 								className="button-root"
 								displayType="primary"
-								href={toRoute(
-									Routes.SETTINGS_DATA_SOURCE_LIST,
-									{
-										groupId,
-									}
-								)}
+								href={config.dataSourcesURL}
 							>
 								{Liferay.Language.get('connect-data-source')}
 							</Link>

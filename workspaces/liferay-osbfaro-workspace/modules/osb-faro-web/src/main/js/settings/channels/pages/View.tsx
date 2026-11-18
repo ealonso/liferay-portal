@@ -26,7 +26,6 @@ import {Alert, IPaginationUnsorted} from 'shared/types';
 import {compose} from 'shared/hoc';
 import {connect, ConnectedProps} from 'react-redux';
 import {RootState} from 'shared/store';
-import {Routes, toRoute} from 'shared/util/router';
 import {SafeResults} from 'shared/hoc/util';
 import {sequence} from 'shared/util/promise';
 import {sub} from 'shared/util/lang';
@@ -34,6 +33,7 @@ import {updateDefaultChannelId} from 'shared/actions/preferences';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useModal} from '@clayui/modal';
 import {useRequest} from 'shared/hooks/useRequest';
+import {config} from 'shared/util/config';
 
 const {channelPermissionTypes} = Constants;
 
@@ -63,7 +63,7 @@ export const ViewContainer: React.FC<Omit<IViewProps, 'channel'>> = ({
 			data={data}
 			error={error}
 			errorProps={{
-				href: toRoute(Routes.SETTINGS_CHANNELS, {groupId}),
+				href: config.propertiesURL,
 				linkLabel: Liferay.Language.get('go-to-properties'),
 				message: Liferay.Language.get(
 					'the-property-you-are-looking-for-does-not-exist'
@@ -107,9 +107,6 @@ interface IViewProps
 		IPaginationUnsorted {
 	channel: Channel;
 	groupId: string;
-	history: {
-		push: (value: string) => void;
-	};
 	id: string;
 }
 
@@ -118,7 +115,6 @@ const View: React.FC<IViewProps> = ({
 	channel,
 	defaultChannelId,
 	groupId,
-	history,
 	id,
 	updateDefaultChannelId,
 	...otherProps
@@ -163,7 +159,7 @@ const View: React.FC<IViewProps> = ({
 	return (
 		<BasePage
 			breadcrumbItems={[
-				breadcrumbs.getChannels({groupId}),
+				breadcrumbs.getChannels(),
 				breadcrumbs.getChannelName({
 					active: true,
 					label: name,
@@ -377,12 +373,7 @@ const View: React.FC<IViewProps> = ({
 
 								deleteModal.onOpenChange(false);
 
-								history.push(
-									toRoute(Routes.SETTINGS_CHANNELS, {
-										groupId,
-										id,
-									})
-								);
+								window.location.assign(config.propertiesURL);
 
 								addAlert({
 									alertType: Alert.Types.Success,

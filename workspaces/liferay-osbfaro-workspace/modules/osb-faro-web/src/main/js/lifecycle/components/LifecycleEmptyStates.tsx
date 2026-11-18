@@ -4,17 +4,11 @@ import ErrorDisplay from 'shared/components/ErrorDisplay';
 import Loading from 'shared/components/Loading';
 import NoResultsDisplay from 'shared/components/NoResultsDisplay';
 import React from 'react';
-import {Routes, toRoute} from 'shared/util/router';
 import {Sizes} from 'shared/util/constants';
 import {AccountDataStatus} from 'lifecycle/utils/types';
+import {config} from 'shared/util/config';
 
-export const ConfigureLifecycleEmptyState = ({
-	channelId,
-	groupId,
-}: {
-	channelId: string;
-	groupId: string;
-}) => (
+export const ConfigureLifecycleEmptyState = () => (
 	<NoResultsDisplay
 		description={Liferay.Language.get(
 			'complete-the-configuration-to-start-seeing-insights'
@@ -32,7 +26,7 @@ export const ConfigureLifecycleEmptyState = ({
 			button
 			className="button-root mt-1"
 			displayType="primary"
-			href={toRoute(Routes.LIFECYCLE_CREATE, {channelId, groupId})}
+			href={config.editLifecycleURL}
 		>
 			{Liferay.Language.get('new-lifecycle')}
 		</ClayLink>
@@ -41,10 +35,8 @@ export const ConfigureLifecycleEmptyState = ({
 
 export const NoDataSourcesEmptyState = ({
 	authorized,
-	groupId,
 }: {
 	authorized: boolean;
-	groupId: string;
 }) => (
 	<DataSourceEmptyState
 		authorized={authorized}
@@ -57,17 +49,14 @@ export const NoDataSourcesEmptyState = ({
 						'please-contact-your-workspace-administrator-to-add-data-sources'
 					)
 		}
-		groupId={groupId}
 		title={Liferay.Language.get('no-data-sources-are-connected')}
 	/>
 );
 
 export const NoAccountDataEmptyState = ({
 	authorized,
-	groupId,
 }: {
 	authorized: boolean;
-	groupId: string;
 }) => (
 	<DataSourceEmptyState
 		authorized={authorized}
@@ -80,29 +69,21 @@ export const NoAccountDataEmptyState = ({
 						'contact-an-administrator-to-connect-a-data-source-containing-account-data'
 					)
 		}
-		groupId={groupId}
 		title={Liferay.Language.get('no-account-data-available')}
 	/>
 );
 
 export const LifecycleAccountDataEmptyState = ({
 	authorized,
-	groupId,
 	onReload,
 	status,
 }: {
 	authorized: boolean;
-	groupId: string;
 	onReload: () => void;
 	status: AccountDataStatus;
 }) => {
 	if (status === AccountDataStatus.NoDataSources) {
-		return (
-			<NoDataSourcesEmptyState
-				authorized={authorized}
-				groupId={groupId}
-			/>
-		);
+		return <NoDataSourcesEmptyState authorized={authorized} />;
 	}
 
 	if (status === AccountDataStatus.Error) {
@@ -110,12 +91,7 @@ export const LifecycleAccountDataEmptyState = ({
 	}
 
 	if (status === AccountDataStatus.NoAccountData) {
-		return (
-			<NoAccountDataEmptyState
-				authorized={authorized}
-				groupId={groupId}
-			/>
-		);
+		return <NoAccountDataEmptyState authorized={authorized} />;
 	}
 
 	return <Loading />;

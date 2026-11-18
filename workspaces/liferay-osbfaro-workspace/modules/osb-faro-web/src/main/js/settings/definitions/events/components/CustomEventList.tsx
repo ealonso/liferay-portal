@@ -42,7 +42,6 @@ import {LIMIT_REACHED_ALERT_ID} from './constants';
 import {NotificationSubtypes} from 'shared/util/records/Notification';
 import {OrderedMap} from 'immutable';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
 import {Sizes} from 'shared/util/constants';
 import {sub} from 'shared/util/lang';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
@@ -53,6 +52,7 @@ import {
 	useSelectionContext,
 	withSelectionProvider,
 } from 'shared/context/selection';
+import {config} from 'shared/util/config';
 
 const connector = connect(null, {addAlert, removeAlert});
 
@@ -60,13 +60,11 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface ICustomEventListProps extends PropsFromRedux {
 	groupId: string;
-	history: {push: (url: string) => void};
 }
 
 const CustomEventList: React.FC<ICustomEventListProps> = ({
 	addAlert,
 	groupId,
-	history,
 	removeAlert,
 }) => {
 	const {selectedItems, selectionDispatch} = useSelectionContext();
@@ -251,7 +249,7 @@ const CustomEventList: React.FC<ICustomEventListProps> = ({
 
 				<CrossPageSelect
 					columns={[
-						eventListColumns.getName({groupId}),
+						eventListColumns.getName(),
 						eventListColumns.displayName,
 						eventListColumns.description,
 						eventListColumns.hidden,
@@ -421,18 +419,18 @@ const CustomEventList: React.FC<ICustomEventListProps> = ({
 
 									const {field, sortOrder} = orderParams;
 
-									history.push(
+									window.location.assign(
 										setUriQueryValues(
 											{
 												field,
 												page: updatedPage,
 												sortOrder,
 											},
-											toRoute(
-												Routes.SETTINGS_DEFINITIONS_EVENTS_CUSTOM,
+											setUriQueryValues(
 												{
-													groupId,
-												}
+													tab: 'custom',
+												},
+												config.eventDefinitionsURL
 											)
 										)
 									);

@@ -17,9 +17,8 @@ import {jsDatetoYYYYMMDD} from '../utils/utils';
 import {List} from 'immutable';
 import {Property, PropertyGroup, PropertySubgroup} from 'shared/util/records';
 import {DEFAULT_UTM_PARAMETER_OPTIONS} from '../utils/properties/session-properties';
-import {Routes, toRoute} from 'shared/util/router';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
-import {useParams} from 'react-router-dom';
+import {config} from 'shared/util/config';
 
 /**
  * Returns a default value for a property provided.
@@ -268,7 +267,6 @@ const CriteriaSidebarCollapse: React.FC<ICriteriaSidebarCollapseProps> = ({
 	propertyKey,
 	searchValue,
 }) => {
-	const {groupId} = useParams();
 	const currentUser = useCurrentUser();
 	const authorized = currentUser.isAdmin();
 
@@ -357,9 +355,7 @@ const CriteriaSidebarCollapse: React.FC<ICriteriaSidebarCollapseProps> = ({
 							button
 							className="button-root mt-3"
 							displayType="secondary"
-							href={toRoute(Routes.SETTINGS_DATA_SOURCE_LIST, {
-								groupId,
-							})}
+							href={config.dataSourcesURL}
 						>
 							{Liferay.Language.get('connect-data-source')}
 						</ClayLink>

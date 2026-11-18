@@ -12,10 +12,9 @@ import TypeTrendCard from '../hocs/TypeTrendCard';
 import URLConstants from 'shared/util/url-constants';
 import {DataSource} from 'shared/util/records';
 import {fromJS} from 'immutable';
-import {Routes, toRoute} from 'shared/util/router';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useDataSources} from 'shared/context/dataSources';
-import {useParams} from 'react-router-dom';
+import {config} from 'shared/util/config';
 
 const {
 	pagination: {cur},
@@ -25,10 +24,7 @@ const MAX_DELTA = 500;
 
 const Overview = () => {
 	const [dataSources, setDataSources] = useState<DataSource[] | null>(null);
-	const {channelId = '', groupId = ''} = useParams<{
-		channelId: string;
-		groupId: string;
-	}>();
+	const {channelId = '', groupId = ''} = config;
 	const currentUser = useCurrentUser();
 	const authorized = currentUser.isAdmin();
 	const dataSourceStates = useDataSources();
@@ -79,12 +75,7 @@ const Overview = () => {
 									button
 									className="button-root"
 									displayType="primary"
-									href={toRoute(
-										Routes.SETTINGS_DATA_SOURCE_LIST,
-										{
-											groupId,
-										}
-									)}
+									href={config.dataSourcesURL}
 								>
 									{Liferay.Language.get(
 										'connect-data-source'

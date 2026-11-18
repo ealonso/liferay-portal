@@ -19,14 +19,13 @@ import {
 	RECOMMENDATION_DELETE_MUTATION,
 	RECOMMENDATION_RUN_MUTATION,
 } from '../queries/RecommendationMutation';
-import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
 import {useModal} from '@clayui/modal';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useMutation, useQuery} from '@apollo/client';
-import {useParams} from 'react-router-dom';
 import {useTimeZone} from 'shared/hooks/useTimeZone';
-import {withHistory} from 'shared/hoc';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 const {
 	pagination: {orderDescending},
@@ -36,17 +35,11 @@ const connector = connect(null, {addAlert});
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface IViewProps extends PropsFromRedux {
-	history: {
-		push: (value: string) => void;
-	};
 	job: Job;
 }
 
-const View: React.FC<IViewProps> = ({addAlert, history, job}) => {
-	const {groupId = '', jobId = ''} = useParams<{
-		groupId: string;
-		jobId: string;
-	}>();
+const View: React.FC<IViewProps> = ({addAlert, job}) => {
+	const {jobId = ''} = config.params;
 	const {timeZoneId} = useTimeZone();
 	const currentUser = useCurrentUser();
 	const deleteModal = useModal();
@@ -89,7 +82,7 @@ const View: React.FC<IViewProps> = ({addAlert, history, job}) => {
 			<div className="col-xl-8">
 				<BasePage
 					breadcrumbItems={[
-						getRecommendations({groupId}),
+						getRecommendations(),
 						{
 							active: true,
 							label: name,
@@ -106,12 +99,9 @@ const View: React.FC<IViewProps> = ({addAlert, history, job}) => {
 										},
 									},
 									{
-										href: toRoute(
-											Routes.SETTINGS_RECOMMENDATION_EDIT,
-											{
-												groupId,
-												jobId,
-											}
+										href: setUriQueryValues(
+											{jobId},
+											config.editRecommendationURL
 										),
 										label: Liferay.Language.get('edit'),
 									},
@@ -167,10 +157,8 @@ const View: React.FC<IViewProps> = ({addAlert, history, job}) => {
 									) as string,
 								});
 
-								history.push(
-									toRoute(Routes.SETTINGS_RECOMMENDATIONS, {
-										groupId,
-									})
+								window.location.assign(
+									config.recommendationsURL
 								);
 							})
 							.catch(() => {
@@ -232,6 +220,5 @@ const View: React.FC<IViewProps> = ({addAlert, history, job}) => {
 
 export default compose<React.ComponentType<any>>(
 	withRecommendation,
-	withHistory,
 	connector
 )(View);

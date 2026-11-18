@@ -2,38 +2,33 @@ import DataValue from 'shared/components/DataValue';
 import getCN from 'classnames';
 import React from 'react';
 import {isNil} from 'lodash';
-import {Link} from 'react-router-dom';
 import {PropTypes} from 'prop-types';
-import {Routes, toRoute} from 'shared/util/router';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 export default class SourceCell extends React.Component {
 	static propTypes = {
 		data: PropTypes.shape({
 			dataSourceId: PropTypes.string,
 			dataSourceName: PropTypes.string
-		}),
-		groupId: PropTypes.string
+		})
 	};
 
 	render() {
 		const {
 			className,
-			data: {dataSourceId, dataSourceName},
-			groupId
+			data: {dataSourceId, dataSourceName}
 		} = this.props;
 
 		return (
 			<td className={getCN('table-cell-expand', className)}>
 				{!isNil(dataSourceId) ? (
-					<Link
+					<a
 						className='text-truncate'
-						to={toRoute(Routes.SETTINGS_DATA_SOURCE, {
-							groupId,
-							id: dataSourceId
-						})}
+						href={setUriQueryValues({id: dataSourceId}, config.dataSourceURL)}
 					>
 						<DataValue value={dataSourceName} />
-					</Link>
+					</a>
 				) : (
 					<DataValue value={dataSourceName} />
 				)}

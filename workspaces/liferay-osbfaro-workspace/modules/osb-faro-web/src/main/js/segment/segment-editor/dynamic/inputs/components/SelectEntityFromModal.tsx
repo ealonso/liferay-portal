@@ -88,7 +88,7 @@ const SelectEntityFromModal: React.FC<ISelectEntityFromModalProps> = ({
 					columns={[
 						...columns,
 						{
-							...detailsListColumns.getDataSourceName(groupId),
+							...detailsListColumns.getDataSourceName(),
 							className: 'table-cell-expand',
 							sortable: false,
 						},

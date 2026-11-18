@@ -39,7 +39,6 @@ import {LIMIT_REACHED_ALERT_ID} from './constants';
 import {OrderedMap} from 'immutable';
 import {RootState} from 'shared/store';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
 import {Sizes} from 'shared/util/constants';
 import {sub} from 'shared/util/lang';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
@@ -50,6 +49,7 @@ import {
 	useSelectionContext,
 	withSelectionProvider,
 } from 'shared/context/selection';
+import {config} from 'shared/util/config';
 
 const EVENT_LIMIT_REACHED =
 	/Processing request will exceed custom event definition limit/;
@@ -71,14 +71,11 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 interface IBlockListCardProps extends PropsFromRedux {
 	groupId: string;
-	history: {push: (url: string) => void};
 	timeZoneId: string;
 }
 
 const BlockListCard: React.FC<IBlockListCardProps> = ({
 	addAlert,
-	groupId,
-	history,
 	removeAlert,
 	timeZoneId,
 }) => {
@@ -220,18 +217,18 @@ const BlockListCard: React.FC<IBlockListCardProps> = ({
 
 					const {field, sortOrder} = orderParams;
 
-					history.push(
+					window.location.assign(
 						setUriQueryValues(
 							{
 								field,
 								page: updatedPage,
 								sortOrder,
 							},
-							toRoute(
-								Routes.SETTINGS_DEFINITIONS_EVENTS_BLOCK_LIST,
+							setUriQueryValues(
 								{
-									groupId,
-								}
+									tab: 'block-list',
+								},
+								config.eventDefinitionsURL
 							)
 						)
 					);

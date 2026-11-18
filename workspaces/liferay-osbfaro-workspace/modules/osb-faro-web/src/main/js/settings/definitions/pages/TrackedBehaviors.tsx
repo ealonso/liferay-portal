@@ -4,19 +4,13 @@ import TrackedBehaviorsList from '../hocs/TrackedBehaviorsList';
 import {getDefinitions} from 'shared/util/breadcrumbs';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 
-interface ITrackedBehaviorsProps {
-	groupId: string;
-}
-
-export const TrackedBehaviors: React.FC<ITrackedBehaviorsProps> = ({
-	groupId,
-}) => {
+export const TrackedBehaviors: React.FC = () => {
 	const currentUser = useCurrentUser();
 
 	return (
 		<BasePage
 			breadcrumbItems={[
-				getDefinitions({groupId}),
+				getDefinitions(),
 				{active: true, label: Liferay.Language.get('behaviors')},
 			]}
 			pageDescription={Liferay.Language.get(

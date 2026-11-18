@@ -75,12 +75,12 @@ export default class EntityDetailsList extends React.Component<IEntityDetailsLis
 	}
 
 	getColumns() {
-		const {groupId, timeZoneId} = this.props;
+		const {timeZoneId} = this.props;
 
 		return [
 			detailsListColumns.name,
 			detailsListColumns.sourceName,
-			detailsListColumns.getDataSourceName(groupId),
+			detailsListColumns.getDataSourceName(),
 			detailsListColumns.getDateModified(timeZoneId),
 		];
 	}

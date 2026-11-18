@@ -3,14 +3,10 @@ import React from 'react';
 import SearchCard from './SearchCard';
 import {getDefinitions} from 'shared/util/breadcrumbs';
 
-interface ISearchProps {
-	groupId: string;
-}
-
-export const Search: React.FC<ISearchProps> = ({groupId}) => (
+export const Search: React.FC = () => (
 	<BasePage
 		breadcrumbItems={[
-			getDefinitions({groupId}),
+			getDefinitions(),
 			{active: true, label: Liferay.Language.get('search')},
 		]}
 		pageDescription={Liferay.Language.get(
@@ -18,7 +14,7 @@ export const Search: React.FC<ISearchProps> = ({groupId}) => (
 		)}
 		pageTitle={Liferay.Language.get('search')}
 	>
-		<SearchCard groupId={groupId} />
+		<SearchCard />
 	</BasePage>
 );
 

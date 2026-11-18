@@ -26,7 +26,6 @@ import {CREATE_DATE, createOrderIOMap, KEYWORD} from 'shared/util/pagination';
 import {formatDateToTimeZone, getCustomDateFormat} from 'shared/util/date';
 import {getDefinitions} from 'shared/util/breadcrumbs';
 import {partition} from 'lodash';
-import {Routes, toRoute} from 'shared/util/router';
 import {Sizes} from 'shared/util/constants';
 import {sub} from 'shared/util/lang';
 import {UNAUTHORIZED_ACCESS} from 'shared/util/request';
@@ -35,6 +34,7 @@ import {useModal} from '@clayui/modal';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
 import {useRequest} from 'shared/hooks/useRequest';
 import {useTimeZone} from 'shared/hooks/useTimeZone';
+import {config} from 'shared/util/config';
 
 const INITIAL_PAGE = 1;
 
@@ -211,9 +211,7 @@ const InterestTopics: React.FC<IInterestTopicsProps> = ({
 					button
 					className="button-root"
 					displayType="secondary"
-					href={toRoute(Routes.SETTINGS_DEFINITIONS_INTEREST_TOPICS, {
-						groupId,
-					})}
+					href={config.interestTopicsURL}
 				>
 					{Liferay.Language.get('back-to-interest-topics')}
 				</ClayLink>
@@ -279,7 +277,7 @@ const InterestTopics: React.FC<IInterestTopicsProps> = ({
 		<>
 			<BasePage
 				breadcrumbItems={[
-					getDefinitions({groupId}),
+					getDefinitions(),
 					{
 						active: true,
 						label: Liferay.Language.get('interest-topics'),

@@ -7,8 +7,9 @@ import {get} from 'lodash';
 import {getRecommendations} from 'shared/util/breadcrumbs';
 import {Job} from '../utils/utils';
 import {Router} from 'shared/types';
-import {Routes, toRoute} from 'shared/util/router';
 import {withAdminPermission} from 'shared/hoc';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 interface IEditProps {
 	job: Job;
@@ -16,14 +17,14 @@ interface IEditProps {
 }
 
 const Edit: React.FC<IEditProps> = ({job, router}) => {
-	const {groupId = '', jobId} = router.params;
+	const {jobId} = router.params;
 
 	const name = get(job, 'name');
 
 	return (
 		<BasePage
 			breadcrumbItems={[
-				getRecommendations({groupId}),
+				getRecommendations(),
 				{
 					active: true,
 					label: name,
@@ -37,12 +38,9 @@ const Edit: React.FC<IEditProps> = ({job, router}) => {
 			<div className="row">
 				<div className="col-xl-8">
 					<RecommendationStepCard
-						cancelHref={toRoute(
-							Routes.SETTINGS_RECOMMENDATION_MODEL_VIEW,
-							{
-								groupId,
-								jobId,
-							}
+						cancelHref={setUriQueryValues(
+							{jobId},
+							config.recommendationURL
 						)}
 						job={job}
 						router={router}

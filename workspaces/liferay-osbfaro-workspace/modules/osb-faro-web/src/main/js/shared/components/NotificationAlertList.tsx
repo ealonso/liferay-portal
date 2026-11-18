@@ -10,8 +10,9 @@ import {
 	NotificationSubtypes,
 	NotificationTypes,
 } from 'shared/util/records/Notification';
-import {Routes, toRoute} from 'shared/util/router';
 import {useRequest} from 'shared/hooks/useRequest';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
@@ -57,12 +58,7 @@ const notificationStrategies = new Map<string, Function>([
 	],
 	[
 		NotificationSubtypes.BlockedEventsLimit,
-		({
-			groupId,
-			notificationId,
-			onClose,
-			stripe,
-		}: NotificationStrategyParams) => ({
+		({notificationId, onClose, stripe}: NotificationStrategyParams) => ({
 			alertType: 'warning',
 			className: 'd-flex align-items-center',
 			id: notificationId,
@@ -77,9 +73,11 @@ const notificationStrategies = new Map<string, Function>([
 
 					<ClayLink
 						className="button-root py-0"
-						href={toRoute(
-							Routes.SETTINGS_DEFINITIONS_EVENTS_BLOCK_LIST,
-							{groupId}
+						href={setUriQueryValues(
+							{
+								tab: 'block-list',
+							},
+							config.eventDefinitionsURL
 						)}
 						small
 					>

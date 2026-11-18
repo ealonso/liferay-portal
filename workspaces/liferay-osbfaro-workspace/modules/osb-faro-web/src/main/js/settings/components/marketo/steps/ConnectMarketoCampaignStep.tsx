@@ -6,13 +6,12 @@ import {Alert} from 'shared/types';
 import {ConnectMarketoCampaignAuth} from 'settings/components/marketo/ConnectMarketoCampaignAuth';
 import {DataSourceStatuses} from 'shared/util/constants';
 import {disconnect} from 'shared/api/data-source';
-import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
 import {updateSearchParams} from 'settings/components/base-page/utis';
-import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
 import {useModal} from '@clayui/modal';
 import {useWizardPage} from '../../base-page/WizardPageContext';
 import {WizardPageButtonGroup} from 'settings/components/base-page/WizardPageButtonGroup';
+import {config} from 'shared/util/config';
 
 interface IConnectMarketoCampaignStepProps {
 	addAlert: Alert.AddAlert;
@@ -25,7 +24,6 @@ const ConnectMarketoCampaignStep = ({
 	groupId,
 	onNext,
 }: IConnectMarketoCampaignStepProps) => {
-	const history = useHistoryAdapter();
 	const {dataSource, refetchDataSource} = useWizardPage();
 	const modal = useModal();
 
@@ -35,14 +33,10 @@ const ConnectMarketoCampaignStep = ({
 				addAlert={addAlert}
 				buttonProps={{block: true}}
 				onCancel={() => {
-					history.push(
-						toRoute(Routes.SETTINGS_DATA_SOURCE_LIST, {
-							groupId,
-						})
-					);
+					window.location.assign(config.dataSourcesURL);
 				}}
 				onSubmit={(dataSource) => {
-					updateSearchParams(history, 'dataSourceId', dataSource.id);
+					updateSearchParams('dataSourceId', dataSource.id);
 
 					onNext();
 				}}
@@ -120,11 +114,7 @@ const ConnectMarketoCampaignStep = ({
 			buttonProps={{block: true}}
 			dataSource={dataSource}
 			onCancel={() => {
-				history.push(
-					toRoute(Routes.SETTINGS_DATA_SOURCE_LIST, {
-						groupId,
-					})
-				);
+				window.location.assign(config.dataSourcesURL);
 			}}
 			onSubmit={onNext}
 		/>

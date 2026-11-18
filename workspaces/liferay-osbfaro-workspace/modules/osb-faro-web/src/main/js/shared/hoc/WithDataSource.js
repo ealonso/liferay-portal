@@ -1,15 +1,13 @@
 import withAction from './WithAction';
 import {fetchDataSource} from '../actions/data-sources';
-import {Routes, toRoute} from 'shared/util/router';
+import {config} from 'shared/util/config';
 
 export default withAction(
 	({groupId, id}) => fetchDataSource({groupId, id}),
 	(state, {id}) => state.getIn(['dataSources', id]),
 	{
-		errorPageProps: ({groupId}) => ({
-			href: toRoute(Routes.SETTINGS_DATA_SOURCE_LIST, {
-				groupId,
-			}),
+		errorPageProps: () => ({
+			href: config.dataSourcesURL,
 			linkLabel: Liferay.Language.get('go-to-data-sources'),
 			message: Liferay.Language.get(
 				'the-data-source-you-are-looking-for-does-not-exist'

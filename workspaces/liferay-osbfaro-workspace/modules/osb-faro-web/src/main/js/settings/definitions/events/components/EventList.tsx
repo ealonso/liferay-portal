@@ -43,11 +43,9 @@ const connector = connect(null, {addAlert});
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-interface IEventListProps extends PropsFromRedux {
-	groupId: string;
-}
+interface IEventListProps extends PropsFromRedux {}
 
-const EventList: React.FC<IEventListProps> = ({addAlert, groupId}) => {
+const EventList: React.FC<IEventListProps> = ({addAlert}) => {
 	const {selectedItems, selectionDispatch} = useSelectionContext();
 
 	const {delta, orderIOMap, page, query} = useQueryPagination({
@@ -197,7 +195,7 @@ const EventList: React.FC<IEventListProps> = ({addAlert, groupId}) => {
 		<>
 			<CrossPageSelect
 				columns={[
-					eventListColumns.getName({groupId}),
+					eventListColumns.getName(),
 					eventListColumns.displayName,
 					eventListColumns.description,
 					eventListColumns.hidden,

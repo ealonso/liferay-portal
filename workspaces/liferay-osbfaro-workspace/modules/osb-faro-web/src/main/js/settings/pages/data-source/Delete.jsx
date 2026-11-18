@@ -11,7 +11,6 @@ import {
 	compose,
 	withAdminPermission,
 	withDataSource,
-	withHistory,
 	withRequest,
 	withSheet
 } from 'shared/hoc';
@@ -19,9 +18,9 @@ import {connect} from 'react-redux';
 import {DataSource} from 'shared/util/records';
 import {deleteDataSource} from 'shared/actions/data-sources';
 import {PropTypes} from 'prop-types';
-import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
 import {truncate} from 'lodash';
+import {config} from 'shared/util/config';
 
 const WrappedDeleteDataSource = compose(
 	withSheet(),
@@ -41,7 +40,6 @@ export class Delete extends React.Component {
 		deleteDataSource: PropTypes.func.isRequired,
 		entitiesCount: PropTypes.object,
 		groupId: PropTypes.string.isRequired,
-		history: PropTypes.object.isRequired,
 		id: PropTypes.string.isRequired
 	};
 
@@ -52,7 +50,6 @@ export class Delete extends React.Component {
 			dataSource: {name},
 			deleteDataSource,
 			groupId,
-			history,
 			id
 		} = this.props;
 
@@ -71,10 +68,8 @@ export class Delete extends React.Component {
 					)
 				});
 
-				history.push(
-					toRoute(Routes.SETTINGS_DATA_SOURCE_LIST, {
-						groupId
-					})
+				window.location.assign(
+					config.dataSourcesURL
 				);
 			})
 			.catch(() => {
@@ -92,13 +87,8 @@ export class Delete extends React.Component {
 		return (
 			<BasePage
 				breadcrumbItems={[
-					breadcrumbs.getDataSources({groupId}),
+					breadcrumbs.getDataSources(),
 					breadcrumbs.getDataSourceName({
-						groupId,
-						href: toRoute(Routes.SETTINGS_DATA_SOURCE, {
-							groupId,
-							id
-						}),
 						id,
 						label: dataSource.name
 					}),
@@ -148,7 +138,6 @@ export class Delete extends React.Component {
 }
 
 export default compose(
-	withHistory,
 	withAdminPermission,
 	withDataSource,
 	connect(null, {addAlert, deleteDataSource})

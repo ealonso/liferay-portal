@@ -21,10 +21,9 @@ import {config} from 'shared/util/config';
  * Details List Columns for CDP
  */
 export const detailsListCDPColumns = {
-	getDataSourceName: (groupId: string) => ({
+	getDataSourceName: () => ({
 		accessor: 'dataSourceName',
 		cellRenderer: SourceCell,
-		cellRendererProps: {groupId},
 		label: Liferay.Language.get('data-source'),
 		sortable: false,
 	}),
@@ -220,9 +219,7 @@ const IndividualDetailsCDP = ({
 							columns={[
 								detailsListCDPColumns.name,
 								detailsListCDPColumns.sourceName,
-								detailsListCDPColumns.getDataSourceName(
-									groupId
-								),
+								detailsListCDPColumns.getDataSourceName(),
 								detailsListCDPColumns.getDateModified(),
 							]}
 							entityLabel={Liferay.Language.get('all-attributes')}

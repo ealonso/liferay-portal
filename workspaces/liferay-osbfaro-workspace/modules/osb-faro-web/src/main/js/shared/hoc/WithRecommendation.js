@@ -1,9 +1,9 @@
 import RecommendationQuery from 'settings/recommendations/queries/RecommendationQuery';
 import {compose} from 'redux';
 import {graphql} from '@apollo/client/react/hoc';
-import {Routes} from 'shared/util/router';
 import {safeResultToProps} from 'shared/util/mappers';
 import {withError, withLoading, withNull} from 'shared/hoc/util';
+import {config} from 'shared/util/config';
 
 const withRecommendation = compose(
 	graphql(RecommendationQuery, {
@@ -22,7 +22,7 @@ const withRecommendation = compose(
 	withError({page: true}),
 	withNull('job', {
 		entityType: Liferay.Language.get('recommendation-model'),
-		linkRoute: Routes.SETTINGS_RECOMMENDATIONS,
+		url: config.recommendationsURL,
 	})
 );
 

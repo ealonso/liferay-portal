@@ -11,13 +11,11 @@ import {Map, OrderedMap} from 'immutable';
 interface IEventDetailsCardProps {
 	eventAttributes: Attribute[];
 	eventName: string;
-	groupId: string;
 }
 
 const EventDetailsCard: React.FC<IEventDetailsCardProps> = ({
 	eventAttributes,
 	eventName,
-	groupId,
 }) => {
 	const [codeLines, setCodeLines] = useState([
 		`Analytics.track('${eventName}', {`,
@@ -86,10 +84,7 @@ const EventDetailsCard: React.FC<IEventDetailsCardProps> = ({
 				className="mb-0"
 				columns={
 					[
-						attributeListColumns.getName({
-							channelId: 'channelId',
-							groupId,
-						}),
+						attributeListColumns.getName(),
 						attributeListColumns.displayName,
 						attributeListColumns.description,
 						attributeListColumns.sampleValue,

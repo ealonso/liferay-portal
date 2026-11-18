@@ -14,7 +14,6 @@ import {
 } from 'shared/util/pagination';
 import {mapListResultsToProps} from 'shared/util/mappers';
 import {Sort} from 'shared/types';
-import {useParams} from 'react-router-dom';
 import {useQuery} from '@apollo/client';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
 
@@ -29,11 +28,6 @@ const GlobalAttributeList: React.FC = () => {
 	const {delta, orderIOMap, page, query} = useQueryPagination({
 		initialOrderIOMap: createOrderIOMap(NAME),
 	});
-
-	const {channelId = '', groupId = ''} = useParams<{
-		channelId: string;
-		groupId: string;
-	}>();
 
 	const response = useQuery<
 		EventAttributeDefinitionsData,
@@ -61,7 +55,7 @@ const GlobalAttributeList: React.FC = () => {
 				};
 			})}
 			columns={[
-				attributeListColumns.getName({channelId, groupId}),
+				attributeListColumns.getName(),
 				attributeListColumns.displayName,
 				attributeListColumns.description,
 				attributeListColumns.sampleValue,

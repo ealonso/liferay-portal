@@ -4,8 +4,8 @@ import ClayLabel, {LabelDisplayType} from '@clayui/label';
 import ClayLink from '@clayui/link';
 import Constants, {
 	OrderByDirections,
-	Sizes,
 	PERIOD,
+	Sizes,
 	STATUSES,
 	TYPES,
 } from 'shared/util/constants';
@@ -41,17 +41,15 @@ import {getSafeDisplayValue} from 'shared/util/util';
 import {mapListResultsToProps} from 'shared/util/mappers';
 import {OrderedMap, Set} from 'immutable';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
 import {useMutation, useQuery} from '@apollo/client';
 import {useModal} from '@clayui/modal';
-import {useParams} from 'react-router-dom';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
 import {User} from 'shared/util/records';
 import {
 	useSelectionContext,
 	withSelectionProvider,
 } from 'shared/context/selection';
-import {withHistory} from 'shared/hoc';
+import {config} from 'shared/util/config';
 
 const {
 	pagination: {cur: defaultPage},
@@ -200,23 +198,19 @@ const getFilterOptionType = (filterKey: string): FilterInputType =>
 interface IRequestListProps {
 	addAlert: Alert.AddAlert;
 	currentUser: User;
-	history: {
-		push: (href: string) => void;
-	};
 	timeZoneId: string;
 }
 
 const RequestList: React.FC<IRequestListProps> = ({
 	addAlert,
 	currentUser,
-	history,
 	timeZoneId,
 }) => {
 	const {delta, filterBy, orderIOMap, page, query} = useQueryPagination({
 		filterFields: [STATUSES, TYPES, PERIOD],
 		initialOrderIOMap: createOrderIOMap(CREATE_DATE),
 	});
-	const {groupId} = useParams();
+	const {groupId} = config;
 
 	const {selectedItems} = useSelectionContext();
 
@@ -480,7 +474,7 @@ const RequestList: React.FC<IRequestListProps> = ({
 									),
 								});
 
-								history.push(
+								window.location.assign(
 									setUriQueryValues(
 										{
 											field: CREATE_DATE,
@@ -489,11 +483,11 @@ const RequestList: React.FC<IRequestListProps> = ({
 											sortOrder:
 												OrderByDirections.Descending,
 										},
-										toRoute(
-											Routes.SETTINGS_DATA_PRIVACY_REQUEST_LOG,
+										setUriQueryValues(
 											{
-												groupId,
-											}
+												view: 'request-log',
+											},
+											config.dataPrivacyURL
 										)
 									)
 								);
@@ -520,6 +514,5 @@ const RequestList: React.FC<IRequestListProps> = ({
 
 export default compose<any>(
 	withSelectionProvider,
-	connect(null, {addAlert}),
-	withHistory
+	connect(null, {addAlert})
 )(RequestList);

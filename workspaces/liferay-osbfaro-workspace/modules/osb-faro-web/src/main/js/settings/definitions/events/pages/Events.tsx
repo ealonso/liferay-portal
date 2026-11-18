@@ -3,14 +3,10 @@ import React from 'react';
 import TabsCard from '../components/TabsCard';
 import {getDefinitions} from 'shared/util/breadcrumbs';
 
-interface IEventsProps {
-	groupId: string;
-}
-
-const Events: React.FC<IEventsProps> = ({groupId}) => (
+const Events: React.FC = () => (
 	<BasePage
 		breadcrumbItems={[
-			getDefinitions({groupId}),
+			getDefinitions(),
 			{active: true, label: Liferay.Language.get('events')},
 		]}
 		pageDescription={Liferay.Language.get(
@@ -18,7 +14,7 @@ const Events: React.FC<IEventsProps> = ({groupId}) => (
 		)}
 		pageTitle={Liferay.Language.get('events')}
 	>
-		<TabsCard groupId={groupId} />
+		<TabsCard />
 	</BasePage>
 );
 

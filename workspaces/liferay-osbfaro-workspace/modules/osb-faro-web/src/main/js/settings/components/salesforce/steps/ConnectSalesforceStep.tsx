@@ -6,12 +6,11 @@ import {Alert} from 'shared/types';
 import {ConnectSalesforceAuth} from 'settings/components/salesforce/ConnectSalesforceAuth';
 import {DataSourceStatuses} from 'shared/util/constants';
 import {disconnect} from 'shared/api/data-source';
-import {Routes, toRoute} from 'shared/util/router';
 import {updateSearchParams} from 'settings/components/base-page/utis';
-import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
 import {useModal} from '@clayui/modal';
 import {useWizardPage} from '../../base-page/WizardPageContext';
 import {WizardPageButtonGroup} from 'settings/components/base-page/WizardPageButtonGroup';
+import {config} from 'shared/util/config';
 
 interface IConnectSalesforceStepProps {
 	addAlert: Alert.AddAlert;
@@ -24,7 +23,6 @@ const ConnectSalesforceStep = ({
 	groupId,
 	onNext,
 }: IConnectSalesforceStepProps) => {
-	const history = useHistoryAdapter();
 	const {dataSource, refetchDataSource} = useWizardPage();
 	const modal = useModal();
 
@@ -34,14 +32,10 @@ const ConnectSalesforceStep = ({
 				addAlert={addAlert}
 				buttonProps={{block: true}}
 				onCancel={() => {
-					history.push(
-						toRoute(Routes.SETTINGS_DATA_SOURCE_LIST, {
-							groupId,
-						})
-					);
+					window.location.assign(config.dataSourcesURL);
 				}}
 				onSubmit={(dataSource) => {
-					updateSearchParams(history, 'dataSourceId', dataSource.id);
+					updateSearchParams('dataSourceId', dataSource.id);
 
 					onNext();
 				}}
@@ -116,11 +110,7 @@ const ConnectSalesforceStep = ({
 			buttonProps={{block: true}}
 			dataSource={dataSource}
 			onCancel={() => {
-				history.push(
-					toRoute(Routes.SETTINGS_DATA_SOURCE_LIST, {
-						groupId,
-					})
-				);
+				window.location.assign(config.dataSourcesURL);
 			}}
 			onSubmit={onNext}
 		/>

@@ -20,7 +20,6 @@ import {hasChanges} from 'shared/util/react';
 import {List, Map} from 'immutable';
 import {noop} from 'lodash';
 import {PropTypes} from 'prop-types';
-import {Routes, toRoute} from 'shared/util/router';
 import {sequence} from 'shared/util/promise';
 import {
 	toPromise,
@@ -29,6 +28,8 @@ import {
 } from 'shared/components/form';
 import {validateUniqueName} from 'shared/util/data-sources';
 import {withCurrentUser} from 'shared/hoc';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 @hasRequest
 export class CSV extends React.Component {
@@ -194,7 +195,7 @@ export class CSV extends React.Component {
 		return (
 			<BasePage
 				breadcrumbItems={[
-					breadcrumbs.getDataSources({groupId}),
+					breadcrumbs.getDataSources(),
 					breadcrumbs.getEntityName({
 						label: name
 					})
@@ -225,13 +226,7 @@ export class CSV extends React.Component {
 										button
 										className='button-root'
 										displayType='primary'
-										href={toRoute(
-											Routes.SETTINGS_DATA_SOURCE_EDIT,
-											{
-												groupId,
-												id
-											}
-										)}
+										href={setUriQueryValues({id}, config.editDataSourceURL)}
 									>
 										{Liferay.Language.get('edit-csv')}
 									</ClayLink>
@@ -240,13 +235,7 @@ export class CSV extends React.Component {
 										button
 										className='button-root'
 										displayType='primary'
-										href={toRoute(
-											Routes.SETTINGS_DATA_SOURCE_DELETE,
-											{
-												groupId,
-												id
-											}
-										)}
+										href={setUriQueryValues({id}, config.deleteDataSourceURL)}
 									>
 										{Liferay.Language.get(
 											'delete-data-source'

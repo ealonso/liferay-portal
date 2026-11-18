@@ -23,13 +23,9 @@ import {useQuery} from '@apollo/client';
 
 interface IAttributeViewProps extends React.HTMLAttributes<HTMLElement> {
 	attributeId: string;
-	groupId: string;
 }
 
-const AttributeView: React.FC<IAttributeViewProps> = ({
-	attributeId,
-	groupId,
-}) => {
+const AttributeView: React.FC<IAttributeViewProps> = ({attributeId}) => {
 	const result = useQuery<
 		EventAttributeDefinitionData,
 		EventAttributeDefinitionVariables
@@ -62,8 +58,8 @@ const AttributeView: React.FC<IAttributeViewProps> = ({
 				}) => (
 					<BasePage
 						breadcrumbItems={[
-							getDefinitions({groupId}),
-							getEventAttributes({groupId}),
+							getDefinitions(),
+							getEventAttributes(),
 							{active: true, label: name},
 						]}
 						pageActions={viewAttributePageActions}

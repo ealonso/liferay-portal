@@ -10,12 +10,10 @@ export const SuppressedUsers = ({router}: {router: Router}) => {
 	const currentUser = useCurrentUser();
 	const {timeZoneId} = useTimeZone();
 
-	const groupId = router.params.groupId ?? '';
-
 	return (
 		<BasePage
 			breadcrumbItems={[
-				getDataPrivacy({groupId}),
+				getDataPrivacy(),
 				{
 					active: true,
 					label: Liferay.Language.get('suppressed-user-list'),

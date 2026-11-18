@@ -3,20 +3,18 @@ import ClayLink from '@clayui/link';
 import NoResultsDisplay from 'shared/components/NoResultsDisplay';
 import React from 'react';
 import URLConstants from 'shared/util/url-constants';
-import {Routes, toRoute} from 'shared/util/router';
 import {Sizes} from 'shared/util/constants';
+import {config} from 'shared/util/config';
 
 interface IDataSourceEmptyStateProps {
 	authorized: boolean;
 	description: string;
-	groupId: string;
 	title: string;
 }
 
 const DataSourceEmptyState: React.FC<IDataSourceEmptyStateProps> = ({
 	authorized,
 	description,
-	groupId,
 	title,
 }) => (
 	<NoResultsDisplay
@@ -52,7 +50,7 @@ const DataSourceEmptyState: React.FC<IDataSourceEmptyStateProps> = ({
 				button
 				className="button-root mt-1"
 				displayType="primary"
-				href={toRoute(Routes.SETTINGS_DATA_SOURCE_LIST, {groupId})}
+				href={config.dataSourcesURL}
 			>
 				{Liferay.Language.get('connect-data-source')}
 			</ClayLink>

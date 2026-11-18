@@ -13,11 +13,10 @@ import {
 	INDIVIDUALS_DASHBOARD_DISTRUBTIONS_KEY,
 } from 'shared/actions/distributions';
 import {get} from 'lodash';
-import {Routes, toRoute} from 'shared/util/router';
 import {Sizes} from 'shared/util/constants';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useDataSources} from 'shared/context/dataSources';
-import {useParams} from 'react-router-dom';
+import {config} from 'shared/util/config';
 
 const connector = connect(null, {
 	fetchDistribution: fetchIndividualsDistribution,
@@ -32,7 +31,6 @@ interface IIndividualsDistributionProps extends PropsFromRedux {
 export const IndividualsDistribution: React.FC<
 	IIndividualsDistributionProps
 > = ({knownIndividualCount, ...otherProps}) => {
-	const {groupId} = useParams();
 	const dataSourceStates = useDataSources();
 	const currentUser = useCurrentUser();
 	const authorized = currentUser.isAdmin();
@@ -66,12 +64,7 @@ export const IndividualsDistribution: React.FC<
 								button
 								className="button-root"
 								displayType="primary"
-								href={toRoute(
-									Routes.SETTINGS_DATA_SOURCE_LIST,
-									{
-										groupId,
-									}
-								)}
+								href={config.dataSourcesURL}
 							>
 								{Liferay.Language.get('connect-data-source')}
 							</ClayLink>

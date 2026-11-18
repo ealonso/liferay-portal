@@ -16,9 +16,10 @@ import {connect} from 'react-redux';
 import {DataSource} from 'shared/util/records';
 import {hasChanges} from 'shared/util/react';
 import {PropTypes} from 'prop-types';
-import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
 import {UNAUTHORIZED_ACCESS} from 'shared/util/request';
+import {config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
 
 class ConfigureCSV extends React.Component {
 	static propTypes = {
@@ -29,7 +30,6 @@ class ConfigureCSV extends React.Component {
 			PropTypes.number
 		]),
 		groupId: PropTypes.string.isRequired,
-		history: PropTypes.object.isRequired,
 		id: PropTypes.string,
 		name: PropTypes.string
 	};
@@ -61,7 +61,7 @@ class ConfigureCSV extends React.Component {
 	@autobind
 	handleCreateCSVSource(fieldMappings) {
 		const {
-			props: {addAlert, fileVersionId, groupId, history, id},
+			props: {addAlert, fileVersionId, groupId, id},
 			state: {name}
 		} = this;
 
@@ -84,11 +84,8 @@ class ConfigureCSV extends React.Component {
 
 		request(data)
 			.then(response => {
-				history.push(
-					toRoute(Routes.SETTINGS_DATA_SOURCE, {
-						groupId,
-						id: response.id
-					})
+				window.location.assign(
+					setUriQueryValues({id: response.id}, config.dataSourceURL)
 				);
 			})
 			.catch(err => {
@@ -116,10 +113,7 @@ class ConfigureCSV extends React.Component {
 			? [
 					breadcrumbs.getEntityName({
 						active: false,
-						href: toRoute(Routes.SETTINGS_DATA_SOURCE, {
-							groupId,
-							id
-						}),
+						href: setUriQueryValues({id}, config.dataSourceURL),
 						label: name
 					})
 			  ]
@@ -128,7 +122,7 @@ class ConfigureCSV extends React.Component {
 		return (
 			<BasePage
 				breadcrumbItems={[
-					breadcrumbs.getDataSources({groupId}),
+					breadcrumbs.getDataSources(),
 					...breadcrumbItems,
 					{
 						active: true,
@@ -143,10 +137,7 @@ class ConfigureCSV extends React.Component {
 					<DataTransformation
 						cancelHref={
 							id
-								? toRoute(Routes.SETTINGS_DATA_SOURCE, {
-										groupId,
-										id
-								  })
+								? setUriQueryValues({id}, config.dataSourceURL)
 								: ''
 						}
 						fileVersionId={fileVersionId}

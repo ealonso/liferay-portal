@@ -6,7 +6,6 @@ import React from 'react';
 import {compose} from 'redux';
 import {get, omit} from 'lodash';
 import {sub} from 'shared/util/lang';
-import {toRoute} from 'shared/util/router';
 /**
  * HOC for ErrorDisplay.
  * @param {Object} - Options object to pass as props to ErrorDisplay
@@ -92,14 +91,14 @@ export const withNull =
 	(key, errorProps = {}) =>
 	Component =>
 	props => {
-		const {entityType = Liferay.Language.get('page'), linkRoute} =
+		const {entityType = Liferay.Language.get('page'), url} =
 			errorProps;
 
 		if (key && !props[key]) {
 			return (
 				<ErrorPage
 					{...props}
-					href={toRoute(linkRoute, props.router.params)}
+					href={url}
 					linkLabel={sub(Liferay.Language.get('go-to-x'), [
 						entityType
 					])}
