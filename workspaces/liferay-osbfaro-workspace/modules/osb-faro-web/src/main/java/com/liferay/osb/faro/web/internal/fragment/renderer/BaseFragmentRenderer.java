@@ -11,7 +11,6 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemList;
 import com.liferay.frontend.taglib.react.servlet.taglib.ComponentTag;
 import com.liferay.osb.faro.web.internal.display.context.ChannelSelectorDisplayContext;
 import com.liferay.osb.faro.web.internal.util.FaroFragmentRendererUtil;
-import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -56,14 +55,6 @@ public abstract class BaseFragmentRenderer implements FragmentRenderer {
 				httpServletRequest, httpServletResponse, "inline",
 				"window.faroConstants = " +
 					FaroFragmentRendererUtil.getFaroConstants() + ";",
-				null, null);
-			FaroFragmentRendererUtil.renderScriptTag(
-				httpServletRequest, httpServletResponse, null,
-				StringBundler.concat(
-					"document.addEventListener('DOMContentLoaded', () => {",
-					"for (const id of ['liferayAUICSS', 'liferayThemeCSS']) {",
-					"const element = document.getElementById(id);",
-					"if (element) {element.disabled = true;}}});"),
 				null, null);
 
 			PageContext pageContext = PageContextFactoryUtil.create(
