@@ -1,3 +1,4 @@
+import {Config} from 'shared/util/config';
 import Card from 'shared/components/Card';
 import ClayLink from '@clayui/link';
 import getCN from 'classnames';
@@ -15,12 +16,11 @@ import {OrderedMap} from 'immutable';
 import {OrderParams} from 'shared/util/records';
 import {RangeKeyTimeRanges} from 'shared/util/constants';
 import {RangeSelectors, Router} from 'shared/types';
-import {Routes} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
-import {useParams} from 'react-router-dom';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
 import {useQueryRangeSelectors} from 'shared/hooks/useQueryRangeSelectors';
 import {withBaseResults, withRangeKey} from 'shared/hoc';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const withData = () =>
 	graphql(
@@ -70,22 +70,21 @@ const TableWithData: React.FC<ITableWithDataProps> = withRangeKey(
 		getColumns: ({
 			accountId,
 			accountName,
-			channelId,
-			groupId,
+			pageConfig,
 			rangeSelectors,
 			segmentId,
 			segmentName,
-		}: ITableWithDataProps) => [
-			sitePagesListColumns.getTitleUrl({
-				accountId,
-				accountName,
-				channelId,
-				groupId,
-				rangeSelectors,
-				route: Routes.SITES_TOUCHPOINTS_OVERVIEW,
-				segmentId,
-				segmentName,
-			}),
+		}: ITableWithDataProps & {pageConfig: Config}) => [
+			sitePagesListColumns.getTitleUrl(
+				{
+					accountId,
+					accountName,
+					rangeSelectors,
+					segmentId,
+					segmentName,
+				},
+				pageConfig
+			),
 			metricsListColumns.visitorsMetric,
 			metricsListColumns.viewsMetric,
 			metricsListColumns.avgTimeOnPageMetric,
@@ -109,7 +108,12 @@ const InterestDetails: React.FC<IInterestDetailsProps> = ({
 	className,
 	router,
 }) => {
-	const {channelId, groupId, interestId} = useParams();
+	const {
+		channelId,
+		groupId,
+		params: {interestId},
+	} = usePageConfig();
+
 	const {delta, orderIOMap, page, query} = useQueryPagination({
 		initialOrderIOMap: createOrderIOMap(VISITORS_METRIC),
 	});

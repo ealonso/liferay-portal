@@ -21,13 +21,13 @@ import {graphql, OperationOption} from '@apollo/client/react/hoc';
 import {pickBy} from 'lodash';
 import {RangeSelectors} from 'shared/types';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
 import {useChannelContext} from 'shared/context/channel';
-import {useParams} from 'react-router-dom';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
 import {useQueryRangeSelectors} from 'shared/hooks/useQueryRangeSelectors';
-import {withHistory, withPaginationBar, withTableData} from 'shared/hoc';
+import {withPaginationBar, withTableData} from 'shared/hoc';
+import {Config} from 'shared/util/config';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const {
 	pagination: {cur: defaultPage, delta: defaultDelta},
@@ -69,9 +69,8 @@ const TableWithData = withTableData(withData, {
 	getColumns: ({
 		accountId,
 		accountName,
-		channelId,
-		groupId,
 		maxCount,
+		pageConfig,
 		rangeSelectors,
 		segmentId,
 		segmentName,
@@ -79,9 +78,8 @@ const TableWithData = withTableData(withData, {
 	}: {
 		accountId?: string | null;
 		accountName?: string | null;
-		channelId: string;
-		groupId: string;
 		maxCount: number;
+		pageConfig: Config;
 		rangeSelectors: RangeSelectors;
 		segmentId?: string | null;
 		segmentName?: string | null;
@@ -93,18 +91,17 @@ const TableWithData = withTableData(withData, {
 			routeFn: ({data: {name}}: {data: {name: string}}) =>
 				name &&
 				setUriQueryValues(
-					pickBy({
-						accountId,
-						accountName,
-						segmentId,
-						segmentName,
-						...rangeSelectors,
-					}),
-					toRoute(Routes.SITES_INTEREST_DETAILS, {
-						channelId,
-						groupId,
+					{
+						...pickBy({
+							accountId,
+							accountName,
+							segmentId,
+							segmentName,
+							...rangeSelectors,
+						}),
 						interestId: name,
-					})
+					},
+					pageConfig.siteInterestURL
 				),
 			sortable: false,
 		}),
@@ -121,15 +118,13 @@ const TableWithData = withTableData(withData, {
 	rowIdentifier: 'name',
 });
 
-const Interests = ({history}: {history: {push: (path: string) => void}}) => {
+const Interests = () => {
+	const {channelId, groupId} = usePageConfig();
+
 	const {accountId, accountName, segmentId, segmentName} = useContext(
 		BasePage.Context
 	);
 	const {selectedChannel} = useChannelContext();
-	const {channelId, groupId} = useParams<{
-		channelId: string;
-		groupId: string;
-	}>();
 	const {delta, orderIOMap, page} = useQueryPagination({
 		initialOrderIOMap: createOrderIOMap(COUNT),
 	});
@@ -149,7 +144,7 @@ const Interests = ({history}: {history: {push: (path: string) => void}}) => {
 		rangeKey: number | string | null;
 		rangeStart?: string | null;
 	}) => {
-		history.push(
+		Liferay.Util.navigate(
 			setUriQueryValues(
 				pickBy({
 					page: defaultPage,
@@ -197,4 +192,4 @@ const Interests = ({history}: {history: {push: (path: string) => void}}) => {
 	);
 };
 
-export default withHistory(Interests);
+export default Interests;

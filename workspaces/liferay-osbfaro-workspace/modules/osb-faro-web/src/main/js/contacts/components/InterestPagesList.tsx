@@ -8,8 +8,8 @@ import {
 	URL,
 } from 'shared/util/pagination';
 import {pagesListColumns} from 'shared/util/table-columns';
-import {Routes} from 'shared/util/router';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const PAGES_ORDER_BY_OPTIONS = [
 	{
@@ -23,32 +23,24 @@ const PAGES_ORDER_BY_OPTIONS = [
 ];
 
 interface IInterestPages {
-	channelId?: string;
-	groupId?: string;
 	dataSourceFn: () => void;
 	dataSourceParams: any;
 	entityLabel: string;
 	rowIdentifier: string[];
 }
 
-const ActivePagesList: React.FC<IInterestPages> = ({
-	channelId,
-	groupId,
-	...otherProps
-}) => {
+const ActivePagesList: React.FC<IInterestPages> = (props) => {
+	const config = usePageConfig();
+
 	const {delta, orderIOMap, page, query} = useQueryPagination({
 		initialOrderIOMap: createOrderIOMap(UNIQUE_VISITS_COUNT),
 	});
 
 	return (
 		<SearchableEntityTable
-			{...otherProps}
+			{...props}
 			columns={[
-				pagesListColumns.getTitleUrl({
-					channelId,
-					groupId,
-					route: Routes.SITES_TOUCHPOINTS_OVERVIEW,
-				}),
+				pagesListColumns.getTitleUrl(config),
 				pagesListColumns.url,
 				pagesListColumns.viewCount,
 			]}
@@ -66,24 +58,18 @@ const ActivePagesList: React.FC<IInterestPages> = ({
 		/>
 	);
 };
-const InactivePagesList: React.FC<IInterestPages> = ({
-	channelId,
-	groupId,
-	...otherProps
-}) => {
+const InactivePagesList: React.FC<IInterestPages> = (props) => {
+	const config = usePageConfig();
+
 	const {delta, orderIOMap, page, query} = useQueryPagination({
 		initialOrderIOMap: createOrderIOMap(URL),
 	});
 
 	return (
 		<SearchableEntityTable
-			{...otherProps}
+			{...props}
 			columns={[
-				pagesListColumns.getTitleUrl({
-					channelId,
-					groupId,
-					route: Routes.SITES_TOUCHPOINTS_OVERVIEW,
-				}),
+				pagesListColumns.getTitleUrl(config),
 				pagesListColumns.url,
 				pagesListColumns.inactiveViewCount,
 			]}

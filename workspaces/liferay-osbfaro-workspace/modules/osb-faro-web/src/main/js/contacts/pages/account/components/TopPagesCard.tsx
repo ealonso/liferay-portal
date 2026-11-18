@@ -11,11 +11,11 @@ import TopPagesCardContent, {
 } from 'shared/components/TopPagesCardContent';
 import {getSafeRangeSelectors} from 'shared/util/util';
 import {OrderByDirections} from 'shared/util/constants';
-import {pickBy} from 'lodash';
+import {isString, pickBy} from 'lodash';
 import {RangeSelectors} from 'shared/types';
 import {useQuery} from '@apollo/client';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const TopPagesCard: React.FC<React.HTMLAttributes<HTMLElement>> = ({
 	className,
@@ -38,12 +38,14 @@ interface ITopPagesCardWithDataProps {
 const TopPagesCardWithData: React.FC<ITopPagesCardWithDataProps> = ({
 	rangeSelectors,
 }) => {
+	const {pagesURL} = usePageConfig();
+
 	const [activeTabId, setActiveTabId] = useState(TOP_PAGES_TABS[0].tabId);
 	const {
 		accountId,
 		accountName,
 		router: {
-			params: {channelId, groupId},
+			params: {channelId},
 		},
 	} = useContext(BasePage.Context);
 
@@ -68,7 +70,7 @@ const TopPagesCardWithData: React.FC<ITopPagesCardWithDataProps> = ({
 		}
 	);
 
-	const routeQueries = pickBy({accountId, accountName});
+	const routeQueries = pickBy({accountId, accountName}, isString);
 
 	return (
 		<TopPagesCardContent
@@ -77,10 +79,7 @@ const TopPagesCardWithData: React.FC<ITopPagesCardWithDataProps> = ({
 			emptyState={<TopPagesEmptyState />}
 			error={error}
 			footer={{
-				href: setUriQueryValues(
-					routeQueries,
-					toRoute(Routes.SITES_TOUCHPOINTS, {channelId, groupId})
-				),
+				href: setUriQueryValues(routeQueries, pagesURL),
 				label: Liferay.Language.get('view-all'),
 			}}
 			items={data?.pages.assetMetrics ?? []}

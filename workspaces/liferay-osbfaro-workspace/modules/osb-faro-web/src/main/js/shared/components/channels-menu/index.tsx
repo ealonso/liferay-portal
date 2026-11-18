@@ -4,9 +4,9 @@ import PickerTriggerButton from '../PickerTriggerButton';
 import React from 'react';
 import {connect} from 'react-redux';
 import {Option, Picker} from '@clayui/core';
-import {Routes, toRoute} from 'shared/util/router';
 import {updateDefaultChannelId} from 'shared/actions/preferences';
-import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
+import {usePageConfig} from 'shared/context/pageConfig';
+import {setUriQueryValues} from 'shared/util/url';
 
 export type Channel = {
 	createTime: number;
@@ -61,7 +61,7 @@ export const ChannelsMenu: React.FC<IChannelsMenuProps> = ({
 	groupId,
 	updateDefaultChannelId,
 }) => {
-	const history = useHistoryAdapter();
+	const {sitesURL} = usePageConfig();
 
 	const channel = getDefaultChannel(defaultChannelId, channels);
 
@@ -97,11 +97,8 @@ export const ChannelsMenu: React.FC<IChannelsMenuProps> = ({
 						groupId,
 					});
 
-					history.push(
-						toRoute(Routes.SITES, {
-							channelId: selected.id,
-							groupId,
-						})
+					Liferay.Util.navigate(
+						setUriQueryValues({channelId: selected.id}, sitesURL)
 					);
 				}}
 				searchable

@@ -1,11 +1,11 @@
 import BaseInterestDetails from 'contacts/pages/BaseInterestDetails';
 import PropTypes from 'prop-types';
 import React from 'react';
-import {Routes} from 'shared/util/router';
 import {Segment} from 'shared/util/records';
 import {SEGMENTS} from 'shared/util/constants';
+import withPageConfig from 'shared/hoc/WithPageConfig';
 
-export default class InterestDetails extends React.Component {
+class InterestDetails extends React.Component {
 	static propTypes = {
 		segment: PropTypes.instanceOf(Segment).isRequired
 	};
@@ -17,9 +17,12 @@ export default class InterestDetails extends React.Component {
 			<BaseInterestDetails
 				{...otherProps}
 				entity={segment}
-				interestDetailsRoute={Routes.CONTACTS_SEGMENT_INTEREST_DETAILS}
+				interestDetailsURL={this.props.pageConfig.segmentInterestURL}
+				interestsURL={this.props.pageConfig.segmentInterestsURL}
 				type={SEGMENTS}
 			/>
 		);
 	}
 }
+
+export default withPageConfig(InterestDetails);

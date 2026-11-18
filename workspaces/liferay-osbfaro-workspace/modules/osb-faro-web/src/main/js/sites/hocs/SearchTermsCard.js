@@ -13,10 +13,9 @@ import {
 import {graphql} from '@apollo/client/react/hoc';
 import {pickBy} from 'lodash';
 import {ReportContainer} from 'shared/components/download-report/DownloadPDFReport';
-import {useParams} from 'react-router-dom';
 import {withTableData} from 'shared/hoc';
+import {usePageConfig} from 'shared/context/pageConfig';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
 
 const withData = () =>
 	graphql(SearchTermsQuery, {
@@ -64,7 +63,11 @@ const TableWithData = withTableData(withData, {
 });
 
 const SearchTermsCard = ({minHeight, ...props}) => {
-	const {channelId, groupId, id} = useParams();
+	const {
+		channelId,
+		params: {id},
+		searchTermsURL,
+	} = usePageConfig();
 
 	return (
 		<BaseCard
@@ -101,10 +104,7 @@ const SearchTermsCard = ({minHeight, ...props}) => {
 									segmentId,
 									...rangeSelectors,
 								}),
-								toRoute(Routes.SITES_SEARCH_TERMS, {
-									channelId,
-									groupId,
-								})
+								searchTermsURL
 							)}
 							small
 						>

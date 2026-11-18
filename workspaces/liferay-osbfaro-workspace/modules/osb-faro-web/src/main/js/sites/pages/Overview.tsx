@@ -10,18 +10,18 @@ import SiteMetricsCard from 'sites/components/SiteMetricCard';
 import TopPagesCard from 'sites/components/TopPagesCard';
 import VisitorsByTimeCard from 'sites/hocs/VisitorsByTimeCard';
 import {CompositionTypes} from 'shared/util/constants';
-import {pickBy} from 'lodash';
+import {isString, pickBy} from 'lodash';
 import {sub} from 'shared/util/lang';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
-import {useParams} from 'react-router-dom';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface IOverviewProps extends React.HTMLAttributes<HTMLDivElement> {
 	channelName: string;
 }
 
 const Overview: FC<IOverviewProps> = ({channelName}) => {
-	const {channelId, groupId} = useParams();
+	const {pagesURL} = usePageConfig();
+
 	const {accountId, accountName, segmentId, segmentName} = useContext(
 		BasePage.Context
 	);
@@ -47,16 +47,16 @@ const Overview: FC<IOverviewProps> = ({channelName}) => {
 						className="top-pages-card-root"
 						footer={{
 							href: setUriQueryValues(
-								pickBy({
-									accountId,
-									accountName,
-									segmentId,
-									segmentName,
-								}),
-								toRoute(Routes.SITES_TOUCHPOINTS, {
-									channelId,
-									groupId,
-								})
+								pickBy(
+									{
+										accountId,
+										accountName,
+										segmentId,
+										segmentName,
+									},
+									isString
+								),
+								pagesURL
 							),
 							label: Liferay.Language.get('view-all'),
 						}}

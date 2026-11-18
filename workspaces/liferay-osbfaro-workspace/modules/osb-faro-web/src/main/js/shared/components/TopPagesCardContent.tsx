@@ -1,11 +1,10 @@
-import BasePage from 'shared/components/base-page';
 import Card from 'shared/components/Card';
 import ClayEmptyState from '@clayui/empty-state';
 import ClayLink from '@clayui/link';
 import ClayTabs from '@clayui/tabs';
 import DataValue from 'shared/components/DataValue';
 import ErrorDisplay from 'shared/components/ErrorDisplay';
-import React, {useContext} from 'react';
+import React from 'react';
 import StatesRenderer from 'shared/components/states-renderer/StatesRenderer';
 import Table from 'shared/components/table';
 import URLConstants from 'shared/util/url-constants';
@@ -18,19 +17,19 @@ import {OrderByDirections} from 'shared/util/constants';
 import {pickBy} from 'lodash';
 import {RangeSelectors} from 'shared/types';
 import {setUriQueryValues} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
+import {Config} from 'shared/util/config';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const ROW_IDENTIFIER = ['assetId', 'assetTitle'];
 
-const getAssetTitleColumn = ({
-	channelId,
-	groupId,
-	routeQueries,
-}: {
-	channelId?: string;
-	groupId?: string;
-	routeQueries: {[key: string]: any};
-}) => ({
+const getAssetTitleColumn = (
+	{
+		routeQueries,
+	}: {
+		routeQueries: {[key: string]: any};
+	},
+	config: Config
+) => ({
 	cellRenderer: NameCell,
 	cellRendererProps: {
 		nameKey: 'assetTitle',
@@ -40,18 +39,13 @@ const getAssetTitleColumn = ({
 				return undefined;
 			}
 
-			const params = {
-				channelId,
-				groupId,
-				touchpoint: assetId,
-			};
-
 			return setUriQueryValues(
-				routeQueries,
-				toRoute(
-					Routes.SITES_TOUCHPOINTS_OVERVIEW,
-					assetTitle ? {...params, title: assetTitle} : params
-				)
+				{
+					...routeQueries,
+					title: assetTitle || undefined,
+					touchpoint: assetId,
+				},
+				config.pageOverviewURL
 			);
 		},
 	},
@@ -157,11 +151,7 @@ const TopPagesCardContent: React.FC<ITopPagesCardContentProps> = ({
 	rangeSelectors,
 	routeQueries = {},
 }) => {
-	const {
-		router: {
-			params: {channelId, groupId},
-		},
-	} = useContext(BasePage.Context);
+	const config = usePageConfig();
 
 	const activeIndex = Math.max(
 		TOP_PAGES_TABS.findIndex(({tabId}) => tabId === activeTabId),
@@ -171,7 +161,7 @@ const TopPagesCardContent: React.FC<ITopPagesCardContentProps> = ({
 	const {metricColumn, rowIdentifier, tabId} = TOP_PAGES_TABS[activeIndex];
 
 	const columns = [
-		getAssetTitleColumn({channelId, groupId, routeQueries}),
+		getAssetTitleColumn({routeQueries}, config),
 		{
 			...DEFAULT_METRIC_COLUMN,
 			...metricColumn,

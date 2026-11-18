@@ -16,14 +16,14 @@ import {
 	getSafeRangeSelectors,
 	isBlank,
 } from 'shared/util/util';
-import {getUrl} from 'shared/util/urls';
 import {metricsListColumns} from 'shared/util/table-columns';
 import {pickBy} from 'lodash';
 import {ReportContainer} from 'shared/components/download-report/DownloadPDFReport';
-import {Routes} from 'shared/util/router';
-import {useParams} from 'react-router-dom';
 import {useQuery} from '@apollo/client';
 import {useQueryRangeSelectors} from 'shared/hooks/useQueryRangeSelectors';
+import {Config} from 'shared/util/config';
+import {setUriQueryValues} from 'shared/util/url';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const {cur, delta, deltaValues} = FaroConstants.pagination;
 
@@ -96,7 +96,11 @@ const AssetAppearsOnStateRenderer = ({
 	rangeSelectors,
 	segmentId,
 }: any) => {
-	const {assetId, channelId, title} = useParams();
+	const {
+		channelId,
+		params: {assetId, title},
+	} = usePageConfig();
+
 	const [pagination, setPagination] = useState({
 		page: cur,
 		size: delta,
@@ -187,7 +191,8 @@ const AssetApperarsOnContentCard = ({
 	onPaginationChange,
 	pagination,
 }: any) => {
-	const {channelId, groupId} = useParams();
+	const config = usePageConfig();
+
 	const rangeSelectors = useQueryRangeSelectors();
 
 	const items = useMemo(() => formatItems(data), [data]);
@@ -196,12 +201,13 @@ const AssetApperarsOnContentCard = ({
 		<>
 			<Table
 				className="mb-3 table-hover"
-				columns={getTableColumns({
-					accessors,
-					channelId,
-					groupId,
-					rangeSelectors,
-				})}
+				columns={getTableColumns(
+					{
+						accessors,
+						rangeSelectors,
+					},
+					config
+				)}
 				items={items}
 				rowIdentifier={['touchpoint', 'title']}
 			/>
@@ -227,35 +233,21 @@ const AssetApperarsOnContentCard = ({
 	);
 };
 
-const getTableColumns = ({
-	accessors,
-	channelId,
-	groupId,
-	rangeSelectors,
-}: any) => {
-	const generateURL = ({title, touchpoint}: any) => {
-		const router = {
-			params: {
-				channelId,
-				groupId,
-				title,
-				touchpoint,
-			},
-			query: {
-				...pickBy(rangeSelectors),
-			},
-		};
-
-		return getUrl(Routes.SITES_TOUCHPOINTS_OVERVIEW, router);
-	};
-
+const getTableColumns = ({accessors, rangeSelectors}: any, config: Config) => {
 	const tableColumns = [
 		{
 			accessor: 'title',
 			cellRenderer: ({data}: any) => {
 				const url = isBlank(data.touchpoint)
 					? undefined
-					: generateURL(data);
+					: setUriQueryValues(
+							{
+								...pickBy(rangeSelectors),
+								title: data.title,
+								touchpoint: data.touchpoint,
+							},
+							config.pageOverviewURL
+						);
 
 				return (
 					<td className="table-cell-expand">
