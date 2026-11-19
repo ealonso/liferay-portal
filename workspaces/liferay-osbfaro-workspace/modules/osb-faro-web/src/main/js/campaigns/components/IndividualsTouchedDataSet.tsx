@@ -7,7 +7,8 @@ import {
 	pagination,
 } from 'shared/components/FrontendDataSet';
 import {getVisitorType} from 'contacts/pages/account/components/IndividualsDataSet';
-import {Routes, setUriQueryValues} from 'shared/util/router';
+import {setUriQueryValues} from 'shared/util/url';
+import {Routes} from 'shared/util/router';
 import {useRangeQueryValues} from 'shared/hooks/useRangeQueryValues';
 
 interface IIndividualsTouchedDataSetProps {
