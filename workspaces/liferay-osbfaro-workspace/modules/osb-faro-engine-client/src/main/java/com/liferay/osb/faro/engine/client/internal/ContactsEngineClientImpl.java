@@ -981,7 +981,8 @@ public class ContactsEngineClientImpl
 
 	@Override
 	public List<AccountMetric> getAccountMetrics(
-		FaroProject faroProject, String campaignId, Long channelId) {
+		FaroProject faroProject, String campaignId, Long channelId,
+		String rangeEnd, Integer rangeKey, String rangeStart) {
 
 		Map<String, Object> uriVariables = getUriVariables(faroProject);
 
@@ -991,6 +992,18 @@ public class ContactsEngineClientImpl
 
 		if (Validator.isNotNull(channelId)) {
 			uriVariables.put("channelId", channelId);
+		}
+
+		if (Validator.isNotNull(rangeEnd)) {
+			uriVariables.put("rangeEnd", rangeEnd);
+		}
+
+		if (rangeKey != null) {
+			uriVariables.put("rangeKey", rangeKey);
+		}
+
+		if (Validator.isNotNull(rangeStart)) {
+			uriVariables.put("rangeStart", rangeStart);
 		}
 
 		return get(
