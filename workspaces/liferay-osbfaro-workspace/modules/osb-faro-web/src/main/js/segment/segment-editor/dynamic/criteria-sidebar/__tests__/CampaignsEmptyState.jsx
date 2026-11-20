@@ -2,16 +2,10 @@ import CampaignsEmptyState from '../CampaignsEmptyState';
 import React from 'react';
 import {cleanup, render, screen} from '@testing-library/react';
 import {useDataSources} from 'shared/context/dataSources';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.mock('shared/context/dataSources', () => ({useDataSources: jest.fn()}));
 
-jest.mock('shared/hooks/useCurrentUser', () => ({
-	useCurrentUser: () => ({isAdmin: () => true})
-}));
-
-jest.mock('react-router-dom', () => ({
-	useParams: () => ({groupId: '12345'})
-}));
 
 describe('CampaignsEmptyState', () => {
 	afterEach(cleanup);
@@ -23,7 +17,11 @@ describe('CampaignsEmptyState', () => {
 	it('should point to connecting a data source when none is connected', () => {
 		useDataSources.mockReturnValue({empty: true, loading: false});
 
-		render(<CampaignsEmptyState />);
+		render(
+			<WorkspacePage>
+				<CampaignsEmptyState />
+			</WorkspacePage>
+		);
 
 		expect(
 			screen.getByText(/no campaign data has been synced/i)
@@ -34,7 +32,11 @@ describe('CampaignsEmptyState', () => {
 	});
 
 	it('should tell that no campaign was synced when a data source is connected', () => {
-		render(<CampaignsEmptyState />);
+		render(
+			<WorkspacePage>
+				<CampaignsEmptyState />
+			</WorkspacePage>
+		);
 
 		expect(screen.getByText(/no campaigns were found/i)).toBeInTheDocument();
 		expect(
@@ -47,7 +49,11 @@ describe('CampaignsEmptyState', () => {
 	it('should wait for the data sources before telling why it is empty', () => {
 		useDataSources.mockReturnValue({empty: false, loading: true});
 
-		render(<CampaignsEmptyState />);
+		render(
+			<WorkspacePage>
+				<CampaignsEmptyState />
+			</WorkspacePage>
+		);
 
 		expect(
 			screen.queryByText(/no campaigns were found/i)

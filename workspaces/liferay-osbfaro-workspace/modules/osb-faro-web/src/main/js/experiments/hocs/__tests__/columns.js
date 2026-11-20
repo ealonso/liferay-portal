@@ -1,15 +1,7 @@
 import getColumns from '../columns';
 import React from 'react';
-import {MemoryRouter} from 'react-router-dom';
 import {render, screen} from '@testing-library/react';
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		channelId: '2000',
-		groupId: '1000',
-	}),
-}));
+import {WorkspacePage} from 'test/mock-page-context';
 
 const TIME_ZONE_ID = 'America/Recife';
 
@@ -19,13 +11,15 @@ const renderDateColumn = (accessor, data) => {
 	).find((column) => column.accessor === accessor);
 
 	return render(
-		<table>
-			<tbody>
-				<tr>
-					<CellRenderer data={data} {...cellRendererProps} />
-				</tr>
-			</tbody>
-		</table>
+		<WorkspacePage>
+			<table>
+				<tbody>
+					<tr>
+						<CellRenderer data={data} {...cellRendererProps} />
+					</tr>
+				</tbody>
+			</table>
+		</WorkspacePage>
 	);
 };
 
@@ -35,7 +29,7 @@ const renderNameColumn = (data) => {
 	);
 
 	return render(
-		<MemoryRouter>
+		<WorkspacePage>
 			<table>
 				<tbody>
 					<tr>
@@ -43,7 +37,7 @@ const renderNameColumn = (data) => {
 					</tr>
 				</tbody>
 			</table>
-		</MemoryRouter>
+		</WorkspacePage>
 	);
 };
 
@@ -52,6 +46,12 @@ describe('columns', () => {
 		renderNameColumn({id: '1', name: 'My test', pageURL: 'https://a.com'});
 
 		expect(screen.getByText('My test')).toBeInTheDocument();
+	});
+
+	it('links the experiment title to its page', () => {
+		renderNameColumn({id: '1', name: 'My test', pageURL: 'https://a.com'});
+
+		expect(screen.getByRole('link')).toHaveAttribute('href', '/test?id=1');
 	});
 
 	it('renders a missing experiment title as no data', () => {

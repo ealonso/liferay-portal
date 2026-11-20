@@ -2,6 +2,7 @@ import ClayForm from '@clayui/form';
 import client from 'shared/apollo/client';
 import mockStore from 'test/mock-store';
 import React, {useState} from 'react';
+import ReactDOM from 'react-dom';
 import {act, cleanup, fireEvent, render} from '@testing-library/react';
 import {ApolloProvider} from '@apollo/client';
 import {
@@ -15,23 +16,11 @@ import {DownloadReportModal, ReportType} from '../DownloadReportModal';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockPreferenceReq, mockTimeRangeReq} from 'test/graphql-data';
 import {Provider} from 'react-redux';
-import {RangeKeyTimeRanges} from 'shared/util/constants';
 import {RangeSelectors} from 'shared/types';
-import {MemoryRouter} from 'react-router-dom';
 import {sub} from 'shared/util/lang';
 import {useModal} from '@clayui/modal';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		channelId: '456',
-		groupId: '2000',
-		query: {
-			rangeKey: RangeKeyTimeRanges.Last30Days,
-		},
-	}),
-}));
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.mock('shared/hooks/useTimeZone', () => ({
 	useTimeZone: () => ({timeZoneId: 'UTC'}),
@@ -131,24 +120,22 @@ const WrapperComponent: React.FC<IWrapperComponent> = ({
 		<>
 			{visible && (
 				<ApolloProvider client={client}>
-					<MemoryRouter>
-						<MockedProvider
-							mocks={[mockTimeRangeReq(), mockPreferenceReq()]}
-						>
-							<Provider store={mockStore()}>
-								<DownloadReportModal
-									{...otherProps}
-									infoMessage={infoMessage}
-									observer={observer}
-									onClose={jest.fn()}
-									onSubmit={onSubmit}
-									type={type}
-								>
-									{children}
-								</DownloadReportModal>
-							</Provider>
-						</MockedProvider>
-					</MemoryRouter>
+					<MockedProvider
+						mocks={[mockTimeRangeReq(), mockPreferenceReq()]}
+					>
+						<Provider store={mockStore()}>
+							<DownloadReportModal
+								{...otherProps}
+								infoMessage={infoMessage}
+								observer={observer}
+								onClose={jest.fn()}
+								onSubmit={onSubmit}
+								type={type}
+							>
+								{children}
+							</DownloadReportModal>
+						</Provider>
+					</MockedProvider>
 				</ApolloProvider>
 			)}
 
@@ -162,7 +149,9 @@ const WrapperComponent: React.FC<IWrapperComponent> = ({
 
 const generateCSVURL = (type: CSVType) => {
 	const {getByRole, getByTestId} = render(
-		<WrapperCSVComponent type={type} />
+		<WorkspacePage channelId="456" groupId="2000">
+			<WrapperCSVComponent type={type} />
+		</WorkspacePage>
 	);
 
 	fireEvent.click(
@@ -191,6 +180,9 @@ describe('DownloadReportModal CSV', () => {
 		CSV_URL = '';
 
 		jest.useFakeTimers();
+
+		// @ts-ignore
+		ReactDOM.createPortal = jest.fn((element) => element);
 	});
 
 	afterAll(() => {
@@ -198,8 +190,10 @@ describe('DownloadReportModal CSV', () => {
 	});
 
 	it('renders component', async () => {
-		const {getByRole, getByTestId, getByText} = render(
-			<WrapperCSVComponent type={CSVType.Blog} />
+		const {container, getByRole, getByTestId, getByText} = render(
+			<WorkspacePage>
+				<WrapperCSVComponent type={CSVType.Blog} />
+			</WorkspacePage>
 		);
 
 		fireEvent.click(
@@ -212,7 +206,7 @@ describe('DownloadReportModal CSV', () => {
 			jest.runAllTimers();
 		});
 
-		await waitForLoadingToBeRemoved();
+		await waitForLoadingToBeRemoved(container);
 
 		expect(getByText(/^select date range$/i)).toBeInTheDocument();
 
@@ -261,6 +255,9 @@ describe('DownloadReportModal PDF', () => {
 
 	beforeAll(() => {
 		jest.useFakeTimers();
+
+		// @ts-ignore
+		ReactDOM.createPortal = jest.fn((element) => element);
 	});
 
 	afterAll(() => {
@@ -298,22 +295,26 @@ describe('DownloadReportModal PDF', () => {
 			ReportContainer.VisitorsByTimeCard,
 		];
 
-		const {getByRole, getByTestId, getByText} = render(
-			<WrapperPDFomponent>
-				<ClayForm.Group>
-					<label>{Liferay.Language.get('dashboard-reports')}</label>
+		const {container, getByRole, getByTestId, getByText} = render(
+			<WorkspacePage>
+				<WrapperPDFomponent>
+					<ClayForm.Group>
+						<label>
+							{Liferay.Language.get('dashboard-reports')}
+						</label>
 
-					{Object.values(formattedContainers(containers)).map(
-						({id, label}) => (
-							<Checkbox
-								key={id}
-								label={label}
-								onChange={jest.fn()}
-							/>
-						)
-					)}
-				</ClayForm.Group>
-			</WrapperPDFomponent>
+						{Object.values(formattedContainers(containers)).map(
+							({id, label}) => (
+								<Checkbox
+									key={id}
+									label={label}
+									onChange={jest.fn()}
+								/>
+							)
+						)}
+					</ClayForm.Group>
+				</WrapperPDFomponent>
+			</WorkspacePage>
 		);
 
 		fireEvent.click(
@@ -326,7 +327,7 @@ describe('DownloadReportModal PDF', () => {
 			jest.runAllTimers();
 		});
 
-		await waitForLoadingToBeRemoved();
+		await waitForLoadingToBeRemoved(container);
 
 		expect(getByText(/^select date range$/i)).toBeInTheDocument();
 

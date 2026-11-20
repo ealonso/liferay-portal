@@ -1,10 +1,12 @@
 import mockStore from 'test/mock-store';
 import React from 'react';
 import {Dashboard} from '../index';
-import {MemoryRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
+import {Router} from 'shared/types';
 import {render, screen} from '@testing-library/react';
-import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
+import {WorkspacePage} from 'test/mock-page-context';
+import {mockCurrentUser} from 'test/mock-page-context';
+import {UserRoleNames} from 'shared/util/constants';
 
 jest.mock('shared/components/download-report/DownloadCSVReport', () => ({
 	__esModule: true,
@@ -17,16 +19,6 @@ jest.mock('shared/components/download-report/DownloadPDFReport', () => ({
 }));
 
 jest.mock('shared/components/Loading', () => ({
-	__esModule: true,
-	default: () => null,
-}));
-
-jest.mock('shared/components/RouteNotFound', () => ({
-	__esModule: true,
-	default: () => null,
-}));
-
-jest.mock('route-middleware/BundleRouter', () => ({
 	__esModule: true,
 	default: () => null,
 }));
@@ -73,21 +65,10 @@ jest.mock('shared/context/dataSources', () => ({
 	useDataSources: () => ({empty: false, error: false, loading: false}),
 }));
 
-jest.mock('shared/hooks/useCurrentUser', () => ({
-	useCurrentUser: () => ({isAdmin: () => false}),
-}));
-
-jest.mock('shared/hooks/useLDPEnabled', () => ({
-	useLDPEnabled: jest.fn(),
-}));
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({channelId: '456', groupId: '789'}),
-}));
+beforeEach(() => mockCurrentUser({roleName: UserRoleNames.Member}));
 
 describe('Dashboard', () => {
-	const router = {
+	const router: Router = {
 		params: {
 			channelId: '456',
 			groupId: '789',
@@ -96,43 +77,40 @@ describe('Dashboard', () => {
 	};
 
 	it('shows the account filter for LDP workspaces', () => {
-		(useLDPEnabled as jest.Mock).mockReturnValue(true);
-
 		render(
 			<Provider store={mockStore()}>
-				<MemoryRouter>
-					<Dashboard router={router as any} />
-				</MemoryRouter>
+				<WorkspacePage channelId="456" groupId="789" ldpEnabled>
+					<Dashboard renderContent={() => null} router={router} />
+				</WorkspacePage>
 			</Provider>
 		);
 
-		expect(screen.queryByTestId('filter-by-account')).toBeTruthy();
+		expect(screen.getByTestId('filter-by-account')).toBeInTheDocument();
 	});
 
 	it('hides the account filter for non-LDP workspaces', () => {
-		(useLDPEnabled as jest.Mock).mockReturnValue(false);
-
 		render(
 			<Provider store={mockStore()}>
-				<MemoryRouter>
-					<Dashboard router={router as any} />
-				</MemoryRouter>
+				<WorkspacePage channelId="456" groupId="789" ldpEnabled={false}>
+					<Dashboard renderContent={() => null} router={router} />
+				</WorkspacePage>
 			</Provider>
 		);
 
 		expect(screen.queryByTestId('filter-by-account')).toBeNull();
 	});
 
-	it('seeds the account filter from the accountId/accountName URL query params', () => {
-		(useLDPEnabled as jest.Mock).mockReturnValue(true);
-
+	it('seeds the account filter from the accountId/accountName page params', () => {
 		render(
 			<Provider store={mockStore()}>
-				<MemoryRouter
-					initialEntries={['/?accountId=100&accountName=Account+100']}
+				<WorkspacePage
+					channelId="456"
+					groupId="789"
+					ldpEnabled
+					params={{accountId: '100', accountName: 'Account 100'}}
 				>
-					<Dashboard router={router as any} />
-				</MemoryRouter>
+					<Dashboard renderContent={() => null} router={router} />
+				</WorkspacePage>
 			</Provider>
 		);
 
@@ -147,43 +125,40 @@ describe('Dashboard', () => {
 	});
 
 	it('shows the segment filter for LDP workspaces', () => {
-		(useLDPEnabled as jest.Mock).mockReturnValue(true);
-
 		render(
 			<Provider store={mockStore()}>
-				<MemoryRouter>
-					<Dashboard router={router as any} />
-				</MemoryRouter>
+				<WorkspacePage channelId="456" groupId="789" ldpEnabled>
+					<Dashboard renderContent={() => null} router={router} />
+				</WorkspacePage>
 			</Provider>
 		);
 
-		expect(screen.queryByTestId('filter-by-segment')).toBeTruthy();
+		expect(screen.getByTestId('filter-by-segment')).toBeInTheDocument();
 	});
 
 	it('hides the segment filter for non-LDP workspaces', () => {
-		(useLDPEnabled as jest.Mock).mockReturnValue(false);
-
 		render(
 			<Provider store={mockStore()}>
-				<MemoryRouter>
-					<Dashboard router={router as any} />
-				</MemoryRouter>
+				<WorkspacePage channelId="456" groupId="789" ldpEnabled={false}>
+					<Dashboard renderContent={() => null} router={router} />
+				</WorkspacePage>
 			</Provider>
 		);
 
 		expect(screen.queryByTestId('filter-by-segment')).toBeNull();
 	});
 
-	it('seeds the segment filter from the segmentId/segmentName URL query params', () => {
-		(useLDPEnabled as jest.Mock).mockReturnValue(true);
-
+	it('seeds the segment filter from the segmentId/segmentName page params', () => {
 		render(
 			<Provider store={mockStore()}>
-				<MemoryRouter
-					initialEntries={['/?segmentId=100&segmentName=Segment+100']}
+				<WorkspacePage
+					channelId="456"
+					groupId="789"
+					ldpEnabled
+					params={{segmentId: '100', segmentName: 'Segment 100'}}
 				>
-					<Dashboard router={router as any} />
-				</MemoryRouter>
+					<Dashboard renderContent={() => null} router={router} />
+				</WorkspacePage>
 			</Provider>
 		);
 

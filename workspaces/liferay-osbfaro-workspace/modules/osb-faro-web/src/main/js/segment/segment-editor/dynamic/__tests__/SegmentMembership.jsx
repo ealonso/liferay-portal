@@ -7,6 +7,7 @@ import {cleanup, fireEvent, render, screen, waitFor} from '@testing-library/reac
 import {Formik} from 'formik';
 import {Provider} from 'react-redux';
 import {SegmentCategories, SegmentTypes} from 'shared/util/constants';
+import {WorkspacePage} from 'test/mock-page-context';
 
 let mockModalProps;
 
@@ -23,7 +24,7 @@ const renderMembership = (props = {}, store = mockStore()) => {
 	let formik;
 
 	const result = render(
-		<Provider store={store}>
+		<WorkspacePage><Provider store={store}>
 			<Formik
 				initialValues={{includeAnonymousUsers: false}}
 				onSubmit={jest.fn()}
@@ -45,7 +46,7 @@ const renderMembership = (props = {}, store = mockStore()) => {
 					);
 				}}
 			</Formik>
-		</Provider>
+		</Provider></WorkspacePage>
 	);
 
 	return {...result, getFormik: () => formik};

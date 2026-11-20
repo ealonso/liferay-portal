@@ -3,6 +3,7 @@ import React from 'react';
 import {act, cleanup, render, screen} from '@testing-library/react';
 import {useRequest} from 'shared/hooks/useRequest';
 import {warmFrontendDataSet} from 'test/warm-frontend-data-set';
+import {WorkspacePage} from 'test/mock-page-context';
 
 let lastCustomDataRenderers: any;
 let lastOnItemsPropSearch: ((item: any, query: string) => boolean) | undefined;
@@ -43,11 +44,6 @@ jest.mock('shared/hooks/useRequest', () => ({
 	useRequest: jest.fn(),
 }));
 
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({channelId: '456', groupId: '23'}),
-}));
-
 const mockedUseRequest = useRequest as jest.Mock;
 
 beforeAll(warmFrontendDataSet);
@@ -79,12 +75,14 @@ const renderModal = (
 	}> = {}
 ) => {
 	const result = render(
-		<AccountDetailsModal
-			accountId="abc"
-			accountName="Acme Corp"
-			onClose={jest.fn()}
-			{...overrides}
-		/>
+		<WorkspacePage channelId="456" groupId="23">
+			<AccountDetailsModal
+				accountId="abc"
+				accountName="Acme Corp"
+				onClose={jest.fn()}
+				{...overrides}
+			/>
+		</WorkspacePage>
 	);
 
 	act(() => {

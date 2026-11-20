@@ -8,7 +8,7 @@ import React from 'react';
 import {DataSource} from 'shared/util/records';
 import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import {Map} from 'immutable';
-import {MemoryRouter} from 'react-router-dom';
+import {WorkspacePage} from 'test/mock-page-context';
 
 describe('ConnectSalesforceAuth', () => {
 	afterEach(() => {
@@ -19,7 +19,7 @@ describe('ConnectSalesforceAuth', () => {
 		const openSpy = jest.spyOn(window, 'open').mockReturnValue(null);
 
 		render(
-			<MemoryRouter>
+			<WorkspacePage>
 				<ConnectSalesforceAuth
 					addAlert={jest.fn()}
 					dataSource={
@@ -33,7 +33,7 @@ describe('ConnectSalesforceAuth', () => {
 					}
 					onSubmit={jest.fn()}
 				/>
-			</MemoryRouter>
+			</WorkspacePage>
 		);
 
 		fireEvent.click(screen.getByRole('button', {name: 'Connect'}));

@@ -6,7 +6,8 @@ import {
 	useUnassignedSegmentsContext,
 	withUnassignedSegmentsProvider
 } from '../unassignedSegments';
-import {cleanup, render} from '@testing-library/react';
+import {WorkspacePage} from 'test/mock-page-context';
+import {cleanup, fireEvent, render, screen} from '@testing-library/react';
 import {mockSegment} from 'test/data';
 
 const initialState = {
@@ -39,12 +40,69 @@ describe('UnassignedSegmentsProvider', () => {
 		};
 
 		const {container} = render(
-			<UnassignedSegmentsProvider unassignedSegments={[mockSegment()]}>
+			<WorkspacePage><UnassignedSegmentsProvider unassignedSegments={[mockSegment()]}>
 				<ChildComponent />
-			</UnassignedSegmentsProvider>
+			</UnassignedSegmentsProvider></WorkspacePage>
 		);
 
 		expect(container).toHaveTextContent(successMsg);
+	});
+
+	describe('unassigned alert', () => {
+		const AlertState = () => {
+			const {showUnassignedAlert, unassignedSegmentsDispatch} =
+				useUnassignedSegmentsContext();
+
+			return (
+				<button
+					onClick={() =>
+						unassignedSegmentsDispatch({
+							type: ActionType.updateShowAlert
+						})
+					}
+				>
+					{showUnassignedAlert ? 'shown' : 'hidden'}
+				</button>
+			);
+		};
+
+		afterEach(() => {
+			jest.restoreAllMocks();
+		});
+
+		it('hides the alert when the renderer says it was dismissed', () => {
+			render(
+				<WorkspacePage dismissedAlerts={{unassignedSegments: true}}>
+					<UnassignedSegmentsProvider>
+						<AlertState />
+					</UnassignedSegmentsProvider>
+				</WorkspacePage>
+			);
+
+			expect(screen.getByRole('button')).toHaveTextContent('hidden');
+		});
+
+		it('stores the dismissal in the session when the alert is closed', () => {
+			const setSpy = jest.spyOn(Liferay.Util.Session, 'set');
+
+			render(
+				<WorkspacePage><UnassignedSegmentsProvider>
+					<AlertState />
+				</UnassignedSegmentsProvider></WorkspacePage>
+			);
+
+			expect(screen.getByRole('button')).toHaveTextContent('shown');
+			expect(setSpy).not.toHaveBeenCalled();
+
+			fireEvent.click(screen.getByRole('button'));
+
+			expect(screen.getByRole('button')).toHaveTextContent('hidden');
+			expect(setSpy).toHaveBeenCalledWith(
+				'osb-faro-web_dismissedAlerts_unassignedSegments',
+				'true',
+				{useHttpSession: true}
+			);
+		});
 	});
 });
 
@@ -64,9 +122,9 @@ describe('useUnassignedSegmentsContext', () => {
 		};
 
 		const {container} = render(
-			<UnassignedSegmentsProvider>
+			<WorkspacePage><UnassignedSegmentsProvider>
 				<ChildComponent />
-			</UnassignedSegmentsProvider>
+			</UnassignedSegmentsProvider></WorkspacePage>
 		);
 
 		expect(container).toHaveTextContent(successMsg);
@@ -80,7 +138,7 @@ describe('withUnassignedSegmentsProvider', () => {
 		const WrappedComponent = withUnassignedSegmentsProvider(() => (
 			<div>{'foo'}</div>
 		));
-		const {container} = render(<WrappedComponent />);
+		const {container} = render(<WorkspacePage><WrappedComponent /></WorkspacePage>);
 		expect(container).toHaveTextContent('foo');
 	});
 });

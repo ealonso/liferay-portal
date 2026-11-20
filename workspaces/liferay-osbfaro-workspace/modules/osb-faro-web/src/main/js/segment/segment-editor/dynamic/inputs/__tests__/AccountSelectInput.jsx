@@ -5,6 +5,7 @@ import {cleanup, fireEvent, render, waitFor} from '@testing-library/react';
 import {createCustomValueMap} from '../../utils/custom-inputs';
 import {Property} from 'shared/util/records';
 import {PropertyTypes} from '../../utils/constants';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const getMockValue = (propertyName, operatorName, value) =>
 	createCustomValueMap([
@@ -88,7 +89,7 @@ describe('AccountSelectInput', () => {
 	});
 
 	it('should render the entity, the property and the operator of the criterion', () => {
-		const {getAllByText, getByText} = render(<DefaultComponent />);
+		const {getAllByText, getByText} = render(<WorkspacePage><DefaultComponent /></WorkspacePage>);
 
 		expect(getByText(/^account$/i)).toBeInTheDocument();
 		expect(getAllByText(/^lifecycle$/i)[0]).toBeInTheDocument();
@@ -99,7 +100,7 @@ describe('AccountSelectInput', () => {
 		const onChange = jest.fn();
 
 		const {getAllByRole, getByLabelText} = render(
-			<DefaultComponent onChange={onChange} />
+			<WorkspacePage><DefaultComponent onChange={onChange} /></WorkspacePage>
 		);
 
 		await waitFor(() =>
@@ -126,7 +127,7 @@ describe('AccountSelectInput', () => {
 	});
 
 	it('should disable the stages until a lifecycle is selected', async () => {
-		const {getByLabelText, getByText} = render(<DefaultComponent />);
+		const {getByLabelText, getByText} = render(<WorkspacePage><DefaultComponent /></WorkspacePage>);
 
 		await waitFor(() =>
 			expect(getByLabelText(/^lifecycle$/i)).not.toBeDisabled()
@@ -139,14 +140,14 @@ describe('AccountSelectInput', () => {
 		const onChange = jest.fn();
 
 		const {findByText, getAllByRole, getByText} = render(
-			<DefaultComponent
+			<WorkspacePage><DefaultComponent
 				onChange={onChange}
 				value={getMockValue(
 					'lifecycleStatus@erc-lifecycle-100',
 					'ne',
 					null
 				)}
-			/>
+			/></WorkspacePage>
 		);
 
 		await findByText(/^customer$/i);
@@ -174,14 +175,14 @@ describe('AccountSelectInput', () => {
 		const onChange = jest.fn();
 
 		const {findByText, getAllByRole, getByRole} = render(
-			<DefaultComponent
+			<WorkspacePage><DefaultComponent
 				onChange={onChange}
 				value={getMockValue(
 					'lifecycleStatus@erc-lifecycle-100',
 					'eq',
 					'erc-stage-1002'
 				)}
-			/>
+			/></WorkspacePage>
 		);
 
 		await findByText(/^engaged$/i);
@@ -216,13 +217,13 @@ describe('AccountSelectInput', () => {
 	it('should show the stages input instead of the Add Stage button when clicking it', async () => {
 		const {findByText, getByRole, getByText, queryByRole, queryByText} =
 			render(
-				<DefaultComponent
+				<WorkspacePage><DefaultComponent
 					value={getMockValue(
 						'lifecycleStatus@erc-lifecycle-100',
 						'ne',
 						null
 					)}
-				/>
+				/></WorkspacePage>
 			);
 
 		await findByText(/^customer$/i);
@@ -237,13 +238,13 @@ describe('AccountSelectInput', () => {
 
 	it('should show the Add Stage button when closing the stages input without selecting a stage', async () => {
 		const {findByText, getByRole, getByText, queryByRole} = render(
-			<DefaultComponent
+			<WorkspacePage><DefaultComponent
 				value={getMockValue(
 					'lifecycleStatus@erc-lifecycle-100',
 					'ne',
 					null
 				)}
-			/>
+			/></WorkspacePage>
 		);
 
 		await findByText(/^customer$/i);
@@ -260,13 +261,13 @@ describe('AccountSelectInput', () => {
 
 	it('should keep the stages input after selecting the first stage', async () => {
 		const {findByText, getByRole, getByText} = render(
-			<StatefulComponent
+			<WorkspacePage><StatefulComponent
 				value={getMockValue(
 					'lifecycleStatus@erc-lifecycle-100',
 					'ne',
 					null
 				)}
-			/>
+			/></WorkspacePage>
 		);
 
 		await findByText(/^customer$/i);
@@ -280,13 +281,13 @@ describe('AccountSelectInput', () => {
 
 	it('should show the Add Stage button after removing every stage', async () => {
 		const {findByText, getByLabelText, getByText, queryByRole} = render(
-			<StatefulComponent
+			<WorkspacePage><StatefulComponent
 				value={getMockValue(
 					'lifecycleStatus@erc-lifecycle-100',
 					'eq',
 					'erc-stage-1002'
 				)}
-			/>
+			/></WorkspacePage>
 		);
 
 		await findByText(/^engaged$/i);
@@ -299,13 +300,13 @@ describe('AccountSelectInput', () => {
 
 	it('should show the Add Stage button after clearing every stage', async () => {
 		const {findByText, getByLabelText, getByText, queryByRole} = render(
-			<StatefulComponent
+			<WorkspacePage><StatefulComponent
 				value={getMockValue(
 					'lifecycleStatus@erc-lifecycle-100',
 					'eq',
 					'erc-stage-1002'
 				)}
-			/>
+			/></WorkspacePage>
 		);
 
 		await findByText(/^engaged$/i);
@@ -319,13 +320,13 @@ describe('AccountSelectInput', () => {
 	it('should show the Add Stage button after changing the lifecycle while adding stages', async () => {
 		const {findByText, getByLabelText, getByRole, getByText, queryByRole} =
 			render(
-				<StatefulComponent
+				<WorkspacePage><StatefulComponent
 					value={getMockValue(
 						'lifecycleStatus@erc-lifecycle-100',
 						'ne',
 						null
 					)}
-				/>
+				/></WorkspacePage>
 			);
 
 		await findByText(/^customer$/i);
@@ -342,14 +343,14 @@ describe('AccountSelectInput', () => {
 		const onChange = jest.fn();
 
 		const {findByText, getByLabelText} = render(
-			<DefaultComponent
+			<WorkspacePage><DefaultComponent
 				onChange={onChange}
 				value={getMockValue(
 					'lifecycleStatus@erc-lifecycle-100',
 					'eq',
 					'erc-stage-1002'
 				)}
-			/>
+			/></WorkspacePage>
 		);
 
 		await findByText(/^engaged$/i);
@@ -369,7 +370,7 @@ describe('AccountSelectInput', () => {
 		const onChange = jest.fn();
 
 		const {findByText, getByLabelText, getByText} = render(
-			<DefaultComponent
+			<WorkspacePage><DefaultComponent
 				onChange={onChange}
 				value={createCustomValueMap([
 					{
@@ -395,7 +396,7 @@ describe('AccountSelectInput', () => {
 						]
 					}
 				])}
-			/>
+			/></WorkspacePage>
 		);
 
 		await findByText(/^engaged$/i);
@@ -417,14 +418,14 @@ describe('AccountSelectInput', () => {
 		const onChange = jest.fn();
 
 		const {findByText, getAllByRole, getByText} = render(
-			<DefaultComponent
+			<WorkspacePage><DefaultComponent
 				onChange={onChange}
 				value={getMockValue(
 					'lifecycleStatus@erc-lifecycle-100',
 					'eq',
 					'erc-stage-1002'
 				)}
-			/>
+			/></WorkspacePage>
 		);
 
 		await findByText(/^customer$/i);
@@ -445,14 +446,14 @@ describe('AccountSelectInput', () => {
 		const onChange = jest.fn();
 
 		const {findByText, getAllByRole, getByText} = render(
-			<DefaultComponent
+			<WorkspacePage><DefaultComponent
 				onChange={onChange}
 				value={getMockValue(
 					'lifecycleStatus@erc-lifecycle-100',
 					'eq',
 					'erc-stage-1002'
 				)}
-			/>
+			/></WorkspacePage>
 		);
 
 		await findByText(/^customer$/i);
@@ -466,13 +467,13 @@ describe('AccountSelectInput', () => {
 
 	it('should not show the stages of a lifecycle that does not exist', async () => {
 		const {getByLabelText, queryByLabelText, queryByText} = render(
-			<DefaultComponent
+			<WorkspacePage><DefaultComponent
 				value={getMockValue(
 					'lifecycleStatus@erc-lifecycle-300',
 					'eq',
 					'erc-stage-3001'
 				)}
-			/>
+			/></WorkspacePage>
 		);
 
 		await waitFor(() =>
@@ -485,13 +486,13 @@ describe('AccountSelectInput', () => {
 
 	it('should show a stage that does not exist as undefined', async () => {
 		const {findByText, queryByText} = render(
-			<DefaultComponent
+			<WorkspacePage><DefaultComponent
 				value={getMockValue(
 					'lifecycleStatus@erc-lifecycle-100',
 					'eq',
 					'deleted-stage'
 				)}
-			/>
+			/></WorkspacePage>
 		);
 
 		await findByText(/^undefined stage$/i);
@@ -501,9 +502,9 @@ describe('AccountSelectInput', () => {
 
 	it('should select the lifecycle of a stage saved without its lifecycle', async () => {
 		const {findByText, getByText} = render(
-			<DefaultComponent
+			<WorkspacePage><DefaultComponent
 				value={getMockValue('lifecycleStatus', 'eq', 'erc-stage-2001')}
-			/>
+			/></WorkspacePage>
 		);
 
 		await findByText('Partner');

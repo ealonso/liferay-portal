@@ -4,12 +4,12 @@ import React from 'react';
 import {DataTransformation, processFieldMappings} from '../DataTransformation';
 import {fromJS} from 'immutable';
 import {InMemoryCache} from '@apollo/client';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockFieldMapping, mockMapping} from 'test/data';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {mockPageConfig, WorkspacePage} from 'test/mock-page-context';
 
 const defaultProps = {
 	groupId: '23',
@@ -19,27 +19,22 @@ const defaultProps = {
 
 const WrappedComponent = props => (
 	<Provider store={mockStore()}>
-		<MemoryRouter
-			initialEntries={['/workspace/23/settings/data-source/123']}
-		>
-			<RouterRoutes>
-				<Route
-					element={
-						<MockedProvider
-							cache={
-								new InMemoryCache({
-									addTypename: false,
-									freezeResults: false
-								})
-							}
-						>
-							<DataTransformation {...defaultProps} {...props} />
-						</MockedProvider>
-					}
-					path='/workspace/:groupId/settings/data-source/:id/*'
+		<WorkspacePage params={{id: '123'}}>
+			<MockedProvider
+				cache={
+					new InMemoryCache({
+						addTypename: false,
+						freezeResults: false
+					})
+				}
+			>
+				<DataTransformation
+					{...defaultProps}
+					pageConfig={mockPageConfig()}
+					{...props}
 				/>
-			</RouterRoutes>
-		</MemoryRouter>
+			</MockedProvider>
+		</WorkspacePage>
 	</Provider>
 );
 

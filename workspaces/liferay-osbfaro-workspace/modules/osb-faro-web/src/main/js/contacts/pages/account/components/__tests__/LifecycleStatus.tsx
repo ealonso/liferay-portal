@@ -8,6 +8,7 @@ import {
 	within,
 } from '@testing-library/react';
 import {useRequest} from 'shared/hooks/useRequest';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.mock('shared/api', () => ({
 	accounts: {
@@ -22,10 +23,14 @@ jest.mock('shared/hooks/useRequest', () => ({
 	useRequest: jest.fn(),
 }));
 
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({channelId: '123', groupId: '23', id: 'acc-1'}),
-}));
+const LifecycleStatusPage = ({children}: {children: React.ReactNode}) => (
+	<WorkspacePage channelId="123" groupId="23" params={{id: 'acc-1'}}>
+		{children}
+	</WorkspacePage>
+);
+
+const renderLifecycleStatus = (ui: React.ReactElement) =>
+	render(ui, {wrapper: LifecycleStatusPage});
 
 const mockedUseRequest = useRequest as jest.Mock;
 
@@ -171,7 +176,7 @@ describe('LifecycleStatus', () => {
 
 	describe('rendering', () => {
 		it('should render the card title and description', () => {
-			render(<LifecycleStatus />);
+			renderLifecycleStatus(<LifecycleStatus />);
 
 			expect(screen.getByText('LIFECYCLE STATUS')).toBeInTheDocument();
 			expect(
@@ -182,7 +187,7 @@ describe('LifecycleStatus', () => {
 		});
 
 		it('should render every progression stage label in the multistep view', () => {
-			const {container} = render(<LifecycleStatus />);
+			const {container} = renderLifecycleStatus(<LifecycleStatus />);
 
 			const multistep = container.querySelector(
 				'.lifecycle-status-multistep'
@@ -226,7 +231,7 @@ describe('LifecycleStatus', () => {
 				})
 			);
 
-			const {container} = render(<LifecycleStatus />);
+			const {container} = renderLifecycleStatus(<LifecycleStatus />);
 
 			const multistep = container.querySelector(
 				'.lifecycle-status-multistep'
@@ -240,7 +245,7 @@ describe('LifecycleStatus', () => {
 		});
 
 		it('should render numeric indicators 1 through 5 in the multistep view', () => {
-			const {container} = render(<LifecycleStatus />);
+			const {container} = renderLifecycleStatus(<LifecycleStatus />);
 
 			const multistep = container.querySelector(
 				'.lifecycle-status-multistep'
@@ -252,7 +257,7 @@ describe('LifecycleStatus', () => {
 		});
 
 		it('should render the start date below stages that have one', () => {
-			const {container} = render(<LifecycleStatus />);
+			const {container} = renderLifecycleStatus(<LifecycleStatus />);
 
 			const multistep = container.querySelector(
 				'.lifecycle-status-multistep'
@@ -267,7 +272,7 @@ describe('LifecycleStatus', () => {
 		});
 
 		it('should mark the in-progress stage as active and completed stages as complete', () => {
-			const {container} = render(<LifecycleStatus />);
+			const {container} = renderLifecycleStatus(<LifecycleStatus />);
 
 			const items = container.querySelectorAll(
 				'.lifecycle-status-multistep li'
@@ -280,7 +285,7 @@ describe('LifecycleStatus', () => {
 		});
 
 		it('should render the At-Risk stage with a sticker and icon in the multistep view', () => {
-			const {container} = render(<LifecycleStatus />);
+			const {container} = renderLifecycleStatus(<LifecycleStatus />);
 
 			const multistep = container.querySelector(
 				'.lifecycle-status-multistep'
@@ -298,7 +303,7 @@ describe('LifecycleStatus', () => {
 
 	describe('summary view', () => {
 		it('should render the active stage label and step counter', () => {
-			const {container} = render(<LifecycleStatus />);
+			const {container} = renderLifecycleStatus(<LifecycleStatus />);
 
 			const summary = container.querySelector(
 				'.lifecycle-status-summary'
@@ -311,7 +316,7 @@ describe('LifecycleStatus', () => {
 		});
 
 		it('should render the active stage start date', () => {
-			const {container} = render(<LifecycleStatus />);
+			const {container} = renderLifecycleStatus(<LifecycleStatus />);
 
 			const summary = container.querySelector(
 				'.lifecycle-status-summary'
@@ -323,7 +328,7 @@ describe('LifecycleStatus', () => {
 		});
 
 		it('should render the at-risk row as No when the account is not at risk', () => {
-			const {container} = render(<LifecycleStatus />);
+			const {container} = renderLifecycleStatus(<LifecycleStatus />);
 
 			const summary = container.querySelector(
 				'.lifecycle-status-summary'
@@ -357,7 +362,7 @@ describe('LifecycleStatus', () => {
 				})
 			);
 
-			const {container} = render(<LifecycleStatus />);
+			const {container} = renderLifecycleStatus(<LifecycleStatus />);
 
 			const summary = container.querySelector(
 				'.lifecycle-status-summary'
@@ -387,7 +392,7 @@ describe('LifecycleStatus', () => {
 				})
 			);
 
-			const {container} = render(<LifecycleStatus />);
+			const {container} = renderLifecycleStatus(<LifecycleStatus />);
 
 			expect(
 				container.querySelector('.lifecycle-status-summary')
@@ -433,7 +438,7 @@ describe('LifecycleStatus', () => {
 					})
 				);
 
-				const {container} = render(<LifecycleStatus />);
+				const {container} = renderLifecycleStatus(<LifecycleStatus />);
 
 				expect(
 					screen.getByRole('combobox', {name: /^lifecycle$/i})
@@ -466,7 +471,7 @@ describe('LifecycleStatus', () => {
 				})
 			);
 
-			const {container} = render(<LifecycleStatus />);
+			const {container} = renderLifecycleStatus(<LifecycleStatus />);
 
 			fireEvent.click(
 				screen.getByRole('combobox', {name: /^lifecycle$/i})
@@ -527,7 +532,7 @@ describe('LifecycleStatus', () => {
 				})
 			);
 
-			const {container} = render(<LifecycleStatus />);
+			const {container} = renderLifecycleStatus(<LifecycleStatus />);
 
 			const multistep = container.querySelector(
 				'.lifecycle-status-multistep'
@@ -546,7 +551,7 @@ describe('LifecycleStatus', () => {
 				useRequestImpl({lifecyclesData: []})
 			);
 
-			const {container} = render(<LifecycleStatus />);
+			const {container} = renderLifecycleStatus(<LifecycleStatus />);
 
 			expect(
 				screen.getByText(/^no lifecycle data available$/i)
@@ -576,7 +581,7 @@ describe('LifecycleStatus', () => {
 				})
 			);
 
-			render(<LifecycleStatus />);
+			renderLifecycleStatus(<LifecycleStatus />);
 
 			expect(
 				screen.getByText(/^no lifecycle data available$/i)
@@ -590,7 +595,7 @@ describe('LifecycleStatus', () => {
 				useRequestImpl({lifecyclesLoading: true})
 			);
 
-			const {container} = render(<LifecycleStatus />);
+			const {container} = renderLifecycleStatus(<LifecycleStatus />);
 
 			expect(
 				container.querySelector('.loading-root')
@@ -608,7 +613,7 @@ describe('LifecycleStatus', () => {
 				})
 			);
 
-			const {container} = render(<LifecycleStatus />);
+			const {container} = renderLifecycleStatus(<LifecycleStatus />);
 
 			expect(
 				container.querySelector('.loading-root')
@@ -626,7 +631,7 @@ describe('LifecycleStatus', () => {
 				})
 			);
 
-			const {container} = render(<LifecycleStatus />);
+			const {container} = renderLifecycleStatus(<LifecycleStatus />);
 
 			expect(container.querySelector('.loading-root')).toBeNull();
 		});

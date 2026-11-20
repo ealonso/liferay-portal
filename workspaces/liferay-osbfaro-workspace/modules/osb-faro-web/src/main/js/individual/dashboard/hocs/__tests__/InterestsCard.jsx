@@ -1,7 +1,6 @@
 import InterestsCard from '../InterestsCard';
 import React from 'react';
 import {act, cleanup, render} from '@testing-library/react';
-import {BrowserRouter} from 'react-router-dom';
 import {
 	mockCompositionBag,
 	mockIndividualInterestsReq
@@ -9,14 +8,7 @@ import {
 import {MockedProvider} from '@apollo/client/testing';
 import {omit} from 'lodash';
 import {waitFor} from '@testing-library/react';
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		channelId: '456',
-		groupId: '123'
-	})
-}));
+import {WorkspacePage} from 'test/mock-page-context';
 
 describe('InterestsCard', () => {
 	afterEach(cleanup);
@@ -30,9 +22,9 @@ describe('InterestsCard', () => {
 					)
 				]}
 			>
-				<BrowserRouter>
+				<WorkspacePage channelId='456' groupId='123'>
 					<InterestsCard />
-				</BrowserRouter>
+				</WorkspacePage>
 			</MockedProvider>
 		);
 
@@ -62,9 +54,9 @@ describe('InterestsCard', () => {
 					)
 				]}
 			>
-				<BrowserRouter>
+				<WorkspacePage channelId='456' groupId='123'>
 					<InterestsCard />
-				</BrowserRouter>
+				</WorkspacePage>
 			</MockedProvider>
 		);
 

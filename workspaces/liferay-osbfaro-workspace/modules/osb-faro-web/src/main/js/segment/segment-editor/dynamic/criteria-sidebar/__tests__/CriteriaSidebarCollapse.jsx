@@ -16,14 +16,9 @@ import {HTML5Backend} from 'react-dnd-html5-backend';
 import {List} from 'immutable';
 import {Property, PropertyGroup, PropertySubgroup} from 'shared/util/records';
 import {PropertyTypes} from '../../utils/constants';
+import {mockCurrentUser, WorkspacePage} from 'test/mock-page-context';
 
-jest.mock('shared/hooks/useCurrentUser', () => ({
-	useCurrentUser: () => ({isAdmin: () => true})
-}));
-
-jest.mock('react-router-dom', () => ({
-	useParams: () => ({groupId: '12345'})
-}));
+beforeEach(() => mockCurrentUser());
 
 const mockLiferayLanguage = key => {
 	const messages = {
@@ -114,13 +109,13 @@ describe('CriteriaSidebarCollapse', () => {
 
 	it('should render correctly', () => {
 		render(
-			<DndProvider backend={HTML5Backend}>
+			<WorkspacePage><DndProvider backend={HTML5Backend}>
 				<CriteriaSidebarCollapse
 					propertyGroupsIList={propertyGroupsIList}
 					propertyKey='interests'
 					searchValue=''
 				/>
-			</DndProvider>
+			</DndProvider></WorkspacePage>
 		);
 
 		expect(screen.getByText(/^page views$/i)).toBeInTheDocument();
@@ -129,13 +124,13 @@ describe('CriteriaSidebarCollapse', () => {
 
 	it('should filter properties and show "no-results-were-found" for the empty subgroup', () => {
 		const {queryByText} = render(
-			<DndProvider backend={HTML5Backend}>
+			<WorkspacePage><DndProvider backend={HTML5Backend}>
 				<CriteriaSidebarCollapse
 					propertyGroupsIList={propertyGroupsIList}
 					propertyKey='interests'
 					searchValue='Views'
 				/>
-			</DndProvider>
+			</DndProvider></WorkspacePage>
 		);
 
 		expect(queryByText(/^page views$/i)).toBeInTheDocument();
@@ -152,13 +147,13 @@ describe('CriteriaSidebarCollapse', () => {
 
 	it('should render w/ global EmptyState "no-results-were-found" when no properties match the search', () => {
 		const {queryByText} = render(
-			<DndProvider backend={HTML5Backend}>
+			<WorkspacePage><DndProvider backend={HTML5Backend}>
 				<CriteriaSidebarCollapse
 					propertyGroupsIList={propertyGroupsIList}
 					propertyKey='interests'
 					searchValue='should not exist'
 				/>
-			</DndProvider>
+			</DndProvider></WorkspacePage>
 		);
 
 		expect(queryByText('no-results-were-found')).toBeInTheDocument();
@@ -172,13 +167,13 @@ describe('CriteriaSidebarCollapse', () => {
 
 	it('should render custom events in the sidebar', () => {
 		const {queryByText} = render(
-			<DndProvider backend={HTML5Backend}>
+			<WorkspacePage><DndProvider backend={HTML5Backend}>
 				<CriteriaSidebarCollapse
 					propertyGroupsIList={propertyGroupsIListCustomEvents}
 					propertyKey='events'
 					searchValue=''
 				/>
-			</DndProvider>
+			</DndProvider></WorkspacePage>
 		);
 
 		expect(queryByText(/^custom events$/i)).toBeInTheDocument();
@@ -189,13 +184,13 @@ describe('CriteriaSidebarCollapse', () => {
 
 	it('should render the Account EmptyState when propertyKey is Account and there are no properties', () => {
 		const {getByRole, queryByText} = render(
-			<DndProvider backend={HTML5Backend}>
+			<WorkspacePage><DndProvider backend={HTML5Backend}>
 				<CriteriaSidebarCollapse
 					propertyGroupsIList={propertyGroupsIList}
 					propertyKey={ACCOUNT_KEY}
 					searchValue=''
 				/>
-			</DndProvider>
+			</DndProvider></WorkspacePage>
 		);
 
 		expect(queryByText('no-account-data-has-been-synced')).toBeInTheDocument();
@@ -210,10 +205,7 @@ describe('CriteriaSidebarCollapse', () => {
 		const connectLink = getByRole('link', {
 			name: /connect-data-source/i
 		});
-		expect(connectLink).toHaveAttribute(
-			'href',
-			'/workspace/12345/settings/data-source'
-		);
+		expect(connectLink).toHaveAttribute('href', '/data-sources');
 	});
 
 	it('should not render Account EmptyState when there are properties, even if propertyKey is Account', () => {
@@ -241,13 +233,13 @@ describe('CriteriaSidebarCollapse', () => {
 		]);
 
 		const {queryByText} = render(
-			<DndProvider backend={HTML5Backend}>
+			<WorkspacePage><DndProvider backend={HTML5Backend}>
 				<CriteriaSidebarCollapse
 					propertyGroupsIList={propertyGroupsWithAccountData}
 					propertyKey={ACCOUNT_KEY}
 					searchValue=''
 				/>
-			</DndProvider>
+			</DndProvider></WorkspacePage>
 		);
 
 		expect(queryByText(/^account name$/i)).toBeInTheDocument();

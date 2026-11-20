@@ -3,32 +3,23 @@ import HeaderDefault from '../HeaderDefault';
 import React from 'react';
 import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import {INTERVAL_KEY_MAP} from 'shared/util/time';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockPreferenceReq, mockTimeRangeReq} from 'test/graphql-data';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const DefaultComponent = ({
 	mocks = [mockTimeRangeReq(), mockPreferenceReq()],
 	onChangeInterval = jest.fn(),
 	...props
 }) => (
-	<MemoryRouter>
-		<RouterRoutes>
-			<Route
-				element={
-					<MockedProvider addTypename={false} mocks={mocks}>
-						<HeaderDefault
-							label='Title'
-							onChangeInterval={onChangeInterval}
-							{...props}
-						/>
-					</MockedProvider>
-				}
-				path='/*'
-			/>
-		</RouterRoutes>
-	</MemoryRouter>
+	<MockedProvider addTypename={false} mocks={mocks}>
+		<HeaderDefault
+			label='Title'
+			onChangeInterval={onChangeInterval}
+			{...props}
+		/>
+	</MockedProvider>
 );
 
 describe('HeaderDefault', () => {
@@ -41,7 +32,7 @@ describe('HeaderDefault', () => {
 	});
 
 	it('should render', async () => {
-		const {container} = render(<DefaultComponent />);
+		const {container} = render(<WorkspacePage><DefaultComponent /></WorkspacePage>);
 
 		await waitForLoadingToBeRemoved(container);
 
@@ -51,7 +42,7 @@ describe('HeaderDefault', () => {
 	it('should call the onChangeInterval prop fn with "day" if the rangekey is changed to an hourly value', async () => {
 		const spy = jest.fn();
 		render(
-			<DefaultComponent onChangeInterval={spy} rangeKey='LAST_30_DAYS' />
+			<WorkspacePage><DefaultComponent onChangeInterval={spy} rangeKey='LAST_30_DAYS' /></WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved();

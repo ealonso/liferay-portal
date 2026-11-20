@@ -4,7 +4,6 @@ import {AttributesContext, AttributesProvider} from '../../context/attributes';
 import {cleanup, render} from '@testing-library/react';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockEventAnalysisResultReq} from 'test/graphql-data';
-import {MemoryRouter} from 'react-router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
 
 const initialAttributes = {
@@ -81,32 +80,30 @@ describe('BreakdownTable', () => {
 
 	it('render', async () => {
 		const {container} = render(
-			<MemoryRouter>
-				<AttributesContext.Provider value={initialAttributes}>
-					<MockedProvider
-						mocks={[
-							mockEventAnalysisResultReq(eventAnalysisResult, {
-								eventAnalysisBreakdowns: Object.values(
-									initialAttributes.breakdowns
-								),
-								eventAnalysisFilters: Object.values(
-									initialAttributes.filters
-								)
-							})
-						]}
-					>
-						<BreakdownTable
-							channelId='123'
-							compareToPrevious
-							event={event}
-							rangeSelectors={{
-								rangeKey: '30'
-							}}
-							type='TOTAL'
-						/>
-					</MockedProvider>
-				</AttributesContext.Provider>
-			</MemoryRouter>
+			<AttributesContext.Provider value={initialAttributes}>
+				<MockedProvider
+					mocks={[
+						mockEventAnalysisResultReq(eventAnalysisResult, {
+							eventAnalysisBreakdowns: Object.values(
+								initialAttributes.breakdowns
+							),
+							eventAnalysisFilters: Object.values(
+								initialAttributes.filters
+							)
+						})
+					]}
+				>
+					<BreakdownTable
+						channelId='123'
+						compareToPrevious
+						event={event}
+						rangeSelectors={{
+							rangeKey: '30'
+						}}
+						type='TOTAL'
+					/>
+				</MockedProvider>
+			</AttributesContext.Provider>
 		);
 
 		await waitForLoadingToBeRemoved(container);
@@ -120,28 +117,26 @@ describe('BreakdownTable', () => {
 
 	it('render with single event', async () => {
 		const {container} = render(
-			<MemoryRouter>
-				<MockedProvider
-					mocks={[
-						mockEventAnalysisResultReq(eventAnalysisResult, {
-							eventAnalysisBreakdowns: [],
-							eventAnalysisFilters: []
-						})
-					]}
-				>
-					<AttributesProvider>
-						<BreakdownTable
-							channelId='123'
-							compareToPrevious
-							event={event}
-							rangeSelectors={{
-								rangeKey: '30'
-							}}
-							type='TOTAL'
-						/>
-					</AttributesProvider>
-				</MockedProvider>
-			</MemoryRouter>
+			<MockedProvider
+				mocks={[
+					mockEventAnalysisResultReq(eventAnalysisResult, {
+						eventAnalysisBreakdowns: [],
+						eventAnalysisFilters: []
+					})
+				]}
+			>
+				<AttributesProvider>
+					<BreakdownTable
+						channelId='123'
+						compareToPrevious
+						event={event}
+						rangeSelectors={{
+							rangeKey: '30'
+						}}
+						type='TOTAL'
+					/>
+				</AttributesProvider>
+			</MockedProvider>
 		);
 
 		await waitForLoadingToBeRemoved(container);
@@ -172,32 +167,30 @@ describe('BreakdownTable', () => {
 		};
 
 		const {container, getByText} = render(
-			<MemoryRouter>
-				<AttributesContext.Provider value={initialAttributes}>
-					<MockedProvider
-						mocks={[
-							mockEventAnalysisResultReq(eventAnalysisResult, {
-								eventAnalysisBreakdowns: Object.values(
-									initialAttributes.breakdowns
-								),
-								eventAnalysisFilters: Object.values(
-									initialAttributes.filters
-								)
-							})
-						]}
-					>
-						<BreakdownTable
-							channelId='123'
-							compareToPrevious
-							event={event}
-							rangeSelectors={{
-								rangeKey: '30'
-							}}
-							type='TOTAL'
-						/>
-					</MockedProvider>
-				</AttributesContext.Provider>
-			</MemoryRouter>
+			<AttributesContext.Provider value={initialAttributes}>
+				<MockedProvider
+					mocks={[
+						mockEventAnalysisResultReq(eventAnalysisResult, {
+							eventAnalysisBreakdowns: Object.values(
+								initialAttributes.breakdowns
+							),
+							eventAnalysisFilters: Object.values(
+								initialAttributes.filters
+							)
+						})
+					]}
+				>
+					<BreakdownTable
+						channelId='123'
+						compareToPrevious
+						event={event}
+						rangeSelectors={{
+							rangeKey: '30'
+						}}
+						type='TOTAL'
+					/>
+				</MockedProvider>
+			</AttributesContext.Provider>
 		);
 
 		await waitForLoadingToBeRemoved(container);

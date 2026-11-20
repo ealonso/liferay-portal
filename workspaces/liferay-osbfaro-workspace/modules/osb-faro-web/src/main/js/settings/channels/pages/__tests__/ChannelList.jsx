@@ -4,11 +4,12 @@ import ChannelList from '../ChannelList';
 import mockStore, {mockStoreData} from 'test/mock-store';
 import React from 'react';
 import {cleanup, render, screen} from '@testing-library/react';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {Provider} from 'react-redux';
-import {RemoteData, TimeZone, User} from 'shared/util/records';
-import {Routes} from 'shared/util/router';
+import {TimeZone} from 'shared/util/records';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
+import {mockCurrentUser} from 'test/mock-page-context';
+import {UserRoleNames} from 'shared/util/constants';
 
 const defaultProps = {
 	groupId: '23'
@@ -16,11 +17,7 @@ const defaultProps = {
 
 const Wrapper = ({children, store = mockStore()}) => (
 	<Provider store={store}>
-		<MemoryRouter initialEntries={['/workspace/23/settings/properties']}>
-			<RouterRoutes>
-				<Route element={children} path={`${Routes.SETTINGS_CHANNELS}/*`} />
-			</RouterRoutes>
-		</MemoryRouter>
+		<WorkspacePage friendlyURL='/properties'>{children}</WorkspacePage>
 	</Provider>
 );
 
@@ -44,15 +41,9 @@ describe.skip('Channels List', () => {
 	});
 
 	it('should not render add button if user is not an admin', async () => {
-		const memberStore = mockStore(
-			mockStoreData.setIn(['currentUser', 'data'], '24').setIn(
-				['users', '24'],
-				new RemoteData({
-					data: new User(data.mockMemberUser('24')),
-					loading: false
-				})
-			)
-		);
+		mockCurrentUser({roleName: UserRoleNames.Member});
+
+		const memberStore = mockStore();
 
 		API.channels.search.mockReturnValue(
 			Promise.resolve(data.mockChannels())

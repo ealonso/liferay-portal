@@ -7,6 +7,9 @@ import {
 } from 'assets/descriptors';
 import {AssetTypes} from 'shared/util/constants';
 import {Name} from 'shared/components/audience-report/types';
+import {mockPageConfig} from 'test/mock-page-context';
+
+const config = mockPageConfig();
 
 describe('ASSET_DESCRIPTORS', () => {
 	it('should cover every asset type that has a dashboard', () => {
@@ -26,32 +29,29 @@ describe('ASSET_DESCRIPTORS', () => {
 		});
 	});
 
-	// The five dashboards used to have a route branch each. One dynamic route
-	// serves them all now, and the slug is what keeps the URLs unchanged.
-
-	it('should build the same URLs the per type routes used to', () => {
+	it('should send every type to the asset page with its slug', () => {
 		const routeParams = {
 			assetId: 123,
-			channelId: 456,
-			groupId: 789,
 			title: 'Foo',
 			touchpoint: 'Any',
 		};
 
-		expect(toAssetOverviewRoute('blog', routeParams, {})).toBe(
-			'/workspace/789/456/assets/blogs/123/page/Any/Foo'
+		expect(toAssetOverviewRoute('blog', routeParams, {}, config)).toBe(
+			'/asset?assetId=123&title=Foo&touchpoint=Any&assetType=blogs'
 		);
-		expect(toAssetOverviewRoute('document', routeParams, {})).toBe(
-			'/workspace/789/456/assets/documents-and-media/123/page/Any/Foo'
+		expect(toAssetOverviewRoute('document', routeParams, {}, config)).toBe(
+			'/asset?assetId=123&title=Foo&touchpoint=Any&assetType=documents-and-media'
 		);
-		expect(toAssetOverviewRoute('form', routeParams, {})).toBe(
-			'/workspace/789/456/assets/forms/123/page/Any/Foo'
+		expect(toAssetOverviewRoute('form', routeParams, {}, config)).toBe(
+			'/asset?assetId=123&title=Foo&touchpoint=Any&assetType=forms'
 		);
-		expect(toAssetOverviewRoute('journal', routeParams, {})).toBe(
-			'/workspace/789/456/assets/web-content/123/page/Any/Foo'
+		expect(toAssetOverviewRoute('journal', routeParams, {}, config)).toBe(
+			'/asset?assetId=123&title=Foo&touchpoint=Any&assetType=web-content'
 		);
-		expect(toAssetOverviewRoute('objectEntry', routeParams, {})).toBe(
-			'/workspace/789/456/assets/object-entry/123/page/Any/Foo'
+		expect(
+			toAssetOverviewRoute('objectEntry', routeParams, {}, config)
+		).toBe(
+			'/asset?assetId=123&title=Foo&touchpoint=Any&assetType=object-entry'
 		);
 	});
 
@@ -136,30 +136,28 @@ describe('getAssetDescriptorBySlug', () => {
 describe('toAssetOverviewRoute', () => {
 	const routeParams = {
 		assetId: 123,
-		channelId: 456,
-		groupId: 789,
 		title: 'Foo',
 		touchpoint: 'Any',
 	};
 
 	it('should build the overview url for every mapped type', () => {
-		expect(toAssetOverviewRoute('blog', routeParams, {})).toBe(
-			'/workspace/789/456/assets/blogs/123/page/Any/Foo'
+		expect(toAssetOverviewRoute('blog', routeParams, {}, config)).toBe(
+			'/asset?assetId=123&title=Foo&touchpoint=Any&assetType=blogs'
 		);
-		expect(toAssetOverviewRoute('journal', routeParams, {})).toBe(
-			'/workspace/789/456/assets/web-content/123/page/Any/Foo'
+		expect(toAssetOverviewRoute('journal', routeParams, {}, config)).toBe(
+			'/asset?assetId=123&title=Foo&touchpoint=Any&assetType=web-content'
 		);
 	});
 
 	it('should fall back to the object entry overview for an unknown type', () => {
-		expect(toAssetOverviewRoute('custom', routeParams, {})).toBe(
-			'/workspace/789/456/assets/object-entry/123/page/Any/Foo'
+		expect(toAssetOverviewRoute('custom', routeParams, {}, config)).toBe(
+			'/asset?assetId=123&title=Foo&touchpoint=Any&assetType=object-entry'
 		);
 	});
 
 	it('should append the query when there is one', () => {
 		expect(
-			toAssetOverviewRoute('blog', routeParams, {rangeKey: 7})
+			toAssetOverviewRoute('blog', routeParams, {rangeKey: 7}, config)
 		).toContain('rangeKey=7');
 	});
 });

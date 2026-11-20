@@ -3,7 +3,6 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import ReportIssue from '../ReportIssue';
 import {InMemoryCache} from '@apollo/client';
-import {MemoryRouter, Route, Routes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
 import {cleanup} from '@testing-library/react';
@@ -16,30 +15,21 @@ describe('ReportIssue', () => {
 	it('should render', async () => {
 		const {queryByText} = await renderModal(observer => (
 			<Provider store={mockStore()}>
-				<MemoryRouter initialEntries={['/workspace/23']}>
-					<Routes>
-						<Route
-							element={
-								<MockedProvider
-									cache={
-										new InMemoryCache({
-											addTypename: false
-										})
-									}
-									mocks={[]}
-								>
-									<ClayModal observer={observer}>
-										<ReportIssue
-											onClose={jest.fn()}
-											onNext={jest.fn()}
-										/>
-									</ClayModal>
-								</MockedProvider>
-							}
-							path='/workspace/:groupId'
+				<MockedProvider
+					cache={
+						new InMemoryCache({
+							addTypename: false
+						})
+					}
+					mocks={[]}
+				>
+					<ClayModal observer={observer}>
+						<ReportIssue
+							onClose={jest.fn()}
+							onNext={jest.fn()}
 						/>
-					</Routes>
-				</MemoryRouter>
+					</ClayModal>
+				</MockedProvider>
 			</Provider>
 		));
 

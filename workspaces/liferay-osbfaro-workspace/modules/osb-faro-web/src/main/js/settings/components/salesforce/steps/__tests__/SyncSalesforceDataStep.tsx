@@ -3,11 +3,7 @@ import {fireEvent, render, screen, waitFor} from '@testing-library/react';
 import {fromJS} from 'immutable';
 import {SyncSalesforceDataStep} from '../SyncSalesforceDataStep';
 import {updateSalesforce} from 'shared/api/data-source';
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({groupId: '23'}),
-}));
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.mock('settings/components/base-page/WizardPageContext', () => ({
 	useWizardPage: () => ({
@@ -34,7 +30,8 @@ const getCheckboxes = () =>
 describe('SyncSalesforceDataStep', () => {
 	it('renders the campaigns item checked and disabled without a synced count', () => {
 		render(
-			<SyncSalesforceDataStep onNext={jest.fn()} onPrev={jest.fn()} />
+			<SyncSalesforceDataStep onNext={jest.fn()} onPrev={jest.fn()} />,
+			{wrapper: WorkspacePage}
 		);
 
 		expect(screen.getByText(/^campaigns$/i)).toBeTruthy();
@@ -55,7 +52,9 @@ describe('SyncSalesforceDataStep', () => {
 	it('keeps saving the accounts and individuals selection', async () => {
 		const onNext = jest.fn();
 
-		render(<SyncSalesforceDataStep onNext={onNext} onPrev={jest.fn()} />);
+		render(<SyncSalesforceDataStep onNext={onNext} onPrev={jest.fn()} />, {
+			wrapper: WorkspacePage,
+		});
 
 		const checkboxes = getCheckboxes();
 

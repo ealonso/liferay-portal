@@ -2,32 +2,21 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import {BasePage} from '../index';
 import {cleanup, render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
 import {Provider} from 'react-redux';
-import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.unmock('shared/components/DocumentTitle');
-
-jest.mock('shared/hooks/useLDPEnabled', () => ({
-	useLDPEnabled: jest.fn()
-}));
 
 describe('BasePage', () => {
 	afterEach(cleanup);
 
-	beforeEach(() => {
-		useLDPEnabled.mockReturnValue(false);
-	});
-
 	it('renders BasePage', () => {
 		const {container} = render(
-			<Provider store={mockStore()}>
-				<MemoryRouter>
-					<BasePage documentTitle='Test title'>
-						{'Test test'}
-					</BasePage>
-				</MemoryRouter>
-			</Provider>
+			<WorkspacePage><Provider store={mockStore()}>
+				<BasePage documentTitle='Test title'>
+					{'Test test'}
+				</BasePage>
+			</Provider></WorkspacePage>
 		);
 
 		expect(container).toMatchSnapshot();
@@ -35,25 +24,19 @@ describe('BasePage', () => {
 
 	it('sets the document title with Analytics Cloud for a non-LDP workspace', () => {
 		render(
-			<Provider store={mockStore()}>
-				<MemoryRouter>
-					<BasePage documentTitle='Test title' />
-				</MemoryRouter>
-			</Provider>
+			<WorkspacePage><Provider store={mockStore()}>
+				<BasePage documentTitle='Test title' />
+			</Provider></WorkspacePage>
 		);
 
 		expect(document.title).toEqual('Test title - Analytics Cloud');
 	});
 
 	it('sets the document title with Liferay Data Platform for an LDP workspace', () => {
-		useLDPEnabled.mockReturnValue(true);
-
 		render(
-			<Provider store={mockStore()}>
-				<MemoryRouter>
-					<BasePage documentTitle='Test title' />
-				</MemoryRouter>
-			</Provider>
+			<WorkspacePage ldpEnabled><Provider store={mockStore()}>
+				<BasePage documentTitle='Test title' />
+			</Provider></WorkspacePage>
 		);
 
 		expect(document.title).toEqual('Test title - Liferay Data Platform');

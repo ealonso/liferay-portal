@@ -4,7 +4,6 @@ import {
 	listAvailableConnectors,
 	listConnectors,
 } from '../registry';
-import {SubscriptionNames} from 'shared/util/subscriptions';
 
 describe('connector registry', () => {
 	describe('getConnectorConfig', () => {
@@ -69,31 +68,26 @@ describe('connector registry', () => {
 		it('hides singleton connectors that already exist on the data source list', () => {
 			const existing = new Set([DataSourceTypes.Demandbase]);
 
-			const slugs = listAvailableConnectors(
-				existing,
-				SubscriptionNames.LiferayDataPlatformPrivateBeta
-			).map((c) => c.slug);
+			const slugs = listAvailableConnectors(existing, true).map(
+				(c) => c.slug
+			);
 
 			expect(slugs).not.toContain('demandbase');
 			expect(slugs).toContain('hubspot');
 		});
 
 		it('returns all connectors when none are present yet', () => {
-			const slugs = listAvailableConnectors(
-				new Set(),
-				SubscriptionNames.LiferayDataPlatformPrivateBeta
-			)
+			const slugs = listAvailableConnectors(new Set(), true)
 				.map((c) => c.slug)
 				.sort();
 
 			expect(slugs).toEqual(['demandbase', 'hubspot', 'marketo']);
 		});
 
-		it('hides every connector that requires LDP when the plan is non-LDP', () => {
-			const slugs = listAvailableConnectors(
-				new Set(),
-				SubscriptionNames.LiferayAnalyticsCloudEnterprise
-			).map((c) => c.slug);
+		it('hides every connector that requires LDP when the plan is not LDP', () => {
+			const slugs = listAvailableConnectors(new Set(), false).map(
+				(c) => c.slug
+			);
 
 			const ldpRequired = listConnectors()
 				.filter((config) => config.requiresLDP)
@@ -105,20 +99,15 @@ describe('connector registry', () => {
 		});
 
 		it('shows LDP-only connectors on an LDP plan', () => {
-			const slugs = listAvailableConnectors(
-				new Set(),
-				SubscriptionNames.LiferayDataPlatformPrivateBeta
-			)
+			const slugs = listAvailableConnectors(new Set(), true)
 				.map((c) => c.slug)
 				.sort();
 
 			expect(slugs).toEqual(['demandbase', 'hubspot', 'marketo']);
 		});
 
-		it('hides LDP-only connectors while the subscription is still loading', () => {
-			const slugs = listAvailableConnectors(new Set(), null).map(
-				(c) => c.slug
-			);
+		it('hides LDP-only connectors when the plan is not given', () => {
+			const slugs = listAvailableConnectors(new Set()).map((c) => c.slug);
 
 			expect(slugs).toEqual([]);
 		});

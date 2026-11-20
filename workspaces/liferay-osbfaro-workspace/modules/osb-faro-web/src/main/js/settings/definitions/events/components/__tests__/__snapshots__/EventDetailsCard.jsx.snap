@@ -138,8 +138,7 @@ exports[`EventDetailsCard should render 1`] = `
                     >
                       <a
                         class="text-truncate"
-                        data-discover="true"
-                        href="/workspace/23/settings/definitions/event-attributes/0"
+                        href="/event-attribute?attributeId=0"
                       >
                         name-0
                       </a>
@@ -212,8 +211,7 @@ exports[`EventDetailsCard should render 1`] = `
                     >
                       <a
                         class="text-truncate"
-                        data-discover="true"
-                        href="/workspace/23/settings/definitions/event-attributes/1"
+                        href="/event-attribute?attributeId=1"
                       >
                         name-1
                       </a>
@@ -286,8 +284,7 @@ exports[`EventDetailsCard should render 1`] = `
                     >
                       <a
                         class="text-truncate"
-                        data-discover="true"
-                        href="/workspace/23/settings/definitions/event-attributes/2"
+                        href="/event-attribute?attributeId=2"
                       >
                         name-2
                       </a>
@@ -360,8 +357,7 @@ exports[`EventDetailsCard should render 1`] = `
                     >
                       <a
                         class="text-truncate"
-                        data-discover="true"
-                        href="/workspace/23/settings/definitions/event-attributes/3"
+                        href="/event-attribute?attributeId=3"
                       >
                         name-3
                       </a>
@@ -434,8 +430,7 @@ exports[`EventDetailsCard should render 1`] = `
                     >
                       <a
                         class="text-truncate"
-                        data-discover="true"
-                        href="/workspace/23/settings/definitions/event-attributes/4"
+                        href="/event-attribute?attributeId=4"
                       >
                         name-4
                       </a>

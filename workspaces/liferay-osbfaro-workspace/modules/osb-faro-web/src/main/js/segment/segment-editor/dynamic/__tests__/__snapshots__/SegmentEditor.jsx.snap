@@ -20,9 +20,8 @@ exports[`SegmentEditor should render 1`] = `
             <a
               aria-label="Back"
               class="btn btn-monospaced btn-outline-borderless btn-outline-secondary btn-sm rounded-lg"
-              data-discover="true"
               data-tooltip-align="bottom"
-              href="/workspace/23/321/contacts/segments"
+              href="/segments"
               title="Back"
             >
               <svg
@@ -60,7 +59,7 @@ exports[`SegmentEditor should render 1`] = `
               >
                 <a
                   class="rounded-lg btn btn-outline-borderless btn-sm btn-outline-secondary"
-                  href="/workspace/23/321/contacts/segments"
+                  href="/segments"
                 >
                   Cancel
                 </a>

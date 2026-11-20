@@ -3,7 +3,6 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import TopPagesCard from '../TopPagesCard';
 import {cleanup, fireEvent, render, screen} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {
 	mockPreferenceReq,
@@ -13,6 +12,7 @@ import {
 import {Provider} from 'react-redux';
 import {RangeKeyTimeRanges} from 'shared/util/constants';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const ACCOUNT_ID = 'acc-1';
 
@@ -34,9 +34,9 @@ const MOCK_CONTEXT = {
 
 const renderTopPagesCard = () =>
 	render(
-		<Provider store={mockStore()}>
-			<BasePage.Context.Provider value={MOCK_CONTEXT}>
-				<MemoryRouter>
+		<WorkspacePage>
+			<Provider store={mockStore()}>
+				<BasePage.Context.Provider value={MOCK_CONTEXT}>
 					<MockedProvider
 						addTypename={false}
 						mocks={[
@@ -54,9 +54,9 @@ const renderTopPagesCard = () =>
 					>
 						<TopPagesCard />
 					</MockedProvider>
-				</MemoryRouter>
-			</BasePage.Context.Provider>
-		</Provider>
+				</BasePage.Context.Provider>
+			</Provider>
+		</WorkspacePage>
 	);
 
 const mockEmptySitesTopPagesReq = () => ({
@@ -74,9 +74,9 @@ const mockEmptySitesTopPagesReq = () => ({
 
 const renderTopPagesCardWithoutPages = () =>
 	render(
-		<Provider store={mockStore()}>
-			<BasePage.Context.Provider value={MOCK_CONTEXT}>
-				<MemoryRouter>
+		<WorkspacePage>
+			<Provider store={mockStore()}>
+				<BasePage.Context.Provider value={MOCK_CONTEXT}>
 					<MockedProvider
 						addTypename={false}
 						mocks={[
@@ -87,9 +87,9 @@ const renderTopPagesCardWithoutPages = () =>
 					>
 						<TopPagesCard />
 					</MockedProvider>
-				</MemoryRouter>
-			</BasePage.Context.Provider>
-		</Provider>
+				</BasePage.Context.Provider>
+			</Provider>
+		</WorkspacePage>
 	);
 
 describe('TopPagesCard', () => {
@@ -125,11 +125,9 @@ describe('TopPagesCard', () => {
 			.closest('a')
 			?.getAttribute('href');
 
-		expect(href).toContain(
-			'/workspace/456/123/sites/pages/overview/123/My%20asset%20A'
+		expect(href).toBe(
+			'/page-overview?accountId=acc-1&accountName=IQVIA&title=My+asset+A&touchpoint=123'
 		);
-		expect(href).toContain('accountId=acc-1');
-		expect(href).toContain('accountName=IQVIA');
 	});
 
 	it('should sort by entrances on the entrance pages tab', async () => {
@@ -153,9 +151,9 @@ describe('TopPagesCard', () => {
 			.closest('a')
 			?.getAttribute('href');
 
-		expect(href).toContain('/workspace/456/123/sites/pages');
-		expect(href).toContain('accountId=acc-1');
-		expect(href).toContain('accountName=IQVIA');
+		expect(href).toBe(
+			'/pages?accountId=acc-1&accountName=IQVIA&rangeKey=30&field=visitorsMetric&sortOrder=DESC'
+		);
 	});
 
 	it('should render the empty state when the account has no pages', async () => {

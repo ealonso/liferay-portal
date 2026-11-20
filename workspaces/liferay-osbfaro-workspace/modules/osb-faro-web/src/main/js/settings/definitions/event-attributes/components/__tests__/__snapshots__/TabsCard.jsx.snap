@@ -45,8 +45,9 @@ exports[`TabsCard should render 1`] = `
                 class="nav-item"
               >
                 <a
-                  class="nav-link"
-                  href="/workspace/23/settings/definitions/event-attributes/global"
+                  aria-current="page"
+                  class="nav-link active"
+                  href="/event-attributes"
                 >
                   <span>
                     Global Attributes
@@ -58,7 +59,7 @@ exports[`TabsCard should render 1`] = `
               >
                 <a
                   class="nav-link"
-                  href="/workspace/23/settings/definitions/event-attributes/local"
+                  href="/event-attributes?tab=local"
                 >
                   <span>
                     Attributes

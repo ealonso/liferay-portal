@@ -47,70 +47,7 @@ exports[`BasePage.Header NavBar renders NavBar 1`] = `
                 <a
                   aria-current="page"
                   class="nav-link active"
-                  href="/workspace/123/contacts/accounts/321?rangeKey=30"
-                >
-                  <span>
-                    Test
-                  </span>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </div>
-    </nav>
-  </div>
-</div>
-`;
-
-exports[`BasePage.Header NavBar renders NavBar w/o routeQueries 1`] = `
-<div>
-  <div
-    class="row"
-  >
-    <nav
-      class="navbar navbar-collapse-relative navbar-expand-md navbar-underline navigation-bar navigation-bar-light"
-    >
-      <div
-        class="container-fluid container-fluid-max-xl"
-      >
-        <button
-          aria-expanded="false"
-          aria-label="Open Menu, Current Page: Test"
-          class="navbar-toggler navbar-toggler-link collapsed btn btn-unstyled"
-          data-testid="navbarToggler"
-          type="button"
-        >
-          <span
-            class="navbar-text-truncate"
-          >
-            Test
-          </span>
-          <svg
-            class="lexicon-icon lexicon-icon-caret-bottom"
-            role="presentation"
-          >
-            <use
-              href="#caret-bottom"
-            />
-          </svg>
-        </button>
-        <div
-          class="navbar-collapse collapse"
-        >
-          <div
-            class="container-fluid container-fluid-max-xl"
-          >
-            <ul
-              class="navbar-nav"
-            >
-              <li
-                class="nav-item"
-              >
-                <a
-                  aria-current="page"
-                  class="nav-link active"
-                  href="/workspace/123/contacts/accounts/321"
+                  href="/account?id=321&rangeKey=30"
                 >
                   <span>
                     Test
@@ -173,7 +110,7 @@ exports[`BasePage.Header NavBar renders NavBar with deprecated label 1`] = `
                 <a
                   aria-current="page"
                   class="nav-link active"
-                  href="/workspace/123/contacts/accounts/321?rangeKey=30"
+                  href="/account?id=321&rangeKey=30"
                 >
                   <span>
                     Test

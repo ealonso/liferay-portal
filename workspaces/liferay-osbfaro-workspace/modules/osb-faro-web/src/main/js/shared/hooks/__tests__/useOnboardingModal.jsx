@@ -1,4 +1,4 @@
-import mockStore, {mockStoreData} from 'test/mock-store';
+import mockStore from 'test/mock-store';
 import React from 'react';
 import SitesDashboardQuery from 'shared/queries/SitesDashboardQuery';
 import {InMemoryCache, useQuery} from '@apollo/client';
@@ -8,6 +8,8 @@ import {OnboardingContext} from 'shared/context/onboarding';
 import {Provider} from 'react-redux';
 import {renderHook, waitFor} from '@testing-library/react';
 import {useOnboardingModal} from 'shared/hooks/useOnboardingModal';
+import {mockCurrentUser, WorkspacePage} from 'test/mock-page-context';
+import {UserRoleNames} from 'shared/util/constants';
 
 jest.mock('shared/components/modals/onboarding-modal', () => ({
 	__esModule: true,
@@ -34,6 +36,7 @@ const renderUseOnboardingModal = ({
 		},
 		{
 			wrapper: ({children}) => (
+				<WorkspacePage>
 				<Provider store={store}>
 					<OnboardingContext.Provider
 						value={{onboardingTriggered, setOnboardingTriggered}}
@@ -46,6 +49,7 @@ const renderUseOnboardingModal = ({
 						</MockedProvider>
 					</OnboardingContext.Provider>
 				</Provider>
+				</WorkspacePage>
 			),
 		}
 	);
@@ -93,9 +97,9 @@ describe('useOnboardingModal', () => {
 	});
 
 	it('does not return the onboarding modal for non-admin users', async () => {
-		const {result} = renderUseOnboardingModal({
-			store: mockStore(mockStoreData.setIn(['currentUser', 'data'], '24')),
-		});
+		mockCurrentUser({roleName: UserRoleNames.Member});
+
+		const {result} = renderUseOnboardingModal();
 
 		await waitFor(() => expect(result.current.loading).toBe(false));
 

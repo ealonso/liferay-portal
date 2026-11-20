@@ -304,9 +304,8 @@ exports[`PagePathCard should filter by the selected account 1`] = `
                     34K
                   </text>
                   <a
-                    data-discover="true"
                     data-tooltip-align="right"
-                    href="/workspace/4567/123/sites/pages/overview/https%3A%2F%2Fwww.liferay.com/Liferay%20Home%20Page?rangeKey=30"
+                    href="/page-overview?rangeKey=30&title=Liferay+Home+Page&touchpoint=https%3A%2F%2Fwww.liferay.com"
                     title="Go to Dashboard Page"
                   >
                     <text
@@ -688,9 +687,8 @@ exports[`PagePathCard should filter by the selected account 1`] = `
                     10K
                   </text>
                   <a
-                    data-discover="true"
                     data-tooltip-align="right"
-                    href="/workspace/4567/123/sites/pages/overview/https%3A%2F%2Fwww.site1.com/Site%201?rangeKey=30"
+                    href="/page-overview?rangeKey=30&title=Site+1&touchpoint=https%3A%2F%2Fwww.site1.com"
                     title="Go to Dashboard Page"
                   >
                     <text
@@ -771,9 +769,8 @@ exports[`PagePathCard should filter by the selected account 1`] = `
                     10K
                   </text>
                   <a
-                    data-discover="true"
                     data-tooltip-align="right"
-                    href="/workspace/4567/123/sites/pages/overview/https%3A%2F%2Fwww.site2.com/Site%202?rangeKey=30"
+                    href="/page-overview?rangeKey=30&title=Site+2&touchpoint=https%3A%2F%2Fwww.site2.com"
                     title="Go to Dashboard Page"
                   >
                     <text
@@ -854,9 +851,8 @@ exports[`PagePathCard should filter by the selected account 1`] = `
                     5K
                   </text>
                   <a
-                    data-discover="true"
                     data-tooltip-align="right"
-                    href="/workspace/4567/123/sites/pages/overview/https%3A%2F%2Fwww.site3.com/Site%203?rangeKey=30"
+                    href="/page-overview?rangeKey=30&title=Site+3&touchpoint=https%3A%2F%2Fwww.site3.com"
                     title="Go to Dashboard Page"
                   >
                     <text
@@ -1306,9 +1302,8 @@ exports[`PagePathCard should filter by the selected segment 1`] = `
                     34K
                   </text>
                   <a
-                    data-discover="true"
                     data-tooltip-align="right"
-                    href="/workspace/4567/123/sites/pages/overview/https%3A%2F%2Fwww.liferay.com/Liferay%20Home%20Page?rangeKey=30"
+                    href="/page-overview?rangeKey=30&title=Liferay+Home+Page&touchpoint=https%3A%2F%2Fwww.liferay.com"
                     title="Go to Dashboard Page"
                   >
                     <text
@@ -1690,9 +1685,8 @@ exports[`PagePathCard should filter by the selected segment 1`] = `
                     10K
                   </text>
                   <a
-                    data-discover="true"
                     data-tooltip-align="right"
-                    href="/workspace/4567/123/sites/pages/overview/https%3A%2F%2Fwww.site1.com/Site%201?rangeKey=30"
+                    href="/page-overview?rangeKey=30&title=Site+1&touchpoint=https%3A%2F%2Fwww.site1.com"
                     title="Go to Dashboard Page"
                   >
                     <text
@@ -1773,9 +1767,8 @@ exports[`PagePathCard should filter by the selected segment 1`] = `
                     10K
                   </text>
                   <a
-                    data-discover="true"
                     data-tooltip-align="right"
-                    href="/workspace/4567/123/sites/pages/overview/https%3A%2F%2Fwww.site2.com/Site%202?rangeKey=30"
+                    href="/page-overview?rangeKey=30&title=Site+2&touchpoint=https%3A%2F%2Fwww.site2.com"
                     title="Go to Dashboard Page"
                   >
                     <text
@@ -1856,9 +1849,8 @@ exports[`PagePathCard should filter by the selected segment 1`] = `
                     5K
                   </text>
                   <a
-                    data-discover="true"
                     data-tooltip-align="right"
-                    href="/workspace/4567/123/sites/pages/overview/https%3A%2F%2Fwww.site3.com/Site%203?rangeKey=30"
+                    href="/page-overview?rangeKey=30&title=Site+3&touchpoint=https%3A%2F%2Fwww.site3.com"
                     title="Go to Dashboard Page"
                   >
                     <text
@@ -2308,9 +2300,8 @@ exports[`PagePathCard should render 1`] = `
                     34K
                   </text>
                   <a
-                    data-discover="true"
                     data-tooltip-align="right"
-                    href="/workspace/4567/123/sites/pages/overview/https%3A%2F%2Fwww.liferay.com/Liferay%20Home%20Page?rangeKey=30"
+                    href="/page-overview?rangeKey=30&title=Liferay+Home+Page&touchpoint=https%3A%2F%2Fwww.liferay.com"
                     title="Go to Dashboard Page"
                   >
                     <text
@@ -2692,9 +2683,8 @@ exports[`PagePathCard should render 1`] = `
                     10K
                   </text>
                   <a
-                    data-discover="true"
                     data-tooltip-align="right"
-                    href="/workspace/4567/123/sites/pages/overview/https%3A%2F%2Fwww.site1.com/Site%201?rangeKey=30"
+                    href="/page-overview?rangeKey=30&title=Site+1&touchpoint=https%3A%2F%2Fwww.site1.com"
                     title="Go to Dashboard Page"
                   >
                     <text
@@ -2775,9 +2765,8 @@ exports[`PagePathCard should render 1`] = `
                     10K
                   </text>
                   <a
-                    data-discover="true"
                     data-tooltip-align="right"
-                    href="/workspace/4567/123/sites/pages/overview/https%3A%2F%2Fwww.site2.com/Site%202?rangeKey=30"
+                    href="/page-overview?rangeKey=30&title=Site+2&touchpoint=https%3A%2F%2Fwww.site2.com"
                     title="Go to Dashboard Page"
                   >
                     <text
@@ -2858,9 +2847,8 @@ exports[`PagePathCard should render 1`] = `
                     5K
                   </text>
                   <a
-                    data-discover="true"
                     data-tooltip-align="right"
-                    href="/workspace/4567/123/sites/pages/overview/https%3A%2F%2Fwww.site3.com/Site%203?rangeKey=30"
+                    href="/page-overview?rangeKey=30&title=Site+3&touchpoint=https%3A%2F%2Fwww.site3.com"
                     title="Go to Dashboard Page"
                   >
                     <text

@@ -3,24 +3,15 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useBlocker: () => ({state: 'unblocked'}),
-	useParams: () => ({
-		channelId: '456',
-		groupId: '2000'
-	})
-}));
+import {WorkspacePage} from 'test/mock-page-context';
 
 describe('ConfigureCSV', () => {
 	it('should render', () => {
 		const {container} = render(
 			<Provider store={mockStore()}>
-				<MemoryRouter>
+				<WorkspacePage channelId='456' groupId='2000'>
 					<ConfigureCSV groupId='23' id='123' />
-				</MemoryRouter>
+				</WorkspacePage>
 			</Provider>
 		);
 

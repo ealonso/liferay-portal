@@ -1,15 +1,12 @@
 import React from 'react';
 import Toolbar from '../Toolbar';
 import {fireEvent, render, screen} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
 
 const renderToolbar = (children?: React.ReactNode) =>
 	render(
-		<MemoryRouter>
-			<Toolbar backURL="/back" title="New Event Analysis">
-				{children}
-			</Toolbar>
-		</MemoryRouter>
+		<Toolbar backURL="/back" title="New Event Analysis">
+			{children}
+		</Toolbar>
 	);
 
 describe('BaseEditPage.Toolbar', () => {
@@ -91,7 +88,7 @@ describe('BaseEditPage.Toolbar', () => {
 		const onSubmit = jest.fn((event) => event.preventDefault());
 
 		render(
-			<MemoryRouter>
+			<>
 				<Toolbar backURL="/back" title="Title">
 					<Toolbar.Save
 						form="analysisForm"
@@ -101,7 +98,7 @@ describe('BaseEditPage.Toolbar', () => {
 				</Toolbar>
 
 				<form id="analysisForm" onSubmit={onSubmit} />
-			</MemoryRouter>
+			</>
 		);
 
 		fireEvent.click(screen.getByRole('button', {name: /^save analysis$/i}));
@@ -113,21 +110,17 @@ describe('BaseEditPage.Toolbar', () => {
 		const onClick = jest.fn();
 
 		const {rerender} = render(
-			<MemoryRouter>
-				<Toolbar backURL="/back" title="Title">
-					<Toolbar.Save disabled label="Save" onClick={onClick} />
-				</Toolbar>
-			</MemoryRouter>
+			<Toolbar backURL="/back" title="Title">
+				<Toolbar.Save disabled label="Save" onClick={onClick} />
+			</Toolbar>
 		);
 
 		expect(screen.getByRole('button', {name: /^save$/i})).toBeDisabled();
 
 		rerender(
-			<MemoryRouter>
-				<Toolbar backURL="/back" title="Title">
-					<Toolbar.Save label="Save" onClick={onClick} />
-				</Toolbar>
-			</MemoryRouter>
+			<Toolbar backURL="/back" title="Title">
+				<Toolbar.Save label="Save" onClick={onClick} />
+			</Toolbar>
 		);
 
 		fireEvent.click(screen.getByRole('button', {name: /^save$/i}));

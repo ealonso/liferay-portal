@@ -5,27 +5,17 @@ import {ApolloProvider} from '@apollo/client';
 import {ChannelContext} from 'shared/context/channel';
 import {mockChannelContext} from 'test/mock-channel-context';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useLocation: () => ({
-		search: '?rangeKey=30',
-	}),
-	useParams: () => ({
-		channelId: '456',
-		groupId: '123',
-		query: {
-			rangeKey: '30',
-		},
-	}),
-}));
+import {WorkspacePage} from 'test/mock-page-context';
 
 describe('Sites Dashboard InterestDetails', () => {
 	it('render', () => {
 		const {container} = render(
 			<ApolloProvider client={client}>
-				<MemoryRouter>
+				<WorkspacePage
+					channelId="456"
+					groupId="123"
+					params={{interestId: 'Liferay', rangeKey: '30'}}
+				>
 					<ChannelContext.Provider value={mockChannelContext()}>
 						<InterestDetails
 							channelName="Test Channel"
@@ -35,7 +25,7 @@ describe('Sites Dashboard InterestDetails', () => {
 							}}
 						/>
 					</ChannelContext.Provider>
-				</MemoryRouter>
+				</WorkspacePage>
 			</ApolloProvider>
 		);
 

@@ -13,6 +13,7 @@ import {Property, Segment} from 'shared/util/records';
 import {Provider} from 'react-redux';
 import {ReferencedObjectsProvider} from '../../context/referencedObjects';
 import {SegmentCategories, SegmentTypes} from 'shared/util/constants';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.mock('shared/hooks/useRequest', () => ({
 	useRequest: () => ({data: null, error: false, loading: false})
@@ -82,7 +83,7 @@ describe('BehaviorInput', () => {
 
 	it('should render', () => {
 		const {container, getAllByText, getByText} = render(
-			<DefaultComponent />
+			<WorkspacePage><DefaultComponent /></WorkspacePage>
 		);
 
 		fireEvent.click(getByText('at least'));
@@ -102,7 +103,7 @@ describe('BehaviorInput', () => {
 
 	it('should render w/ data', () => {
 		const {container} = render(
-			<DefaultComponent
+			<WorkspacePage><DefaultComponent
 				referencedAssetsIMap={
 					new Map({
 						assets: new Map({'123_title': 'test'})
@@ -110,7 +111,7 @@ describe('BehaviorInput', () => {
 				}
 				valid={{asset: true, occurenceCount: true}}
 				value={mockValue.set('value', 123)}
-			/>
+			/></WorkspacePage>
 		);
 
 		expect(container).toMatchSnapshot();
@@ -118,10 +119,10 @@ describe('BehaviorInput', () => {
 
 	it('should start the rule with Account in an account segment', () => {
 		const {getByText, queryByText} = render(
-			<DefaultComponent
+			<WorkspacePage><DefaultComponent
 				property={new Property({entityName: 'Individual'})}
 				segmentCategory={SegmentCategories.Account}
-			/>
+			/></WorkspacePage>
 		);
 
 		expect(getByText(/^account$/i)).toBeInTheDocument();
@@ -131,7 +132,7 @@ describe('BehaviorInput', () => {
 
 	it('should start the rule with Individual in an individual segment', () => {
 		const {getByText, queryByText} = render(
-			<DefaultComponent segmentCategory={SegmentCategories.Individual} />
+			<WorkspacePage><DefaultComponent segmentCategory={SegmentCategories.Individual} /></WorkspacePage>
 		);
 
 		expect(getByText(/^individual$/i)).toBeInTheDocument();
@@ -140,7 +141,7 @@ describe('BehaviorInput', () => {
 
 	it('should render with has-error for occurenceCount', () => {
 		const {container} = render(
-			<DefaultComponent touched={{asset: false, occurenceCount: true}} />
+			<WorkspacePage><DefaultComponent touched={{asset: false, occurenceCount: true}} /></WorkspacePage>
 		);
 
 		expect(
@@ -153,7 +154,7 @@ describe('BehaviorInput', () => {
 			const ref = React.createRef();
 
 			render(
-				<Provider store={mockStore()}>
+				<WorkspacePage><Provider store={mockStore()}>
 					<ReferencedObjectsProvider segment={new Segment({})}>
 						<BehaviorInput
 							{...defaultProps}
@@ -161,7 +162,7 @@ describe('BehaviorInput', () => {
 							ref={ref}
 						/>
 					</ReferencedObjectsProvider>
-				</Provider>
+				</Provider></WorkspacePage>
 			);
 
 			return ref;
@@ -286,7 +287,7 @@ describe('BehaviorInput', () => {
 
 		it('should disable the "Add Event Attribute" button until an asset type is selected', () => {
 			const {getByRole} = render(
-				<DefaultComponent value={valueWithoutAssetType} />
+				<WorkspacePage><DefaultComponent value={valueWithoutAssetType} /></WorkspacePage>
 			);
 
 			expect(
@@ -296,7 +297,7 @@ describe('BehaviorInput', () => {
 
 		it('should keep the "Add Event Attribute" button when there is no event to read attributes from', () => {
 			const {getByText, queryByTestId} = render(
-				<DefaultComponent value={valueWithoutAssetType} />
+				<WorkspacePage><DefaultComponent value={valueWithoutAssetType} /></WorkspacePage>
 			);
 
 			fireEvent.click(getByText(/^add event attribute$/i));
@@ -306,7 +307,7 @@ describe('BehaviorInput', () => {
 		});
 
 		it('should show the "Add Event Attribute" button when there is no attribute criterion', () => {
-			const {getByText, queryByTestId} = render(<DefaultComponent />);
+			const {getByText, queryByTestId} = render(<WorkspacePage><DefaultComponent /></WorkspacePage>);
 
 			expect(getByText(/^add event attribute$/i)).toBeInTheDocument();
 			expect(queryByTestId('attribute-filter-section')).toBeNull();
@@ -314,7 +315,7 @@ describe('BehaviorInput', () => {
 
 		it('should not render the attribute filter in a real time segment', () => {
 			const {queryByTestId, queryByText} = render(
-				<DefaultComponent segmentType={SegmentTypes.RealTime} />
+				<WorkspacePage><DefaultComponent segmentType={SegmentTypes.RealTime} /></WorkspacePage>
 			);
 
 			expect(queryByTestId('attribute-filter-section')).toBeNull();
@@ -323,7 +324,7 @@ describe('BehaviorInput', () => {
 
 		it('should reveal the attribute filter section when the button is clicked', () => {
 			const {getByText, getByTestId, queryByText} = render(
-				<DefaultComponent />
+				<WorkspacePage><DefaultComponent /></WorkspacePage>
 			);
 
 			fireEvent.click(getByText(/^add event attribute$/i));
@@ -354,7 +355,7 @@ describe('BehaviorInput', () => {
 			]);
 
 			const {getByTestId, queryByText} = render(
-				<DefaultComponent value={valueWithAttribute} />
+				<WorkspacePage><DefaultComponent value={valueWithAttribute} /></WorkspacePage>
 			);
 
 			expect(getByTestId('attribute-filter-section')).toBeInTheDocument();
@@ -383,7 +384,7 @@ describe('BehaviorInput', () => {
 			]);
 
 			const {getByText, queryByTestId} = render(
-				<DefaultComponent value={valueWithPlaceholder} />
+				<WorkspacePage><DefaultComponent value={valueWithPlaceholder} /></WorkspacePage>
 			);
 
 			expect(getByText(/^add event attribute$/i)).toBeInTheDocument();
@@ -395,7 +396,7 @@ describe('BehaviorInput', () => {
 				const ref = React.createRef();
 
 				render(
-					<Provider store={mockStore()}>
+					<WorkspacePage><Provider store={mockStore()}>
 						<ReferencedObjectsProvider segment={new Segment({})}>
 							<BehaviorInput
 								{...defaultProps}
@@ -404,7 +405,7 @@ describe('BehaviorInput', () => {
 								value={value ?? defaultProps.value}
 							/>
 						</ReferencedObjectsProvider>
-					</Provider>
+					</Provider></WorkspacePage>
 				);
 
 				return ref;

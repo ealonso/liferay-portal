@@ -1,22 +1,15 @@
 import mockStore from 'test/mock-store';
 import React from 'react';
 import {cleanup, render} from '@testing-library/react';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockSuppressedUsersListReq} from 'test/graphql-data';
 import {Provider} from 'react-redux';
-import {Routes} from 'shared/util/router';
 import {SuppressedUsers} from '../SuppressedUsers';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
+import {mockCurrentUser} from 'test/mock-page-context';
 
-jest.mock('shared/hooks/useCurrentUser', () => ({
-	useCurrentUser: () => ({
-		id: '123',
-		isAdmin: () => true,
-		name: 'Marcos',
-		userId: '456'
-	})
-}));
+beforeEach(() => mockCurrentUser({id: '123', name: 'Marcos', userId: '456'}));
 
 jest.mock('shared/hooks/useTimeZone', () => ({
 	useTimeZone: () => ({timeZoneId: 'UTC'})
@@ -46,27 +39,16 @@ describe('SuppressedUsers', () => {
 
 		const {container} = render(
 			<Provider store={mockStore()}>
-				<MemoryRouter
-					initialEntries={[
-						'/workspace/23/settings/data-privacy/suppressed-users?delta=5'
-					]}
-				>
-					<RouterRoutes>
-						<Route
-							element={
-								<MockedProvider addTypename={false} mocks={mocks}>
-									<SuppressedUsers
-										router={{
-											params: {groupId: '23'},
-											query: {delta: '5', page: '1'}
-										}}
-									/>
-								</MockedProvider>
-							}
-							path={`${Routes.SETTINGS_DATA_PRIVACY_SUPPRESSED_USERS}/*`}
+				<WorkspacePage params={{delta: '5'}}>
+					<MockedProvider addTypename={false} mocks={mocks}>
+						<SuppressedUsers
+							router={{
+								params: {groupId: '23'},
+								query: {delta: '5', page: '1'}
+							}}
 						/>
-					</RouterRoutes>
-				</MemoryRouter>
+					</MockedProvider>
+				</WorkspacePage>
 			</Provider>
 		);
 

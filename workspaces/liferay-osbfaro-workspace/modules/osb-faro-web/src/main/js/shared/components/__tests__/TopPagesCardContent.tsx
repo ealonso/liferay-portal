@@ -7,11 +7,11 @@ import TopPagesCardContent, {
 } from '../TopPagesCardContent';
 import {cleanup, render, screen} from '@testing-library/react';
 import {EXIT_RATE_METRIC} from 'shared/util/pagination';
-import {MemoryRouter} from 'react-router-dom';
 import {noop} from 'lodash';
 import {Provider} from 'react-redux';
 import {RangeKeyTimeRanges} from 'shared/util/constants';
 import {RangeSelectors} from 'shared/types';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const MOCK_CONTEXT = {
 	filters: {},
@@ -51,9 +51,9 @@ const renderContent = (
 	} = {}
 ) =>
 	render(
-		<Provider store={mockStore()}>
-			<BasePage.Context.Provider value={MOCK_CONTEXT}>
-				<MemoryRouter>
+		<WorkspacePage>
+			<Provider store={mockStore()}>
+				<BasePage.Context.Provider value={MOCK_CONTEXT}>
 					<TopPagesCardContent
 						activeTabId={activeTabId}
 						footer={footer}
@@ -61,9 +61,9 @@ const renderContent = (
 						onActiveTabIdChange={noop}
 						rangeSelectors={rangeSelectors}
 					/>
-				</MemoryRouter>
-			</BasePage.Context.Provider>
-		</Provider>
+				</BasePage.Context.Provider>
+			</Provider>
+		</WorkspacePage>
 	);
 
 describe('TopPagesCardContent', () => {
@@ -74,30 +74,30 @@ describe('TopPagesCardContent', () => {
 
 		expect(screen.getByText('A page').closest('a')).toHaveAttribute(
 			'href',
-			'/workspace/456/123/sites/pages/overview/https%3A%2F%2Fliferay.com%2Fpage/A%20page'
+			'/page-overview?title=A+page&touchpoint=https%3A%2F%2Fliferay.com%2Fpage'
 		);
 	});
 
 	it('should not carry the account of the page context into the link', () => {
 		render(
-			<Provider store={mockStore()}>
-				<BasePage.Context.Provider
-					value={{
-						...MOCK_CONTEXT,
-						accountId: 'acc-1',
-						accountName: 'IQVIA',
-					}}
-				>
-					<MemoryRouter>
+			<WorkspacePage>
+				<Provider store={mockStore()}>
+					<BasePage.Context.Provider
+						value={{
+							...MOCK_CONTEXT,
+							accountId: 'acc-1',
+							accountName: 'IQVIA',
+						}}
+					>
 						<TopPagesCardContent
 							activeTabId={TOP_PAGES_TABS[0].tabId}
 							items={[item({})]}
 							onActiveTabIdChange={noop}
 							rangeSelectors={RANGE_SELECTORS}
 						/>
-					</MemoryRouter>
-				</BasePage.Context.Provider>
-			</Provider>
+					</BasePage.Context.Provider>
+				</Provider>
+			</WorkspacePage>
 		);
 
 		const href = screen
@@ -114,9 +114,7 @@ describe('TopPagesCardContent', () => {
 
 		expect(
 			container.querySelector('.table-title a')?.getAttribute('href')
-		).toBe(
-			'/workspace/456/123/sites/pages/overview/https%3A%2F%2Fliferay.com%2Fpage'
-		);
+		).toBe('/page-overview?touchpoint=https%3A%2F%2Fliferay.com%2Fpage');
 	});
 
 	it('should render the exit rate with a single decimal place', () => {

@@ -1,4 +1,3 @@
-import * as API from 'shared/api';
 import * as data from 'test/data';
 import * as NotificationAlertList from 'shared/components/NotificationAlertList';
 import CustomEventList from '../CustomEventList';
@@ -6,27 +5,20 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import {cleanup, render} from '@testing-library/react';
 import {InMemoryCache} from '@apollo/client';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockEventDefinitionsReq} from 'test/graphql-data';
 import {NotificationSubtypes} from 'shared/util/records/Notification';
 import {Provider} from 'react-redux';
 import {range} from 'lodash';
-import {Routes} from 'shared/util/router';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
-
-jest.mock('shared/hooks/useCurrentUser', () => ({
-	useCurrentUser: jest.fn()
-}));
+import {WorkspacePage} from 'test/mock-page-context';
+import {mockCurrentUser} from 'test/mock-page-context';
+import {UserRoleNames} from 'shared/util/constants';
 
 const mockNotificationAlertList = NotificationAlertList;
 
 const WrappedComponent = ({
 	children,
-	initialEntries = [
-		'/workspace/23/settings/definitions/events/custom?delta=1'
-	],
 	mocks = [
 		mockEventDefinitionsReq(
 			[
@@ -43,21 +35,14 @@ const WrappedComponent = ({
 	]
 }) => (
 	<Provider store={mockStore()}>
-		<MemoryRouter initialEntries={initialEntries}>
-			<RouterRoutes>
-				<Route
-					element={
-						<MockedProvider
-							cache={new InMemoryCache({freezeResults: false})}
-							mocks={mocks}
-						>
-							{children}
-						</MockedProvider>
-					}
-					path={`${Routes.SETTINGS_DEFINITIONS_EVENTS_CUSTOM}/*`}
-				/>
-			</RouterRoutes>
-		</MemoryRouter>
+		<WorkspacePage params={{delta: '1', tab: 'custom'}}>
+			<MockedProvider
+				cache={new InMemoryCache({freezeResults: false})}
+				mocks={mocks}
+			>
+				{children}
+			</MockedProvider>
+		</WorkspacePage>
 	</Provider>
 );
 
@@ -65,7 +50,7 @@ describe('CustomEventList', () => {
 	afterEach(cleanup);
 
 	it('should render', async () => {
-		useCurrentUser.mockImplementation(() => ({isAdmin: () => true}));
+		mockCurrentUser();
 
 		const {container, queryByTestId} = render(
 			<WrappedComponent>
@@ -80,11 +65,7 @@ describe('CustomEventList', () => {
 	});
 
 	it('should render w/o select all checkbox if user is not an admin', async () => {
-		useCurrentUser.mockImplementation(() => ({isAdmin: () => false}));
-
-		API.user.fetchCurrentUser.mockReturnValueOnce(
-			Promise.resolve(data.mockMemberUser('23'))
-		);
+		mockCurrentUser({roleName: UserRoleNames.Member});
 
 		const {container, queryByTestId} = render(
 			<WrappedComponent>
@@ -98,7 +79,7 @@ describe('CustomEventList', () => {
 	});
 
 	it('should render alert notification', async () => {
-		useCurrentUser.mockImplementation(() => ({isAdmin: () => true}));
+		mockCurrentUser();
 
 		mockNotificationAlertList.useNotificationsAPI = jest.fn(() => ({
 			data: range(1).map(i =>

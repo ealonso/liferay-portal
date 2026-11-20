@@ -1,16 +1,13 @@
 import ListComponent from '../ListComponent';
 import React from 'react';
 import {cleanup, render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
 
 describe('ListComponent', () => {
 	afterEach(cleanup);
 
 	it('renders', () => {
 		const {container} = render(
-			<MemoryRouter>
-				<ListComponent items={[]} total={0} />
-			</MemoryRouter>
+			<ListComponent items={[]} total={0} />
 		);
 
 		expect(container).toMatchSnapshot();

@@ -12,8 +12,8 @@ import {
 	mockTimeRangeReq
 } from 'test/graphql-data';
 import {Provider} from 'react-redux';
-import {MemoryRouter} from 'react-router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const variables = {channelId: undefined};
 
@@ -22,7 +22,7 @@ describe('IndividualOverview', () => {
 
 	it('should render', async () => {
 		const {container, getByText} = render(
-			<MockedProvider
+			<WorkspacePage><MockedProvider
 				mocks={[
 					mockEventMetrics(variables),
 					mockTimeRangeReq(),
@@ -31,18 +31,16 @@ describe('IndividualOverview', () => {
 				]}
 			>
 				<Provider store={mockStore()}>
-					<MemoryRouter>
-						<Overview
-							groupId='23'
-							id='test'
-							individual={data.getImmutableMock(
-								Individual,
-								data.mockIndividual
-							)}
-						/>
-					</MemoryRouter>
+					<Overview
+						groupId='23'
+						id='test'
+						individual={data.getImmutableMock(
+							Individual,
+							data.mockIndividual
+						)}
+					/>
 				</Provider>
-			</MockedProvider>
+			</MockedProvider></WorkspacePage>
 		);
 
 		jest.runAllTimers();

@@ -10,7 +10,7 @@ import {mockSegment} from 'test/data';
 import {Provider} from 'react-redux';
 import {Segment} from 'shared/util/records';
 import {SegmentCategories, SegmentStates} from 'shared/util/constants';
-import {MemoryRouter} from 'react-router';
+import {WorkspacePage} from 'test/mock-page-context';
 
 type FakeFilter = {
 	id: string;
@@ -52,7 +52,7 @@ jest.mock('shared/hooks/useTimeZone', () => ({
 const renderAccountProfile = (data = {}) =>
 	render(
 		<Provider store={mockStore()}>
-			<MemoryRouter>
+			<WorkspacePage channelId="123" params={{id: '0'}}>
 				<ChannelContext.Provider value={mockChannelContext() as any}>
 					<DataSourcesProvider groupId="23">
 						<AccountProfile
@@ -71,7 +71,7 @@ const renderAccountProfile = (data = {}) =>
 						/>
 					</DataSourcesProvider>
 				</ChannelContext.Provider>
-			</MemoryRouter>
+			</WorkspacePage>
 		</Provider>
 	);
 
@@ -124,10 +124,8 @@ describe('AccountProfile', () => {
 		fireEvent.click(screen.getByRole('button', {name: /^menu$/i}));
 
 		expect(
-			screen
-				.getByRole('menuitem', {name: /^edit segment$/i})
-				.getAttribute('href')
-		).toMatch(/\/segments\/0\/edit$/);
+			screen.getByRole('menuitem', {name: /^edit segment$/i})
+		).toHaveAttribute('href', '/edit-segment?id=0');
 	});
 
 	it('should list the accounts matching the segment', async () => {

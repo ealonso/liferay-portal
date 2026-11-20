@@ -3,12 +3,11 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import {cleanup, render, screen} from '@testing-library/react';
 import {fromJS} from 'immutable';
-import {MemoryRouter} from 'react-router-dom';
 import {noop} from 'lodash';
 import {Provider} from 'react-redux';
 import {updateProject} from 'shared/actions/projects';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useRequest} from 'shared/hooks/useRequest';
+import {mockCurrentUser, WorkspacePage} from 'test/mock-page-context';
 
 jest.mock('shared/actions/alerts', () => ({
 	actionTypes: {},
@@ -18,10 +17,6 @@ jest.mock('shared/actions/alerts', () => ({
 jest.mock('shared/actions/projects', () => ({
 	actionTypes: {},
 	updateProject: jest.fn(),
-}));
-
-jest.mock('shared/hooks/useCurrentUser', () => ({
-	useCurrentUser: jest.fn(),
 }));
 
 jest.mock('shared/hooks/useRequest', () => ({
@@ -50,14 +45,12 @@ const defaultStore = mockStore(
 
 const WrapperComponent = ({store = defaultStore, ...props}: any) => (
 	<Provider store={store}>
-		<MemoryRouter>
-			<ConfigureWorkspace
-				groupId={mockGroupId}
-				onClose={noop}
-				onNext={noop}
-				{...props}
-			/>
-		</MemoryRouter>
+		<ConfigureWorkspace
+			groupId={mockGroupId}
+			onClose={noop}
+			onNext={noop}
+			{...props}
+		/>
 	</Provider>
 );
 
@@ -65,9 +58,7 @@ describe('ConfigureWorkspace', () => {
 	beforeEach(() => {
 		(updateProject as jest.Mock).mockReturnValue(Promise.resolve());
 
-		(useCurrentUser as jest.Mock).mockReturnValue({
-			isAdmin: () => true,
-		});
+		mockCurrentUser();
 
 		(useRequest as jest.Mock).mockReturnValue({
 			data: ['liferay.com'],
@@ -78,13 +69,21 @@ describe('ConfigureWorkspace', () => {
 	afterEach(cleanup);
 
 	it('renders', async () => {
-		const {container} = render(<WrapperComponent />);
+		const {container} = render(
+			<WorkspacePage>
+				<WrapperComponent />
+			</WorkspacePage>
+		);
 
 		expect(container).toMatchSnapshot();
 	});
 
 	it('should have the next button enabled by default', async () => {
-		render(<WrapperComponent />);
+		render(
+			<WorkspacePage>
+				<WrapperComponent />
+			</WorkspacePage>
+		);
 
 		expect(
 			screen.getByText(/^next$/i).closest('button')

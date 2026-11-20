@@ -7,9 +7,9 @@ import {
 	screen,
 	waitFor,
 } from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
 import {useRequest} from 'shared/hooks/useRequest';
 import {warmFrontendDataSet} from 'test/warm-frontend-data-set';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.mock('@liferay/frontend-data-set-web', () => ({
 	...jest.requireActual('@liferay/frontend-data-set-web'),
@@ -31,9 +31,9 @@ const mockLifecycles = (data?: {id: string}[], loading = false) =>
 
 const renderCard = () =>
 	render(
-		<MemoryRouter>
+		<WorkspacePage>
 			<MembershipsCard campaignId="7" channelId="123" groupId="23" />
-		</MemoryRouter>
+		</WorkspacePage>
 	);
 
 const getDataSet = (id: string) => document.getElementById(id) as HTMLElement;

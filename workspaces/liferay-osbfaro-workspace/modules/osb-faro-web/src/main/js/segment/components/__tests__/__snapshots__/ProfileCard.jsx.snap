@@ -39,7 +39,7 @@ exports[`SegmentProfileCard should render 1`] = `
     >
       <a
         class="button-root btn btn-outline-borderless btn-sm btn-outline-secondary"
-        href="/workspace/23/123/contacts/segments/3/membership"
+        href="/segment-membership?id=3"
       >
         View Members
         <svg

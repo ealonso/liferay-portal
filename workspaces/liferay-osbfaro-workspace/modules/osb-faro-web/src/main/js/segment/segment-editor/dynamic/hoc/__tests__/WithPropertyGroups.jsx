@@ -2,8 +2,8 @@ import * as API from 'shared/api';
 import React, {useState} from 'react';
 import withPropertyGroups from '../WithPropertyGroups';
 import {act, fireEvent, render, screen} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const TestComponent = ({propertyGroupsIList}) => (
 	<div>
@@ -118,9 +118,7 @@ describe('WithPropertyGroups', () => {
 		const WrappedComponent = withPropertyGroups(TestComponent);
 
 		const {container} = render(
-			<MemoryRouter>
-				<WrappedComponent channelId='123' groupId='123' type='BATCH' />
-			</MemoryRouter>
+			<WorkspacePage><WrappedComponent channelId='123' groupId='123' type='BATCH' /></WorkspacePage>
 		);
 
 		jest.runAllTimers();
@@ -134,13 +132,7 @@ describe('WithPropertyGroups', () => {
 		const WrappedComponent = withPropertyGroups(TestComponent);
 
 		const {container} = render(
-			<MemoryRouter>
-				<WrappedComponent
-					channelId='123'
-					groupId='123'
-					type='REAL_TIME'
-				/>
-			</MemoryRouter>
+			<WorkspacePage><WrappedComponent channelId='123' groupId='123' type='REAL_TIME' /></WorkspacePage>
 		);
 
 		jest.runAllTimers();
@@ -190,9 +182,7 @@ describe('WithPropertyGroups', () => {
 		};
 
 		render(
-			<MemoryRouter>
-				<Ancestor />
-			</MemoryRouter>
+			<WorkspacePage><Ancestor /></WorkspacePage>
 		);
 
 		await act(async () => {});
@@ -226,13 +216,11 @@ describe('WithPropertyGroups', () => {
 			const WrappedComponent = withPropertyGroups(TestComponent);
 
 			const {container} = render(
-				<MemoryRouter>
-					<WrappedComponent
-						channelId='123'
-						groupId='123'
-						type='BATCH'
-					/>
-				</MemoryRouter>
+				<WorkspacePage><WrappedComponent
+					channelId='123'
+					groupId='123'
+					type='BATCH'
+				/></WorkspacePage>
 			);
 
 			await act(async () => {});

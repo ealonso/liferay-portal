@@ -3,28 +3,21 @@ import AssociatedSegmentsCard from '../AssociatedSegmentsCard';
 import NoResultsDisplay from 'shared/components/NoResultsDisplay';
 import React from 'react';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const DefaultComponent = props => (
-	<MemoryRouter>
-		<AssociatedSegmentsCard
-			groupId='23'
-			id='123'
-			pageUrl='/foo'
-			{...props}
-		/>
-	</MemoryRouter>
+	<AssociatedSegmentsCard groupId='23' id='123' pageUrl='/foo' {...props} />
 );
 
 describe('AssociatedSegmentsCard', () => {
 	it('should render', async () => {
 		const {container} = render(
-			<DefaultComponent
+			<WorkspacePage><DefaultComponent
 				dataSourceFn={() =>
 					Promise.resolve(data.mockSearch(data.mockSegment, 2))
 				}
-			/>
+			/></WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(container);
@@ -34,7 +27,7 @@ describe('AssociatedSegmentsCard', () => {
 
 	it('should render with an error display', async () => {
 		const {container, getByText} = render(
-			<DefaultComponent dataSourceFn={() => Promise.reject({})} />
+			<WorkspacePage><DefaultComponent dataSourceFn={() => Promise.reject({})} /></WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(container);
@@ -44,12 +37,12 @@ describe('AssociatedSegmentsCard', () => {
 
 	it('should render with an no results display', async () => {
 		const {container} = render(
-			<DefaultComponent
+			<WorkspacePage><DefaultComponent
 				dataSourceFn={() =>
 					Promise.resolve(data.mockSearch(data.mockSegment, 0))
 				}
 				noResultsRenderer={() => <NoResultsDisplay />}
-			/>
+			/></WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(container);

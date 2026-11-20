@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom';
 import 'jest-extended/all';
-import lang from './lang';
 import {TextDecoder, TextEncoder} from 'util';
+import {mockCurrentUser} from './mock-page-context';
 
 // Temporarily silence console.error/warn in tests until the underlying
 // deprecations (Apollo Client v3, react-dom/test-utils, graphql HOC/<Query />,
@@ -16,6 +16,8 @@ jest.mock('shared/api');
 jest.mock('shared/components/DocumentTitle');
 
 document.body.className = 'dxp';
+
+beforeEach(() => mockCurrentUser());
 
 global.ResizeObserver = jest.fn().mockImplementation(() => ({
 	disconnect: jest.fn(),
@@ -32,25 +34,6 @@ global.analytics = {
 global.AUI = () => ({
 	use: (module, callback) => callback(),
 });
-
-global.Liferay = {
-	FeatureFlags: {},
-	Language: {
-		available: {
-			en_US: 'English (United States)',
-			es_ES: 'español (España)',
-			ja_JP: '日本語 (日本)',
-			pt_BR: 'português (Brasil)',
-		},
-		get: lang,
-	},
-	Util: {
-		fetch: () =>
-			Promise.resolve({
-				json: () => Promise.resolve({items: []}),
-			}),
-	},
-};
 
 global.localStorage = (() => {
 	let store = {};

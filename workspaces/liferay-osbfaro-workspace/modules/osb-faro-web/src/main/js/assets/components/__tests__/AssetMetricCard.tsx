@@ -24,22 +24,8 @@ import {
 } from 'test/graphql-data';
 import {MockedProvider} from '@apollo/client/testing';
 import {RangeKeyTimeRanges, THIRTEEN_MONTHS} from 'shared/util/constants';
-import {MemoryRouter} from 'react-router-dom';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		assetId: '123',
-		channelId: '456',
-		groupId: '2000',
-		query: {
-			rangeKey: RangeKeyTimeRanges.Last30Days,
-		},
-		title: 'My awesome asset',
-		touchpoint: 'https://liferay.com',
-	}),
-}));
+import {WorkspacePage} from 'test/mock-page-context';
 
 /**
  * Override Recharts Responsive Container
@@ -129,7 +115,16 @@ const WrappedComponent = ({
 	empty?: boolean;
 }) => (
 	<ApolloProvider client={client}>
-		<MemoryRouter>
+		<WorkspacePage
+			channelId="456"
+			groupId="2000"
+			params={{
+				assetId: '123',
+				rangeKey: RangeKeyTimeRanges.Last30Days,
+				title: 'My awesome asset',
+				touchpoint: 'https://liferay.com',
+			}}
+		>
 			<MockedProvider
 				mocks={[
 					mockTimeRangeReq(),
@@ -156,7 +151,7 @@ const WrappedComponent = ({
 					variableType={assetCase.variableType}
 				/>
 			</MockedProvider>
-		</MemoryRouter>
+		</WorkspacePage>
 	</ApolloProvider>
 );
 

@@ -1,13 +1,13 @@
 import React from 'react';
 import {cleanup, fireEvent, render, screen} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
 import {Toolbar} from '../Toolbar';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const renderToolbar = (props = {}) =>
 	render(
-		<MemoryRouter>
-			<Toolbar channelId='321' groupId='123' {...props} />
-		</MemoryRouter>
+		<WorkspacePage>
+			<Toolbar {...props} />
+		</WorkspacePage>
 	);
 
 describe('Toolbar', () => {

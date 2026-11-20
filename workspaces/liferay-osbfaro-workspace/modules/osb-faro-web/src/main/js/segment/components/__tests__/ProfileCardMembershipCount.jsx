@@ -3,8 +3,8 @@ import React from 'react';
 import SegmentProfileCard from '../ProfileCard';
 import {render} from '@testing-library/react';
 import {Segment} from 'shared/util/records';
-import {MemoryRouter} from 'react-router-dom';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.mock('recharts', () => {
 	const OriginalModule = jest.requireActual('recharts');
@@ -20,26 +20,24 @@ jest.mock('recharts', () => {
 });
 
 const DefaultComponent = props => (
-	<MemoryRouter>
-		<SegmentProfileCard
-			channelId='123'
-			groupId='23'
-			id='3'
-			segment={data.getImmutableMock(Segment, data.mockSegment, '3')}
-			{...props}
-		/>
-	</MemoryRouter>
+	<SegmentProfileCard
+		channelId='123'
+		groupId='23'
+		id='3'
+		segment={data.getImmutableMock(Segment, data.mockSegment, '3')}
+		{...props}
+	/>
 );
 
 describe('SegmentProfileCard membership count', () => {
 	it('shows the member count as processing while membership is calculated', async () => {
 		const {container} = render(
-			<DefaultComponent
+			<WorkspacePage><DefaultComponent
 				segment={data.getImmutableMock(Segment, data.mockSegment, '3', {
 					knownIndividualCount: 5,
 					lastMembershipUpdateDate: null
 				})}
-			/>
+			/></WorkspacePage>
 		);
 
 		jest.runAllTimers();
@@ -55,12 +53,12 @@ describe('SegmentProfileCard membership count', () => {
 
 	it('shows a zero member count once membership is calculated', async () => {
 		const {container} = render(
-			<DefaultComponent
+			<WorkspacePage><DefaultComponent
 				segment={data.getImmutableMock(Segment, data.mockSegment, '3', {
 					knownIndividualCount: 0,
 					lastMembershipUpdateDate: data.getTimestamp()
 				})}
-			/>
+			/></WorkspacePage>
 		);
 
 		jest.runAllTimers();
@@ -76,12 +74,12 @@ describe('SegmentProfileCard membership count', () => {
 
 	it('shows the member count once membership is calculated', async () => {
 		const {container} = render(
-			<DefaultComponent
+			<WorkspacePage><DefaultComponent
 				segment={data.getImmutableMock(Segment, data.mockSegment, '3', {
 					knownIndividualCount: 1500,
 					lastMembershipUpdateDate: data.getTimestamp()
 				})}
-			/>
+			/></WorkspacePage>
 		);
 
 		jest.runAllTimers();

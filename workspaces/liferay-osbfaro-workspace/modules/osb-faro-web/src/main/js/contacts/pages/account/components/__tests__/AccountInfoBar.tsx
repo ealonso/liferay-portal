@@ -2,11 +2,7 @@ import AccountInfoBar from '../AccountInfoBar';
 import React from 'react';
 import {cleanup, render, screen} from '@testing-library/react';
 import {useLifecycleSelection} from 'shared/hooks/useLifecycleSelection';
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({channelId: '123', groupId: '23'}),
-}));
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.mock('shared/hooks/useLifecycleSelection', () => ({
 	useLifecycleSelection: jest.fn(),
@@ -43,6 +39,15 @@ const lifecycleSelection = {
 	setSelectedLifecycleId: jest.fn(),
 };
 
+const AccountPage = ({children}: {children: React.ReactNode}) => (
+	<WorkspacePage channelId="123" groupId="23">
+		{children}
+	</WorkspacePage>
+);
+
+const renderAccountInfoBar = (ui: React.ReactElement) =>
+	render(ui, {wrapper: AccountPage});
+
 describe('AccountInfoBar', () => {
 	afterEach(cleanup);
 
@@ -52,26 +57,26 @@ describe('AccountInfoBar', () => {
 
 	describe('rendering', () => {
 		it('should render the account name', () => {
-			render(<AccountInfoBar {...mockAccount} />);
+			renderAccountInfoBar(<AccountInfoBar {...mockAccount} />);
 
 			expect(screen.getByText('Hydrofield')).toBeInTheDocument();
 		});
 
 		it('should render every firmographic value', () => {
-			render(<AccountInfoBar {...mockAccount} />);
+			renderAccountInfoBar(<AccountInfoBar {...mockAccount} />);
 
 			expect(screen.getByText(/^australia$/i)).toBeInTheDocument();
 			expect(screen.getByText('Health Sector')).toBeInTheDocument();
 		});
 
 		it('should abbreviate the annual revenue', () => {
-			render(<AccountInfoBar {...mockAccount} />);
+			renderAccountInfoBar(<AccountInfoBar {...mockAccount} />);
 
 			expect(screen.getByText('120M Revenue')).toBeInTheDocument();
 		});
 
 		it('should render the stage of the account in the selected lifecycle and the account type as labels', () => {
-			render(<AccountInfoBar {...mockAccount} />);
+			renderAccountInfoBar(<AccountInfoBar {...mockAccount} />);
 
 			expect(screen.getByText(/^engaged$/i)).toBeInTheDocument();
 			expect(screen.queryByText(/^at risk$/i)).not.toBeInTheDocument();
@@ -84,14 +89,23 @@ describe('AccountInfoBar', () => {
 				selectedLifecycleId: 'al-2',
 			});
 
-			render(<AccountInfoBar {...mockAccount} />);
+			renderAccountInfoBar(<AccountInfoBar {...mockAccount} />);
 
 			expect(screen.getByText(/^at risk$/i)).toBeInTheDocument();
 			expect(screen.queryByText(/^engaged$/i)).not.toBeInTheDocument();
 		});
 
+		it('should load the lifecycles of the channel being viewed', () => {
+			renderAccountInfoBar(<AccountInfoBar {...mockAccount} />);
+
+			expect(mockedUseLifecycleSelection).toHaveBeenCalledWith({
+				channelId: '123',
+				groupId: '23',
+			});
+		});
+
 		it('should render the Lifecycle label before the lifecycle selector', () => {
-			render(<AccountInfoBar {...mockAccount} />);
+			renderAccountInfoBar(<AccountInfoBar {...mockAccount} />);
 
 			const label = screen.getByText(/^lifecycle$/i);
 
@@ -103,7 +117,7 @@ describe('AccountInfoBar', () => {
 		});
 
 		it('should render the lifecycle selector with the selected lifecycle', () => {
-			render(<AccountInfoBar {...mockAccount} />);
+			renderAccountInfoBar(<AccountInfoBar {...mockAccount} />);
 
 			expect(
 				screen.getByRole('combobox', {name: /^lifecycle$/i})
@@ -113,7 +127,7 @@ describe('AccountInfoBar', () => {
 
 	describe('missing values', () => {
 		it('should render a field blank rather than a placeholder', () => {
-			render(<AccountInfoBar accountName="Hydrofield" />);
+			renderAccountInfoBar(<AccountInfoBar accountName="Hydrofield" />);
 
 			expect(screen.getByText('Hydrofield')).toBeInTheDocument();
 			expect(screen.queryByText(/^australia$/i)).not.toBeInTheDocument();
@@ -122,7 +136,7 @@ describe('AccountInfoBar', () => {
 		});
 
 		it('should not render the stage label when the account has no stage in the selected lifecycle', () => {
-			const {container} = render(
+			const {container} = renderAccountInfoBar(
 				<AccountInfoBar
 					accountName="Hydrofield"
 					accountType="Prospect"
@@ -136,7 +150,7 @@ describe('AccountInfoBar', () => {
 		});
 
 		it('should render a zero annual revenue', () => {
-			render(
+			renderAccountInfoBar(
 				<AccountInfoBar accountName="Hydrofield" annualRevenue={0} />
 			);
 
@@ -144,7 +158,7 @@ describe('AccountInfoBar', () => {
 		});
 
 		it('should render nothing for an empty account', () => {
-			const {container} = render(<AccountInfoBar />);
+			const {container} = renderAccountInfoBar(<AccountInfoBar />);
 
 			expect(container.querySelectorAll('.label')).toHaveLength(0);
 			expect(container.querySelectorAll('.lexicon-icon')).toHaveLength(0);

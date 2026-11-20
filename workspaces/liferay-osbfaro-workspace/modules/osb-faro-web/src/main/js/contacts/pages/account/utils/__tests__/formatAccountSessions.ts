@@ -6,6 +6,9 @@ import {
 	VerticalTimelineIndividual,
 	VerticalTimelineSession,
 } from 'shared/util/activities';
+import {mockPageConfig} from 'test/mock-page-context';
+
+const config = mockPageConfig();
 
 const ANONYMOUS_USER = Liferay.Language.get('anonymous-user');
 
@@ -60,11 +63,11 @@ const buildSession = (
 
 describe('formatAccountSessions', () => {
 	it('returns an empty array when there are no sessions', () => {
-		expect(formatAccountSessions([])).toEqual([]);
+		expect(formatAccountSessions(config, [])).toEqual([]);
 	});
 
 	it('groups sessions by day, emitting one individual row per individual ahead of their sessions', () => {
-		const days = formatAccountSessions([
+		const days = formatAccountSessions(config, [
 			buildSession({
 				createDate: '2026-07-16T10:00:00.000Z',
 				individualId: 'ind-1',
@@ -90,7 +93,7 @@ describe('formatAccountSessions', () => {
 	});
 
 	it('carries the job title of a known individual onto their row', () => {
-		const days = formatAccountSessions([
+		const days = formatAccountSessions(config, [
 			buildSession({
 				individualId: 'ind-1',
 				jobTitle: 'Plant Manager',
@@ -102,7 +105,7 @@ describe('formatAccountSessions', () => {
 	});
 
 	it('leaves the job title off a row whose session has none', () => {
-		const days = formatAccountSessions([
+		const days = formatAccountSessions(config, [
 			buildSession({individualId: 'ind-1', userName: 'Elena Ruiz'}),
 		]);
 
@@ -110,7 +113,7 @@ describe('formatAccountSessions', () => {
 	});
 
 	it('keeps each day self-contained, holding only that day rows', () => {
-		const days = formatAccountSessions([
+		const days = formatAccountSessions(config, [
 			buildSession({
 				createDate: '2026-07-16T10:00:00.000Z',
 				individualId: 'ind-1',
@@ -129,7 +132,7 @@ describe('formatAccountSessions', () => {
 	});
 
 	it('does not repeat the individual row for later sessions of the same day', () => {
-		const days = formatAccountSessions([
+		const days = formatAccountSessions(config, [
 			buildSession({
 				createDate: '2026-07-16T10:00:00.000Z',
 				individualId: 'ind-1',
@@ -148,7 +151,7 @@ describe('formatAccountSessions', () => {
 
 	it('always shows the generic "Anonymous User" label for an individual without an individualId, regardless of the tracked userName', () => {
 		const [individual] = individualsOf(
-			formatAccountSessions([
+			formatAccountSessions(config, [
 				buildSession({individualId: null, userName: 'tracked-name'}),
 			])
 		);
@@ -159,7 +162,7 @@ describe('formatAccountSessions', () => {
 
 	it('marks an individual with an individualId as known', () => {
 		const [individual] = individualsOf(
-			formatAccountSessions([
+			formatAccountSessions(config, [
 				buildSession({individualId: 'ind-1', userName: 'Grace Hopper'}),
 			])
 		);
@@ -171,6 +174,7 @@ describe('formatAccountSessions', () => {
 	it('links a known individual to their profile by individualId', () => {
 		const [individual] = individualsOf(
 			formatAccountSessions(
+				config,
 				[
 					buildSession({
 						individualId: 'ind-1',
@@ -182,14 +186,13 @@ describe('formatAccountSessions', () => {
 			)
 		);
 
-		expect(individual.individualUrl).toBe(
-			'/workspace/liferay.com/420253908131944590/contacts/individuals/known-individuals/ind-1'
-		);
+		expect(individual.individualUrl).toBe('/individual?id=ind-1');
 	});
 
 	it('links an anonymous individual by their userId when there is no individualId', () => {
 		const [individual] = individualsOf(
 			formatAccountSessions(
+				config,
 				[buildSession({userId: 'abc123', userName: null})],
 				{channelId: '420253908131944590', groupId: 'liferay.com'}
 			)
@@ -197,14 +200,13 @@ describe('formatAccountSessions', () => {
 
 		expect(individual.isAnonymous).toBe(true);
 		expect(individual.individualId).toBe('abc123');
-		expect(individual.individualUrl).toBe(
-			'/workspace/liferay.com/420253908131944590/contacts/individuals/known-individuals/abc123'
-		);
+		expect(individual.individualUrl).toBe('/individual?id=abc123');
 	});
 
 	it('does not link an individual without an individualId or userId', () => {
 		const [individual] = individualsOf(
 			formatAccountSessions(
+				config,
 				[
 					buildSession({
 						individualId: null,
@@ -222,7 +224,7 @@ describe('formatAccountSessions', () => {
 	});
 
 	it('groups every anonymous session with neither an individualId nor a userId under a single individual', () => {
-		const days = formatAccountSessions([
+		const days = formatAccountSessions(config, [
 			buildSession({
 				createDate: '2026-07-16T10:00:00.000Z',
 				individualId: null,
@@ -246,7 +248,7 @@ describe('formatAccountSessions', () => {
 
 	it('orders days most-recent first and sums the day event totals', () => {
 		const dayHeaders = headersOf(
-			formatAccountSessions([
+			formatAccountSessions(config, [
 				buildSession({
 					createDate: '2026-07-15T10:00:00.000Z',
 					events: [{}, {}],
@@ -266,7 +268,7 @@ describe('formatAccountSessions', () => {
 
 	it("includes accountId and accountName in a page group's dashboard link", () => {
 		const [session] = sessionsOf(
-			formatAccountSessions([buildSession()], {
+			formatAccountSessions(config, [buildSession()], {
 				accountId: 'acc-1',
 				accountName: 'Acme Corporation',
 				channelId: '420253908131944590',
@@ -282,7 +284,9 @@ describe('formatAccountSessions', () => {
 
 	it('maps session attributes with the correct field names', () => {
 		const [session] = sessionsOf(
-			formatAccountSessions([buildSession({userName: 'Ada Lovelace'})])
+			formatAccountSessions(config, [
+				buildSession({userName: 'Ada Lovelace'}),
+			])
 		);
 
 		expect(session.attributes).toMatchObject({
@@ -302,7 +306,7 @@ describe('formatAccountSessions', () => {
 		"%s the tracked userName in its attributes, matching its individual's row",
 		(_, individualId, expected) => {
 			const [session] = sessionsOf(
-				formatAccountSessions([
+				formatAccountSessions(config, [
 					buildSession({individualId, userName: 'Grace Hopper'}),
 				])
 			);
@@ -313,7 +317,7 @@ describe('formatAccountSessions', () => {
 
 	it('marks the session, sets its total events and passes through the device fields', () => {
 		const [session] = sessionsOf(
-			formatAccountSessions([
+			formatAccountSessions(config, [
 				buildSession({
 					browserName: 'Firefox',
 					deviceType: 'Mobile',
@@ -331,7 +335,7 @@ describe('formatAccountSessions', () => {
 
 	it('marks a webhook session as having no reliable timestamps', () => {
 		const [session] = sessionsOf(
-			formatAccountSessions([
+			formatAccountSessions(config, [
 				buildSession({userAgent: 'HubSpot Webhook'}),
 			])
 		);
@@ -341,7 +345,7 @@ describe('formatAccountSessions', () => {
 
 	it('groups the session events by the page they happened on', () => {
 		const [session] = sessionsOf(
-			formatAccountSessions([
+			formatAccountSessions(config, [
 				buildSession({
 					events: [
 						{
@@ -374,7 +378,7 @@ describe('formatAccountSessions', () => {
 
 	it('carries the experience a page view was served by, same as the individual stream', () => {
 		const [session] = sessionsOf(
-			formatAccountSessions([
+			formatAccountSessions(config, [
 				buildSession({
 					events: [
 						{
@@ -399,7 +403,7 @@ describe('formatAccountSessions', () => {
 
 	it('carries the acquisition parameters of a page view, which the expanded event renders as its UTM parameters table', () => {
 		const [session] = sessionsOf(
-			formatAccountSessions([
+			formatAccountSessions(config, [
 				buildSession({
 					events: [
 						{

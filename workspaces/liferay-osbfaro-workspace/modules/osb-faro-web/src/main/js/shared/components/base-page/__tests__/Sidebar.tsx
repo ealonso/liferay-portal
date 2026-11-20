@@ -2,9 +2,9 @@ import BasePage from '..';
 import mockStore from 'test/mock-store';
 import React from 'react';
 import {cleanup, fireEvent, render, screen} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {resetBodyWidth, setBodyWidth} from 'test/body-width';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const PUSH_WIDTH = 1440;
 
@@ -23,15 +23,13 @@ const Panel = ({
 
 	return (
 		<Provider store={mockStore()}>
-			<MemoryRouter>
-				<BasePage className="test-page" documentTitle="Test">
-					<div data-testid="page-content" />
+			<BasePage className="test-page" documentTitle="Test">
+				<div data-testid="page-content" />
 
-					<BasePage.Sidebar onOpenChange={onOpenChange} open={open}>
-						<button type="button">{'Inside'}</button>
-					</BasePage.Sidebar>
-				</BasePage>
-			</MemoryRouter>
+				<BasePage.Sidebar onOpenChange={onOpenChange} open={open}>
+					<button type="button">{'Inside'}</button>
+				</BasePage.Sidebar>
+			</BasePage>
 		</Provider>
 	);
 };
@@ -46,13 +44,21 @@ describe('BasePage.Sidebar', () => {
 	});
 
 	it('pushes the content without an overlay', () => {
-		render(<Panel open />);
+		render(
+			<WorkspacePage>
+				<Panel open />
+			</WorkspacePage>
+		);
 
 		expect(screen.queryByTestId('base-page-sidebar-backdrop')).toBeNull();
 	});
 
 	it('overlays the content in overlay mode', () => {
-		render(<Panel open overlay />);
+		render(
+			<WorkspacePage>
+				<Panel open overlay />
+			</WorkspacePage>
+		);
 
 		expect(
 			screen.getByTestId('base-page-sidebar-backdrop')
@@ -60,7 +66,11 @@ describe('BasePage.Sidebar', () => {
 	});
 
 	it('sets its width on the page', () => {
-		render(<Panel open />);
+		render(
+			<WorkspacePage>
+				<Panel open />
+			</WorkspacePage>
+		);
 
 		expect(
 			(getPage() as HTMLElement).style.getPropertyValue(
@@ -70,13 +80,21 @@ describe('BasePage.Sidebar', () => {
 	});
 
 	it('shows no overlay while closed', () => {
-		render(<Panel open={false} overlay />);
+		render(
+			<WorkspacePage>
+				<Panel open={false} overlay />
+			</WorkspacePage>
+		);
 
 		expect(screen.queryByTestId('base-page-sidebar-backdrop')).toBeNull();
 	});
 
 	it('keeps the panel inert while closed', () => {
-		render(<Panel open={false} />);
+		render(
+			<WorkspacePage>
+				<Panel open={false} />
+			</WorkspacePage>
+		);
 
 		expect(
 			screen
@@ -103,35 +121,63 @@ describe('BasePage.Sidebar', () => {
 		});
 
 		it('is locked while the overlay is open', () => {
-			render(<Panel open overlay />);
+			render(
+				<WorkspacePage>
+					<Panel open overlay />
+				</WorkspacePage>
+			);
 
 			expect(isLocked()).toBe(true);
 		});
 
 		it('stays free while the panel pushes the page', () => {
-			render(<Panel open />);
+			render(
+				<WorkspacePage>
+					<Panel open />
+				</WorkspacePage>
+			);
 
 			expect(isLocked()).toBe(false);
 		});
 
 		it('stays free while the overlay is closed', () => {
-			render(<Panel open={false} overlay />);
+			render(
+				<WorkspacePage>
+					<Panel open={false} overlay />
+				</WorkspacePage>
+			);
 
 			expect(isLocked()).toBe(false);
 		});
 
 		it('is released when the overlay closes', () => {
-			const {rerender} = render(<Panel open overlay />);
+			const {rerender} = render(
+				<WorkspacePage>
+					<Panel open overlay />
+				</WorkspacePage>
+			);
 
-			rerender(<Panel open={false} overlay />);
+			rerender(
+				<WorkspacePage>
+					<Panel open={false} overlay />
+				</WorkspacePage>
+			);
 
 			expect(isLocked()).toBe(false);
 		});
 
 		it('is released when the panel stops overlaying the page', () => {
-			const {rerender} = render(<Panel open overlay />);
+			const {rerender} = render(
+				<WorkspacePage>
+					<Panel open overlay />
+				</WorkspacePage>
+			);
 
-			rerender(<Panel open />);
+			rerender(
+				<WorkspacePage>
+					<Panel open />
+				</WorkspacePage>
+			);
 
 			fireEvent(window, new Event('resize'));
 
@@ -139,7 +185,11 @@ describe('BasePage.Sidebar', () => {
 		});
 
 		it('is released when the panel unmounts', () => {
-			const {unmount} = render(<Panel open overlay />);
+			const {unmount} = render(
+				<WorkspacePage>
+					<Panel open overlay />
+				</WorkspacePage>
+			);
 
 			unmount();
 
@@ -149,7 +199,11 @@ describe('BasePage.Sidebar', () => {
 		it('keeps the page from shifting under the hidden scrollbar', () => {
 			setViewportWidth(window.innerWidth - 15);
 
-			const {unmount} = render(<Panel open overlay />);
+			const {unmount} = render(
+				<WorkspacePage>
+					<Panel open overlay />
+				</WorkspacePage>
+			);
 
 			expect(document.body.style.paddingRight).toBe('15px');
 
@@ -161,7 +215,11 @@ describe('BasePage.Sidebar', () => {
 		it('adds no padding when the scrollbar cannot be measured', () => {
 			setViewportWidth(0);
 
-			render(<Panel open overlay />);
+			render(
+				<WorkspacePage>
+					<Panel open overlay />
+				</WorkspacePage>
+			);
 
 			expect(document.body.style.paddingRight).toBe('');
 		});
@@ -171,7 +229,11 @@ describe('BasePage.Sidebar', () => {
 
 			document.body.style.paddingRight = '4px';
 
-			const {unmount} = render(<Panel open overlay />);
+			const {unmount} = render(
+				<WorkspacePage>
+					<Panel open overlay />
+				</WorkspacePage>
+			);
 
 			unmount();
 
@@ -184,7 +246,11 @@ describe('BasePage.Sidebar', () => {
 	it('closes when the backdrop is clicked', () => {
 		const onOpenChange = jest.fn();
 
-		render(<Panel onOpenChange={onOpenChange} open overlay />);
+		render(
+			<WorkspacePage>
+				<Panel onOpenChange={onOpenChange} open overlay />
+			</WorkspacePage>
+		);
 
 		fireEvent.mouseDown(screen.getByTestId('base-page-sidebar-backdrop'));
 
@@ -194,7 +260,11 @@ describe('BasePage.Sidebar', () => {
 	it('closes when a click lands outside the inert page', () => {
 		const onOpenChange = jest.fn();
 
-		render(<Panel onOpenChange={onOpenChange} open overlay />);
+		render(
+			<WorkspacePage>
+				<Panel onOpenChange={onOpenChange} open overlay />
+			</WorkspacePage>
+		);
 
 		fireEvent.mouseDown(document.body);
 
@@ -204,7 +274,11 @@ describe('BasePage.Sidebar', () => {
 	it('closes when a click passes through the inert backdrop to the page', () => {
 		const onOpenChange = jest.fn();
 
-		render(<Panel onOpenChange={onOpenChange} open overlay />);
+		render(
+			<WorkspacePage>
+				<Panel onOpenChange={onOpenChange} open overlay />
+			</WorkspacePage>
+		);
 
 		fireEvent.mouseDown(getPage()!);
 
@@ -214,7 +288,11 @@ describe('BasePage.Sidebar', () => {
 	it('stays open when the page content is clicked', () => {
 		const onOpenChange = jest.fn();
 
-		render(<Panel onOpenChange={onOpenChange} open overlay />);
+		render(
+			<WorkspacePage>
+				<Panel onOpenChange={onOpenChange} open overlay />
+			</WorkspacePage>
+		);
 
 		fireEvent.mouseDown(screen.getByTestId('page-content'));
 
@@ -224,7 +302,11 @@ describe('BasePage.Sidebar', () => {
 	it('stays open when the panel itself is clicked', () => {
 		const onOpenChange = jest.fn();
 
-		render(<Panel onOpenChange={onOpenChange} open overlay />);
+		render(
+			<WorkspacePage>
+				<Panel onOpenChange={onOpenChange} open overlay />
+			</WorkspacePage>
+		);
 
 		fireEvent.mouseDown(
 			screen.getByRole('button', {hidden: true, name: 'Inside'})
@@ -236,7 +318,11 @@ describe('BasePage.Sidebar', () => {
 	it('ignores outside clicks while it pushes the page', () => {
 		const onOpenChange = jest.fn();
 
-		render(<Panel onOpenChange={onOpenChange} open />);
+		render(
+			<WorkspacePage>
+				<Panel onOpenChange={onOpenChange} open />
+			</WorkspacePage>
+		);
 
 		fireEvent.mouseDown(document.body);
 
@@ -246,7 +332,11 @@ describe('BasePage.Sidebar', () => {
 	it('closes on Escape', () => {
 		const onOpenChange = jest.fn();
 
-		render(<Panel onOpenChange={onOpenChange} open />);
+		render(
+			<WorkspacePage>
+				<Panel onOpenChange={onOpenChange} open />
+			</WorkspacePage>
+		);
 
 		fireEvent.keyDown(document, {key: 'Escape'});
 

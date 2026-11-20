@@ -5,7 +5,6 @@ import React from 'react';
 import {cleanup, render} from '@testing-library/react';
 import {Individual} from 'shared/util/records';
 import {Provider} from 'react-redux';
-import {MemoryRouter} from 'react-router';
 
 jest.mock('../../components/ContextualInformation', () => ({
 	__esModule: true,
@@ -22,9 +21,7 @@ const mockIndividual = data.getImmutableMock(Individual, data.mockIndividual);
 const renderComponent = () =>
 	render(
 		<Provider store={mockStore()}>
-			<MemoryRouter>
-				<OverviewCDP groupId='23' individual={mockIndividual} />
-			</MemoryRouter>
+			<OverviewCDP groupId='23' individual={mockIndividual} />
 		</Provider>
 	);
 

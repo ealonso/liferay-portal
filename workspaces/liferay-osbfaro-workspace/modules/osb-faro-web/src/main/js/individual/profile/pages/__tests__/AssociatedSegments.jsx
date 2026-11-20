@@ -5,24 +5,22 @@ import React from 'react';
 import {Individual} from 'shared/util/records';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 describe('IndividualAssociatedSegments', () => {
 	it('should render', async () => {
 		const {container, getByText} = render(
-			<MemoryRouter>
-				<Provider store={mockStore()}>
-					<AssociatedSegments
-						groupId='23'
-						id='test'
-						individual={data.getImmutableMock(
-							Individual,
-							data.mockIndividual
-						)}
-					/>
-				</Provider>
-			</MemoryRouter>
+			<WorkspacePage><Provider store={mockStore()}>
+				<AssociatedSegments
+					groupId='23'
+					id='test'
+					individual={data.getImmutableMock(
+						Individual,
+						data.mockIndividual
+					)}
+				/>
+			</Provider></WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(container);

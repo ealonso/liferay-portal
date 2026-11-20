@@ -16,12 +16,15 @@ import {
 	SESSION_PAYLOAD_LAYOUT,
 	toDayKey
 } from '../activities';
+import {mockPageConfig} from 'test/mock-page-context';
+
+const config = mockPageConfig();
 
 const CONTEXT = {channelId: '456', groupId: '23'};
 
 const CAMPAIGN_ENTITY_ID = '6beeaea355642c82e8bb7f9c049f58e8';
 
-const CAMPAIGN_URL = `/workspace/23/456/campaigns/${CAMPAIGN_ENTITY_ID}`;
+const CAMPAIGN_URL = `/campaign?id=${CAMPAIGN_ENTITY_ID}`;
 
 const CAMPAIGN = {
 	campaignEntityId: CAMPAIGN_ENTITY_ID,
@@ -116,7 +119,7 @@ describe('activities', () => {
 
 	describe('formatEvents', () => {
 		it('turns an event into a row named, described and timed after it, with its decoded url', () => {
-			const [row] = formatEvents([
+			const [row] = formatEvents(config, [
 				buildPageView({
 					assetTitle: 'Asset',
 					canonicalUrl: 'http://localhost:7400/%e6%96%b0'
@@ -133,7 +136,7 @@ describe('activities', () => {
 
 		it('gives a webhook event neither a subtitle nor a dashboard link', () => {
 			const [row] = formatEvents(
-				[buildEvent({canonicalUrl: 'https://hubspot.com'})],
+				config, [buildEvent({canonicalUrl: 'https://hubspot.com'})],
 				'HubSpot Webhook',
 				CONTEXT
 			);
@@ -143,7 +146,7 @@ describe('activities', () => {
 		});
 
 		it('lays the attributes out as the event\'s displayable fields, with its properties and utm parameters as groups of their own', () => {
-			const [{attributes}] = formatEvents([
+			const [{attributes}] = formatEvents(config, [
 				buildEvent({
 					acquisitionProperties: [{name: 'utm_medium', value: 'ppc'}],
 					properties: [{name: 'formId', value: 'abc123'}]
@@ -161,7 +164,7 @@ describe('activities', () => {
 		});
 
 		it('carries the campaign the touch resolved to, linked to its page', () => {
-			const [row] = formatEvents([buildEvent(CAMPAIGN)], undefined, CONTEXT);
+			const [row] = formatEvents(config, [buildEvent(CAMPAIGN)], undefined, CONTEXT);
 
 			expect(row.campaign).toEqual({
 				campaignId: CAMPAIGN.campaignId,
@@ -175,7 +178,7 @@ describe('activities', () => {
 
 		it('keeps an unresolved campaign unlinked rather than linking its utm_cid', () => {
 			const [row] = formatEvents(
-				[buildEvent(UNRESOLVED_CAMPAIGN)],
+				config, [buildEvent(UNRESOLVED_CAMPAIGN)],
 				undefined,
 				CONTEXT
 			);
@@ -188,7 +191,7 @@ describe('activities', () => {
 		});
 
 		it('carries no campaign for an event without one', () => {
-			const [row] = formatEvents([buildEvent()], undefined, CONTEXT);
+			const [row] = formatEvents(config, [buildEvent()], undefined, CONTEXT);
 
 			expect(row).not.toHaveProperty('campaign');
 			expect(row.attributes).not.toHaveProperty('campaign');
@@ -197,7 +200,7 @@ describe('activities', () => {
 
 	describe('payload layouts', () => {
 		it('lays a session out as a single table of its attributes', () => {
-			const [{attributes}] = formatSessions([buildSession()])[0].items;
+			const [{attributes}] = formatSessions(config, [buildSession()])[0].items;
 
 			expect(
 				formatPayloadTables(attributes, SESSION_PAYLOAD_LAYOUT)
@@ -222,7 +225,7 @@ describe('activities', () => {
 
 		it('lays an event out as its attributes, its linked campaign, then its utm parameters', () => {
 			const [{attributes}] = formatEvents(
-				[
+				config, [
 					buildPageView({
 						...CAMPAIGN,
 						acquisitionProperties: [
@@ -274,7 +277,7 @@ describe('activities', () => {
 	describe('groupEventsByPage', () => {
 		it('collapses the events of a page into one group named, timed and linked after its page view', () => {
 			const [group, ...rest] = groupEventsByPage(
-				[
+				config, [
 					buildEvent({assetTitle: 'Contact Form', pageGroupId: HOME_URL}),
 					buildPageView({createDate: '2026-07-16T10:05:00.000Z'})
 				],
@@ -285,7 +288,7 @@ describe('activities', () => {
 			expect(rest).toEqual([]);
 			expect(group).toMatchObject({
 				descriptionUrl:
-					'/workspace/23/456/sites/pages/overview/https%3A%2F%2Fliferay.com%2Fhome/Home',
+					'/page-overview?touchpoint=https%3A%2F%2Fliferay.com%2Fhome&title=Home',
 				pageGroup: true,
 				subtitle: HOME_URL,
 				title: 'Home',
@@ -299,7 +302,7 @@ describe('activities', () => {
 		});
 
 		it('leaves an event the API gave no page group key ungrouped', () => {
-			const [item] = groupEventsByPage([
+			const [item] = groupEventsByPage(config, [
 				buildPageView({pageGroupId: null})
 			]);
 
@@ -308,7 +311,7 @@ describe('activities', () => {
 		});
 
 		it('orders groups and loose events by their most recent event, newest first', () => {
-			const result = groupEventsByPage([
+			const result = groupEventsByPage(config, [
 				buildPageView({
 					createDate: '2026-07-16T09:00:00.000Z',
 					pageGroupId: 'https://liferay.com/older',
@@ -354,7 +357,7 @@ describe('activities', () => {
 				]
 			]
 		])('carries %s onto the group', (_, events) => {
-			const [group] = groupEventsByPage(events);
+			const [group] = groupEventsByPage(config, events);
 
 			expect(group.campaign.campaignId).toBe(CAMPAIGN.campaignId);
 		});
@@ -364,7 +367,7 @@ describe('activities', () => {
 				{
 					nestedItems: [nestedEvent]
 				}
-			] = groupEventsByPage([buildPageView(CAMPAIGN)], undefined, CONTEXT);
+			] = groupEventsByPage(config, [buildPageView(CAMPAIGN)], undefined, CONTEXT);
 
 			expect(nestedEvent.campaign).toBeUndefined();
 			expect(nestedEvent.attributes.campaign).toEqual({
@@ -375,7 +378,7 @@ describe('activities', () => {
 
 		it('lists each distinct experience the page views were served by once, by name or raw id, without the default', () => {
 			const [group] = groupEventsByPage(
-				[
+				config, [
 					{experienceId: '39201', experienceName: 'Q3 Promo'},
 					{experienceId: '39202'},
 					{experienceId: '39201', experienceName: 'Q3 Promo'},
@@ -445,7 +448,7 @@ describe('activities', () => {
 
 	describe('formatSessions', () => {
 		it('turns each session into a timeline row under its day', () => {
-			const [day, ...rest] = formatSessions([
+			const [day, ...rest] = formatSessions(config, [
 				buildSession({becameKnown: true})
 			]);
 
@@ -476,7 +479,7 @@ describe('activities', () => {
 				{
 					items: [row]
 				}
-			] = formatSessions([
+			] = formatSessions(config, [
 				buildSession({
 					events: [buildEvent({applicationId: 'HubSpot'})],
 					userAgent: 'HubSpot Webhook'
@@ -500,7 +503,7 @@ describe('activities', () => {
 			},
 			{
 				'ind-1':
-					'/workspace/23/456/contacts/individuals/known-individuals/ind-1'
+					'/individual?id=ind-1'
 			}
 		],
 		[
@@ -510,15 +513,15 @@ describe('activities', () => {
 				'2026-07-15': {campaigns: [{campaignId: 'c1'}]},
 				'2026-07-16': {campaigns: [{campaignId: 'c1'}]}
 			},
-			{c1: '/workspace/23/456/campaigns/c1'}
+			{c1: '/campaign?id=c1'}
 		]
 	])('%s', (_, buildUrls, campaignDays, expected) => {
 		it('routes every id in the campaign days, once each', () => {
-			expect(buildUrls(campaignDays, CONTEXT)).toEqual(expected);
+			expect(buildUrls(config, campaignDays, CONTEXT)).toEqual(expected);
 		});
 
 		it('routes nothing without a channel and a group', () => {
-			expect(buildUrls(campaignDays, {})).toEqual({});
+			expect(buildUrls(config, campaignDays, {})).toEqual({});
 		});
 	});
 

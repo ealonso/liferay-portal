@@ -5,403 +5,147 @@ exports[`AttributeView should render 1`] = `
   <div
     class="settings-root"
   >
-    <nav
-      class="align-items-center bg-white sticky-top toolbar-root base-edit-page-toolbar mb-4 tbar component-tbar"
-    >
-      <ul
-        class="align-items-center mx-3 tbar-nav"
-      >
-        <li
-          class="tbar-item"
-        >
-          <a
-            aria-label="Back"
-            class="btn btn-monospaced btn-outline-borderless btn-outline-secondary btn-sm rounded-lg"
-            data-discover="true"
-            data-tooltip-align="bottom"
-            href="/workspace/23"
-            title="Back"
-          >
-            <svg
-              class="lexicon-icon lexicon-icon-angle-left"
-              role="presentation"
-            >
-              <use
-                href="#angle-left"
-              />
-            </svg>
-          </a>
-        </li>
-        <li
-          class="pl-0 tbar-item"
-        >
-          <div
-            class="tbar-section"
-          >
-            <h1
-              class="font-weight-semi-bold m-0 text-5 text-dark text-nowrap"
-            >
-              Settings
-            </h1>
-          </div>
-        </li>
-        <li
-          class="ml-auto tbar-item"
-        >
-          <ul
-            class="base-edit-page-toolbar-actions justify-content-end tbar-nav"
-            data-testid="toolbar-actions"
-          />
-        </li>
-      </ul>
-    </nav>
     <div
-      class="content-wrapper"
+      class="content section-main"
     >
-      <nav
-        class="section-side settings-side-bar"
-      >
-        <div>
-          <h5
-            class="section-title"
-          >
-            Workspace Data
-          </h5>
-          <ul
-            class="nav"
-          >
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/apis/tokens"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-ac_api icon-root"
-                    data-file="ac_api.svg"
-                    role="presentation"
-                  />
-                </span>
-                APIs
-              </a>
-            </li>
-            <li
-              class="item active"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/definitions"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-definitions icon-root"
-                    data-file="definitions.svg"
-                    role="presentation"
-                  />
-                </span>
-                Definitions
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/data-privacy"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-data_privacy_lock icon-root"
-                    data-file="data_privacy_lock.svg"
-                    role="presentation"
-                  />
-                </span>
-                Data Control & Privacy
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/data-source"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-faro_data_source icon-root"
-                    data-file="faro_data_source.svg"
-                    role="presentation"
-                  />
-                </span>
-                Data Sources
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/recommendations"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-ac_star icon-root"
-                    data-file="ac_star.svg"
-                    role="presentation"
-                  />
-                </span>
-                Recommendations
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h5
-            class="section-title"
-          >
-            Workspace Settings
-          </h5>
-          <ul
-            class="nav"
-          >
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/users"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-user_management icon-root"
-                    data-file="user_management.svg"
-                    role="presentation"
-                  />
-                </span>
-                User Management
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/properties"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-ac_page icon-root"
-                    data-file="ac_page.svg"
-                    role="presentation"
-                  />
-                </span>
-                Properties
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/usage"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-usage icon-root"
-                    data-file="usage.svg"
-                    role="presentation"
-                  />
-                </span>
-                Subscription & Usage
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/workspace"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-cog icon-root"
-                    role="presentation"
-                  >
-                    <use
-                      href="#cog"
-                    />
-                  </svg>
-                </span>
-                Workspace
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
       <div
-        class="content section-main"
+        class="settings-base-page-root"
       >
         <div
-          class="settings-base-page-root"
+          class="maintenance-alert-root"
+        />
+        <ol
+          class="breadcrumb breadcrumbs-root"
+        >
+          <li
+            class="breadcrumb-item"
+          >
+            <a
+              class="breadcrumb-text-truncate breadcrumb-link"
+              href="/definitions"
+            >
+              Definitions
+            </a>
+          </li>
+          <li
+            class="breadcrumb-item"
+          >
+            <a
+              class="breadcrumb-text-truncate breadcrumb-link"
+              href="/event-attributes"
+            >
+              Event Attributes
+            </a>
+          </li>
+          <li
+            class="breadcrumb-item active"
+          >
+            <span
+              class="breadcrumb-text-truncate"
+            >
+              name-0
+            </span>
+          </li>
+        </ol>
+        <div
+          class="content-header has-page-actions"
         >
           <div
-            class="maintenance-alert-root"
-          />
-          <ol
-            class="breadcrumb breadcrumbs-root"
-          >
-            <li
-              class="breadcrumb-item"
-            >
-              <a
-                class="breadcrumb-text-truncate breadcrumb-link"
-                data-discover="true"
-                href="/workspace/23/settings/definitions"
-              >
-                Definitions
-              </a>
-            </li>
-            <li
-              class="breadcrumb-item"
-            >
-              <a
-                class="breadcrumb-text-truncate breadcrumb-link"
-                data-discover="true"
-                href="/workspace/23/settings/definitions/event-attributes/global"
-              >
-                Event Attributes
-              </a>
-            </li>
-            <li
-              class="breadcrumb-item active"
-            >
-              <span
-                class="breadcrumb-text-truncate"
-              >
-                name-0
-              </span>
-            </li>
-          </ol>
-          <div
-            class="content-header has-page-actions"
+            class="header-text"
           >
             <div
-              class="header-text"
+              class="d-flex"
             >
-              <div
-                class="d-flex"
+              <h3
+                class="title-text text-truncate"
               >
-                <h3
-                  class="title-text text-truncate"
-                >
-                  <span
-                    class="text-truncate"
-                    data-tooltip="false"
-                    title=""
-                  >
-                    name-0
-                  </span>
-                </h3>
                 <span
-                  class="text-truncate subtitle-text ml-2"
+                  class="text-truncate"
                   data-tooltip="false"
                   title=""
                 >
-                  displayName-0
+                  name-0
                 </span>
-              </div>
-              <div
-                class="description"
+              </h3>
+              <span
+                class="text-truncate subtitle-text ml-2"
+                data-tooltip="false"
+                title=""
               >
-                <div
-                  class="no-description"
-                >
-                  No Description
-                </div>
-                <span
-                  class="label label-inverse-secondary"
-                >
-                  <span
-                    class="label-item label-item-expand"
-                  >
-                    String
-                  </span>
-                </span>
-              </div>
+                displayName-0
+              </span>
             </div>
             <div
-              class="page-actions-container"
+              class="description"
             >
-              <button
-                class="button-root btn btn-secondary"
-                type="button"
+              <div
+                class="no-description"
               >
-                Edit
-              </button>
+                No Description
+              </div>
+              <span
+                class="label label-inverse-secondary"
+              >
+                <span
+                  class="label-item label-item-expand"
+                >
+                  String
+                </span>
+              </span>
             </div>
           </div>
-          <div>
-            <div
-              class="flex-grow-1 mx-4 table-root"
+          <div
+            class="page-actions-container"
+          >
+            <button
+              class="button-root btn btn-secondary"
+              type="button"
             >
-              <div
-                class="table-responsive"
+              Edit
+            </button>
+          </div>
+        </div>
+        <div>
+          <div
+            class="flex-grow-1 mx-4 table-root"
+          >
+            <div
+              class="table-responsive"
+            >
+              <table
+                class="table table-autofit table-list table-nowrap table-head-bordered table-hover table-striped"
               >
-                <table
-                  class="table table-autofit table-list table-nowrap table-head-bordered table-hover table-striped"
-                >
-                  <thead>
-                    <tr>
-                      <th
-                        class="table-head-title table-cell-expand-small text-truncate"
-                      >
-                        Sample Raw Data
-                      </th>
-                      <th
-                        class="table-head-title table-column-text-end"
-                      >
-                        Last Seen
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr
-                      class=""
+                <thead>
+                  <tr>
+                    <th
+                      class="table-head-title table-cell-expand-small text-truncate"
                     >
-                      <td
-                        class="table-cell-expand-small text-truncate"
-                      >
-                        RecentValue
-                      </td>
-                      <td
-                        class="table-column-text-end"
-                      >
-                        Jul 10, 2018
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+                      Sample Raw Data
+                    </th>
+                    <th
+                      class="table-head-title table-column-text-end"
+                    >
+                      Last Seen
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr
+                    class=""
+                  >
+                    <td
+                      class="table-cell-expand-small text-truncate"
+                    >
+                      RecentValue
+                    </td>
+                    <td
+                      class="table-column-text-end"
+                    >
+                      Jul 10, 2018
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
         </div>

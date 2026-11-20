@@ -4,13 +4,9 @@ import {fireEvent, render, waitFor} from '@testing-library/react';
 import {SyncMarketoCampaignDataStep} from '../SyncMarketoCampaignDataStep';
 import {updateMarketoCampaign} from 'shared/api/data-source';
 import React from 'react';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const useWizardPageMock = jest.fn();
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({groupId: '23'}),
-}));
 
 jest.mock('settings/components/base-page/WizardPageContext', () => ({
 	useWizardPage: () => useWizardPageMock(),
@@ -53,7 +49,8 @@ describe('SyncMarketoCampaignDataStep', () => {
 			<SyncMarketoCampaignDataStep
 				onNext={jest.fn()}
 				onPrev={jest.fn()}
-			/>
+			/>,
+			{wrapper: WorkspacePage}
 		);
 
 		await waitFor(() => expect(getCheckbox(container).checked).toBe(true));
@@ -63,7 +60,8 @@ describe('SyncMarketoCampaignDataStep', () => {
 		const onNext = jest.fn();
 
 		const {container} = render(
-			<SyncMarketoCampaignDataStep onNext={onNext} onPrev={jest.fn()} />
+			<SyncMarketoCampaignDataStep onNext={onNext} onPrev={jest.fn()} />,
+			{wrapper: WorkspacePage}
 		);
 
 		fireEvent.click(getCheckbox(container));
@@ -91,7 +89,8 @@ describe('SyncMarketoCampaignDataStep', () => {
 		useWizardPageMock.mockReturnValue({dataSource: mockDataSource(true)});
 
 		const {container} = render(
-			<SyncMarketoCampaignDataStep onNext={onNext} onPrev={jest.fn()} />
+			<SyncMarketoCampaignDataStep onNext={onNext} onPrev={jest.fn()} />,
+			{wrapper: WorkspacePage}
 		);
 
 		fireEvent.submit(container.querySelector('form')!);
@@ -114,7 +113,8 @@ describe('SyncMarketoCampaignDataStep', () => {
 		useWizardPageMock.mockReturnValue({dataSource: null});
 
 		const {container} = render(
-			<SyncMarketoCampaignDataStep onNext={onNext} onPrev={jest.fn()} />
+			<SyncMarketoCampaignDataStep onNext={onNext} onPrev={jest.fn()} />,
+			{wrapper: WorkspacePage}
 		);
 
 		fireEvent.submit(container.querySelector('form')!);

@@ -3,8 +3,8 @@ import BasePage from 'shared/components/base-page';
 import client from 'shared/apollo/client';
 import React from 'react';
 import {ApolloProvider} from '@apollo/client';
-import {BrowserRouter} from 'react-router-dom';
 import {render} from '@testing-library/react';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const items = [
 	{
@@ -89,24 +89,22 @@ describe('AssetsListCard', () => {
 	const WrappedComponent = props => (
 		<ApolloProvider client={client}>
 			<BasePage.Context.Provider value={MOCK_CONTEXT}>
-				<BrowserRouter>
-					<AssetsListCard
-						{...props}
-						rangeSelectors={{rangeKey: '30'}}
-					/>
-				</BrowserRouter>
+				<AssetsListCard
+					{...props}
+					rangeSelectors={{rangeKey: '30'}}
+				/>
 			</BasePage.Context.Provider>
 		</ApolloProvider>
 	);
 
 	it('should render component', () => {
-		const {container} = render(<WrappedComponent />);
+		const {container} = render(<WorkspacePage><WrappedComponent /></WorkspacePage>);
 
 		expect(container).toMatchSnapshot();
 	});
 
 	it('should render component with items', () => {
-		const {container} = render(<WrappedComponent items={items} />);
+		const {container} = render(<WorkspacePage><WrappedComponent items={items} /></WorkspacePage>);
 
 		expect(container).toMatchSnapshot();
 	});

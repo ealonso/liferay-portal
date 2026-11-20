@@ -1,7 +1,6 @@
 import React from 'react';
 import UserDropdown, {Menus} from '../index';
 import {act, cleanup, fireEvent, render, screen} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
 
 const mockMenus = (): Menus => ({
 	base: [
@@ -38,22 +37,16 @@ const mockMenus = (): Menus => ({
 	],
 });
 
-const Wrapper = ({children}: {children: React.ReactNode}) => (
-	<MemoryRouter>{children}</MemoryRouter>
-);
-
 describe('UserDropdown', () => {
 	afterEach(cleanup);
 
 	it('should render', () => {
 		const {container} = render(
-			<Wrapper>
-				<UserDropdown
-					initialActiveMenu="base"
-					menus={mockMenus()}
-					userName="Test Test"
-				/>
-			</Wrapper>
+			<UserDropdown
+				initialActiveMenu="base"
+				menus={mockMenus()}
+				userName="Test Test"
+			/>
 		);
 
 		expect(container).toMatchSnapshot();
@@ -61,13 +54,11 @@ describe('UserDropdown', () => {
 
 	it('should render dropdown menu when clicked', () => {
 		const {container} = render(
-			<Wrapper>
-				<UserDropdown
-					initialActiveMenu="base"
-					menus={mockMenus()}
-					userName="Test Test"
-				/>
-			</Wrapper>
+			<UserDropdown
+				initialActiveMenu="base"
+				menus={mockMenus()}
+				userName="Test Test"
+			/>
 		);
 
 		const toggleButton = container.querySelector('.user-menu');
@@ -80,13 +71,11 @@ describe('UserDropdown', () => {
 
 	it('should descend into nested menu when child button is clicked', async () => {
 		const {container} = render(
-			<Wrapper>
-				<UserDropdown
-					initialActiveMenu="base"
-					menus={mockMenus()}
-					userName="Test Test"
-				/>
-			</Wrapper>
+			<UserDropdown
+				initialActiveMenu="base"
+				menus={mockMenus()}
+				userName="Test Test"
+			/>
 		);
 
 		const toggleButton = container.querySelector('.user-menu');
@@ -107,13 +96,11 @@ describe('UserDropdown', () => {
 
 	it('should ascend from nested menu when back button is clicked', async () => {
 		const {container} = render(
-			<Wrapper>
-				<UserDropdown
-					initialActiveMenu="base"
-					menus={mockMenus()}
-					userName="Test Test"
-				/>
-			</Wrapper>
+			<UserDropdown
+				initialActiveMenu="base"
+				menus={mockMenus()}
+				userName="Test Test"
+			/>
 		);
 
 		const toggleButton = container.querySelector('.user-menu');
@@ -143,13 +130,11 @@ describe('UserDropdown', () => {
 
 	it('should go back to the initialActiveMenu on close', async () => {
 		const {container} = render(
-			<Wrapper>
-				<UserDropdown
-					initialActiveMenu="base"
-					menus={mockMenus()}
-					userName="Test Test"
-				/>
-			</Wrapper>
+			<UserDropdown
+				initialActiveMenu="base"
+				menus={mockMenus()}
+				userName="Test Test"
+			/>
 		);
 
 		const toggleButton = container.querySelector('.user-menu');

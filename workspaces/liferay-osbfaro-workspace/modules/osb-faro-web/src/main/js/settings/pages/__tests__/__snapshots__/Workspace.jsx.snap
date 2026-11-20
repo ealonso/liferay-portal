@@ -5,518 +5,329 @@ exports[`Workspace Settting should render 1`] = `
   <div
     class="settings-root"
   >
-    <nav
-      class="align-items-center bg-white sticky-top toolbar-root base-edit-page-toolbar mb-4 tbar component-tbar"
-    >
-      <ul
-        class="align-items-center mx-3 tbar-nav"
-      >
-        <li
-          class="tbar-item"
-        >
-          <a
-            aria-label="Back"
-            class="btn btn-monospaced btn-outline-borderless btn-outline-secondary btn-sm rounded-lg"
-            data-discover="true"
-            data-tooltip-align="bottom"
-            href="/workspace/23"
-            title="Back"
-          >
-            <svg
-              class="lexicon-icon lexicon-icon-angle-left"
-              role="presentation"
-            >
-              <use
-                href="#angle-left"
-              />
-            </svg>
-          </a>
-        </li>
-        <li
-          class="pl-0 tbar-item"
-        >
-          <div
-            class="tbar-section"
-          >
-            <h1
-              class="font-weight-semi-bold m-0 text-5 text-dark text-nowrap"
-            >
-              Settings
-            </h1>
-          </div>
-        </li>
-        <li
-          class="ml-auto tbar-item"
-        >
-          <ul
-            class="base-edit-page-toolbar-actions justify-content-end tbar-nav"
-            data-testid="toolbar-actions"
-          />
-        </li>
-      </ul>
-    </nav>
     <div
-      class="content-wrapper"
+      class="content section-main"
     >
-      <nav
-        class="section-side settings-side-bar"
-      >
-        <div>
-          <h5
-            class="section-title"
-          >
-            Workspace Data
-          </h5>
-          <ul
-            class="nav"
-          >
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/apis/tokens"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-ac_api icon-root"
-                    data-file="ac_api.svg"
-                    role="presentation"
-                  />
-                </span>
-                APIs
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/definitions"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-definitions icon-root"
-                    data-file="definitions.svg"
-                    role="presentation"
-                  />
-                </span>
-                Definitions
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/data-privacy"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-data_privacy_lock icon-root"
-                    data-file="data_privacy_lock.svg"
-                    role="presentation"
-                  />
-                </span>
-                Data Control & Privacy
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/data-source"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-faro_data_source icon-root"
-                    data-file="faro_data_source.svg"
-                    role="presentation"
-                  />
-                </span>
-                Data Sources
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/recommendations"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-ac_star icon-root"
-                    data-file="ac_star.svg"
-                    role="presentation"
-                  />
-                </span>
-                Recommendations
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h5
-            class="section-title"
-          >
-            Workspace Settings
-          </h5>
-          <ul
-            class="nav"
-          >
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/users"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-user_management icon-root"
-                    data-file="user_management.svg"
-                    role="presentation"
-                  />
-                </span>
-                User Management
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/properties"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-ac_page icon-root"
-                    data-file="ac_page.svg"
-                    role="presentation"
-                  />
-                </span>
-                Properties
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/usage"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-usage icon-root"
-                    data-file="usage.svg"
-                    role="presentation"
-                  />
-                </span>
-                Subscription & Usage
-              </a>
-            </li>
-            <li
-              class="item active"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/workspace"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-cog icon-root"
-                    role="presentation"
-                  >
-                    <use
-                      href="#cog"
-                    />
-                  </svg>
-                </span>
-                Workspace
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
       <div
-        class="content section-main"
+        class="settings-base-page-root workspace-settings"
       >
         <div
-          class="settings-base-page-root workspace-settings"
+          class="maintenance-alert-root"
+        />
+        <div
+          class="content-header"
         >
           <div
-            class="maintenance-alert-root"
-          />
-          <div
-            class="content-header"
+            class="header-text"
           >
             <div
-              class="header-text"
+              class="d-flex"
             >
-              <div
-                class="d-flex"
+              <h3
+                class="title-text text-truncate"
               >
-                <h3
-                  class="title-text text-truncate"
+                <span
+                  class="text-truncate"
+                  data-tooltip="false"
+                  title=""
                 >
-                  <span
-                    class="text-truncate"
-                    data-tooltip="false"
-                    title=""
-                  >
-                    Workspace Settings
-                  </span>
-                </h3>
-              </div>
-              <div
-                class="description"
-              >
-                View and edit your workspace settings. Data center location and friendly workspace URL cannot be edited once it has been set.
-              </div>
+                  Workspace Settings
+                </span>
+              </h3>
             </div>
             <div
-              class="page-actions-container"
-            />
-          </div>
-          <div>
-            <div
-              class="add-workspace-form-root add-workspace-root col-lg-7 pl-0"
+              class="description"
             >
-              <div
-                class="sheet"
+              View and edit your workspace settings. Data center location and friendly workspace URL cannot be edited once it has been set.
+            </div>
+          </div>
+          <div
+            class="page-actions-container"
+          />
+        </div>
+        <div>
+          <div
+            class="add-workspace-form-root add-workspace-root col-lg-7 pl-0"
+          >
+            <div
+              class="sheet"
+            >
+              <form
+                class="form-root"
               >
-                <form
-                  class="form-root"
+                <div
+                  class="sheet-header"
                 >
-                  <div
-                    class="sheet-header"
+                  <h3
+                    class="sheet-subtitle"
                   >
-                    <h3
-                      class="sheet-subtitle"
-                    >
-                      General
-                    </h3>
+                    General
+                  </h3>
+                  <div
+                    class="sheet-section input-name"
+                  >
                     <div
-                      class="sheet-section input-name"
-                    >
-                      <div
-                        class=""
-                      >
-                        <label
-                          class="form-control-label label-root required"
-                          for="name"
-                        >
-                          <span
-                            class="content-container"
-                          >
-                            Workspace Name
-                          </span>
-                        </label>
-                        <input
-                          aria-required="true"
-                          class="input-root form-control"
-                          id="name"
-                          name="name"
-                          type="text"
-                          value="project1"
-                        />
-                      </div>
-                    </div>
-                    <div
-                      class="sheet-section input-workspace-owner-email"
-                    >
-                      <div
-                        class=""
-                      >
-                        <label
-                          class="form-control-label label-root required"
-                          for="ownerEmailAddress"
-                        >
-                          <span
-                            class="content-container"
-                          >
-                            Workspace Owner Email
-                          </span>
-                        </label>
-                        <input
-                          aria-required="true"
-                          class="input-root form-control"
-                          disabled=""
-                          id="ownerEmailAddress"
-                          name="ownerEmailAddress"
-                          type="text"
-                          value="test1@liferay.com"
-                        />
-                      </div>
-                    </div>
-                    <div
-                      class="sheet-section input-server"
-                    >
-                      <div
-                        class=""
-                      >
-                        <label
-                          class="form-control-label label-root required"
-                          for="serverLocation"
-                        >
-                          <span
-                            class="content-container"
-                          >
-                            Data Center Location
-                          </span>
-                        </label>
-                        <label
-                          class="form-control-label label-root font-weight-normal"
-                          for="serverLocation"
-                        >
-                          <span
-                            class="content-container"
-                          >
-                            <p>
-                              Select a server to store your data. This could have implications to your organization's policy on user data storage.
-                            </p>
-                          </span>
-                        </label>
-                        <select
-                          class="form-control select-root"
-                          data-testid="server-location-input"
-                          disabled=""
-                          id="serverLocation"
-                          name="serverLocation"
-                        >
-                          <option
-                            value="MUMBAI, INDIA"
-                          >
-                            Mumbai, India
-                          </option>
-                          <option
-                            value="LONDON, ENGLAND"
-                          >
-                            London, England
-                          </option>
-                          <option
-                            value="FRANKFURT, GERMANY"
-                          >
-                            Frankfurt, Germany
-                          </option>
-                          <option
-                            value="SÃO PAULO, BRAZIL"
-                          >
-                            São Paulo, Brazil
-                          </option>
-                          <option
-                            value="OREGON, USA"
-                          >
-                            Oregon, USA
-                          </option>
-                        </select>
-                      </div>
-                    </div>
-                    <div
-                      class="sheet-section"
+                      class=""
                     >
                       <label
-                        class="form-control-label label-root"
+                        class="form-control-label label-root required"
+                        for="name"
                       >
                         <span
                           class="content-container"
                         >
-                          Timezone
+                          Workspace Name
                         </span>
                       </label>
-                      <p
-                        class="text-3"
+                      <input
+                        aria-required="true"
+                        class="input-root form-control"
+                        id="name"
+                        name="name"
+                        type="text"
+                        value="project1"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="sheet-section input-workspace-owner-email"
+                  >
+                    <div
+                      class=""
+                    >
+                      <label
+                        class="form-control-label label-root required"
+                        for="ownerEmailAddress"
                       >
-                        Time zone used for all data reporting in this workspace. It is automatically set based on your time zone and cannot be changed.
-                      </p>
+                        <span
+                          class="content-container"
+                        >
+                          Workspace Owner Email
+                        </span>
+                      </label>
+                      <input
+                        aria-required="true"
+                        class="input-root form-control"
+                        disabled=""
+                        id="ownerEmailAddress"
+                        name="ownerEmailAddress"
+                        type="text"
+                        value="test1@liferay.com"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="sheet-section input-server"
+                  >
+                    <div
+                      class=""
+                    >
+                      <label
+                        class="form-control-label label-root required"
+                        for="serverLocation"
+                      >
+                        <span
+                          class="content-container"
+                        >
+                          Data Center Location
+                        </span>
+                      </label>
+                      <label
+                        class="form-control-label label-root font-weight-normal"
+                        for="serverLocation"
+                      >
+                        <span
+                          class="content-container"
+                        >
+                          <p>
+                            Select a server to store your data. This could have implications to your organization's policy on user data storage.
+                          </p>
+                        </span>
+                      </label>
+                      <select
+                        class="form-control select-root"
+                        data-testid="server-location-input"
+                        disabled=""
+                        id="serverLocation"
+                        name="serverLocation"
+                      >
+                        <option
+                          value="MUMBAI, INDIA"
+                        >
+                          Mumbai, India
+                        </option>
+                        <option
+                          value="LONDON, ENGLAND"
+                        >
+                          London, England
+                        </option>
+                        <option
+                          value="FRANKFURT, GERMANY"
+                        >
+                          Frankfurt, Germany
+                        </option>
+                        <option
+                          value="SÃO PAULO, BRAZIL"
+                        >
+                          São Paulo, Brazil
+                        </option>
+                        <option
+                          value="OREGON, USA"
+                        >
+                          Oregon, USA
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                  <div
+                    class="sheet-section"
+                  >
+                    <label
+                      class="form-control-label label-root"
+                    >
+                      <span
+                        class="content-container"
+                      >
+                        Timezone
+                      </span>
+                    </label>
+                    <p
+                      class="text-3"
+                    >
+                      Time zone used for all data reporting in this workspace. It is automatically set based on your time zone and cannot be changed.
+                    </p>
+                    <div
+                      class="form-group time-zone-picker-root form-group-autofit"
+                    >
                       <div
-                        class="form-group time-zone-picker-root form-group-autofit"
+                        class="form-group-item col-3 p-0"
+                      >
+                        <select
+                          class="form-control select-root"
+                          disabled=""
+                        >
+                          <option
+                            value=""
+                          >
+                            Country
+                          </option>
+                        </select>
+                      </div>
+                      <div
+                        class="form-group-item col-9 p-0"
                       >
                         <div
-                          class="form-group-item col-3 p-0"
+                          class=""
                         >
                           <select
                             class="form-control select-root"
                             disabled=""
+                            id="timeZoneId"
+                            name="timeZoneId"
                           >
-                            <option
-                              value=""
-                            >
-                              Country
-                            </option>
+                            <option />
                           </select>
-                        </div>
-                        <div
-                          class="form-group-item col-9 p-0"
-                        >
-                          <div
-                            class=""
-                          >
-                            <select
-                              class="form-control select-root"
-                              disabled=""
-                              id="timeZoneId"
-                              name="timeZoneId"
-                            >
-                              <option />
-                            </select>
-                          </div>
                         </div>
                       </div>
                     </div>
-                    <div
-                      class="sheet-section"
-                    >
-                      <div>
-                        <span
-                          class="text-3 font-weight-semi-bold"
-                        >
-                          Set a Friendly Workspace URL
-                        </span>
-                      </div>
+                  </div>
+                  <div
+                    class="sheet-section"
+                  >
+                    <div>
                       <span
-                        class="text-3"
+                        class="text-3 font-weight-semi-bold"
                       >
-                        Define a friendly URL that others can use to access and share this workspace. This value cannot be changed after it is set.
+                        Set a Friendly Workspace URL
                       </span>
-                      <div
-                        class="mb-1"
+                    </div>
+                    <span
+                      class="text-3"
+                    >
+                      Define a friendly URL that others can use to access and share this workspace. This value cannot be changed after it is set.
+                    </span>
+                    <div
+                      class="mb-1"
+                    >
+                      <span
+                        class="text-3 text-secondary"
                       >
-                        <span
-                          class="text-3 text-secondary"
-                        >
-                          e.g. 
-                          <span>
-                            http://localhost:3000
-                          </span>
-                          <strong>
-                            /workspace-name
-                          </strong>
-                          .
+                        e.g. 
+                        <span>
+                          http://localhost:3000
                         </span>
-                      </div>
+                        <strong>
+                          /workspace-name
+                        </strong>
+                        .
+                      </span>
+                    </div>
+                    <div
+                      class=""
+                    >
                       <div
-                        class=""
+                        class="input-group"
+                      >
+                        <div
+                          class="input-group-item input-group-item-shrink input-group-prepend"
+                        >
+                          <div
+                            class="input-group-text"
+                          >
+                            /
+                          </div>
+                        </div>
+                        <div
+                          class="input-group-item input-group-append"
+                        >
+                          <input
+                            class="input-root form-control"
+                            data-testid="friendly-url-input"
+                            id="friendlyURL"
+                            name="friendlyURL"
+                            type="text"
+                            value=""
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="sheet-section"
+                  >
+                    <div>
+                      <span
+                        class="text-3 font-weight-semi-bold"
+                      >
+                        Allowed Email Domains
+                      </span>
+                    </div>
+                    <span
+                      class="text-3"
+                    >
+                      Define which email domains can request access to this workspace.
+                    </span>
+                    <div
+                      class="mb-1"
+                    >
+                      <span
+                        class="text-3 text-secondary"
+                      >
+                        e.g. 
+                        <span>
+                          user.name@
+                        </span>
+                        <strong>
+                          company-domain.com
+                        </strong>
+                        .
+                      </span>
+                    </div>
+                    <div
+                      class=""
+                    >
+                      <div
+                        class="input-group"
                       >
                         <div
                           class="input-group"
@@ -527,17 +338,118 @@ exports[`Workspace Settting should render 1`] = `
                             <div
                               class="input-group-text"
                             >
-                              /
+                              @
                             </div>
                           </div>
                           <div
                             class="input-group-item input-group-append"
                           >
+                            <div
+                              class="input-group-item input-list-root"
+                            >
+                              <div
+                                class="form-control form-control-tag-group"
+                              >
+                                <span
+                                  class="label label-dismissible label-inverse-secondary"
+                                >
+                                  <span
+                                    class="label-item label-item-expand"
+                                  >
+                                    liferay.com
+                                  </span>
+                                  <span
+                                    class="label-item label-item-after"
+                                  >
+                                    <button
+                                      aria-label="Close"
+                                      class="close"
+                                      type="button"
+                                    >
+                                      <svg
+                                        class="lexicon-icon lexicon-icon-times-small"
+                                        role="presentation"
+                                      >
+                                        <use
+                                          href="#times-small"
+                                        />
+                                      </svg>
+                                    </button>
+                                  </span>
+                                </span>
+                                <input
+                                  class="form-control-inset"
+                                  placeholder=""
+                                  type="text"
+                                  value=""
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <h3
+                    class="sheet-subtitle"
+                  >
+                    Security
+                  </h3>
+                  <div
+                    class="sheet-section"
+                  >
+                    <div
+                      class=""
+                    >
+                      <label
+                        class="form-control-label label-root required"
+                        for="incidentReportEmailAddresses"
+                      >
+                        <span
+                          class="content-container"
+                        >
+                          Add Incident Report Contacts
+                        </span>
+                        <span
+                          aria-label="Incident Report Contact"
+                          class="info-popover-root"
+                          role="button"
+                          tabindex="0"
+                        >
+                          <svg
+                            class="lexicon-icon lexicon-icon-question-circle-full icon-root"
+                            role="presentation"
+                          >
+                            <use
+                              href="#question-circle-full"
+                            />
+                          </svg>
+                        </span>
+                      </label>
+                      <label
+                        class="form-control-label label-root font-weight-normal"
+                        for="incidentReportEmailAddresses"
+                      >
+                        <span
+                          class="content-container"
+                        >
+                          <p>
+                            Who should we contact in case of a security breach?
+                          </p>
+                        </span>
+                      </label>
+                      <div
+                        class="input-group"
+                      >
+                        <div
+                          class="input-group-item input-list-root"
+                        >
+                          <div
+                            class="form-control form-control-tag-group"
+                          >
                             <input
-                              class="input-root form-control"
-                              data-testid="friendly-url-input"
-                              id="friendlyURL"
-                              name="friendlyURL"
+                              class="form-control-inset"
+                              placeholder=""
                               type="text"
                               value=""
                             />
@@ -545,192 +457,26 @@ exports[`Workspace Settting should render 1`] = `
                         </div>
                       </div>
                     </div>
-                    <div
-                      class="sheet-section"
-                    >
-                      <div>
-                        <span
-                          class="text-3 font-weight-semi-bold"
-                        >
-                          Allowed Email Domains
-                        </span>
-                      </div>
-                      <span
-                        class="text-3"
-                      >
-                        Define which email domains can request access to this workspace.
-                      </span>
-                      <div
-                        class="mb-1"
-                      >
-                        <span
-                          class="text-3 text-secondary"
-                        >
-                          e.g. 
-                          <span>
-                            user.name@
-                          </span>
-                          <strong>
-                            company-domain.com
-                          </strong>
-                          .
-                        </span>
-                      </div>
-                      <div
-                        class=""
-                      >
-                        <div
-                          class="input-group"
-                        >
-                          <div
-                            class="input-group"
-                          >
-                            <div
-                              class="input-group-item input-group-item-shrink input-group-prepend"
-                            >
-                              <div
-                                class="input-group-text"
-                              >
-                                @
-                              </div>
-                            </div>
-                            <div
-                              class="input-group-item input-group-append"
-                            >
-                              <div
-                                class="input-group-item input-list-root"
-                              >
-                                <div
-                                  class="form-control form-control-tag-group"
-                                >
-                                  <span
-                                    class="label label-dismissible label-inverse-secondary"
-                                  >
-                                    <span
-                                      class="label-item label-item-expand"
-                                    >
-                                      liferay.com
-                                    </span>
-                                    <span
-                                      class="label-item label-item-after"
-                                    >
-                                      <button
-                                        aria-label="Close"
-                                        class="close"
-                                        type="button"
-                                      >
-                                        <svg
-                                          class="lexicon-icon lexicon-icon-times-small"
-                                          role="presentation"
-                                        >
-                                          <use
-                                            href="#times-small"
-                                          />
-                                        </svg>
-                                      </button>
-                                    </span>
-                                  </span>
-                                  <input
-                                    class="form-control-inset"
-                                    placeholder=""
-                                    type="text"
-                                    value=""
-                                  />
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    <h3
-                      class="sheet-subtitle"
-                    >
-                      Security
-                    </h3>
-                    <div
-                      class="sheet-section"
-                    >
-                      <div
-                        class=""
-                      >
-                        <label
-                          class="form-control-label label-root required"
-                          for="incidentReportEmailAddresses"
-                        >
-                          <span
-                            class="content-container"
-                          >
-                            Add Incident Report Contacts
-                          </span>
-                          <span
-                            aria-label="Incident Report Contact"
-                            class="info-popover-root"
-                            role="button"
-                            tabindex="0"
-                          >
-                            <svg
-                              class="lexicon-icon lexicon-icon-question-circle-full icon-root"
-                              role="presentation"
-                            >
-                              <use
-                                href="#question-circle-full"
-                              />
-                            </svg>
-                          </span>
-                        </label>
-                        <label
-                          class="form-control-label label-root font-weight-normal"
-                          for="incidentReportEmailAddresses"
-                        >
-                          <span
-                            class="content-container"
-                          >
-                            <p>
-                              Who should we contact in case of a security breach?
-                            </p>
-                          </span>
-                        </label>
-                        <div
-                          class="input-group"
-                        >
-                          <div
-                            class="input-group-item input-list-root"
-                          >
-                            <div
-                              class="form-control form-control-tag-group"
-                            >
-                              <input
-                                class="form-control-inset"
-                                placeholder=""
-                                type="text"
-                                value=""
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
                   </div>
-                  <div
-                    class="sheet-footer"
+                </div>
+                <div
+                  class="sheet-footer"
+                >
+                  <button
+                    class="button-root mr-3 btn btn-primary"
+                    type="submit"
                   >
-                    <button
-                      class="button-root mr-3 btn btn-primary"
-                      type="submit"
-                    >
-                      Save
-                    </button>
-                    <button
-                      class="button-root btn btn-secondary"
-                      disabled=""
-                      type="button"
-                    >
-                      Cancel
-                    </button>
-                  </div>
-                </form>
-              </div>
+                    Save
+                  </button>
+                  <button
+                    class="button-root btn btn-secondary"
+                    disabled=""
+                    type="button"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
             </div>
           </div>
         </div>

@@ -5,26 +5,24 @@ import React from 'react';
 import {cleanup, render} from '@testing-library/react';
 import {Individual} from 'shared/util/records';
 import {Provider} from 'react-redux';
-import {MemoryRouter} from 'react-router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 describe('IndividualDetails', () => {
 	afterEach(cleanup);
 
 	it('should render', async () => {
 		const {container} = render(
-			<MemoryRouter>
-				<Provider store={mockStore()}>
-					<Details
-						groupId='23'
-						id='test'
-						individual={data.getImmutableMock(
-							Individual,
-							data.mockIndividual
-						)}
-					/>
-				</Provider>
-			</MemoryRouter>
+			<WorkspacePage><Provider store={mockStore()}>
+				<Details
+					groupId='23'
+					id='test'
+					individual={data.getImmutableMock(
+						Individual,
+						data.mockIndividual
+					)}
+				/>
+			</Provider></WorkspacePage>
 		);
 
 		jest.runAllTimers();

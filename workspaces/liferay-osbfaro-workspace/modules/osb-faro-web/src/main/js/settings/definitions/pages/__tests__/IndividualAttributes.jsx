@@ -5,15 +5,8 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import {cleanup, fireEvent, render, screen} from '@testing-library/react';
 import {Provider} from 'react-redux';
-import {MemoryRouter} from 'react-router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		groupId: '23'
-	})
-}));
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.mock('shared/hooks/useTimeZone', () => ({
 	useTimeZone: () => ({timeZoneId: 'UTC'})
@@ -21,9 +14,9 @@ jest.mock('shared/hooks/useTimeZone', () => ({
 
 const DefaultComponent = props => (
 	<Provider store={mockStore()}>
-		<MemoryRouter>
+		<WorkspacePage>
 			<IndividualAttributes groupId='23' {...props} />
-		</MemoryRouter>
+		</WorkspacePage>
 	</Provider>
 );
 

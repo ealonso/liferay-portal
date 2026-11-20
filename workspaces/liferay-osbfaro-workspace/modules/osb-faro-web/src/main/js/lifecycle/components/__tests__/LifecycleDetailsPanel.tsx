@@ -10,25 +10,15 @@ import {
 	within,
 } from '@testing-library/react';
 import {ILifecycleDetail} from 'shared/api/lifecycle';
-import {MemoryRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useRequest} from 'shared/hooks/useRequest';
+import {WorkspacePage} from 'test/mock-page-context';
+import {mockCurrentUser} from 'test/mock-page-context';
 
 jest.mock('shared/hooks/useRequest', () => ({
 	useRequest: jest.fn(),
 }));
 
-jest.mock('shared/hooks/useCurrentUser', () => ({
-	useCurrentUser: jest.fn(),
-}));
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({channelId: '123', groupId: '23'}),
-}));
-
-const mockedUseCurrentUser = useCurrentUser as jest.Mock;
 const mockedUseRequest = useRequest as jest.Mock;
 
 const LIFECYCLE: ILifecycleDetail = {
@@ -108,9 +98,9 @@ const renderPanel = (
 ) =>
 	render(
 		<Provider store={mockStore()}>
-			<MemoryRouter>
+			<WorkspacePage channelId="123" groupId="23">
 				<Panel {...props} />
-			</MemoryRouter>
+			</WorkspacePage>
 		</Provider>
 	);
 
@@ -121,7 +111,7 @@ describe('LifecycleDetailsPanel', () => {
 	beforeEach(() => {
 		jest.clearAllMocks();
 
-		mockedUseCurrentUser.mockReturnValue({isAdmin: () => true});
+		mockCurrentUser();
 
 		mockLifecycle(LIFECYCLE);
 	});

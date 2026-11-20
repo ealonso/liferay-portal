@@ -1,15 +1,9 @@
 import ChannelsMenu, {isValidChannel} from '../index';
 import mockStore from 'test/mock-store';
 import React from 'react';
-import {BrowserRouter} from 'react-router-dom';
-import {
-	cleanup,
-	fireEvent,
-	render,
-	screen,
-	within
-} from '@testing-library/react';
+import {cleanup, fireEvent, render, screen, within} from '@testing-library/react';
 import {Provider} from 'react-redux';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const mockMenuItems = () => [
 	{
@@ -29,11 +23,9 @@ describe('ChannelsMenu', () => {
 
 	it('should render the first item as label', () => {
 		const {container} = render(
-			<Provider store={mockStore()}>
-				<BrowserRouter>
-					<ChannelsMenu channels={mockMenuItems()} groupId='123456' />
-				</BrowserRouter>
-			</Provider>
+			<WorkspacePage><Provider store={mockStore()}>
+				<ChannelsMenu channels={mockMenuItems()} groupId='123456' />
+			</Provider></WorkspacePage>
 		);
 
 		expect(container).toHaveTextContent('Link 1');
@@ -42,11 +34,9 @@ describe('ChannelsMenu', () => {
 
 	it('should render the empty state label when channels is not provided', () => {
 		const {container} = render(
-			<Provider store={mockStore()}>
-				<BrowserRouter>
-					<ChannelsMenu groupId='123456' />
-				</BrowserRouter>
-			</Provider>
+			<WorkspacePage><Provider store={mockStore()}>
+				<ChannelsMenu groupId='123456' />
+			</Provider></WorkspacePage>
 		);
 
 		expect(container).toHaveTextContent(/no properties/i);
@@ -54,15 +44,13 @@ describe('ChannelsMenu', () => {
 
 	it('should render dropdown menu when clicked', () => {
 		render(
-			<Provider store={mockStore()}>
-				<BrowserRouter>
-					<ChannelsMenu
-						channels={mockMenuItems()}
-						defaultChannelId='1'
-						groupId='123456'
-					/>
-				</BrowserRouter>
-			</Provider>
+			<WorkspacePage><Provider store={mockStore()}>
+				<ChannelsMenu
+					channels={mockMenuItems()}
+					defaultChannelId='1'
+					groupId='123456'
+				/>
+			</Provider></WorkspacePage>
 		);
 
 		const toggleButton = screen.getByRole('combobox', {name: /^property$/i});
@@ -74,15 +62,13 @@ describe('ChannelsMenu', () => {
 
 	it('should mark the selected channel and let the other one be picked', () => {
 		render(
-			<Provider store={mockStore()}>
-				<BrowserRouter>
-					<ChannelsMenu
-						channels={mockMenuItems()}
-						defaultChannelId='1'
-						groupId='123456'
-					/>
-				</BrowserRouter>
-			</Provider>
+			<WorkspacePage><Provider store={mockStore()}>
+				<ChannelsMenu
+					channels={mockMenuItems()}
+					defaultChannelId='1'
+					groupId='123456'
+				/>
+			</Provider></WorkspacePage>
 		);
 
 		fireEvent.click(screen.getByRole('combobox', {name: /^property$/i}));
@@ -94,15 +80,13 @@ describe('ChannelsMenu', () => {
 		const channelName = 'A property name longer than the label length';
 
 		render(
-			<Provider store={mockStore()}>
-				<BrowserRouter>
-					<ChannelsMenu
-						channels={[...mockMenuItems(), {id: '3', name: channelName}]}
-						defaultChannelId='1'
-						groupId='123456'
-					/>
-				</BrowserRouter>
-			</Provider>
+			<WorkspacePage><Provider store={mockStore()}>
+				<ChannelsMenu
+					channels={[...mockMenuItems(), {id: '3', name: channelName}]}
+					defaultChannelId='1'
+					groupId='123456'
+				/>
+				</Provider></WorkspacePage>
 		);
 
 		fireEvent.click(screen.getByRole('combobox', {name: /^property$/i}));
@@ -121,15 +105,13 @@ describe('ChannelsMenu', () => {
 			'A property name much longer than the product menu picker width';
 
 		render(
-			<Provider store={mockStore()}>
-				<BrowserRouter>
-					<ChannelsMenu
-						channels={[{id: '1', name: channelName}]}
-						defaultChannelId='1'
-						groupId='123456'
-					/>
-				</BrowserRouter>
-			</Provider>
+			<WorkspacePage><Provider store={mockStore()}>
+				<ChannelsMenu
+					channels={[{id: '1', name: channelName}]}
+					defaultChannelId='1'
+					groupId='123456'
+				/>
+				</Provider></WorkspacePage>
 		);
 
 		expect(

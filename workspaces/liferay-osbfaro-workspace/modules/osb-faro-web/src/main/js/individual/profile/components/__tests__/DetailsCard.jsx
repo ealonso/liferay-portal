@@ -4,17 +4,15 @@ import {fromJS} from 'immutable';
 import {Individual} from 'shared/util/records';
 import {mockIndividual} from 'test/data';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
+import {WorkspacePage} from 'test/mock-page-context';
 
 describe('IndividualDetailsCard', () => {
 	it('should render', () => {
 		const {container} = render(
-			<MemoryRouter>
-				<IndividualDetailsCard
-					entity={new Individual(fromJS(mockIndividual()))}
-					groupId='23'
-				/>
-			</MemoryRouter>
+			<WorkspacePage><IndividualDetailsCard
+				entity={new Individual(fromJS(mockIndividual()))}
+				groupId='23'
+			/></WorkspacePage>
 		);
 
 		expect(container).toMatchSnapshot();

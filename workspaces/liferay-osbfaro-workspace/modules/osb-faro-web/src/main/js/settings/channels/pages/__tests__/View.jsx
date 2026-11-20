@@ -10,16 +10,11 @@ import {
 	screen
 } from '@testing-library/react';
 import {Provider} from 'react-redux';
-import {MemoryRouter} from 'react-router';
 import {User} from 'shared/util/records';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		groupId: '23'
-	})
-}));
+import {WorkspacePage} from 'test/mock-page-context';
+import {mockCurrentUser} from 'test/mock-page-context';
+import {UserRoleNames} from 'shared/util/constants';
 
 const defaultProps = {
 	currentUser: new User(data.mockUser()),
@@ -31,9 +26,9 @@ const DefaultComponent = props => {
 
 	return (
 		<Provider store={mockStore()}>
-			<MemoryRouter>
+			<WorkspacePage>
 				<View {...defaultProps} {...props} />
-			</MemoryRouter>
+			</WorkspacePage>
 		</Provider>
 	);
 };
@@ -67,9 +62,7 @@ describe('View Channel', () => {
 	});
 
 	it('should not edit or delete property when the user is not an admin', () => {
-		API.user.fetchCurrentUser.mockReturnValueOnce(
-			Promise.resolve(data.mockMemberUser())
-		);
+		mockCurrentUser({roleName: UserRoleNames.Member});
 
 		const {queryByLabelText, queryByText} = render(<DefaultComponent />);
 
@@ -78,10 +71,6 @@ describe('View Channel', () => {
 	});
 
 	it('should check if DELETE and CLEAR DATA buttons are displayed', async () => {
-		API.user.fetchCurrentUser.mockReturnValueOnce(
-			Promise.resolve(data.mockUser())
-		);
-
 		const {container, queryByText} = render(<DefaultComponent />);
 
 		await waitForLoadingToBeRemoved(container);
@@ -91,10 +80,6 @@ describe('View Channel', () => {
 	});
 
 	it('should check error modal message and hyperlink on deleting property that has SITES synced', async () => {
-		API.user.fetchCurrentUser.mockReturnValueOnce(
-			Promise.resolve(data.mockUser())
-		);
-
 		API.channels.fetch.mockReturnValueOnce(
 			Promise.resolve(
 				data.mockChannel(1, 1, {
@@ -148,10 +133,6 @@ describe('View Channel', () => {
 	});
 
 	it('should check error modal message and hyperlink on deleting property that has SITES NOT synced', async () => {
-		API.user.fetchCurrentUser.mockReturnValueOnce(
-			Promise.resolve(data.mockUser())
-		);
-
 		API.channels.fetch.mockReturnValueOnce(
 			Promise.resolve(
 				data.mockChannel(1, 1, {

@@ -55,6 +55,28 @@ describe('useChannels', () => {
 		expect(result.current.context.selectedChannel).toEqual(CHANNELS[1]);
 	});
 
+	it('uses the channels that the renderer passes without requesting them', async () => {
+		const {result} = renderHook(
+			() => ({
+				channels: useChannels({
+					channelId: '2',
+					groupId: '23',
+					initialChannels: CHANNELS,
+				}),
+				context: React.useContext(ChannelContext),
+			}),
+			{wrapper}
+		);
+
+		await waitFor(() =>
+			expect(result.current.channels.loading).toBe(false)
+		);
+
+		expect(API.channels.fetchAll).not.toHaveBeenCalled();
+		expect(result.current.context.channels).toEqual(CHANNELS);
+		expect(result.current.context.selectedChannel).toEqual(CHANNELS[1]);
+	});
+
 	it('falls back to the first channel when the URL has none', async () => {
 		const {result} = renderRecordingHook({});
 

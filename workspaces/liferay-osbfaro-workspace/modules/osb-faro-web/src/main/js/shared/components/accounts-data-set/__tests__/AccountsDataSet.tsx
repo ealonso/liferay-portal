@@ -9,6 +9,7 @@ import {useRequest} from 'shared/hooks/useRequest';
 import {warmFrontendDataSet} from 'test/warm-frontend-data-set';
 
 import type {TSort} from '@liferay/frontend-data-set-web';
+import {WorkspacePage} from 'test/mock-page-context';
 
 interface IStageItem {
 	externalReferenceCode: string;
@@ -211,7 +212,7 @@ jest.mock('@liferay/frontend-data-set-web', () => ({
 }));
 
 const renderAccountsDataSet = async (ui: React.ReactElement) => {
-	const result = render(ui);
+	const result = render(<WorkspacePage>{ui}</WorkspacePage>);
 
 	await screen.findByTestId('fds-component');
 
@@ -356,12 +357,14 @@ describe('AccountsDataSet', () => {
 		expect(mountCount).toBe(1);
 
 		rerender(
-			<AccountsDataSet
-				apiURL="fake-url"
-				campaignId="7"
-				channelId="123"
-				groupId="23"
-			/>
+			<WorkspacePage>
+				<AccountsDataSet
+					apiURL="fake-url"
+					campaignId="7"
+					channelId="123"
+					groupId="23"
+				/>
+			</WorkspacePage>
 		);
 
 		await waitFor(() => expect(mountCount).toBe(2));
@@ -673,21 +676,21 @@ describe('AccountsDataSet', () => {
 		}
 	);
 
-	it('should render the account name link with channelId in the href', async () => {
+	it('should render the account name linked to the account page', async () => {
 		await renderAccountsDataSet(
 			<AccountsDataSet apiURL="fake-url" channelId="123" groupId="23" />
 		);
 
-		const {container} = render(
+		render(
 			lastCustomDataRenderers!.accountNameRenderer({
 				itemData: {id: 'abc'},
 				value: 'Acme Corp',
 			})
 		);
 
-		expect(container.querySelector('a')).toHaveAttribute(
+		expect(screen.getByRole('link', {name: 'Acme Corp'})).toHaveAttribute(
 			'href',
-			'/workspace/23/123/contacts/accounts/abc'
+			'/account?id=abc'
 		);
 	});
 
@@ -946,12 +949,14 @@ describe('AccountsDataSet', () => {
 		expect(mountCount).toBe(1);
 
 		rerender(
-			<AccountsDataSet
-				apiURL="fake-url"
-				channelId="123"
-				groupId="23"
-				segmentFilter="segment-100"
-			/>
+			<WorkspacePage>
+				<AccountsDataSet
+					apiURL="fake-url"
+					channelId="123"
+					groupId="23"
+					segmentFilter="segment-100"
+				/>
+			</WorkspacePage>
 		);
 
 		await waitFor(() => expect(mountCount).toBe(2));
@@ -972,14 +977,16 @@ describe('AccountsDataSet', () => {
 		expect(mountCount).toBe(1);
 
 		rerender(
-			<AccountsDataSet
-				accountLifecycleId="al-1"
-				apiURL="fake-url"
-				channelId="123"
-				groupId="23"
-				lifecycleStageFilter="9990"
-				stageSelectionNonce={1}
-			/>
+			<WorkspacePage>
+				<AccountsDataSet
+					accountLifecycleId="al-1"
+					apiURL="fake-url"
+					channelId="123"
+					groupId="23"
+					lifecycleStageFilter="9990"
+					stageSelectionNonce={1}
+				/>
+			</WorkspacePage>
 		);
 
 		await waitFor(() => expect(mountCount).toBe(2));
@@ -989,12 +996,14 @@ describe('AccountsDataSet', () => {
 		mockStagesLoading();
 
 		const {rerender} = render(
-			<AccountsDataSet
-				accountLifecycleId="al-1"
-				apiURL="fake-url"
-				channelId="123"
-				groupId="23"
-			/>
+			<WorkspacePage>
+				<AccountsDataSet
+					accountLifecycleId="al-1"
+					apiURL="fake-url"
+					channelId="123"
+					groupId="23"
+				/>
+			</WorkspacePage>
 		);
 
 		expect(screen.queryByTestId('fds-component')).toBeNull();
@@ -1003,12 +1012,14 @@ describe('AccountsDataSet', () => {
 		mockStages(DEFAULT_STAGE_ITEMS);
 
 		rerender(
-			<AccountsDataSet
-				accountLifecycleId="al-1"
-				apiURL="fake-url"
-				channelId="123"
-				groupId="23"
-			/>
+			<WorkspacePage>
+				<AccountsDataSet
+					accountLifecycleId="al-1"
+					apiURL="fake-url"
+					channelId="123"
+					groupId="23"
+				/>
+			</WorkspacePage>
 		);
 
 		expect(await screen.findByTestId('fds-component')).toBeInTheDocument();

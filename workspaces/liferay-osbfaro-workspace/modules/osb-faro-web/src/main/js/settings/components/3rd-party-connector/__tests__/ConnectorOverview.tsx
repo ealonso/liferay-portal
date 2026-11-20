@@ -10,20 +10,12 @@ import {fromJS} from 'immutable';
 import {generateConnectorToken, updateConnector} from 'shared/api/connector';
 import {Provider} from 'react-redux';
 import {revoke} from 'shared/api/api-tokens';
+import {WorkspacePage} from 'test/mock-page-context';
+import {mockCurrentUser} from 'test/mock-page-context';
+import {UserRoleNames} from 'shared/util/constants';
 
-const useParamsMock = jest.fn();
-const useCurrentUserMock = jest.fn();
 const useDisconnectDataSourceMock = jest.fn();
 const useRequestMock = jest.fn();
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => useParamsMock(),
-}));
-
-jest.mock('shared/hooks/useCurrentUser', () => ({
-	useCurrentUser: () => useCurrentUserMock(),
-}));
 
 jest.mock('shared/hooks/useRequest', () => ({
 	useRequest: (args: any) => useRequestMock(args),
@@ -149,15 +141,17 @@ const renderOverview = (
 	}> = {}
 ) =>
 	render(
-		<Provider store={mockStore()}>
-			<ConnectorOverview
-				config={props.config ?? buildConfig()}
-				dataSource={
-					props.dataSource ??
-					buildDataSource(DataSourceStatuses.Active)
-				}
-			/>
-		</Provider>
+		<WorkspacePage params={{id: 'ds-1'}}>
+			<Provider store={mockStore()}>
+				<ConnectorOverview
+					config={props.config ?? buildConfig()}
+					dataSource={
+						props.dataSource ??
+						buildDataSource(DataSourceStatuses.Active)
+					}
+				/>
+			</Provider>
+		</WorkspacePage>
 	);
 
 const mockEntityCounts = (counts: {[entity: string]: number | undefined}) =>
@@ -181,8 +175,7 @@ describe('ConnectorOverview', () => {
 		(revoke as jest.Mock).mockClear();
 		useDisconnectDataSourceMock.mockClear();
 
-		useParamsMock.mockReturnValue({groupId: '23', id: 'ds-1'});
-		useCurrentUserMock.mockReturnValue({isAdmin: () => true});
+		mockCurrentUser();
 		useDisconnectDataSourceMock.mockReturnValue({
 			handleDisconnect: jest.fn(),
 		});
@@ -471,7 +464,7 @@ describe('ConnectorOverview', () => {
 		});
 
 		it('hides the disconnect button when the user is not an admin', () => {
-			useCurrentUserMock.mockReturnValue({isAdmin: () => false});
+			mockCurrentUser({roleName: UserRoleNames.Member});
 
 			const {queryByLabelText} = renderOverview();
 

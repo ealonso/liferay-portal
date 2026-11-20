@@ -18,6 +18,7 @@ import {Property, PropertyGroup, PropertySubgroup} from 'shared/util/records';
 import {ReferencedObjectsContext} from '../../context/referencedObjects';
 import {SegmentTypes} from 'shared/util/constants';
 import {useQuery} from '@apollo/client';
+import {mockCurrentUser, WorkspacePage} from 'test/mock-page-context';
 
 jest.mock('shared/apollo/client', () => ({
 	__esModule: true,
@@ -29,17 +30,11 @@ jest.mock('@apollo/client', () => ({
 	useQuery: jest.fn()
 }));
 
-jest.mock('shared/hooks/useCurrentUser', () => ({
-	useCurrentUser: () => ({isAdmin: () => true})
-}));
-
 jest.mock('shared/context/dataSources', () => ({
 	useDataSources: () => ({empty: false, loading: false})
 }));
 
-jest.mock('react-router-dom', () => ({
-	useParams: () => ({groupId: '12345'})
-}));
+beforeEach(() => mockCurrentUser());
 
 const campaignPropertyGroupList = new List([
 	new PropertyGroup({
@@ -149,12 +144,12 @@ describe('CriteriaSidebar', () => {
 
 	it('should render the sidebar structure with property groups', () => {
 		render(
-			<DndProvider backend={HTML5Backend}>
+			<WorkspacePage><DndProvider backend={HTML5Backend}>
 				<CriteriaSidebar
 					propertyGroupsIList={fullPropertyGroupList}
 					type={SegmentTypes.Batch}
 				/>
-			</DndProvider>
+			</DndProvider></WorkspacePage>
 		);
 
 		expect(screen.getByText(/^conditions library$/i)).toBeInTheDocument();
@@ -167,12 +162,12 @@ describe('CriteriaSidebar', () => {
 
 	it('names the property-group picker for assistive technologies', () => {
 		render(
-			<DndProvider backend={HTML5Backend}>
+			<WorkspacePage><DndProvider backend={HTML5Backend}>
 				<CriteriaSidebar
 					propertyGroupsIList={fullPropertyGroupList}
 					type={SegmentTypes.Batch}
 				/>
-			</DndProvider>
+			</DndProvider></WorkspacePage>
 		);
 
 		expect(
@@ -182,12 +177,12 @@ describe('CriteriaSidebar', () => {
 
 	it('keeps a single tab stop and moves focus between items with the arrow keys', () => {
 		render(
-			<DndProvider backend={HTML5Backend}>
+			<WorkspacePage><DndProvider backend={HTML5Backend}>
 				<CriteriaSidebar
 					propertyGroupsIList={fullPropertyGroupList}
 					type={SegmentTypes.Batch}
 				/>
-			</DndProvider>
+			</DndProvider></WorkspacePage>
 		);
 
 		const [pageViews, pageActions] = screen.getAllByRole('menuitem');
@@ -311,10 +306,10 @@ describe('CriteriaSidebar', () => {
 
 	it('should render w/ "No Results Were Found" when propertyGroupsIList is empty', () => {
 		render(
-			<CriteriaSidebar
+			<WorkspacePage><CriteriaSidebar
 				propertyGroupsIList={new List()}
 				type={SegmentTypes.Batch}
-			/>
+			/></WorkspacePage>
 		);
 
 		expect(
@@ -329,12 +324,12 @@ describe('CriteriaSidebar', () => {
 		});
 
 		render(
-			<DndProvider backend={HTML5Backend}>
+			<WorkspacePage><DndProvider backend={HTML5Backend}>
 				<CriteriaSidebar
 					propertyGroupsIList={realTimePropertyGroupList}
 					type={SegmentTypes.RealTime}
 				/>
-			</DndProvider>
+			</DndProvider></WorkspacePage>
 		);
 
 		expect(screen.queryByRole('combobox')).not.toBeInTheDocument();
@@ -347,12 +342,12 @@ describe('CriteriaSidebar', () => {
 		});
 
 		render(
-			<DndProvider backend={HTML5Backend}>
+			<WorkspacePage><DndProvider backend={HTML5Backend}>
 				<CriteriaSidebar
 					propertyGroupsIList={realTimePropertyGroupList}
 					type={SegmentTypes.RealTime}
 				/>
-			</DndProvider>
+			</DndProvider></WorkspacePage>
 		);
 
 		expect(screen.getByText(/^default$/i)).toBeInTheDocument();
@@ -367,12 +362,12 @@ describe('CriteriaSidebar', () => {
 
 	it('renders the Default and Custom tabs for the individual attributes section', () => {
 		render(
-			<DndProvider backend={HTML5Backend}>
+			<WorkspacePage><DndProvider backend={HTML5Backend}>
 				<CriteriaSidebar
 					propertyGroupsIList={individualPropertyGroupList}
 					type={SegmentTypes.Batch}
 				/>
-			</DndProvider>
+			</DndProvider></WorkspacePage>
 		);
 
 		expect(screen.getByText(/^default$/i)).toBeInTheDocument();
@@ -406,14 +401,14 @@ describe('CriteriaSidebar', () => {
 		]);
 
 		render(
-			<DndProvider backend={HTML5Backend}>
+			<WorkspacePage><DndProvider backend={HTML5Backend}>
 				<CriteriaSidebar
 					channelId='123'
 					groupId='12345'
 					propertyGroupsIList={searchTermPropertyGroupList}
 					type={SegmentTypes.Batch}
 				/>
-			</DndProvider>
+			</DndProvider></WorkspacePage>
 		);
 
 		await waitFor(() =>
@@ -459,7 +454,7 @@ describe('CriteriaSidebar', () => {
 		]);
 
 		render(
-			<DndProvider backend={HTML5Backend}>
+			<WorkspacePage><DndProvider backend={HTML5Backend}>
 				<ReferencedObjectsContext.Provider
 					value={{
 						addProperty,
@@ -474,7 +469,7 @@ describe('CriteriaSidebar', () => {
 						type={SegmentTypes.Batch}
 					/>
 				</ReferencedObjectsContext.Provider>
-			</DndProvider>
+			</DndProvider></WorkspacePage>
 		);
 
 		await waitFor(() => expect(addProperty).toHaveBeenCalled());

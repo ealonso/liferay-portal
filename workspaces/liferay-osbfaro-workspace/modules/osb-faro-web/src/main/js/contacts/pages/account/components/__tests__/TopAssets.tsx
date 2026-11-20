@@ -10,13 +10,13 @@ import {
 	within,
 } from '@testing-library/react';
 import {ITopAsset} from 'shared/api/assets';
-import {MemoryRouter} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockPreferenceReq, mockTimeRangeReq} from 'test/graphql-data';
 import {Provider} from 'react-redux';
 import {RangeKeyTimeRanges} from 'shared/util/constants';
 import {useRequest} from 'shared/hooks/useRequest';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.mock('shared/api', () => ({
 	assets: {
@@ -28,16 +28,9 @@ jest.mock('shared/hooks/useRequest', () => ({
 	useRequest: jest.fn(),
 }));
 
-const mockPush = jest.fn();
+const navigate = Liferay.Util.navigate as jest.Mock;
 
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({channelId: '5', groupId: '23', id: 'acc-1'}),
-}));
-
-jest.mock('shared/hooks/useHistoryAdapter', () => ({
-	useHistoryAdapter: () => ({push: mockPush}),
-}));
+const originalLocation = window.location;
 
 const mockedUseRequest = useRequest as jest.Mock;
 
@@ -57,14 +50,18 @@ const renderTopAssets = () =>
 	render(
 		<Provider store={mockStore()}>
 			<BasePage.Context.Provider value={MOCK_CONTEXT}>
-				<MemoryRouter>
+				<WorkspacePage
+					channelId="5"
+					groupId="23"
+					params={{id: ACCOUNT.id}}
+				>
 					<MockedProvider
 						addTypename={false}
 						mocks={[mockTimeRangeReq(), mockPreferenceReq()]}
 					>
 						<TopAssets account={ACCOUNT} />
 					</MockedProvider>
-				</MemoryRouter>
+				</WorkspacePage>
 			</BasePage.Context.Provider>
 		</Provider>
 	);
@@ -73,14 +70,18 @@ const renderTopAssetsWithoutAccount = () =>
 	render(
 		<Provider store={mockStore()}>
 			<BasePage.Context.Provider value={MOCK_CONTEXT}>
-				<MemoryRouter>
+				<WorkspacePage
+					channelId="5"
+					groupId="23"
+					params={{id: ACCOUNT.id}}
+				>
 					<MockedProvider
 						addTypename={false}
 						mocks={[mockTimeRangeReq(), mockPreferenceReq()]}
 					>
 						<TopAssets />
 					</MockedProvider>
-				</MemoryRouter>
+				</WorkspacePage>
 			</BasePage.Context.Provider>
 		</Provider>
 	);
@@ -154,12 +155,26 @@ const mockUseRequestWith = ({
 };
 
 describe('TopAssets', () => {
+	beforeAll(() => {
+		Object.defineProperty(window, 'location', {
+			configurable: true,
+			value: {...originalLocation},
+		});
+	});
+
 	beforeEach(() => {
 		jest.clearAllMocks();
 		mockUseRequestWith({data: {items: DEFAULT_ASSETS}});
 	});
 
 	afterEach(cleanup);
+
+	afterAll(() => {
+		Object.defineProperty(window, 'location', {
+			configurable: true,
+			value: originalLocation,
+		});
+	});
 
 	describe('rendering', () => {
 		it('should render the card title', () => {
@@ -230,17 +245,17 @@ describe('TopAssets', () => {
 			expect(screen.getAllByText('10').length).toBeGreaterThan(0);
 		});
 
-		it('should route blog assets through the Blogs overview path', () => {
+		it('should link blog assets to the Blogs asset page', () => {
 			renderTopAssets();
 
 			const link = screen.getAllByRole('link', {
 				name: 'Blog Post',
 			})[0] as HTMLAnchorElement;
 
-			expect(link.getAttribute('href')).toContain('/assets/blogs/');
+			expect(link.getAttribute('href')).toContain('assetType=blogs');
 		});
 
-		it('should route document assets through the Documents and Media path', () => {
+		it('should link document assets to the Documents and Media asset page', () => {
 			renderTopAssets();
 
 			const link = screen.getAllByRole('link', {
@@ -248,31 +263,34 @@ describe('TopAssets', () => {
 			})[0] as HTMLAnchorElement;
 
 			expect(link.getAttribute('href')).toContain(
-				'/assets/documents-and-media/'
+				'assetType=documents-and-media'
 			);
 		});
 
-		it('should route form assets through the Forms path', () => {
+		it('should link form assets to the Forms asset page', () => {
 			renderTopAssets();
 
 			const link = screen.getAllByRole('link', {
 				name: 'Lead Form',
 			})[0] as HTMLAnchorElement;
 
-			expect(link.getAttribute('href')).toContain('/assets/forms/');
+			expect(link.getAttribute('href')).toContain('assetType=forms');
 		});
 
-		it('should route web content assets through the Web Content path', () => {
+		it('should link web content assets to the Web Content asset page', () => {
 			renderTopAssets();
 
 			const link = screen.getAllByRole('link', {
 				name: 'Web Content One',
 			})[0] as HTMLAnchorElement;
 
-			expect(link.getAttribute('href')).toContain('/assets/web-content/');
+			expect(link).toHaveAttribute(
+				'href',
+				'/asset?accountId=acc-1&accountName=Acme&assetId=a-1&assetType=web-content&touchpoint=overview&type=webContent&title=Web+Content+One'
+			);
 		});
 
-		it('should route unknown asset types through the Object Entry path', () => {
+		it('should link unknown asset types to the Object Entry asset page', () => {
 			renderTopAssets();
 
 			const link = screen.getAllByRole('link', {
@@ -280,7 +298,7 @@ describe('TopAssets', () => {
 			})[0] as HTMLAnchorElement;
 
 			expect(link.getAttribute('href')).toContain(
-				'/assets/object-entry/'
+				'assetType=object-entry'
 			);
 		});
 
@@ -461,13 +479,10 @@ describe('TopAssets', () => {
 
 			fireEvent.click(screen.getByRole('button', {name: /^view all$/i}));
 
-			expect(mockPush).toHaveBeenCalledTimes(1);
-
-			const pushedURL = mockPush.mock.calls[0][0];
-
-			expect(pushedURL).toContain('/assets');
-			expect(pushedURL).toContain('accountId=acc-1');
-			expect(pushedURL).toContain('accountName=Acme');
+			expect(navigate).toHaveBeenCalledTimes(1);
+			expect(navigate).toHaveBeenCalledWith(
+				'/assets?accountId=acc-1&accountName=Acme&objectType=content&orderBy=impressionsMetric'
+			);
 		});
 
 		it('should pass the default metric (Impressions) as the orderBy param', () => {
@@ -475,9 +490,9 @@ describe('TopAssets', () => {
 
 			fireEvent.click(screen.getByRole('button', {name: /^view all$/i}));
 
-			const pushedURL = mockPush.mock.calls[0][0];
+			const navigatedURL = navigate.mock.calls[0][0];
 
-			expect(pushedURL).toContain('orderBy=impressionsMetric');
+			expect(navigatedURL).toContain('orderBy=impressionsMetric');
 		});
 
 		it('should pass the metric selected in the Group By picker as the orderBy param', () => {
@@ -493,9 +508,9 @@ describe('TopAssets', () => {
 
 			fireEvent.click(screen.getByRole('button', {name: /^view all$/i}));
 
-			const pushedURL = mockPush.mock.calls[0][0];
+			const navigatedURL = navigate.mock.calls[0][0];
 
-			expect(pushedURL).toContain('orderBy=viewsMetric');
+			expect(navigatedURL).toContain('orderBy=viewsMetric');
 		});
 
 		it('should pass the Content objectType from the Content tab', () => {
@@ -503,9 +518,9 @@ describe('TopAssets', () => {
 
 			fireEvent.click(screen.getByRole('button', {name: /^view all$/i}));
 
-			const pushedURL = mockPush.mock.calls[0][0];
+			const navigatedURL = navigate.mock.calls[0][0];
 
-			expect(pushedURL).toContain('objectType=content');
+			expect(navigatedURL).toContain('objectType=content');
 		});
 
 		it('should pass the File objectType from the Files tab', () => {
@@ -515,9 +530,9 @@ describe('TopAssets', () => {
 
 			fireEvent.click(screen.getByRole('button', {name: /^view all$/i}));
 
-			const pushedURL = mockPush.mock.calls[0][0];
+			const navigatedURL = navigate.mock.calls[0][0];
 
-			expect(pushedURL).toContain('objectType=file');
+			expect(navigatedURL).toContain('objectType=file');
 		});
 	});
 

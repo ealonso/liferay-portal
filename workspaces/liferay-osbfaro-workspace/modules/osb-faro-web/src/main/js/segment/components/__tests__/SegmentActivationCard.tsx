@@ -1,7 +1,6 @@
 import mockStore from 'test/mock-store';
 import React from 'react';
 import SegmentActivationCard from '../SegmentActivationCard';
-import {BrowserRouter} from 'react-router-dom';
 import {fireEvent, render} from '@testing-library/react';
 import {fromJS} from 'immutable';
 import {Provider} from 'react-redux';
@@ -9,14 +8,11 @@ import {
 	SegmentActivationFrequencyTypes,
 	SegmentActivationScheduleTypes,
 } from 'shared/util/constants';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const WrapperComponent: React.FC<{children: React.ReactNode}> = ({
 	children,
-}) => (
-	<Provider store={mockStore()}>
-		<BrowserRouter>{children}</BrowserRouter>
-	</Provider>
-);
+}) => <Provider store={mockStore()}>{children}</Provider>;
 
 jest.mock(
 	'shared/components/DateRangeInput',
@@ -33,46 +29,53 @@ jest.mock(
 describe('SegmentActivationCard', () => {
 	it('should render when frequency type is batch', () => {
 		const {container} = render(
-			<WrapperComponent>
-				<SegmentActivationCard
-					segmentActivation={fromJS({
-						frequencyType:
-							SegmentActivationFrequencyTypes.Indefinitely,
-						scheduleType: SegmentActivationScheduleTypes.Batch,
-					})}
-				/>
-			</WrapperComponent>
+			<WorkspacePage>
+				<WrapperComponent>
+					<SegmentActivationCard
+						segmentActivation={fromJS({
+							frequencyType:
+								SegmentActivationFrequencyTypes.Indefinitely,
+							scheduleType: SegmentActivationScheduleTypes.Batch,
+						})}
+					/>
+				</WrapperComponent>
+			</WorkspacePage>
 		);
 		expect(container).toMatchSnapshot();
 	});
 
 	it('should render with dates when frequency type is between', () => {
 		const {container} = render(
-			<WrapperComponent>
-				<SegmentActivationCard
-					segmentActivation={fromJS({
-						frequencyType: SegmentActivationFrequencyTypes.Between,
-						scheduleEndDate: '1757818800000',
-						scheduleStartDate: '1756004400000',
-						scheduleType: SegmentActivationScheduleTypes.Batch,
-					})}
-				/>
-			</WrapperComponent>
+			<WorkspacePage>
+				<WrapperComponent>
+					<SegmentActivationCard
+						segmentActivation={fromJS({
+							frequencyType:
+								SegmentActivationFrequencyTypes.Between,
+							scheduleEndDate: '1757818800000',
+							scheduleStartDate: '1756004400000',
+							scheduleType: SegmentActivationScheduleTypes.Batch,
+						})}
+					/>
+				</WrapperComponent>
+			</WorkspacePage>
 		);
 		expect(container).toMatchSnapshot();
 	});
 
 	it('should render the modal if the edit button is clicked', async () => {
 		const {findByTestId, findByText, getByTestId} = render(
-			<WrapperComponent>
-				<SegmentActivationCard
-					segmentActivation={fromJS({
-						frequencyType:
-							SegmentActivationFrequencyTypes.Indefinitely,
-						scheduleType: SegmentActivationScheduleTypes.Batch,
-					})}
-				/>
-			</WrapperComponent>
+			<WorkspacePage>
+				<WrapperComponent>
+					<SegmentActivationCard
+						segmentActivation={fromJS({
+							frequencyType:
+								SegmentActivationFrequencyTypes.Indefinitely,
+							scheduleType: SegmentActivationScheduleTypes.Batch,
+						})}
+					/>
+				</WrapperComponent>
+			</WorkspacePage>
 		);
 
 		const editButton = getByTestId('edit-activation-button');
@@ -87,15 +90,17 @@ describe('SegmentActivationCard', () => {
 
 	it('should render the modal with the expected configurations - indefinitely', async () => {
 		const {findByTestId, findByText, getByTestId} = render(
-			<WrapperComponent>
-				<SegmentActivationCard
-					segmentActivation={fromJS({
-						frequencyType:
-							SegmentActivationFrequencyTypes.Indefinitely,
-						scheduleType: SegmentActivationScheduleTypes.Batch,
-					})}
-				/>
-			</WrapperComponent>
+			<WorkspacePage>
+				<WrapperComponent>
+					<SegmentActivationCard
+						segmentActivation={fromJS({
+							frequencyType:
+								SegmentActivationFrequencyTypes.Indefinitely,
+							scheduleType: SegmentActivationScheduleTypes.Batch,
+						})}
+					/>
+				</WrapperComponent>
+			</WorkspacePage>
 		);
 
 		const editButton = getByTestId('edit-activation-button');
@@ -111,16 +116,19 @@ describe('SegmentActivationCard', () => {
 
 	it('should render the modal with the expected configurations - between', async () => {
 		const {findByTestId, findByText, getByTestId} = render(
-			<WrapperComponent>
-				<SegmentActivationCard
-					segmentActivation={fromJS({
-						frequencyType: SegmentActivationFrequencyTypes.Between,
-						scheduleEndDate: '1757818800000',
-						scheduleStartDate: '1756004400000',
-						scheduleType: SegmentActivationScheduleTypes.Batch,
-					})}
-				/>
-			</WrapperComponent>
+			<WorkspacePage>
+				<WrapperComponent>
+					<SegmentActivationCard
+						segmentActivation={fromJS({
+							frequencyType:
+								SegmentActivationFrequencyTypes.Between,
+							scheduleEndDate: '1757818800000',
+							scheduleStartDate: '1756004400000',
+							scheduleType: SegmentActivationScheduleTypes.Batch,
+						})}
+					/>
+				</WrapperComponent>
+			</WorkspacePage>
 		);
 
 		const editButton = getByTestId('edit-activation-button');
@@ -147,9 +155,13 @@ describe('SegmentActivationCard dates', () => {
 
 	it('renders the schedule range label with the custom date format', () => {
 		const {getByText} = render(
-			<WrapperComponent>
-				<SegmentActivationCard segmentActivation={segmentActivation} />
-			</WrapperComponent>
+			<WorkspacePage>
+				<WrapperComponent>
+					<SegmentActivationCard
+						segmentActivation={segmentActivation}
+					/>
+				</WrapperComponent>
+			</WorkspacePage>
 		);
 
 		expect(
@@ -159,9 +171,13 @@ describe('SegmentActivationCard dates', () => {
 
 	it('renders the schedule range in the modal date input as ISO dates', async () => {
 		const {findByTestId, getByTestId} = render(
-			<WrapperComponent>
-				<SegmentActivationCard segmentActivation={segmentActivation} />
-			</WrapperComponent>
+			<WorkspacePage>
+				<WrapperComponent>
+					<SegmentActivationCard
+						segmentActivation={segmentActivation}
+					/>
+				</WrapperComponent>
+			</WorkspacePage>
 		);
 
 		fireEvent.click(getByTestId('edit-activation-button'));

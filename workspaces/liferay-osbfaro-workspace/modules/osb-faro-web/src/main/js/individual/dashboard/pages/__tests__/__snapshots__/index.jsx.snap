@@ -25,8 +25,7 @@ exports[`Individuals Dashboard renders 1`] = `
             >
               <a
                 class="breadcrumb-text-truncate breadcrumb-link"
-                data-discover="true"
-                href="/workspace/123/456/sites"
+                href="/sites"
               >
                 Channel 1
               </a>
@@ -95,8 +94,9 @@ exports[`Individuals Dashboard renders 1`] = `
                       class="nav-item"
                     >
                       <a
-                        class="nav-link"
-                        href="/workspace/123/456/contacts/individuals"
+                        aria-current="page"
+                        class="nav-link active"
+                        href="/individuals"
                       >
                         <span>
                           Overview
@@ -108,7 +108,7 @@ exports[`Individuals Dashboard renders 1`] = `
                     >
                       <a
                         class="nav-link"
-                        href="/workspace/123/456/contacts/individuals/known-individuals"
+                        href="/known-individuals"
                       >
                         <span>
                           Known Individuals
@@ -120,7 +120,7 @@ exports[`Individuals Dashboard renders 1`] = `
                     >
                       <a
                         class="nav-link"
-                        href="/workspace/123/456/contacts/individuals/interests"
+                        href="/individuals-interests"
                       >
                         <span>
                           Interests
@@ -132,7 +132,7 @@ exports[`Individuals Dashboard renders 1`] = `
                     >
                       <a
                         class="nav-link"
-                        href="/workspace/123/456/contacts/individuals/distribution"
+                        href="/individuals-distribution"
                       >
                         <span>
                           Distribution
@@ -147,10 +147,36 @@ exports[`Individuals Dashboard renders 1`] = `
         </div>
       </div>
     </header>
-    <span
-      aria-hidden="true"
-      class="loading-root center loading-animation"
-    />
+    <div
+      class="sub-header-root"
+    >
+      <div
+        class="row-root align-items-center d-flex justify-content-between header-container"
+      >
+        <div
+          class="d-flex justify-content-end w-100"
+        >
+          <div
+            class="download-report"
+          >
+            <button
+              class="btn btn-outline-borderless btn-sm btn-outline-secondary"
+              type="button"
+            >
+              <svg
+                class="lexicon-icon lexicon-icon-download mr-2"
+                role="presentation"
+              >
+                <use
+                  href="#download"
+                />
+              </svg>
+              Download Reports
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 `;

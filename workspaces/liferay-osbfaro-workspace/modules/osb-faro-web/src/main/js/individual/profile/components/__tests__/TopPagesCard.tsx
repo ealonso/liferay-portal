@@ -3,7 +3,6 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import TopPagesCard from '../TopPagesCard';
 import {cleanup, fireEvent, render, screen} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {
 	mockSitesTopPagesReq,
@@ -13,6 +12,7 @@ import {
 import {Provider} from 'react-redux';
 import {RangeKeyTimeRanges} from 'shared/util/constants';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const INDIVIDUAL_ID = 'ind-1';
 
@@ -34,9 +34,9 @@ const MOCK_CONTEXT = {
 
 const renderTopPagesCard = () =>
 	render(
-		<Provider store={mockStore()}>
-			<BasePage.Context.Provider value={MOCK_CONTEXT}>
-				<MemoryRouter>
+		<WorkspacePage>
+			<Provider store={mockStore()}>
+				<BasePage.Context.Provider value={MOCK_CONTEXT}>
 					<MockedProvider
 						addTypename={false}
 						mocks={[
@@ -56,9 +56,9 @@ const renderTopPagesCard = () =>
 					>
 						<TopPagesCard />
 					</MockedProvider>
-				</MemoryRouter>
-			</BasePage.Context.Provider>
-		</Provider>
+				</BasePage.Context.Provider>
+			</Provider>
+		</WorkspacePage>
 	);
 
 const mockEmptyIndividualTopPagesReq = () => ({
@@ -76,9 +76,9 @@ const mockEmptyIndividualTopPagesReq = () => ({
 
 const renderTopPagesCardWithoutPages = () =>
 	render(
-		<Provider store={mockStore()}>
-			<BasePage.Context.Provider value={MOCK_CONTEXT}>
-				<MemoryRouter>
+		<WorkspacePage>
+			<Provider store={mockStore()}>
+				<BasePage.Context.Provider value={MOCK_CONTEXT}>
 					<MockedProvider
 						addTypename={false}
 						mocks={[
@@ -89,9 +89,9 @@ const renderTopPagesCardWithoutPages = () =>
 					>
 						<TopPagesCard />
 					</MockedProvider>
-				</MemoryRouter>
-			</BasePage.Context.Provider>
-		</Provider>
+				</BasePage.Context.Provider>
+			</Provider>
+		</WorkspacePage>
 	);
 
 /**
@@ -101,24 +101,24 @@ const renderTopPagesCardWithoutPages = () =>
 
 const renderTopPagesCardWithoutIndividual = () =>
 	render(
-		<Provider store={mockStore()}>
-			<BasePage.Context.Provider
-				value={{
-					...MOCK_CONTEXT,
-					individualId: undefined,
-					individualName: undefined,
-				}}
-			>
-				<MemoryRouter>
+		<WorkspacePage>
+			<Provider store={mockStore()}>
+				<BasePage.Context.Provider
+					value={{
+						...MOCK_CONTEXT,
+						individualId: undefined,
+						individualName: undefined,
+					}}
+				>
 					<MockedProvider
 						addTypename={false}
 						mocks={[mockTimeRangeReq(), mockPreferenceReq()]}
 					>
 						<TopPagesCard />
 					</MockedProvider>
-				</MemoryRouter>
-			</BasePage.Context.Provider>
-		</Provider>
+				</BasePage.Context.Provider>
+			</Provider>
+		</WorkspacePage>
 	);
 
 describe('TopPagesCard', () => {
@@ -154,11 +154,9 @@ describe('TopPagesCard', () => {
 			.closest('a')
 			?.getAttribute('href');
 
-		expect(href).toContain(
-			'/workspace/456/123/sites/pages/overview/123/My%20asset%20A'
+		expect(href).toBe(
+			'/page-overview?individualId=ind-1&individualName=Jane+Doe&title=My+asset+A&touchpoint=123'
 		);
-		expect(href).toContain('individualId=ind-1');
-		expect(href).toContain('individualName=Jane+Doe');
 	});
 
 	it('should sort by entrances on the entrance pages tab', async () => {

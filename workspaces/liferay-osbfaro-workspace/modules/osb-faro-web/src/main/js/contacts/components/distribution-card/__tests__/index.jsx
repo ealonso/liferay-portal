@@ -1,10 +1,10 @@
 import DistributionCard from '../index';
 import mockStore from 'test/mock-store';
 import React from 'react';
-import {BrowserRouter} from 'react-router-dom';
 import {cleanup, render} from '@testing-library/react';
 import {fetchDistributionTabs} from 'shared/actions/preferences';
 import {Provider} from 'react-redux';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.mock('shared/actions/preferences');
 
@@ -19,14 +19,12 @@ describe('DistributionCard', () => {
 		fetchDistributionTabs.mockReturnValue(() => Promise.resolve({}));
 
 		const {getByText} = render(
-			<Provider store={mockStore()}>
-				<BrowserRouter>
-					<DistributionCard
-						distributionKey='individualsDashboard'
-						fetchDistribution={() => Promise.resolve()}
-					/>
-				</BrowserRouter>
-			</Provider>
+			<WorkspacePage><Provider store={mockStore()}>
+				<DistributionCard
+					distributionKey='individualsDashboard'
+					fetchDistribution={() => Promise.resolve()}
+				/>
+			</Provider></WorkspacePage>
 		);
 
 		expect(
@@ -38,15 +36,13 @@ describe('DistributionCard', () => {
 		fetchDistributionTabs.mockReturnValue(() => Promise.resolve({}));
 
 		const {getByText} = render(
-			<Provider store={mockStore()}>
-				<BrowserRouter>
-					<DistributionCard
-						distributionKey='individualsDashboard'
-						fetchDistribution={() => Promise.resolve()}
-						noResultsRenderer={() => <div>{'empty state'}</div>}
-					/>
-				</BrowserRouter>
-			</Provider>
+			<WorkspacePage><Provider store={mockStore()}>
+				<DistributionCard
+					distributionKey='individualsDashboard'
+					fetchDistribution={() => Promise.resolve()}
+					noResultsRenderer={() => <div>{'empty state'}</div>}
+				/>
+			</Provider></WorkspacePage>
 		);
 
 		expect(getByText('empty state')).toBeInTheDocument();
@@ -56,16 +52,14 @@ describe('DistributionCard', () => {
 		fetchDistributionTabs.mockReturnValue(() => Promise.resolve({}));
 
 		const {getByText} = render(
-			<Provider store={mockStore()}>
-				<BrowserRouter>
-					<DistributionCard
-						distributionKey='individualsDashboard'
-						fetchDistribution={() => Promise.resolve()}
-						groupId='123'
-						showAddDataSource
-					/>
-				</BrowserRouter>
-			</Provider>
+			<WorkspacePage><Provider store={mockStore()}>
+				<DistributionCard
+					distributionKey='individualsDashboard'
+					fetchDistribution={() => Promise.resolve()}
+					groupId='123'
+					showAddDataSource
+				/>
+			</Provider></WorkspacePage>
 		);
 
 		expect(
@@ -80,15 +74,13 @@ describe('DistributionCard', () => {
 		fetchDistributionTabs.mockReturnValue(() => Promise.resolve({}));
 
 		const {getByText} = render(
-			<Provider store={mockStore()}>
-				<BrowserRouter>
-					<DistributionCard
-						distributionKey='123'
-						fetchDistribution={() => Promise.resolve()}
-						id='123'
-					/>
-				</BrowserRouter>
-			</Provider>
+			<WorkspacePage><Provider store={mockStore()}>
+				<DistributionCard
+					distributionKey='123'
+					fetchDistribution={() => Promise.resolve()}
+					id='123'
+				/>
+			</Provider></WorkspacePage>
 		);
 
 		expect(

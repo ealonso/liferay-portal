@@ -4,8 +4,8 @@ import React from 'react';
 import {ApolloProvider} from '@apollo/client';
 import {fireEvent, render} from '@testing-library/react';
 import {getVisitorsListCard} from '../VisitorsListCard';
-import {MemoryRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const MOCK_ROUTER = {
 	params: {
@@ -35,13 +35,13 @@ describe('getVisitorsListCard', () => {
 			const VisitorsListCard = getVisitorsListCard(graphQLType);
 
 			const {getByTestId, getByText} = render(
-				<Provider store={mockStore()}>
-					<ApolloProvider client={client}>
-						<MemoryRouter>
+				<WorkspacePage>
+					<Provider store={mockStore()}>
+						<ApolloProvider client={client}>
 							<VisitorsListCard router={MOCK_ROUTER} />
-						</MemoryRouter>
-					</ApolloProvider>
-				</Provider>
+						</ApolloProvider>
+					</Provider>
+				</WorkspacePage>
 			);
 
 			expect(getByText(/^accounts$/i)).toBeTruthy();

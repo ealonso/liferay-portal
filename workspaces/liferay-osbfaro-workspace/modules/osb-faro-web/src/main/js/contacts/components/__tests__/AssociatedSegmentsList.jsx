@@ -6,7 +6,7 @@ import {fromJS} from 'immutable';
 import {Project} from 'shared/util/records';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const defaultProps = {
 	project: new Project(
@@ -18,21 +18,19 @@ const defaultProps = {
 
 const WrappedComponent = () => (
 	<Provider store={mockStore()}>
-		<MemoryRouter>
-			<AssociatedSegmentsList
-				channelId='123123'
-				dataSourceFn={() => Promise.resolve({})}
-				groupId='23'
-				id='test'
-				total={2}
-			/>
-		</MemoryRouter>
+		<AssociatedSegmentsList
+			channelId='123123'
+			dataSourceFn={() => Promise.resolve({})}
+			groupId='23'
+			id='test'
+			total={2}
+		/>
 	</Provider>
 );
 
 describe('AssociatedSegmentsList', () => {
 	it('should render card header with segment total', () => {
-		const {container} = render(<WrappedComponent {...defaultProps} />);
+		const {container} = render(<WorkspacePage><WrappedComponent {...defaultProps} /></WorkspacePage>);
 
 		expect(container.querySelector('.card-title')).toHaveTextContent(
 			/associated segments/i
@@ -43,7 +41,7 @@ describe('AssociatedSegmentsList', () => {
 	});
 
 	it('should render loading state without ghost table', () => {
-		const {container} = render(<WrappedComponent {...defaultProps} />);
+		const {container} = render(<WorkspacePage><WrappedComponent {...defaultProps} /></WorkspacePage>);
 
 		expect(container.querySelector('.loading-root')).toBeTruthy();
 		expect(container.querySelector('table')).toBeFalsy();

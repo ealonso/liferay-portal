@@ -61,12 +61,21 @@ describe('MaintenanceAlert', () => {
 
 describe('mapState', () => {
 	it('should map store state to props', () => {
-		const router = {groupId: '23'};
-
-		const result = mapState(store, router);
+		const result = mapState(store, {groupId: '23'});
 
 		expect(result).toHaveProperty('project');
 		expect(result).toHaveProperty('groupId', '23');
-		expect(result).toHaveProperty('alertDismissed');
+		expect(result).toHaveProperty('alertDismissed', false);
+	});
+
+	it('should mark the alert dismissed for the maintenance the user closed', () => {
+		const project = store.getIn(['projects', '23', 'data']);
+
+		const result = mapState(store, {
+			dismissedAlerts: {maintenanceDate: String(project.stateStartDate)},
+			groupId: '23'
+		});
+
+		expect(result).toHaveProperty('alertDismissed', true);
 	});
 });

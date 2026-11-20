@@ -2,10 +2,10 @@ import * as API from 'shared/api';
 import IndividualAllAttributesCDP from '../IndividualAllAttributesCDP';
 import mockStore from 'test/mock-store';
 import React from 'react';
-import {MemoryRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {render, screen} from '@testing-library/react';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 describe('IndividualAllAttributesCDP', () => {
 	it('renders the last modified date with the custom date format', async () => {
@@ -28,15 +28,15 @@ describe('IndividualAllAttributesCDP', () => {
 		);
 
 		const {container} = render(
-			<Provider store={mockStore()}>
-				<MemoryRouter>
+			<WorkspacePage>
+				<Provider store={mockStore()}>
 					<IndividualAllAttributesCDP
 						groupId="23"
 						individualId="1"
 						showEmptyState={false}
 					/>
-				</MemoryRouter>
-			</Provider>
+				</Provider>
+			</WorkspacePage>
 		);
 
 		jest.runAllTimers();

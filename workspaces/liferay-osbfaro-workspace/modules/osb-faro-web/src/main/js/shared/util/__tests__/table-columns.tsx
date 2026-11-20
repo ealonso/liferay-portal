@@ -12,8 +12,10 @@ import {
 	segmentsListColumns,
 	usersListColumns,
 } from '../table-columns';
-import {MemoryRouter} from 'react-router';
 import {render} from '@testing-library/react';
+import {mockPageConfig} from 'test/mock-page-context';
+
+const config = mockPageConfig();
 
 describe('accountsListColumns', () => {
 	it('activitiesCount should format a number with locale-aware grouping', () => {
@@ -414,28 +416,23 @@ describe('individualsListColumns no data', () => {
 		'renders a %p job title as no data',
 		(jobTitle) => {
 			const {cellRenderer: NameJobTitleCell, cellRendererProps} =
-				individualsListColumns.getNameJobTitle({
-					channelId: '1',
-					groupId: '2',
-				});
+				individualsListColumns.getNameJobTitle(config);
 
 			const {getByText} = render(
-				<MemoryRouter>
-					<table>
-						<tbody>
-							<tr>
-								<NameJobTitleCell
-									{...cellRendererProps}
-									data={{
-										id: '3',
-										name: 'foo',
-										properties: {jobTitle},
-									}}
-								/>
-							</tr>
-						</tbody>
-					</table>
-				</MemoryRouter>
+				<table>
+					<tbody>
+						<tr>
+							<NameJobTitleCell
+								{...cellRendererProps}
+								data={{
+									id: '3',
+									name: 'foo',
+									properties: {jobTitle},
+								}}
+							/>
+						</tr>
+					</tbody>
+				</table>
 			);
 
 			expect(getByText('–')).toBeInTheDocument();

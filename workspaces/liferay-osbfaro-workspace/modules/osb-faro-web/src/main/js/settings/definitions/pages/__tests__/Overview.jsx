@@ -5,15 +5,7 @@ import {ENABLE_BLOCKLIST_KEYWORDS} from 'shared/util/feature-flags';
 import {Overview} from '../Overview';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		channelId: '456',
-		groupId: '2000'
-	})
-}));
+import {WorkspacePage} from 'test/mock-page-context';
 
 describe('Definitions Overview', () => {
 	it('should render a list of definitions that includes individuals, accounts, behaviors, events, search and interests', () => {
@@ -22,9 +14,9 @@ describe('Definitions Overview', () => {
 
 		const {container} = render(
 			<Provider store={mockStore()}>
-				<MemoryRouter>
+				<WorkspacePage channelId='456' groupId='2000'>
 					<Overview groupId='23' />
-				</MemoryRouter>
+				</WorkspacePage>
 			</Provider>
 		);
 

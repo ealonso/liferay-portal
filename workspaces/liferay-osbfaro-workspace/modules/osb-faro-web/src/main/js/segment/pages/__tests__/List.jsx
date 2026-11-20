@@ -8,14 +8,13 @@ import {ChannelContext} from 'shared/context/channel';
 import {cleanup, fireEvent, render, screen, within} from '@testing-library/react';
 import {formatDateToTimeZone, getCustomDateTimeFormat} from 'shared/util/date';
 import {getTimestamp} from 'test/data';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {mockChannelContext} from 'test/mock-channel-context';
 import {Provider} from 'react-redux';
-import {Routes} from 'shared/util/router';
 import {SegmentCategories, SegmentTypes} from 'shared/util/constants';
 import {UnassignedSegmentsContext} from 'shared/context/unassignedSegments';
 import {User} from 'shared/util/records';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const MOCK_UNASSIGNED_SEGMENTS_CONTEXT = {
 	showUnassignedAlert: false,
@@ -24,39 +23,25 @@ const MOCK_UNASSIGNED_SEGMENTS_CONTEXT = {
 };
 
 const DefaultComponent = ({
-	queryString = '',
+	ldpEnabled = true,
 	storeData = mockStoreDataLDP,
 	...otherProps
 }) => (
 	<Provider store={mockStore(storeData)}>
-		<MemoryRouter
-			initialEntries={[
-				`/workspace/23/123/contacts/segments${queryString}`
-			]}
-		>
-			<RouterRoutes>
-				<Route
-					element={
-						<UnassignedSegmentsContext.Provider
-							value={MOCK_UNASSIGNED_SEGMENTS_CONTEXT}
-						>
-							<ChannelContext.Provider value={mockChannelContext()}>
-								<List
-									channelId='123'
-									currentUser={data.getImmutableMock(
-										User,
-										data.mockUser
-									)}
-									groupId='23'
-									{...otherProps}
-								/>
-							</ChannelContext.Provider>
-						</UnassignedSegmentsContext.Provider>
-					}
-					path={`${Routes.CONTACTS_LIST_SEGMENT}/*`}
-				/>
-			</RouterRoutes>
-		</MemoryRouter>
+		<WorkspacePage channelId='123' groupId='23' ldpEnabled={ldpEnabled}>
+			<UnassignedSegmentsContext.Provider
+				value={MOCK_UNASSIGNED_SEGMENTS_CONTEXT}
+			>
+				<ChannelContext.Provider value={mockChannelContext()}>
+					<List
+						channelId='123'
+						currentUser={data.getImmutableMock(User, data.mockUser)}
+						groupId='23'
+						{...otherProps}
+					/>
+				</ChannelContext.Provider>
+			</UnassignedSegmentsContext.Provider>
+		</WorkspacePage>
 	</Provider>
 );
 
@@ -191,7 +176,9 @@ describe('List', () => {
 	});
 
 	it('links straight to an individual batch segment for non-LDP plans', async () => {
-		render(<DefaultComponent storeData={mockStoreData} />);
+		render(
+			<DefaultComponent ldpEnabled={false} storeData={mockStoreData} />
+		);
 
 		await act(async () => {
 			jest.runAllTimers();
@@ -212,7 +199,7 @@ describe('List', () => {
 		expect(newSegmentLink).toHaveTextContent(/new segment/i);
 		expect(newSegmentLink).toHaveAttribute(
 			'href',
-			'/workspace/23/123/contacts/segments/create?type=BATCH'
+			'/edit-segment?type=BATCH'
 		);
 	});
 

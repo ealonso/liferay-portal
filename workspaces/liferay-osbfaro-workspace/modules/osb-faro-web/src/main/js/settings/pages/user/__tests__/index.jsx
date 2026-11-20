@@ -1,29 +1,42 @@
-import * as data from 'test/data';
+import BundleRouter from 'route-middleware/BundleRouter';
 import mockStore from 'test/mock-store';
-import React from 'react';
-import {BrowserRouter} from 'react-router-dom';
-import {cleanup, render} from '@testing-library/react';
+import React, {lazy} from 'react';
+import {cleanup, render, screen} from '@testing-library/react';
 import {Provider} from 'react-redux';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
-import {User} from 'shared/util/records';
 import {User as UserRoutes} from '../index';
+import {WorkspacePage} from 'test/mock-page-context';
+import {mockCurrentUser} from 'test/mock-page-context';
+import {UserRoleNames} from 'shared/util/constants';
 
-jest.mock('shared/hooks/useCurrentUser', () => ({
-	useCurrentUser: jest.fn()
-}));
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		groupId: '23'
-	})
-}));
+const UserList = lazy(() => import('../UserList'));
 
 const DefaultComponent = props => (
 	<Provider store={mockStore()}>
-		<BrowserRouter>
-			<UserRoutes {...props} />
-		</BrowserRouter>
+		<WorkspacePage
+			navigationItems={[
+			{
+				active: true,
+				href: '/users',
+				label: 'Manage Users'
+			},
+			{
+				active: false,
+				data: {id: 'requests'},
+				href: '/access-requests',
+				label: 'Requests'
+			}
+		]}
+		>
+			<UserRoutes
+				renderContent={({currentUser}) => (
+					<BundleRouter
+						componentProps={{currentUser}}
+						data={UserList}
+					/>
+				)}
+				{...props}
+			/>
+		</WorkspacePage>
 	</Provider>
 );
 
@@ -31,9 +44,7 @@ describe('UserRoutes', () => {
 	afterEach(cleanup);
 
 	it('should render', () => {
-		useCurrentUser.mockImplementation(() => ({
-			isAdmin: () => true
-		}));
+		mockCurrentUser();
 
 		const {container} = render(<DefaultComponent />);
 
@@ -41,34 +52,25 @@ describe('UserRoutes', () => {
 	});
 
 	it('if the user is AC Admin, then the tabs for toggling between users and user requests should render', () => {
-		useCurrentUser.mockImplementation(() => ({
-			isAdmin: () => true
-		}));
+		mockCurrentUser();
 
-		const {getByRole} = render(<DefaultComponent />);
+		render(<DefaultComponent />);
 
 		expect(
-			getByRole('link', {name: /^manage users$/i})
-		).toBeInTheDocument();
-		expect(getByRole('link', {name: /^requests$/i})).toBeInTheDocument();
+			screen.getByRole('link', {name: /^manage users$/i})
+		).toHaveAttribute('href', '/users');
+		expect(screen.getByRole('link', {name: /^requests$/i})).toHaveAttribute(
+			'href',
+			'/access-requests'
+		);
 	});
 
 	it('if the user is NOT an AC Admin, then the tabs for toggling between users and user requests should NOT render', () => {
-		useCurrentUser.mockImplementation(() => ({
-			isAdmin: () => false
-		}));
+		mockCurrentUser({roleName: UserRoleNames.Member});
 
-		const {queryByRole} = render(
-			<DefaultComponent
-				currentUser={data.getImmutableMock(User, data.mockMemberUser)}
-			/>
-		);
+		render(<DefaultComponent />);
 
-		expect(
-			queryByRole('link', {name: /^manage users$/i})
-		).not.toBeInTheDocument();
-		expect(
-			queryByRole('link', {name: /^requests$/i})
-		).not.toBeInTheDocument();
+		expect(screen.queryByRole('link', {name: /^manage users$/i})).toBeNull();
+		expect(screen.queryByRole('link', {name: /^requests$/i})).toBeNull();
 	});
 });

@@ -2,7 +2,7 @@ import EntityList from '../EntityList';
 import React from 'react';
 import {cleanup, render} from '@testing-library/react';
 import {mockIndividual, mockSegment} from 'test/data';
-import {withStaticRouter} from 'test/mock-router';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const items = [
 	mockIndividual(0, {total: 123}),
@@ -12,14 +12,14 @@ const items = [
 
 const segments = [mockSegment(1, {segmentType: 'BATCH'})];
 
-const WrappedComponent = withStaticRouter(EntityList);
+const WrappedComponent = EntityList;
 
 describe('EntityList', () => {
 	afterEach(cleanup);
 
 	it('should render', () => {
 		const {container} = render(
-			<WrappedComponent groupId='23' items={items} />
+			<WorkspacePage><WrappedComponent items={items} /></WorkspacePage>
 		);
 
 		expect(container).toMatchSnapshot();
@@ -28,11 +28,10 @@ describe('EntityList', () => {
 	it('should render noItemsContent', () => {
 		const noItemsContent = <h1>{'No Items!'}</h1>;
 		const {queryByText} = render(
-			<WrappedComponent
-				groupId='23'
+			<WorkspacePage><WrappedComponent
 				noItemsContent={noItemsContent}
 				total={0}
-			/>
+			/></WorkspacePage>
 		);
 
 		expect(queryByText('No Items!')).toBeTruthy();
@@ -40,7 +39,7 @@ describe('EntityList', () => {
 
 	it('should render a list of segments with segment icons', () => {
 		const {container} = render(
-			<WrappedComponent groupId='23' header='foo bar' items={segments} />
+			<WorkspacePage><WrappedComponent header='foo bar' items={segments} /></WorkspacePage>
 		);
 
 		expect(

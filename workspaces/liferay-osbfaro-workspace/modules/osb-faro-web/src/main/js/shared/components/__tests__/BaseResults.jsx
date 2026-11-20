@@ -4,7 +4,6 @@ import React from 'react';
 import {cleanup, fireEvent, render, waitFor} from '@testing-library/react';
 import {noop, times} from 'lodash';
 import {SelectionProvider} from 'shared/context/selection';
-import {MemoryRouter} from 'react-router';
 
 const MAX_LENGTH = 900;
 const TOTAL = 5;
@@ -12,9 +11,7 @@ const INDIVIDUALS = times(TOTAL, i => data.mockIndividual(i));
 
 const DefaultComponent = props => (
 	<SelectionProvider>
-		<MemoryRouter>
-			<BaseResults {...props} />
-		</MemoryRouter>
+		<BaseResults {...props} />
 	</SelectionProvider>
 );
 

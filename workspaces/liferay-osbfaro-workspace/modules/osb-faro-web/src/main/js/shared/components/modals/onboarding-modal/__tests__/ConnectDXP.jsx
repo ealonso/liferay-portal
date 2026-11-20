@@ -6,9 +6,9 @@ import React from 'react';
 import {ChannelContext} from 'shared/context/channel';
 import {cleanup, render, screen, waitFor} from '@testing-library/react';
 import {DataSourceTypes, OrderByDirections} from 'shared/util/constants';
-import {MemoryRouter} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const mockGroupId = '23';
 
@@ -36,15 +36,13 @@ const dataSourceMock = {
 
 const Wrapper = ({channelDispatch = jest.fn(), children, mocks = []}) => (
 	<Provider store={mockStore()}>
-		<MemoryRouter>
-			<MockedProvider addTypename={false} mocks={mocks}>
-				<ChannelContext.Provider
-					value={{channelDispatch, selectedChannel: {id: '123'}}}
-				>
-					{children}
-				</ChannelContext.Provider>
-			</MockedProvider>
-		</MemoryRouter>
+		<MockedProvider addTypename={false} mocks={mocks}>
+			<ChannelContext.Provider
+				value={{channelDispatch, selectedChannel: {id: '123'}}}
+			>
+				{children}
+			</ChannelContext.Provider>
+		</MockedProvider>
 	</Provider>
 );
 
@@ -65,14 +63,14 @@ describe('ConnectDXP', () => {
 
 	it('should render', async () => {
 		const {container} = render(
-			<Wrapper>
+			<WorkspacePage><Wrapper>
 				<ConnectDXP
 					dxpConnected={false}
 					groupId={mockGroupId}
 					onClose={jest.fn()}
 					onDxpConnected={jest.fn()}
 				/>
-			</Wrapper>
+			</Wrapper></WorkspacePage>
 		);
 
 		await waitFor(() =>
@@ -84,14 +82,14 @@ describe('ConnectDXP', () => {
 
 	it('should render connected state', async () => {
 		const {container} = render(
-			<Wrapper>
+			<WorkspacePage><Wrapper>
 				<ConnectDXP
 					dxpConnected
 					groupId={mockGroupId}
 					onClose={jest.fn()}
 					onDxpConnected={jest.fn()}
 				/>
-			</Wrapper>
+			</Wrapper></WorkspacePage>
 		);
 
 		expect(
@@ -102,14 +100,14 @@ describe('ConnectDXP', () => {
 
 	it('should query dataSources without credentialsType', async () => {
 		const {container} = render(
-			<Wrapper mocks={[dataSourceMock]}>
+			<WorkspacePage><Wrapper mocks={[dataSourceMock]}>
 				<ConnectDXP
 					dxpConnected
 					groupId={mockGroupId}
 					onClose={jest.fn()}
 					onDxpConnected={jest.fn()}
 				/>
-			</Wrapper>
+			</Wrapper></WorkspacePage>
 		);
 
 		expect(container).toMatchSnapshot();

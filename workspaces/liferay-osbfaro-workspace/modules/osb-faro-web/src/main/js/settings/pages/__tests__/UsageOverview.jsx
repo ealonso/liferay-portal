@@ -5,27 +5,15 @@ import {cleanup, getByTestId, render} from '@testing-library/react';
 import {fromJS} from 'immutable';
 import {Project} from 'shared/util/records';
 import {Provider} from 'react-redux';
-import {MemoryRouter} from 'react-router';
 import {SubscriptionNames} from 'shared/util/subscriptions';
 import {SubscriptionStatuses, UserRoleNames} from 'shared/util/constants';
 import {UsageOverview} from '../UsageOverview';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {User} from 'shared/util/records';
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		channelId: '456',
-		groupId: '2000'
-	})
-}));
+import {WorkspacePage} from 'test/mock-page-context';
+import {mockCurrentUser} from 'test/mock-page-context';
 
 jest.mock('shared/hooks/useTimeZone', () => ({
 	useTimeZone: () => ({timeZoneId: 'UTC'})
-}));
-
-jest.mock('shared/hooks/useCurrentUser', () => ({
-	useCurrentUser: jest.fn()
 }));
 
 const defaultProps = {
@@ -38,15 +26,15 @@ const defaultProps = {
 
 const WrappedComponent = props => (
 	<Provider store={mockStore()}>
-		<MemoryRouter>
+		<WorkspacePage channelId='456' groupId='2000'>
 			<UsageOverview {...props} />
-		</MemoryRouter>
+		</WorkspacePage>
 	</Provider>
 );
 
 describe('UsageOverview', () => {
 	it('should render', () => {
-		useCurrentUser.mockImplementation(() => ({isAdmin: () => true}));
+		mockCurrentUser();
 
 		const {container} = render(<WrappedComponent {...defaultProps} />);
 
@@ -54,7 +42,7 @@ describe('UsageOverview', () => {
 	});
 
 	it('should render with a warning type and danger type warning if one metric is approaching limit and the other is over', () => {
-		useCurrentUser.mockImplementation(() => ({isAdmin: () => true}));
+		mockCurrentUser();
 
 		const mockProject = new Project(
 			data.mockProject(23, {
@@ -75,7 +63,7 @@ describe('UsageOverview', () => {
 	});
 
 	it('should render with an approaching limit warning if a metric is approaching plan limit', () => {
-		useCurrentUser.mockImplementation(() => ({isAdmin: () => true}));
+		mockCurrentUser();
 
 		const mockProject = new Project(
 			data.mockProject(23, {
@@ -95,7 +83,7 @@ describe('UsageOverview', () => {
 	});
 
 	it('should render the total number of INDIVIDUALS since last anniversary and the percentage used in the plan', () => {
-		useCurrentUser.mockImplementation(() => ({isAdmin: () => true}));
+		mockCurrentUser();
 
 		const mockProject = new Project(
 			data.mockProject(23, {
@@ -130,7 +118,7 @@ describe('UsageOverview', () => {
 	});
 
 	it('should display the plan count percentage as 100% for INDIVIDUALS when count is higher than limit', () => {
-		useCurrentUser.mockImplementation(() => ({isAdmin: () => true}));
+		mockCurrentUser();
 
 		const mockProject = new Project(
 			data.mockProject(23, {
@@ -152,7 +140,7 @@ describe('UsageOverview', () => {
 	});
 
 	it('should display the plan count percentage as 100% for PAGE VIEWS when count is higher than limit', () => {
-		useCurrentUser.mockImplementation(() => ({isAdmin: () => true}));
+		mockCurrentUser();
 
 		const mockProject = new Project(
 			data.mockProject(23, {
@@ -174,7 +162,7 @@ describe('UsageOverview', () => {
 	});
 
 	it('should display the limit of INDIVIDUALS and PAGE VIEWS. Also, it should render a warning if INDIVIDUALS is over the limit. Also, it should render the current plan name.', () => {
-		useCurrentUser.mockImplementation(() => ({isAdmin: () => true}));
+		mockCurrentUser();
 
 		const mockProject = new Project(
 			data.mockProject(23, {
@@ -196,7 +184,7 @@ describe('UsageOverview', () => {
 	});
 
 	it('should render the total of PAGE VIEWS since the last anniversary and the percentage used in the plan', () => {
-		useCurrentUser.mockImplementation(() => ({isAdmin: () => true}));
+		mockCurrentUser();
 
 		const mockProject = new Project(
 			data.mockProject(23, {
@@ -231,7 +219,7 @@ describe('UsageOverview', () => {
 	});
 
 	it('should render with an overage warning if the PAGE VIEWS metric has exceeded the plan limit', () => {
-		useCurrentUser.mockImplementation(() => ({isAdmin: () => true}));
+		mockCurrentUser();
 
 		const mockProject = new Project(
 			data.mockProject(23, {
@@ -251,9 +239,7 @@ describe('UsageOverview', () => {
 	});
 
 	it('should render with a member-specific message overage warning if a metric is approaching plan limit and the user is a member role', () => {
-		useCurrentUser.mockImplementation(() => ({
-			isAdmin: () => false
-		}));
+		mockCurrentUser({roleName: UserRoleNames.Member});
 
 		const mockProject = new Project(
 			data.mockProject(23, {
@@ -278,7 +264,7 @@ describe('UsageOverview', () => {
 	});
 
 	it('not renders next anniversary date for BASIC PLAN', () => {
-		useCurrentUser.mockImplementation(() => ({isAdmin: () => true}));
+		mockCurrentUser();
 
 		const mockProject = new Project(
 			data.mockProject(23, {
@@ -298,7 +284,7 @@ describe('UsageOverview', () => {
 	});
 
 	it('renders next anniversary date for ENTERPRISE PLAN', () => {
-		useCurrentUser.mockImplementation(() => ({isAdmin: () => true}));
+		mockCurrentUser();
 
 		const mockProject = new Project(
 			data.mockProject(23, {
@@ -320,7 +306,7 @@ describe('UsageOverview', () => {
 	});
 
 	it('renders next anniversary date for BUSINESS PLAN', () => {
-		useCurrentUser.mockImplementation(() => ({isAdmin: () => true}));
+		mockCurrentUser();
 
 		const mockProject = new Project(
 			data.mockProject(23, {
@@ -342,7 +328,7 @@ describe('UsageOverview', () => {
 	});
 
 	it('not renders management button for Member view', () => {
-		useCurrentUser.mockImplementation(() => ({isAdmin: () => true}));
+		mockCurrentUser();
 
 		const mockProject = new Project(
 			data.mockProject(23, {
@@ -360,7 +346,7 @@ describe('UsageOverview', () => {
 	});
 
 	it('not renders management button for Admin view', () => {
-		useCurrentUser.mockImplementation(() => ({isAdmin: () => true}));
+		mockCurrentUser();
 
 		const mockProject = new Project(
 			data.mockProject(23, {
@@ -464,7 +450,7 @@ describe('Subscription Details', () => {
 	afterEach(cleanup);
 
 	it('renders subscription details for BASIC PLAN', () => {
-		useCurrentUser.mockImplementation(() => ({isAdmin: () => true}));
+		mockCurrentUser();
 
 		const mockProject = new Project(
 			data.mockProject(23, {
@@ -488,7 +474,7 @@ describe('Subscription Details', () => {
 	});
 
 	it('renders subscription details for BUSINESS PLAN', () => {
-		useCurrentUser.mockImplementation(() => ({isAdmin: () => true}));
+		mockCurrentUser();
 
 		const mockProject = new Project(
 			data.mockProject(23, {
@@ -512,7 +498,7 @@ describe('Subscription Details', () => {
 	});
 
 	it('renders subscription details for ENTERPRISE PLAN', () => {
-		useCurrentUser.mockImplementation(() => ({isAdmin: () => true}));
+		mockCurrentUser();
 
 		const mockProject = new Project(
 			data.mockProject(23, {

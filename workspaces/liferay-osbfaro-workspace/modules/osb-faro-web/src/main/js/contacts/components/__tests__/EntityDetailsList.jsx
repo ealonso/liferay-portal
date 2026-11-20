@@ -3,9 +3,8 @@ import EntityDetailsList from '../EntityDetailsList';
 import React from 'react';
 import {fireEvent, render} from '@testing-library/react';
 import {fromJS} from 'immutable';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
-import {Routes} from 'shared/util/router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const defaultProps = {
 	groupId: '23',
@@ -13,28 +12,15 @@ const defaultProps = {
 };
 
 const DefaultComponent = props => (
-	<MemoryRouter
-		initialEntries={[
-			'/workspace/23/321321/contacts/accounts/123123/interests/test'
-		]}
-	>
-		<RouterRoutes>
-			<Route
-				element={
-					<EntityDetailsList {...defaultProps} {...props} />
-				}
-				path={`${Routes.CONTACTS_ACCOUNT_INTEREST_DETAILS}/*`}
-			/>
-		</RouterRoutes>
-	</MemoryRouter>
+	<EntityDetailsList {...defaultProps} {...props} />
 );
 
 describe('EntityDetailsList', () => {
 	it('should render', async () => {
 		const {container} = render(
-			<DefaultComponent
+			<WorkspacePage><DefaultComponent
 				demographicsIMap={fromJS(data.mockAccountDetails())}
-			/>
+			/></WorkspacePage>
 		);
 
 		jest.runAllTimers();
@@ -46,9 +32,9 @@ describe('EntityDetailsList', () => {
 
 	it('should filter results by query', async () => {
 		const {container, getByPlaceholderText} = render(
-			<DefaultComponent
+			<WorkspacePage><DefaultComponent
 				demographicsIMap={fromJS(data.mockAccountDetails())}
-			/>
+			/></WorkspacePage>
 		);
 
 		jest.runAllTimers();

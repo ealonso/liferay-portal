@@ -1,8 +1,3 @@
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({groupId: '23'}),
-}));
-
 jest.mock('shared/api/data-source', () => ({
 	createMarketoCampaign: jest.fn(),
 	updateMarketoCampaign: jest.fn(),
@@ -12,6 +7,7 @@ import {Alert} from 'shared/types';
 import {ConnectMarketoCampaignAuth} from '../ConnectMarketoCampaignAuth';
 import {createMarketoCampaign} from 'shared/api/data-source';
 import {fireEvent, render, waitFor} from '@testing-library/react';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const fillAndSubmit = (container: HTMLElement) => {
 	const setValue = (name: string, value: string) =>
@@ -48,7 +44,8 @@ describe('ConnectMarketoCampaignAuth', () => {
 			<ConnectMarketoCampaignAuth
 				addAlert={addAlert}
 				onSubmit={jest.fn()}
-			/>
+			/>,
+			{wrapper: WorkspacePage}
 		);
 
 		fillAndSubmit(container);
@@ -74,7 +71,8 @@ describe('ConnectMarketoCampaignAuth', () => {
 			<ConnectMarketoCampaignAuth
 				addAlert={addAlert}
 				onSubmit={jest.fn()}
-			/>
+			/>,
+			{wrapper: WorkspacePage}
 		);
 
 		fillAndSubmit(container);
@@ -98,7 +96,8 @@ describe('ConnectMarketoCampaignAuth', () => {
 			<ConnectMarketoCampaignAuth
 				addAlert={addAlert}
 				onSubmit={jest.fn()}
-			/>
+			/>,
+			{wrapper: WorkspacePage}
 		);
 
 		fillAndSubmit(container);

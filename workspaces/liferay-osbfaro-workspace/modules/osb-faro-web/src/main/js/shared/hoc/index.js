@@ -13,7 +13,6 @@ export {default as withIndividual} from './WithIndividual';
 export {default as withInterval} from './WithInterval';
 export {default as withPageConfig} from './WithPageConfig';
 export {default as withPaginationBar} from './WithPaginationBar';
-export {default as withPermission, withAdminPermission} from './WithPermission';
 export {default as withProject} from './WithProject';
 export {default as withQuery} from './WithQuery';
 export {default as withQueryPagination} from './WithQueryPagination';

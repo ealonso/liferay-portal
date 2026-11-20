@@ -1,10 +1,9 @@
 import AssetDashboard from '../Dashboard';
 import mockStore from 'test/mock-store';
 import React from 'react';
-import {MemoryRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {render, screen} from '@testing-library/react';
-import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.mock('shared/components/download-report/DownloadCSVReport', () => ({
 	__esModule: true,
@@ -82,14 +81,10 @@ jest.mock('shared/hooks/useQueryRangeSelectors', () => ({
 	useQueryRangeSelectors: () => ({rangeKey: '30'}),
 }));
 
-jest.mock('shared/hooks/useLDPEnabled', () => ({
-	useLDPEnabled: jest.fn(),
-}));
-
 const renderDashboard = (tabId?: string, slug = 'blogs') =>
 	render(
-		<Provider store={mockStore()}>
-			<MemoryRouter>
+		<WorkspacePage ldpEnabled>
+			<Provider store={mockStore()}>
 				<AssetDashboard
 					className=""
 					router={
@@ -107,15 +102,13 @@ const renderDashboard = (tabId?: string, slug = 'blogs') =>
 							query: {},
 						} as any
 					}
+					tabId={tabId ?? 'page'}
 				/>
-			</MemoryRouter>
-		</Provider>
+			</Provider>
+		</WorkspacePage>
 	);
 
 describe('AssetDashboard', () => {
-	beforeEach(() => {
-		(useLDPEnabled as jest.Mock).mockReturnValue(true);
-	});
 
 	// The sub headers used to be chosen by comparing the matched route against
 	// a per asset type constant. They key off the tab instead, so that one

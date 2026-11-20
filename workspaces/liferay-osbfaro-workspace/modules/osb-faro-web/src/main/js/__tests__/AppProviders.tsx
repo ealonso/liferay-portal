@@ -2,6 +2,7 @@ import AppProviders from '../AppProviders';
 import React, {useContext} from 'react';
 import {fireEvent, render, screen} from '@testing-library/react';
 import {OnboardingContext} from 'shared/context/onboarding';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const OnboardingTrigger = () => {
 	const {onboardingTriggered, setOnboardingTriggered} =
@@ -21,9 +22,11 @@ describe('AppProviders', () => {
 
 	it('keeps the onboarding triggered when the app mounts again', () => {
 		const {unmount} = render(
-			<AppProviders>
-				<OnboardingTrigger />
-			</AppProviders>
+			<WorkspacePage>
+				<AppProviders>
+					<OnboardingTrigger />
+				</AppProviders>
+			</WorkspacePage>
 		);
 
 		fireEvent.click(screen.getByRole('button', {name: 'not-triggered'}));
@@ -31,9 +34,11 @@ describe('AppProviders', () => {
 		unmount();
 
 		render(
-			<AppProviders>
-				<OnboardingTrigger />
-			</AppProviders>
+			<WorkspacePage>
+				<AppProviders>
+					<OnboardingTrigger />
+				</AppProviders>
+			</WorkspacePage>
 		);
 
 		expect(

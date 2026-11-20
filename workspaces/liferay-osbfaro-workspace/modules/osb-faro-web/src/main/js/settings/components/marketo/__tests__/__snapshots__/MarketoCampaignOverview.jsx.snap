@@ -5,704 +5,449 @@ exports[`MarketoCampaignOverview should render an error when the count requests 
   <div
     class="settings-root"
   >
-    <nav
-      class="align-items-center bg-white sticky-top toolbar-root base-edit-page-toolbar mb-4 tbar component-tbar"
-    >
-      <ul
-        class="align-items-center mx-3 tbar-nav"
-      >
-        <li
-          class="tbar-item"
-        >
-          <a
-            aria-label="Back"
-            class="btn btn-monospaced btn-outline-borderless btn-outline-secondary btn-sm rounded-lg"
-            data-discover="true"
-            data-tooltip-align="bottom"
-            href="/workspace/23"
-            title="Back"
-          >
-            <svg
-              class="lexicon-icon lexicon-icon-angle-left"
-              role="presentation"
-            >
-              <use
-                href="#angle-left"
-              />
-            </svg>
-          </a>
-        </li>
-        <li
-          class="pl-0 tbar-item"
-        >
-          <div
-            class="tbar-section"
-          >
-            <h1
-              class="font-weight-semi-bold m-0 text-5 text-dark text-nowrap"
-            >
-              Settings
-            </h1>
-          </div>
-        </li>
-        <li
-          class="ml-auto tbar-item"
-        >
-          <ul
-            class="base-edit-page-toolbar-actions justify-content-end tbar-nav"
-            data-testid="toolbar-actions"
-          />
-        </li>
-      </ul>
-    </nav>
     <div
-      class="content-wrapper"
+      class="content section-main"
     >
-      <nav
-        class="section-side settings-side-bar"
-      >
-        <div>
-          <h5
-            class="section-title"
-          >
-            Workspace Data
-          </h5>
-          <ul
-            class="nav"
-          >
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/apis/tokens"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-ac_api icon-root"
-                    data-file="ac_api.svg"
-                    role="presentation"
-                  />
-                </span>
-                APIs
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/definitions"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-definitions icon-root"
-                    data-file="definitions.svg"
-                    role="presentation"
-                  />
-                </span>
-                Definitions
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/data-privacy"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-data_privacy_lock icon-root"
-                    data-file="data_privacy_lock.svg"
-                    role="presentation"
-                  />
-                </span>
-                Data Control & Privacy
-              </a>
-            </li>
-            <li
-              class="item active"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/data-source"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-faro_data_source icon-root"
-                    data-file="faro_data_source.svg"
-                    role="presentation"
-                  />
-                </span>
-                Data Sources
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/recommendations"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-ac_star icon-root"
-                    data-file="ac_star.svg"
-                    role="presentation"
-                  />
-                </span>
-                Recommendations
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h5
-            class="section-title"
-          >
-            Workspace Settings
-          </h5>
-          <ul
-            class="nav"
-          >
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/users"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-user_management icon-root"
-                    data-file="user_management.svg"
-                    role="presentation"
-                  />
-                </span>
-                User Management
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/properties"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-ac_page icon-root"
-                    data-file="ac_page.svg"
-                    role="presentation"
-                  />
-                </span>
-                Properties
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/usage"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-usage icon-root"
-                    data-file="usage.svg"
-                    role="presentation"
-                  />
-                </span>
-                Subscription & Usage
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/workspace"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-cog icon-root"
-                    role="presentation"
-                  >
-                    <use
-                      href="#cog"
-                    />
-                  </svg>
-                </span>
-                Workspace
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
       <div
-        class="content section-main"
+        class="settings-base-page-root"
       >
         <div
-          class="settings-base-page-root"
+          class="maintenance-alert-root"
+        />
+        <ol
+          class="breadcrumb breadcrumbs-root"
         >
-          <div
-            class="maintenance-alert-root"
-          />
-          <ol
-            class="breadcrumb breadcrumbs-root"
+          <li
+            class="breadcrumb-item"
           >
-            <li
-              class="breadcrumb-item"
+            <a
+              class="breadcrumb-text-truncate breadcrumb-link"
+              href="/data-sources"
             >
-              <a
-                class="breadcrumb-text-truncate breadcrumb-link"
-                data-discover="true"
-                href="/workspace/23/settings/data-source"
-              >
-                Data Sources
-              </a>
-            </li>
-            <li
-              class="breadcrumb-item active"
+              Data Sources
+            </a>
+          </li>
+          <li
+            class="breadcrumb-item active"
+          >
+            <span
+              class="breadcrumb-text-truncate"
+            >
+              Marketo Campaign 1
+            </span>
+          </li>
+        </ol>
+        <div>
+          <div
+            class="mb-5"
+          >
+            <span
+              class="label mb-2 label-inverse-success"
             >
               <span
-                class="breadcrumb-text-truncate"
+                class="label-item label-item-expand"
               >
-                Marketo Campaign 1
+                Active
               </span>
-            </li>
-          </ol>
-          <div>
+            </span>
             <div
-              class="mb-5"
+              class="input-with-edit-toggle-root definition-item-root"
             >
-              <span
-                class="label mb-2 label-inverse-success"
+              <div
+                class="d-inline-flex"
               >
                 <span
-                  class="label-item label-item-expand"
+                  class="text-8 font-weight-bold"
                 >
-                  Active
+                  Marketo Campaign 1
                 </span>
-              </span>
-              <div
-                class="input-with-edit-toggle-root definition-item-root"
-              >
-                <div
-                  class="d-inline-flex"
-                >
-                  <span
-                    class="text-8 font-weight-bold"
-                  >
-                    Marketo Campaign 1
-                  </span>
-                  <button
-                    aria-label="Edit"
-                    class="button-root btn btn-outline-borderless btn-sm btn-outline-secondary"
-                    data-testid="edit"
-                    type="button"
-                  >
-                    <svg
-                      class="lexicon-icon lexicon-icon-pencil icon-root"
-                      role="presentation"
-                    >
-                      <use
-                        href="#pencil"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div
-              class="panel mb-4 panel-secondary"
-            >
-              <div
-                class="panel-header"
-              >
-                <h2
-                  class="mb-0 p-2 text-6 text-dark"
-                >
-                  Authentication
-                </h2>
-              </div>
-              <div
-                class="panel-body p-4"
-              >
-                <div
-                  class="mb-4"
-                >
-                  <div
-                    class="mb-4"
-                  >
-                    <span
-                      class="text-3 text-secondary font-weight-semi-bold"
-                    >
-                      CONNECTION STATUS
-                    </span>
-                    <hr
-                      class="my-2"
-                    />
-                  </div>
-                  <div
-                    class="alert alert-success"
-                  >
-                    <div
-                      class="alert-autofit-row autofit-row"
-                      role="alert"
-                    >
-                      <div
-                        class="autofit-col"
-                      >
-                        <div
-                          class="autofit-section"
-                        >
-                          <span
-                            class="alert-indicator"
-                          >
-                            <svg
-                              class="lexicon-icon lexicon-icon-check-circle-full"
-                              role="presentation"
-                            >
-                              <use
-                                href="#check-circle-full"
-                              />
-                            </svg>
-                          </span>
-                        </div>
-                      </div>
-                      <div
-                        class="autofit-col autofit-col-expand"
-                      >
-                        <div
-                          class="autofit-section"
-                        >
-                          You have successfully authenticated your credentials with Liferay Analytics Cloud. You can now select the data to sync.
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="mb-4"
-                >
-                  <div
-                    class="mb-4"
-                  >
-                    <span
-                      class="text-3 text-secondary font-weight-semi-bold"
-                    >
-                      DATA SOURCE DETAILS
-                    </span>
-                    <hr
-                      class="my-2"
-                    />
-                  </div>
-                  <div
-                    class="input-group d-flex mt-3"
-                  >
-                    <div
-                      class="input-group-item mr-3 input-group-item-shrink"
-                    >
-                      <label
-                        for="dataSourceType"
-                      >
-                        Data Source Type
-                      </label>
-                      <input
-                        class="form-control"
-                        readonly=""
-                        type="text"
-                        value="Marketo Campaign"
-                      />
-                    </div>
-                    <div
-                      class="input-group-item ml-0 input-group-item-shrink"
-                    >
-                      <label
-                        for="dataSourceId"
-                      >
-                        Data Source ID
-                      </label>
-                      <input
-                        class="form-control"
-                        readonly=""
-                        type="text"
-                        value="1"
-                      />
-                    </div>
-                  </div>
-                </div>
                 <button
-                  aria-label="Disconnect Data Source"
-                  class="btn btn-sm btn-outline-danger"
+                  aria-label="Edit"
+                  class="button-root btn btn-outline-borderless btn-sm btn-outline-secondary"
+                  data-testid="edit"
                   type="button"
                 >
                   <svg
-                    class="lexicon-icon lexicon-icon-logout mr-2"
+                    class="lexicon-icon lexicon-icon-pencil icon-root"
                     role="presentation"
                   >
                     <use
-                      href="#logout"
+                      href="#pencil"
                     />
                   </svg>
-                  Disconnect Data Source
                 </button>
               </div>
             </div>
+          </div>
+          <div
+            class="panel mb-4 panel-secondary"
+          >
             <div
-              class="panel mb-4 panel-secondary"
+              class="panel-header"
+            >
+              <h2
+                class="mb-0 p-2 text-6 text-dark"
+              >
+                Authentication
+              </h2>
+            </div>
+            <div
+              class="panel-body p-4"
             >
               <div
-                class="panel-header"
-              >
-                <h2
-                  class="mb-0 p-2 text-6 text-dark"
-                >
-                  Synced Data
-                </h2>
-              </div>
-              <div
-                class="panel-body p-4"
+                class="mb-4"
               >
                 <div
-                  class="error-display-root flex-grow-1 no-results-root flex-grow-1"
+                  class="mb-4"
+                >
+                  <span
+                    class="text-3 text-secondary font-weight-semi-bold"
+                  >
+                    CONNECTION STATUS
+                  </span>
+                  <hr
+                    class="my-2"
+                  />
+                </div>
+                <div
+                  class="alert alert-success"
                 >
                   <div
-                    class="no-results-content"
+                    class="alert-autofit-row autofit-row"
+                    role="alert"
                   >
                     <div
-                      class="h4 mb-3 no-results-title"
+                      class="autofit-col"
                     >
-                      An unexpected error occurred.
+                      <div
+                        class="autofit-section"
+                      >
+                        <span
+                          class="alert-indicator"
+                        >
+                          <svg
+                            class="lexicon-icon lexicon-icon-check-circle-full"
+                            role="presentation"
+                          >
+                            <use
+                              href="#check-circle-full"
+                            />
+                          </svg>
+                        </span>
+                      </div>
                     </div>
+                    <div
+                      class="autofit-col autofit-col-expand"
+                    >
+                      <div
+                        class="autofit-section"
+                      >
+                        You have successfully authenticated your credentials with Liferay Analytics Cloud. You can now select the data to sync.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="mb-4"
+              >
+                <div
+                  class="mb-4"
+                >
+                  <span
+                    class="text-3 text-secondary font-weight-semi-bold"
+                  >
+                    DATA SOURCE DETAILS
+                  </span>
+                  <hr
+                    class="my-2"
+                  />
+                </div>
+                <div
+                  class="input-group d-flex mt-3"
+                >
+                  <div
+                    class="input-group-item mr-3 input-group-item-shrink"
+                  >
+                    <label
+                      for="dataSourceType"
+                    >
+                      Data Source Type
+                    </label>
+                    <input
+                      class="form-control"
+                      readonly=""
+                      type="text"
+                      value="Marketo Campaign"
+                    />
+                  </div>
+                  <div
+                    class="input-group-item ml-0 input-group-item-shrink"
+                  >
+                    <label
+                      for="dataSourceId"
+                    >
+                      Data Source ID
+                    </label>
+                    <input
+                      class="form-control"
+                      readonly=""
+                      type="text"
+                      value="1"
+                    />
+                  </div>
+                </div>
+              </div>
+              <button
+                aria-label="Disconnect Data Source"
+                class="btn btn-sm btn-outline-danger"
+                type="button"
+              >
+                <svg
+                  class="lexicon-icon lexicon-icon-logout mr-2"
+                  role="presentation"
+                >
+                  <use
+                    href="#logout"
+                  />
+                </svg>
+                Disconnect Data Source
+              </button>
+            </div>
+          </div>
+          <div
+            class="panel mb-4 panel-secondary"
+          >
+            <div
+              class="panel-header"
+            >
+              <h2
+                class="mb-0 p-2 text-6 text-dark"
+              >
+                Synced Data
+              </h2>
+            </div>
+            <div
+              class="panel-body p-4"
+            >
+              <div
+                class="error-display-root flex-grow-1 no-results-root flex-grow-1"
+              >
+                <div
+                  class="no-results-content"
+                >
+                  <div
+                    class="h4 mb-3 no-results-title"
+                  >
+                    An unexpected error occurred.
                   </div>
                 </div>
               </div>
             </div>
+          </div>
+          <div
+            class="panel mb-4 panel-secondary"
+          >
             <div
-              class="panel mb-4 panel-secondary"
+              class="panel-header"
+            >
+              <h2
+                class="mb-0 p-2 text-6 text-dark"
+              >
+                Assigned Properties
+              </h2>
+            </div>
+            <div
+              class="panel-body p-0"
             >
               <div
-                class="panel-header"
+                class="p-4"
               >
-                <h2
-                  class="mb-0 p-2 text-6 text-dark"
+                <p
+                  class="text-4 text-secondary"
                 >
-                  Assigned Properties
-                </h2>
-              </div>
-              <div
-                class="panel-body p-0"
-              >
+                  Properties let you consolidate data from individuals, accounts, campaigns, and sites in one place. An individual's data is available in every property they are assigned to.
+                </p>
                 <div
-                  class="p-4"
+                  class="mb-4"
                 >
-                  <p
-                    class="text-4 text-secondary"
+                  <span
+                    class="text-3 text-secondary font-weight-semi-bold"
                   >
-                    Properties let you consolidate data from individuals, accounts, campaigns, and sites in one place. An individual's data is available in every property they are assigned to.
-                  </p>
+                    DATA AVAILABILITY
+                  </span>
+                  <hr
+                    class="my-2"
+                  />
+                </div>
+                <p
+                  class="text-4 text-secondary"
+                >
+                  Choose the properties that will have access to this data source.
+                </p>
+                <div
+                  class=""
+                >
                   <div
-                    class="mb-4"
+                    class="custom-control custom-radio custom-control-inline custom-control-outside"
                   >
-                    <span
-                      class="text-3 text-secondary font-weight-semi-bold"
-                    >
-                      DATA AVAILABILITY
-                    </span>
-                    <hr
-                      class="my-2"
-                    />
+                    <label>
+                      <input
+                        class="custom-control-input"
+                        role="radio"
+                        type="radio"
+                        value="all"
+                      />
+                      <span
+                        class="custom-control-label"
+                      >
+                        <span
+                          class="custom-control-label-text"
+                        >
+                          Make individual data from this data source available in all properties, including those not yet created.
+                        </span>
+                      </span>
+                    </label>
                   </div>
-                  <p
-                    class="text-4 text-secondary"
-                  >
-                    Choose the properties that will have access to this data source.
-                  </p>
                   <div
-                    class=""
+                    class="custom-control custom-radio custom-control-inline custom-control-outside"
                   >
-                    <div
-                      class="custom-control custom-radio custom-control-inline custom-control-outside"
-                    >
-                      <label>
-                        <input
-                          class="custom-control-input"
-                          role="radio"
-                          type="radio"
-                          value="all"
-                        />
+                    <label>
+                      <input
+                        checked=""
+                        class="custom-control-input"
+                        role="radio"
+                        type="radio"
+                        value="custom"
+                      />
+                      <span
+                        class="custom-control-label"
+                      >
                         <span
-                          class="custom-control-label"
+                          class="custom-control-label-text"
                         >
-                          <span
-                            class="custom-control-label-text"
-                          >
-                            Make individual data from this data source available in all properties, including those not yet created.
-                          </span>
+                          Select Properties
                         </span>
-                      </label>
-                    </div>
-                    <div
-                      class="custom-control custom-radio custom-control-inline custom-control-outside"
-                    >
-                      <label>
-                        <input
-                          checked=""
-                          class="custom-control-input"
-                          role="radio"
-                          type="radio"
-                          value="custom"
-                        />
-                        <span
-                          class="custom-control-label"
-                        >
-                          <span
-                            class="custom-control-label-text"
-                          >
-                            Select Properties
-                          </span>
-                        </span>
-                      </label>
-                    </div>
+                      </span>
+                    </label>
                   </div>
                 </div>
-                <div
-                  class="search-toolbar-root"
+              </div>
+              <div
+                class="search-toolbar-root"
+              >
+                <nav
+                  class="navbar navbar-root management-bar management-bar-light navbar-expand"
                 >
-                  <nav
-                    class="navbar navbar-root management-bar management-bar-light navbar-expand"
+                  <div
+                    class="container-fluid"
                   >
-                    <div
-                      class="container-fluid"
+                    <ul
+                      class="nav-root front-nav mr-auto navbar-nav"
+                      role="tablist"
                     >
-                      <ul
-                        class="nav-root front-nav mr-auto navbar-nav"
-                        role="tablist"
-                      >
-                        <li
-                          class="nav-item"
-                          role="presentation"
-                        >
-                          <div
-                            class="dropdown dropdown-root"
-                          >
-                            <button
-                              aria-expanded="false"
-                              aria-haspopup="true"
-                              class="dropdown-toggle btn btn-outline-borderless btn-sm btn-outline-secondary"
-                              data-testid="order-button"
-                              type="button"
-                            >
-                              <span
-                                class="caret-root"
-                              >
-                                <svg
-                                  class="lexicon-icon lexicon-icon-order-list-down"
-                                  role="presentation"
-                                >
-                                  <use
-                                    href="#order-list-down"
-                                  />
-                                </svg>
-                              </span>
-                              <span
-                                class="mx-2"
-                              >
-                                Order
-                              </span>
-                              <span
-                                class="caret-root"
-                              >
-                                <svg
-                                  class="lexicon-icon lexicon-icon-caret-bottom"
-                                  role="presentation"
-                                >
-                                  <use
-                                    href="#caret-bottom"
-                                  />
-                                </svg>
-                              </span>
-                            </button>
-                          </div>
-                        </li>
-                      </ul>
-                      <div
-                        class="navbar-form navbar-form-autofit mx-2"
+                      <li
+                        class="nav-item"
+                        role="presentation"
                       >
                         <div
-                          class="input-group search"
+                          class="dropdown dropdown-root"
                         >
-                          <div
-                            class="input-group-item"
+                          <button
+                            aria-expanded="false"
+                            aria-haspopup="true"
+                            class="dropdown-toggle btn btn-outline-borderless btn-sm btn-outline-secondary"
+                            data-testid="order-button"
+                            type="button"
                           >
-                            <input
-                              class="input-root form-control input-group-inset input-group-inset-after"
-                              placeholder="Search"
-                              type="text"
-                              value=""
-                            />
-                            <div
-                              class="input-group-inset-item input-group-inset-item-after"
+                            <span
+                              class="caret-root"
                             >
-                              <button
-                                aria-label="Search"
-                                class="button-root btn btn-unstyled"
-                                type="button"
+                              <svg
+                                class="lexicon-icon lexicon-icon-order-list-down"
+                                role="presentation"
                               >
-                                <svg
-                                  class="lexicon-icon lexicon-icon-search icon-root"
-                                  role="presentation"
-                                >
-                                  <use
-                                    href="#search"
-                                  />
-                                </svg>
-                              </button>
-                            </div>
+                                <use
+                                  href="#order-list-down"
+                                />
+                              </svg>
+                            </span>
+                            <span
+                              class="mx-2"
+                            >
+                              Order
+                            </span>
+                            <span
+                              class="caret-root"
+                            >
+                              <svg
+                                class="lexicon-icon lexicon-icon-caret-bottom"
+                                role="presentation"
+                              >
+                                <use
+                                  href="#caret-bottom"
+                                />
+                              </svg>
+                            </span>
+                          </button>
+                        </div>
+                      </li>
+                    </ul>
+                    <div
+                      class="navbar-form navbar-form-autofit mx-2"
+                    >
+                      <div
+                        class="input-group search"
+                      >
+                        <div
+                          class="input-group-item"
+                        >
+                          <input
+                            class="input-root form-control input-group-inset input-group-inset-after"
+                            placeholder="Search"
+                            type="text"
+                            value=""
+                          />
+                          <div
+                            class="input-group-inset-item input-group-inset-item-after"
+                          >
+                            <button
+                              aria-label="Search"
+                              class="button-root btn btn-unstyled"
+                              type="button"
+                            >
+                              <svg
+                                class="lexicon-icon lexicon-icon-search icon-root"
+                                role="presentation"
+                              >
+                                <use
+                                  href="#search"
+                                />
+                              </svg>
+                            </button>
                           </div>
                         </div>
                       </div>
-                      <button
-                        class="btn btn-primary"
-                        type="button"
-                      >
-                        Select Property
-                      </button>
                     </div>
-                  </nav>
-                </div>
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                    >
+                      Select Property
+                    </button>
+                  </div>
+                </nav>
+              </div>
+              <div
+                class="error-display-root flex-grow-1 error-spacer no-results-root flex-grow-1"
+              >
                 <div
-                  class="error-display-root flex-grow-1 error-spacer no-results-root flex-grow-1"
+                  class="no-results-content"
                 >
                   <div
-                    class="no-results-content"
+                    class="h4 mb-3 no-results-title"
                   >
-                    <div
-                      class="h4 mb-3 no-results-title"
-                    >
-                      An unexpected error occurred.
-                    </div>
+                    An unexpected error occurred.
                   </div>
                 </div>
               </div>
@@ -720,868 +465,613 @@ exports[`MarketoCampaignOverview should render the connected data source with th
   <div
     class="settings-root"
   >
-    <nav
-      class="align-items-center bg-white sticky-top toolbar-root base-edit-page-toolbar mb-4 tbar component-tbar"
-    >
-      <ul
-        class="align-items-center mx-3 tbar-nav"
-      >
-        <li
-          class="tbar-item"
-        >
-          <a
-            aria-label="Back"
-            class="btn btn-monospaced btn-outline-borderless btn-outline-secondary btn-sm rounded-lg"
-            data-discover="true"
-            data-tooltip-align="bottom"
-            href="/workspace/23"
-            title="Back"
-          >
-            <svg
-              class="lexicon-icon lexicon-icon-angle-left"
-              role="presentation"
-            >
-              <use
-                href="#angle-left"
-              />
-            </svg>
-          </a>
-        </li>
-        <li
-          class="pl-0 tbar-item"
-        >
-          <div
-            class="tbar-section"
-          >
-            <h1
-              class="font-weight-semi-bold m-0 text-5 text-dark text-nowrap"
-            >
-              Settings
-            </h1>
-          </div>
-        </li>
-        <li
-          class="ml-auto tbar-item"
-        >
-          <ul
-            class="base-edit-page-toolbar-actions justify-content-end tbar-nav"
-            data-testid="toolbar-actions"
-          />
-        </li>
-      </ul>
-    </nav>
     <div
-      class="content-wrapper"
+      class="content section-main"
     >
-      <nav
-        class="section-side settings-side-bar"
-      >
-        <div>
-          <h5
-            class="section-title"
-          >
-            Workspace Data
-          </h5>
-          <ul
-            class="nav"
-          >
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/apis/tokens"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-ac_api icon-root"
-                    data-file="ac_api.svg"
-                    role="presentation"
-                  />
-                </span>
-                APIs
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/definitions"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-definitions icon-root"
-                    data-file="definitions.svg"
-                    role="presentation"
-                  />
-                </span>
-                Definitions
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/data-privacy"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-data_privacy_lock icon-root"
-                    data-file="data_privacy_lock.svg"
-                    role="presentation"
-                  />
-                </span>
-                Data Control & Privacy
-              </a>
-            </li>
-            <li
-              class="item active"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/data-source"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-faro_data_source icon-root"
-                    data-file="faro_data_source.svg"
-                    role="presentation"
-                  />
-                </span>
-                Data Sources
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/recommendations"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-ac_star icon-root"
-                    data-file="ac_star.svg"
-                    role="presentation"
-                  />
-                </span>
-                Recommendations
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h5
-            class="section-title"
-          >
-            Workspace Settings
-          </h5>
-          <ul
-            class="nav"
-          >
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/users"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-user_management icon-root"
-                    data-file="user_management.svg"
-                    role="presentation"
-                  />
-                </span>
-                User Management
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/properties"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-ac_page icon-root"
-                    data-file="ac_page.svg"
-                    role="presentation"
-                  />
-                </span>
-                Properties
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/usage"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-usage icon-root"
-                    data-file="usage.svg"
-                    role="presentation"
-                  />
-                </span>
-                Subscription & Usage
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/workspace"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-cog icon-root"
-                    role="presentation"
-                  >
-                    <use
-                      href="#cog"
-                    />
-                  </svg>
-                </span>
-                Workspace
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
       <div
-        class="content section-main"
+        class="settings-base-page-root"
       >
         <div
-          class="settings-base-page-root"
+          class="maintenance-alert-root"
+        />
+        <ol
+          class="breadcrumb breadcrumbs-root"
         >
-          <div
-            class="maintenance-alert-root"
-          />
-          <ol
-            class="breadcrumb breadcrumbs-root"
+          <li
+            class="breadcrumb-item"
           >
-            <li
-              class="breadcrumb-item"
+            <a
+              class="breadcrumb-text-truncate breadcrumb-link"
+              href="/data-sources"
             >
-              <a
-                class="breadcrumb-text-truncate breadcrumb-link"
-                data-discover="true"
-                href="/workspace/23/settings/data-source"
-              >
-                Data Sources
-              </a>
-            </li>
-            <li
-              class="breadcrumb-item active"
+              Data Sources
+            </a>
+          </li>
+          <li
+            class="breadcrumb-item active"
+          >
+            <span
+              class="breadcrumb-text-truncate"
+            >
+              Marketo Campaign 1
+            </span>
+          </li>
+        </ol>
+        <div>
+          <div
+            class="mb-5"
+          >
+            <span
+              class="label mb-2 label-inverse-success"
             >
               <span
-                class="breadcrumb-text-truncate"
+                class="label-item label-item-expand"
               >
-                Marketo Campaign 1
+                Active
               </span>
-            </li>
-          </ol>
-          <div>
+            </span>
             <div
-              class="mb-5"
+              class="input-with-edit-toggle-root definition-item-root"
             >
-              <span
-                class="label mb-2 label-inverse-success"
+              <div
+                class="d-inline-flex"
               >
                 <span
-                  class="label-item label-item-expand"
+                  class="text-8 font-weight-bold"
                 >
-                  Active
+                  Marketo Campaign 1
                 </span>
-              </span>
-              <div
-                class="input-with-edit-toggle-root definition-item-root"
-              >
-                <div
-                  class="d-inline-flex"
-                >
-                  <span
-                    class="text-8 font-weight-bold"
-                  >
-                    Marketo Campaign 1
-                  </span>
-                  <button
-                    aria-label="Edit"
-                    class="button-root btn btn-outline-borderless btn-sm btn-outline-secondary"
-                    data-testid="edit"
-                    type="button"
-                  >
-                    <svg
-                      class="lexicon-icon lexicon-icon-pencil icon-root"
-                      role="presentation"
-                    >
-                      <use
-                        href="#pencil"
-                      />
-                    </svg>
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div
-              class="panel mb-4 panel-secondary"
-            >
-              <div
-                class="panel-header"
-              >
-                <h2
-                  class="mb-0 p-2 text-6 text-dark"
-                >
-                  Authentication
-                </h2>
-              </div>
-              <div
-                class="panel-body p-4"
-              >
-                <div
-                  class="mb-4"
-                >
-                  <div
-                    class="mb-4"
-                  >
-                    <span
-                      class="text-3 text-secondary font-weight-semi-bold"
-                    >
-                      CONNECTION STATUS
-                    </span>
-                    <hr
-                      class="my-2"
-                    />
-                  </div>
-                  <div
-                    class="alert alert-success"
-                  >
-                    <div
-                      class="alert-autofit-row autofit-row"
-                      role="alert"
-                    >
-                      <div
-                        class="autofit-col"
-                      >
-                        <div
-                          class="autofit-section"
-                        >
-                          <span
-                            class="alert-indicator"
-                          >
-                            <svg
-                              class="lexicon-icon lexicon-icon-check-circle-full"
-                              role="presentation"
-                            >
-                              <use
-                                href="#check-circle-full"
-                              />
-                            </svg>
-                          </span>
-                        </div>
-                      </div>
-                      <div
-                        class="autofit-col autofit-col-expand"
-                      >
-                        <div
-                          class="autofit-section"
-                        >
-                          You have successfully authenticated your credentials with Liferay Analytics Cloud. You can now select the data to sync.
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="mb-4"
-                >
-                  <div
-                    class="mb-4"
-                  >
-                    <span
-                      class="text-3 text-secondary font-weight-semi-bold"
-                    >
-                      DATA SOURCE DETAILS
-                    </span>
-                    <hr
-                      class="my-2"
-                    />
-                  </div>
-                  <div
-                    class="input-group d-flex mt-3"
-                  >
-                    <div
-                      class="input-group-item mr-3 input-group-item-shrink"
-                    >
-                      <label
-                        for="dataSourceType"
-                      >
-                        Data Source Type
-                      </label>
-                      <input
-                        class="form-control"
-                        readonly=""
-                        type="text"
-                        value="Marketo Campaign"
-                      />
-                    </div>
-                    <div
-                      class="input-group-item ml-0 input-group-item-shrink"
-                    >
-                      <label
-                        for="dataSourceId"
-                      >
-                        Data Source ID
-                      </label>
-                      <input
-                        class="form-control"
-                        readonly=""
-                        type="text"
-                        value="1"
-                      />
-                    </div>
-                  </div>
-                </div>
                 <button
-                  aria-label="Disconnect Data Source"
-                  class="btn btn-sm btn-outline-danger"
+                  aria-label="Edit"
+                  class="button-root btn btn-outline-borderless btn-sm btn-outline-secondary"
+                  data-testid="edit"
                   type="button"
                 >
                   <svg
-                    class="lexicon-icon lexicon-icon-logout mr-2"
+                    class="lexicon-icon lexicon-icon-pencil icon-root"
                     role="presentation"
                   >
                     <use
-                      href="#logout"
+                      href="#pencil"
                     />
                   </svg>
-                  Disconnect Data Source
                 </button>
               </div>
             </div>
+          </div>
+          <div
+            class="panel mb-4 panel-secondary"
+          >
             <div
-              class="panel mb-4 panel-secondary"
+              class="panel-header"
+            >
+              <h2
+                class="mb-0 p-2 text-6 text-dark"
+              >
+                Authentication
+              </h2>
+            </div>
+            <div
+              class="panel-body p-4"
             >
               <div
-                class="panel-header"
+                class="mb-4"
               >
-                <h2
-                  class="mb-0 p-2 text-6 text-dark"
+                <div
+                  class="mb-4"
                 >
-                  Synced Data
-                </h2>
-              </div>
-              <div
-                class="panel-body p-4"
-              >
-                <div>
+                  <span
+                    class="text-3 text-secondary font-weight-semi-bold"
+                  >
+                    CONNECTION STATUS
+                  </span>
+                  <hr
+                    class="my-2"
+                  />
+                </div>
+                <div
+                  class="alert alert-success"
+                >
                   <div
-                    class="alert alert-warning"
+                    class="alert-autofit-row autofit-row"
+                    role="alert"
                   >
                     <div
-                      class="alert-autofit-row autofit-row"
-                      role="alert"
+                      class="autofit-col"
+                    >
+                      <div
+                        class="autofit-section"
+                      >
+                        <span
+                          class="alert-indicator"
+                        >
+                          <svg
+                            class="lexicon-icon lexicon-icon-check-circle-full"
+                            role="presentation"
+                          >
+                            <use
+                              href="#check-circle-full"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                    <div
+                      class="autofit-col autofit-col-expand"
+                    >
+                      <div
+                        class="autofit-section"
+                      >
+                        You have successfully authenticated your credentials with Liferay Analytics Cloud. You can now select the data to sync.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="mb-4"
+              >
+                <div
+                  class="mb-4"
+                >
+                  <span
+                    class="text-3 text-secondary font-weight-semi-bold"
+                  >
+                    DATA SOURCE DETAILS
+                  </span>
+                  <hr
+                    class="my-2"
+                  />
+                </div>
+                <div
+                  class="input-group d-flex mt-3"
+                >
+                  <div
+                    class="input-group-item mr-3 input-group-item-shrink"
+                  >
+                    <label
+                      for="dataSourceType"
+                    >
+                      Data Source Type
+                    </label>
+                    <input
+                      class="form-control"
+                      readonly=""
+                      type="text"
+                      value="Marketo Campaign"
+                    />
+                  </div>
+                  <div
+                    class="input-group-item ml-0 input-group-item-shrink"
+                  >
+                    <label
+                      for="dataSourceId"
+                    >
+                      Data Source ID
+                    </label>
+                    <input
+                      class="form-control"
+                      readonly=""
+                      type="text"
+                      value="1"
+                    />
+                  </div>
+                </div>
+              </div>
+              <button
+                aria-label="Disconnect Data Source"
+                class="btn btn-sm btn-outline-danger"
+                type="button"
+              >
+                <svg
+                  class="lexicon-icon lexicon-icon-logout mr-2"
+                  role="presentation"
+                >
+                  <use
+                    href="#logout"
+                  />
+                </svg>
+                Disconnect Data Source
+              </button>
+            </div>
+          </div>
+          <div
+            class="panel mb-4 panel-secondary"
+          >
+            <div
+              class="panel-header"
+            >
+              <h2
+                class="mb-0 p-2 text-6 text-dark"
+              >
+                Synced Data
+              </h2>
+            </div>
+            <div
+              class="panel-body p-4"
+            >
+              <div>
+                <div
+                  class="alert alert-warning"
+                >
+                  <div
+                    class="alert-autofit-row autofit-row"
+                    role="alert"
+                  >
+                    <div
+                      class="autofit-col"
+                    >
+                      <div
+                        class="autofit-section"
+                      >
+                        <span
+                          class="alert-indicator"
+                        >
+                          <svg
+                            class="lexicon-icon lexicon-icon-warning-full"
+                            role="presentation"
+                          >
+                            <use
+                              href="#warning-full"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                    <div
+                      class="autofit-col autofit-col-expand"
+                    >
+                      <div
+                        class="autofit-section"
+                      >
+                        <strong
+                          class="lead"
+                        >
+                          Warning
+                        </strong>
+                        The data source setup is almost complete. Sync data to start seeing results as activities occur on your sites.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="mb-2"
+                >
+                  <span
+                    class="text-4 text-secondary"
+                  >
+                    To configure your Marketo data source, go to your Marketo environment to update this app connection.
+                  </span>
+                </div>
+                <div
+                  class="mt-3 text-dark"
+                >
+                  <span
+                    class="text-2 font-weight-semi-bold"
+                  >
+                    SELECT ITEMS TO SYNC
+                  </span>
+                </div>
+                <div
+                  class="pt-1"
+                >
+                  <ul
+                    class="list-group mb-0 show-quick-actions-on-hover"
+                  >
+                    <li
+                      class="list-group-item list-group-item-flex"
                     >
                       <div
                         class="autofit-col"
                       >
                         <div
-                          class="autofit-section"
+                          class="custom-control custom-checkbox"
+                        >
+                          <label>
+                            <input
+                              class="custom-control-input"
+                              type="checkbox"
+                            />
+                            <span
+                              class="custom-control-label"
+                            />
+                          </label>
+                        </div>
+                      </div>
+                      <div
+                        class="autofit-col"
+                      >
+                        <span
+                          class="sticker sticker-unstyled"
                         >
                           <span
-                            class="alert-indicator"
+                            class="sticker-overlay"
                           >
                             <svg
-                              class="lexicon-icon lexicon-icon-warning-full"
+                              class="lexicon-icon lexicon-icon-users text-secondary"
                               role="presentation"
                             >
                               <use
-                                href="#warning-full"
+                                href="#users"
                               />
                             </svg>
                           </span>
-                        </div>
+                        </span>
                       </div>
                       <div
-                        class="autofit-col autofit-col-expand"
+                        class="d-flex justify-content-center autofit-col autofit-col-expand"
                       >
-                        <div
-                          class="autofit-section"
+                        <p
+                          class="list-group-title"
                         >
-                          <strong
-                            class="lead"
-                          >
-                            Warning
-                          </strong>
-                          The data source setup is almost complete. Sync data to start seeing results as activities occur on your sites.
-                        </div>
+                          Individuals
+                        </p>
+                        <p
+                          class="list-group-text"
+                        >
+                          Represents fields from the Leads and Companies table within Marketo.
+                        </p>
+                        <p
+                          class="list-group-text"
+                        >
+                          20 Items Synced
+                        </p>
                       </div>
-                    </div>
-                  </div>
-                  <div
-                    class="mb-2"
-                  >
-                    <span
-                      class="text-4 text-secondary"
-                    >
-                      To configure your Marketo data source, go to your Marketo environment to update this app connection.
-                    </span>
-                  </div>
-                  <div
-                    class="mt-3 text-dark"
-                  >
-                    <span
-                      class="text-2 font-weight-semi-bold"
-                    >
-                      SELECT ITEMS TO SYNC
-                    </span>
-                  </div>
-                  <div
-                    class="pt-1"
-                  >
-                    <ul
-                      class="list-group mb-0 show-quick-actions-on-hover"
-                    >
-                      <li
-                        class="list-group-item list-group-item-flex"
+                      <div
+                        class="justify-content-center autofit-col"
                       >
-                        <div
-                          class="autofit-col"
-                        >
-                          <div
-                            class="custom-control custom-checkbox"
-                          >
-                            <label>
-                              <input
-                                class="custom-control-input"
-                                type="checkbox"
-                              />
-                              <span
-                                class="custom-control-label"
-                              />
-                            </label>
-                          </div>
-                        </div>
-                        <div
-                          class="autofit-col"
+                        <span
+                          class="label label-inverse-success"
                         >
                           <span
-                            class="sticker sticker-unstyled"
+                            class="label-item label-item-expand"
+                          >
+                            Configured
+                          </span>
+                        </span>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+                <button
+                  class="mt-3 btn btn-sm btn-primary"
+                  type="button"
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            class="panel mb-4 panel-secondary"
+          >
+            <div
+              class="panel-header"
+            >
+              <h2
+                class="mb-0 p-2 text-6 text-dark"
+              >
+                Assigned Properties
+              </h2>
+            </div>
+            <div
+              class="panel-body p-0"
+            >
+              <div
+                class="p-4"
+              >
+                <p
+                  class="text-4 text-secondary"
+                >
+                  Properties let you consolidate data from individuals, accounts, campaigns, and sites in one place. An individual's data is available in every property they are assigned to.
+                </p>
+                <div
+                  class="mb-4"
+                >
+                  <span
+                    class="text-3 text-secondary font-weight-semi-bold"
+                  >
+                    DATA AVAILABILITY
+                  </span>
+                  <hr
+                    class="my-2"
+                  />
+                </div>
+                <p
+                  class="text-4 text-secondary"
+                >
+                  Choose the properties that will have access to this data source.
+                </p>
+                <div
+                  class=""
+                >
+                  <div
+                    class="custom-control custom-radio custom-control-inline custom-control-outside"
+                  >
+                    <label>
+                      <input
+                        class="custom-control-input"
+                        role="radio"
+                        type="radio"
+                        value="all"
+                      />
+                      <span
+                        class="custom-control-label"
+                      >
+                        <span
+                          class="custom-control-label-text"
+                        >
+                          Make individual data from this data source available in all properties, including those not yet created.
+                        </span>
+                      </span>
+                    </label>
+                  </div>
+                  <div
+                    class="custom-control custom-radio custom-control-inline custom-control-outside"
+                  >
+                    <label>
+                      <input
+                        checked=""
+                        class="custom-control-input"
+                        role="radio"
+                        type="radio"
+                        value="custom"
+                      />
+                      <span
+                        class="custom-control-label"
+                      >
+                        <span
+                          class="custom-control-label-text"
+                        >
+                          Select Properties
+                        </span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="search-toolbar-root"
+              >
+                <nav
+                  class="navbar navbar-root management-bar management-bar-light navbar-expand"
+                >
+                  <div
+                    class="container-fluid"
+                  >
+                    <ul
+                      class="nav-root front-nav mr-auto navbar-nav"
+                      role="tablist"
+                    >
+                      <li
+                        class="nav-item"
+                        role="presentation"
+                      >
+                        <div
+                          class="dropdown dropdown-root"
+                        >
+                          <button
+                            aria-expanded="false"
+                            aria-haspopup="true"
+                            class="dropdown-toggle btn btn-outline-borderless btn-sm btn-outline-secondary"
+                            data-testid="order-button"
+                            type="button"
                           >
                             <span
-                              class="sticker-overlay"
+                              class="caret-root"
                             >
                               <svg
-                                class="lexicon-icon lexicon-icon-users text-secondary"
+                                class="lexicon-icon lexicon-icon-order-list-down"
                                 role="presentation"
                               >
                                 <use
-                                  href="#users"
+                                  href="#order-list-down"
                                 />
                               </svg>
                             </span>
-                          </span>
-                        </div>
-                        <div
-                          class="d-flex justify-content-center autofit-col autofit-col-expand"
-                        >
-                          <p
-                            class="list-group-title"
-                          >
-                            Individuals
-                          </p>
-                          <p
-                            class="list-group-text"
-                          >
-                            Represents fields from the Leads and Companies table within Marketo.
-                          </p>
-                          <p
-                            class="list-group-text"
-                          >
-                            20 Items Synced
-                          </p>
-                        </div>
-                        <div
-                          class="justify-content-center autofit-col"
-                        >
-                          <span
-                            class="label label-inverse-success"
-                          >
                             <span
-                              class="label-item label-item-expand"
+                              class="mx-2"
                             >
-                              Configured
+                              Order
                             </span>
-                          </span>
+                            <span
+                              class="caret-root"
+                            >
+                              <svg
+                                class="lexicon-icon lexicon-icon-caret-bottom"
+                                role="presentation"
+                              >
+                                <use
+                                  href="#caret-bottom"
+                                />
+                              </svg>
+                            </span>
+                          </button>
                         </div>
                       </li>
                     </ul>
-                  </div>
-                  <button
-                    class="mt-3 btn btn-sm btn-primary"
-                    type="button"
-                  >
-                    Save
-                  </button>
-                </div>
-              </div>
-            </div>
-            <div
-              class="panel mb-4 panel-secondary"
-            >
-              <div
-                class="panel-header"
-              >
-                <h2
-                  class="mb-0 p-2 text-6 text-dark"
-                >
-                  Assigned Properties
-                </h2>
-              </div>
-              <div
-                class="panel-body p-0"
-              >
-                <div
-                  class="p-4"
-                >
-                  <p
-                    class="text-4 text-secondary"
-                  >
-                    Properties let you consolidate data from individuals, accounts, campaigns, and sites in one place. An individual's data is available in every property they are assigned to.
-                  </p>
-                  <div
-                    class="mb-4"
-                  >
-                    <span
-                      class="text-3 text-secondary font-weight-semi-bold"
-                    >
-                      DATA AVAILABILITY
-                    </span>
-                    <hr
-                      class="my-2"
-                    />
-                  </div>
-                  <p
-                    class="text-4 text-secondary"
-                  >
-                    Choose the properties that will have access to this data source.
-                  </p>
-                  <div
-                    class=""
-                  >
                     <div
-                      class="custom-control custom-radio custom-control-inline custom-control-outside"
+                      class="navbar-form navbar-form-autofit mx-2"
                     >
-                      <label>
-                        <input
-                          class="custom-control-input"
-                          role="radio"
-                          type="radio"
-                          value="all"
-                        />
-                        <span
-                          class="custom-control-label"
-                        >
-                          <span
-                            class="custom-control-label-text"
-                          >
-                            Make individual data from this data source available in all properties, including those not yet created.
-                          </span>
-                        </span>
-                      </label>
-                    </div>
-                    <div
-                      class="custom-control custom-radio custom-control-inline custom-control-outside"
-                    >
-                      <label>
-                        <input
-                          checked=""
-                          class="custom-control-input"
-                          role="radio"
-                          type="radio"
-                          value="custom"
-                        />
-                        <span
-                          class="custom-control-label"
-                        >
-                          <span
-                            class="custom-control-label-text"
-                          >
-                            Select Properties
-                          </span>
-                        </span>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="search-toolbar-root"
-                >
-                  <nav
-                    class="navbar navbar-root management-bar management-bar-light navbar-expand"
-                  >
-                    <div
-                      class="container-fluid"
-                    >
-                      <ul
-                        class="nav-root front-nav mr-auto navbar-nav"
-                        role="tablist"
-                      >
-                        <li
-                          class="nav-item"
-                          role="presentation"
-                        >
-                          <div
-                            class="dropdown dropdown-root"
-                          >
-                            <button
-                              aria-expanded="false"
-                              aria-haspopup="true"
-                              class="dropdown-toggle btn btn-outline-borderless btn-sm btn-outline-secondary"
-                              data-testid="order-button"
-                              type="button"
-                            >
-                              <span
-                                class="caret-root"
-                              >
-                                <svg
-                                  class="lexicon-icon lexicon-icon-order-list-down"
-                                  role="presentation"
-                                >
-                                  <use
-                                    href="#order-list-down"
-                                  />
-                                </svg>
-                              </span>
-                              <span
-                                class="mx-2"
-                              >
-                                Order
-                              </span>
-                              <span
-                                class="caret-root"
-                              >
-                                <svg
-                                  class="lexicon-icon lexicon-icon-caret-bottom"
-                                  role="presentation"
-                                >
-                                  <use
-                                    href="#caret-bottom"
-                                  />
-                                </svg>
-                              </span>
-                            </button>
-                          </div>
-                        </li>
-                      </ul>
                       <div
-                        class="navbar-form navbar-form-autofit mx-2"
+                        class="input-group search"
                       >
                         <div
-                          class="input-group search"
+                          class="input-group-item"
                         >
+                          <input
+                            class="input-root form-control input-group-inset input-group-inset-after"
+                            placeholder="Search"
+                            type="text"
+                            value=""
+                          />
                           <div
-                            class="input-group-item"
+                            class="input-group-inset-item input-group-inset-item-after"
                           >
-                            <input
-                              class="input-root form-control input-group-inset input-group-inset-after"
-                              placeholder="Search"
-                              type="text"
-                              value=""
-                            />
-                            <div
-                              class="input-group-inset-item input-group-inset-item-after"
+                            <button
+                              aria-label="Search"
+                              class="button-root btn btn-unstyled"
+                              type="button"
                             >
-                              <button
-                                aria-label="Search"
-                                class="button-root btn btn-unstyled"
-                                type="button"
+                              <svg
+                                class="lexicon-icon lexicon-icon-search icon-root"
+                                role="presentation"
                               >
-                                <svg
-                                  class="lexicon-icon lexicon-icon-search icon-root"
-                                  role="presentation"
-                                >
-                                  <use
-                                    href="#search"
-                                  />
-                                </svg>
-                              </button>
-                            </div>
+                                <use
+                                  href="#search"
+                                />
+                              </svg>
+                            </button>
                           </div>
                         </div>
                       </div>
-                      <button
-                        class="btn btn-primary"
-                        type="button"
-                      >
-                        Select Property
-                      </button>
                     </div>
-                  </nav>
-                </div>
+                    <button
+                      class="btn btn-primary"
+                      type="button"
+                    >
+                      Select Property
+                    </button>
+                  </div>
+                </nav>
+              </div>
+              <div
+                class="py-6 no-results-root flex-grow-1"
+              >
                 <div
-                  class="py-6 no-results-root flex-grow-1"
+                  class="no-results-content"
                 >
                   <div
-                    class="no-results-content"
+                    class="no-results-icon"
                   >
-                    <div
-                      class="no-results-icon"
+                    <svg
+                      class="lexicon-icon lexicon-icon-ac_satellite icon-root icon-size-xxxl"
+                      data-file="ac_satellite.svg"
+                      role="presentation"
+                    />
+                  </div>
+                  <div
+                    class="h4 mb-3 no-results-title"
+                  >
+                    No Properties Were Found
+                  </div>
+                  <div
+                    class="mb-3 no-results-description"
+                  >
+                    Go to Properties under Workspace Settings to create a property.
+                    <a
+                      class="d-block mb-3"
+                      href="https://learn.liferay.com/w/dxp/personalization/analytics-cloud/workspace-settings/scoping-sites-and-individuals-using-properties"
+                      rel="noreferrer noopener"
+                      target="_blank"
                     >
-                      <svg
-                        class="lexicon-icon lexicon-icon-ac_satellite icon-root icon-size-xxxl"
-                        data-file="ac_satellite.svg"
-                        role="presentation"
-                      />
-                    </div>
-                    <div
-                      class="h4 mb-3 no-results-title"
-                    >
-                      No Properties Were Found
-                    </div>
-                    <div
-                      class="mb-3 no-results-description"
-                    >
-                      Go to Properties under Workspace Settings to create a property.
-                      <a
-                        class="d-block mb-3"
-                        href="https://learn.liferay.com/w/dxp/personalization/analytics-cloud/workspace-settings/scoping-sites-and-individuals-using-properties"
-                        rel="noreferrer noopener"
-                        target="_blank"
+                      Access our documentation to learn more.
+                      <span
+                        class="sr-only"
                       >
-                        Access our documentation to learn more.
-                        <span
-                          class="sr-only"
-                        >
-                          (Opens a new window)
-                        </span>
-                      </a>
-                    </div>
+                        (Opens a new window)
+                      </span>
+                    </a>
                   </div>
                 </div>
               </div>
@@ -1599,958 +1089,703 @@ exports[`MarketoCampaignOverview should render the reconnect view when the data 
   <div
     class="settings-root"
   >
-    <nav
-      class="align-items-center bg-white sticky-top toolbar-root base-edit-page-toolbar mb-4 tbar component-tbar"
-    >
-      <ul
-        class="align-items-center mx-3 tbar-nav"
-      >
-        <li
-          class="tbar-item"
-        >
-          <a
-            aria-label="Back"
-            class="btn btn-monospaced btn-outline-borderless btn-outline-secondary btn-sm rounded-lg"
-            data-discover="true"
-            data-tooltip-align="bottom"
-            href="/workspace/23"
-            title="Back"
-          >
-            <svg
-              class="lexicon-icon lexicon-icon-angle-left"
-              role="presentation"
-            >
-              <use
-                href="#angle-left"
-              />
-            </svg>
-          </a>
-        </li>
-        <li
-          class="pl-0 tbar-item"
-        >
-          <div
-            class="tbar-section"
-          >
-            <h1
-              class="font-weight-semi-bold m-0 text-5 text-dark text-nowrap"
-            >
-              Settings
-            </h1>
-          </div>
-        </li>
-        <li
-          class="ml-auto tbar-item"
-        >
-          <ul
-            class="base-edit-page-toolbar-actions justify-content-end tbar-nav"
-            data-testid="toolbar-actions"
-          />
-        </li>
-      </ul>
-    </nav>
     <div
-      class="content-wrapper"
+      class="content section-main"
     >
-      <nav
-        class="section-side settings-side-bar"
+      <div
+        class="settings-base-page-root"
       >
+        <div
+          class="maintenance-alert-root"
+        />
+        <ol
+          class="breadcrumb breadcrumbs-root"
+        >
+          <li
+            class="breadcrumb-item"
+          >
+            <a
+              class="breadcrumb-text-truncate breadcrumb-link"
+              href="/data-sources"
+            >
+              Data Sources
+            </a>
+          </li>
+          <li
+            class="breadcrumb-item active"
+          >
+            <span
+              class="breadcrumb-text-truncate"
+            >
+              Marketo Campaign 1
+            </span>
+          </li>
+        </ol>
         <div>
-          <h5
-            class="section-title"
+          <div
+            class="mb-5"
           >
-            Workspace Data
-          </h5>
-          <ul
-            class="nav"
-          >
-            <li
-              class="item"
+            <span
+              class="label mb-2 label-inverse-secondary"
             >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/apis/tokens"
+              <span
+                class="label-item label-item-expand"
+              >
+                Disconnected
+              </span>
+            </span>
+            <div
+              class="input-with-edit-toggle-root definition-item-root"
+            >
+              <div
+                class="d-inline-flex"
               >
                 <span
-                  class="icon-wrapper"
+                  class="text-8 font-weight-bold"
                 >
-                  <svg
-                    class="lexicon-icon lexicon-icon-ac_api icon-root"
-                    data-file="ac_api.svg"
-                    role="presentation"
-                  />
+                  Marketo Campaign 1
                 </span>
-                APIs
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/definitions"
-              >
-                <span
-                  class="icon-wrapper"
+                <button
+                  aria-label="Edit"
+                  class="button-root btn btn-outline-borderless btn-sm btn-outline-secondary"
+                  data-testid="edit"
+                  type="button"
                 >
                   <svg
-                    class="lexicon-icon lexicon-icon-definitions icon-root"
-                    data-file="definitions.svg"
-                    role="presentation"
-                  />
-                </span>
-                Definitions
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/data-privacy"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-data_privacy_lock icon-root"
-                    data-file="data_privacy_lock.svg"
-                    role="presentation"
-                  />
-                </span>
-                Data Control & Privacy
-              </a>
-            </li>
-            <li
-              class="item active"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/data-source"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-faro_data_source icon-root"
-                    data-file="faro_data_source.svg"
-                    role="presentation"
-                  />
-                </span>
-                Data Sources
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/recommendations"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-ac_star icon-root"
-                    data-file="ac_star.svg"
-                    role="presentation"
-                  />
-                </span>
-                Recommendations
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h5
-            class="section-title"
-          >
-            Workspace Settings
-          </h5>
-          <ul
-            class="nav"
-          >
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/users"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-user_management icon-root"
-                    data-file="user_management.svg"
-                    role="presentation"
-                  />
-                </span>
-                User Management
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/properties"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-ac_page icon-root"
-                    data-file="ac_page.svg"
-                    role="presentation"
-                  />
-                </span>
-                Properties
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/usage"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-usage icon-root"
-                    data-file="usage.svg"
-                    role="presentation"
-                  />
-                </span>
-                Subscription & Usage
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/workspace"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-cog icon-root"
+                    class="lexicon-icon lexicon-icon-pencil icon-root"
                     role="presentation"
                   >
                     <use
-                      href="#cog"
+                      href="#pencil"
                     />
                   </svg>
-                </span>
-                Workspace
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-      <div
-        class="content section-main"
-      >
-        <div
-          class="settings-base-page-root"
-        >
-          <div
-            class="maintenance-alert-root"
-          />
-          <ol
-            class="breadcrumb breadcrumbs-root"
-          >
-            <li
-              class="breadcrumb-item"
-            >
-              <a
-                class="breadcrumb-text-truncate breadcrumb-link"
-                data-discover="true"
-                href="/workspace/23/settings/data-source"
-              >
-                Data Sources
-              </a>
-            </li>
-            <li
-              class="breadcrumb-item active"
-            >
-              <span
-                class="breadcrumb-text-truncate"
-              >
-                Marketo Campaign 1
-              </span>
-            </li>
-          </ol>
-          <div>
-            <div
-              class="mb-5"
-            >
-              <span
-                class="label mb-2 label-inverse-secondary"
-              >
-                <span
-                  class="label-item label-item-expand"
-                >
-                  Disconnected
-                </span>
-              </span>
-              <div
-                class="input-with-edit-toggle-root definition-item-root"
-              >
-                <div
-                  class="d-inline-flex"
-                >
-                  <span
-                    class="text-8 font-weight-bold"
-                  >
-                    Marketo Campaign 1
-                  </span>
-                  <button
-                    aria-label="Edit"
-                    class="button-root btn btn-outline-borderless btn-sm btn-outline-secondary"
-                    data-testid="edit"
-                    type="button"
-                  >
-                    <svg
-                      class="lexicon-icon lexicon-icon-pencil icon-root"
-                      role="presentation"
-                    >
-                      <use
-                        href="#pencil"
-                      />
-                    </svg>
-                  </button>
-                </div>
+                </button>
               </div>
             </div>
+          </div>
+          <div
+            class="panel mb-4 panel-secondary"
+          >
             <div
-              class="panel mb-4 panel-secondary"
+              class="panel-header"
+            >
+              <h2
+                class="mb-0 p-2 text-6 text-dark"
+              >
+                Authentication
+              </h2>
+            </div>
+            <div
+              class="panel-body p-4"
             >
               <div
-                class="panel-header"
-              >
-                <h2
-                  class="mb-0 p-2 text-6 text-dark"
-                >
-                  Authentication
-                </h2>
-              </div>
-              <div
-                class="panel-body p-4"
+                class="mb-4"
               >
                 <div
                   class="mb-4"
                 >
-                  <div
-                    class="mb-4"
+                  <span
+                    class="text-3 text-secondary font-weight-semi-bold"
                   >
-                    <span
-                      class="text-3 text-secondary font-weight-semi-bold"
+                    CONNECTION STATUS
+                  </span>
+                  <hr
+                    class="my-2"
+                  />
+                </div>
+                <div
+                  class="alert alert-warning"
+                >
+                  <div
+                    class="alert-autofit-row autofit-row"
+                    role="alert"
+                  >
+                    <div
+                      class="autofit-col"
                     >
-                      CONNECTION STATUS
+                      <div
+                        class="autofit-section"
+                      >
+                        <span
+                          class="alert-indicator"
+                        >
+                          <svg
+                            class="lexicon-icon lexicon-icon-warning-full"
+                            role="presentation"
+                          >
+                            <use
+                              href="#warning-full"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                    <div
+                      class="autofit-col autofit-col-expand"
+                    >
+                      <div
+                        class="autofit-section"
+                      >
+                        The data source is disconnected. Data is no longer being synced from Marketo, but you can reconnect to resume syncing.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="mb-3"
+                >
+                  <span
+                    class="text-4 text-secondary"
+                  >
+                    To reestablish the connection between Marketo and Liferay Analytics Cloud, check your credentials and paste on the input below.
+                  </span>
+                  <a
+                    class="ml-1"
+                    href="https://learn.liferay.com/w/dxp/personalization/analytics-cloud/getting-started/connecting-liferay-dxp-to-analytics-cloud"
+                    rel="noreferrer noopener"
+                    target="_blank"
+                  >
+                    Learn more about data sources.
+                    <span
+                      class="sr-only"
+                    >
+                      (Opens a new window)
                     </span>
-                    <hr
-                      class="my-2"
+                  </a>
+                </div>
+                <form
+                  class="form-root oauth-form-root"
+                >
+                  <div
+                    class="mb-3"
+                  >
+                    <label
+                      class="form-control-label label-root required"
+                      for="marketoDataSource"
+                    >
+                      <span
+                        class="content-container"
+                      >
+                        Data Source URL
+                      </span>
+                    </label>
+                    <input
+                      aria-required="true"
+                      class="input-root form-control"
+                      id="marketoDataSource"
+                      name="marketoDataSource"
+                      type="text"
+                      value="https://123-ABC-456.mktorest.com"
                     />
                   </div>
                   <div
-                    class="alert alert-warning"
+                    class="mb-3"
                   >
+                    <label
+                      class="form-control-label label-root required"
+                      for="clientId"
+                    >
+                      <span
+                        class="content-container"
+                      >
+                        Consumer Key / Client ID
+                      </span>
+                    </label>
                     <div
-                      class="alert-autofit-row autofit-row"
-                      role="alert"
+                      class="input-group content-after"
+                    >
+                      <div
+                        class="input-group-item input-group-prepend"
+                      >
+                        <input
+                          aria-required="true"
+                          class="input-root form-control"
+                          id="clientId"
+                          name="clientId"
+                          type="password"
+                          value="oAuthMockClientId-1"
+                        />
+                      </div>
+                      <div
+                        class="input-group-item input-group-item-shrink input-group-append"
+                      >
+                        <button
+                          aria-label="Hidden"
+                          class="btn btn-secondary"
+                          type="button"
+                        >
+                          <svg
+                            class="lexicon-icon lexicon-icon-hidden"
+                            role="presentation"
+                          >
+                            <use
+                              href="#hidden"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="mb-4"
+                  >
+                    <label
+                      class="form-control-label label-root required"
+                      for="clientSecret"
+                    >
+                      <span
+                        class="content-container"
+                      >
+                        Consumer Secret / Client Secret
+                      </span>
+                    </label>
+                    <div
+                      class="input-group content-after"
+                    >
+                      <div
+                        class="input-group-item input-group-prepend"
+                      >
+                        <input
+                          aria-required="true"
+                          class="input-root form-control"
+                          id="clientSecret"
+                          name="clientSecret"
+                          type="password"
+                          value="oAuthMockClientSecret-1"
+                        />
+                      </div>
+                      <div
+                        class="input-group-item input-group-item-shrink input-group-append"
+                      >
+                        <button
+                          aria-label="Hidden"
+                          class="btn btn-secondary"
+                          type="button"
+                        >
+                          <svg
+                            class="lexicon-icon lexicon-icon-hidden"
+                            role="presentation"
+                          >
+                            <use
+                              href="#hidden"
+                            />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                  <button
+                    class="btn btn-sm btn-primary"
+                    type="submit"
+                  >
+                    Connect
+                  </button>
+                </form>
+              </div>
+              <div
+                class="mb-4"
+              >
+                <div
+                  class="mb-4"
+                >
+                  <span
+                    class="text-3 text-secondary font-weight-semi-bold"
+                  >
+                    DATA SOURCE DETAILS
+                  </span>
+                  <hr
+                    class="my-2"
+                  />
+                </div>
+                <div
+                  class="input-group d-flex mt-3"
+                >
+                  <div
+                    class="input-group-item mr-3 input-group-item-shrink"
+                  >
+                    <label
+                      for="dataSourceType"
+                    >
+                      Data Source Type
+                    </label>
+                    <input
+                      class="form-control"
+                      readonly=""
+                      type="text"
+                      value="Marketo Campaign"
+                    />
+                  </div>
+                  <div
+                    class="input-group-item ml-0 input-group-item-shrink"
+                  >
+                    <label
+                      for="dataSourceId"
+                    >
+                      Data Source ID
+                    </label>
+                    <input
+                      class="form-control"
+                      readonly=""
+                      type="text"
+                      value="1"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="panel mb-4 panel-secondary"
+          >
+            <div
+              class="panel-header"
+            >
+              <h2
+                class="mb-0 p-2 text-6 text-dark"
+              >
+                Synced Data
+              </h2>
+            </div>
+            <div
+              class="panel-body p-4"
+            >
+              <div>
+                <div
+                  class="mb-2"
+                >
+                  <span
+                    class="text-4 text-secondary"
+                  >
+                    To configure your Marketo data source, go to your Marketo environment to update this app connection.
+                  </span>
+                </div>
+                <div
+                  class="mt-3 text-dark"
+                >
+                  <span
+                    class="text-2 font-weight-semi-bold"
+                  >
+                    SELECT ITEMS TO SYNC
+                  </span>
+                </div>
+                <div
+                  class="pt-1"
+                >
+                  <ul
+                    class="list-group mb-0 show-quick-actions-on-hover"
+                  >
+                    <li
+                      class="list-group-item list-group-item-flex"
                     >
                       <div
                         class="autofit-col"
                       >
                         <div
-                          class="autofit-section"
+                          class="custom-control custom-checkbox"
                         >
-                          <span
-                            class="alert-indicator"
-                          >
-                            <svg
-                              class="lexicon-icon lexicon-icon-warning-full"
-                              role="presentation"
-                            >
-                              <use
-                                href="#warning-full"
-                              />
-                            </svg>
-                          </span>
+                          <label>
+                            <input
+                              class="custom-control-input"
+                              disabled=""
+                              type="checkbox"
+                            />
+                            <span
+                              class="custom-control-label"
+                            />
+                          </label>
                         </div>
                       </div>
                       <div
-                        class="autofit-col autofit-col-expand"
+                        class="autofit-col"
+                      >
+                        <span
+                          class="sticker sticker-unstyled"
+                        >
+                          <span
+                            class="sticker-overlay"
+                          >
+                            <svg
+                              class="lexicon-icon lexicon-icon-users text-secondary"
+                              role="presentation"
+                            >
+                              <use
+                                href="#users"
+                              />
+                            </svg>
+                          </span>
+                        </span>
+                      </div>
+                      <div
+                        class="d-flex justify-content-center autofit-col autofit-col-expand"
+                      >
+                        <p
+                          class="list-group-title"
+                        >
+                          Individuals
+                        </p>
+                        <p
+                          class="list-group-text"
+                        >
+                          Represents fields from the Leads and Companies table within Marketo.
+                        </p>
+                        <p
+                          class="list-group-text"
+                        >
+                          20 Items Synced
+                        </p>
+                      </div>
+                      <div
+                        class="justify-content-center autofit-col"
+                      >
+                        <span
+                          class="label label-inverse-success"
+                        >
+                          <span
+                            class="label-item label-item-expand"
+                          >
+                            Configured
+                          </span>
+                        </span>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="panel mb-4 panel-secondary"
+          >
+            <div
+              class="panel-header"
+            >
+              <h2
+                class="mb-0 p-2 text-6 text-dark"
+              >
+                Assigned Properties
+              </h2>
+            </div>
+            <div
+              class="panel-body p-0"
+            >
+              <div
+                class="p-4"
+              >
+                <p
+                  class="text-4 text-secondary"
+                >
+                  Properties let you consolidate data from individuals, accounts, campaigns, and sites in one place. An individual's data is available in every property they are assigned to.
+                </p>
+                <div
+                  class="mb-4"
+                >
+                  <span
+                    class="text-3 text-secondary font-weight-semi-bold"
+                  >
+                    DATA AVAILABILITY
+                  </span>
+                  <hr
+                    class="my-2"
+                  />
+                </div>
+                <p
+                  class="text-4 text-secondary"
+                >
+                  Choose the properties that will have access to this data source.
+                </p>
+                <div
+                  class=""
+                >
+                  <div
+                    class="custom-control custom-radio custom-control-inline custom-control-outside"
+                  >
+                    <label>
+                      <input
+                        class="custom-control-input"
+                        disabled=""
+                        role="radio"
+                        type="radio"
+                        value="all"
+                      />
+                      <span
+                        class="custom-control-label"
+                      >
+                        <span
+                          class="custom-control-label-text"
+                        >
+                          Make individual data from this data source available in all properties, including those not yet created.
+                        </span>
+                      </span>
+                    </label>
+                  </div>
+                  <div
+                    class="custom-control custom-radio custom-control-inline custom-control-outside"
+                  >
+                    <label>
+                      <input
+                        checked=""
+                        class="custom-control-input"
+                        disabled=""
+                        role="radio"
+                        type="radio"
+                        value="custom"
+                      />
+                      <span
+                        class="custom-control-label"
+                      >
+                        <span
+                          class="custom-control-label-text"
+                        >
+                          Select Properties
+                        </span>
+                      </span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div
+                class="search-toolbar-root"
+              >
+                <nav
+                  class="navbar navbar-root management-bar management-bar-light navbar-expand"
+                >
+                  <div
+                    class="container-fluid"
+                  >
+                    <ul
+                      class="nav-root front-nav mr-auto navbar-nav"
+                      role="tablist"
+                    >
+                      <li
+                        class="nav-item"
+                        role="presentation"
                       >
                         <div
-                          class="autofit-section"
+                          class="dropdown dropdown-root"
                         >
-                          The data source is disconnected. Data is no longer being synced from Marketo, but you can reconnect to resume syncing.
+                          <button
+                            aria-expanded="false"
+                            aria-haspopup="true"
+                            class="dropdown-toggle btn btn-outline-borderless btn-sm btn-outline-secondary"
+                            data-testid="order-button"
+                            type="button"
+                          >
+                            <span
+                              class="caret-root"
+                            >
+                              <svg
+                                class="lexicon-icon lexicon-icon-order-list-down"
+                                role="presentation"
+                              >
+                                <use
+                                  href="#order-list-down"
+                                />
+                              </svg>
+                            </span>
+                            <span
+                              class="mx-2"
+                            >
+                              Order
+                            </span>
+                            <span
+                              class="caret-root"
+                            >
+                              <svg
+                                class="lexicon-icon lexicon-icon-caret-bottom"
+                                role="presentation"
+                              >
+                                <use
+                                  href="#caret-bottom"
+                                />
+                              </svg>
+                            </span>
+                          </button>
+                        </div>
+                      </li>
+                    </ul>
+                    <div
+                      class="navbar-form navbar-form-autofit mx-2"
+                    >
+                      <div
+                        class="input-group search"
+                      >
+                        <div
+                          class="input-group-item"
+                        >
+                          <input
+                            class="input-root form-control input-group-inset input-group-inset-after"
+                            placeholder="Search"
+                            type="text"
+                            value=""
+                          />
+                          <div
+                            class="input-group-inset-item input-group-inset-item-after"
+                          >
+                            <button
+                              aria-label="Search"
+                              class="button-root btn btn-unstyled"
+                              type="button"
+                            >
+                              <svg
+                                class="lexicon-icon lexicon-icon-search icon-root"
+                                role="presentation"
+                              >
+                                <use
+                                  href="#search"
+                                />
+                              </svg>
+                            </button>
+                          </div>
                         </div>
                       </div>
                     </div>
+                    <button
+                      class="btn btn-primary"
+                      disabled=""
+                      type="button"
+                    >
+                      Select Property
+                    </button>
+                  </div>
+                </nav>
+              </div>
+              <div
+                class="py-6 no-results-root flex-grow-1"
+              >
+                <div
+                  class="no-results-content"
+                >
+                  <div
+                    class="no-results-icon"
+                  >
+                    <svg
+                      class="lexicon-icon lexicon-icon-ac_satellite icon-root icon-size-xxxl"
+                      data-file="ac_satellite.svg"
+                      role="presentation"
+                    />
                   </div>
                   <div
-                    class="mb-3"
+                    class="h4 mb-3 no-results-title"
                   >
-                    <span
-                      class="text-4 text-secondary"
-                    >
-                      To reestablish the connection between Marketo and Liferay Analytics Cloud, check your credentials and paste on the input below.
-                    </span>
+                    No Properties Were Found
+                  </div>
+                  <div
+                    class="mb-3 no-results-description"
+                  >
+                    Go to Properties under Workspace Settings to create a property.
                     <a
-                      class="ml-1"
-                      href="https://learn.liferay.com/w/dxp/personalization/analytics-cloud/getting-started/connecting-liferay-dxp-to-analytics-cloud"
+                      class="d-block mb-3"
+                      href="https://learn.liferay.com/w/dxp/personalization/analytics-cloud/workspace-settings/scoping-sites-and-individuals-using-properties"
                       rel="noreferrer noopener"
                       target="_blank"
                     >
-                      Learn more about data sources.
+                      Access our documentation to learn more.
                       <span
                         class="sr-only"
                       >
                         (Opens a new window)
                       </span>
                     </a>
-                  </div>
-                  <form
-                    class="form-root oauth-form-root"
-                  >
-                    <div
-                      class="mb-3"
-                    >
-                      <label
-                        class="form-control-label label-root required"
-                        for="marketoDataSource"
-                      >
-                        <span
-                          class="content-container"
-                        >
-                          Data Source URL
-                        </span>
-                      </label>
-                      <input
-                        aria-required="true"
-                        class="input-root form-control"
-                        id="marketoDataSource"
-                        name="marketoDataSource"
-                        type="text"
-                        value="https://123-ABC-456.mktorest.com"
-                      />
-                    </div>
-                    <div
-                      class="mb-3"
-                    >
-                      <label
-                        class="form-control-label label-root required"
-                        for="clientId"
-                      >
-                        <span
-                          class="content-container"
-                        >
-                          Consumer Key / Client ID
-                        </span>
-                      </label>
-                      <div
-                        class="input-group content-after"
-                      >
-                        <div
-                          class="input-group-item input-group-prepend"
-                        >
-                          <input
-                            aria-required="true"
-                            class="input-root form-control"
-                            id="clientId"
-                            name="clientId"
-                            type="password"
-                            value="oAuthMockClientId-1"
-                          />
-                        </div>
-                        <div
-                          class="input-group-item input-group-item-shrink input-group-append"
-                        >
-                          <button
-                            aria-label="Hidden"
-                            class="btn btn-secondary"
-                            type="button"
-                          >
-                            <svg
-                              class="lexicon-icon lexicon-icon-hidden"
-                              role="presentation"
-                            >
-                              <use
-                                href="#hidden"
-                              />
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                    <div
-                      class="mb-4"
-                    >
-                      <label
-                        class="form-control-label label-root required"
-                        for="clientSecret"
-                      >
-                        <span
-                          class="content-container"
-                        >
-                          Consumer Secret / Client Secret
-                        </span>
-                      </label>
-                      <div
-                        class="input-group content-after"
-                      >
-                        <div
-                          class="input-group-item input-group-prepend"
-                        >
-                          <input
-                            aria-required="true"
-                            class="input-root form-control"
-                            id="clientSecret"
-                            name="clientSecret"
-                            type="password"
-                            value="oAuthMockClientSecret-1"
-                          />
-                        </div>
-                        <div
-                          class="input-group-item input-group-item-shrink input-group-append"
-                        >
-                          <button
-                            aria-label="Hidden"
-                            class="btn btn-secondary"
-                            type="button"
-                          >
-                            <svg
-                              class="lexicon-icon lexicon-icon-hidden"
-                              role="presentation"
-                            >
-                              <use
-                                href="#hidden"
-                              />
-                            </svg>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                    <button
-                      class="btn btn-sm btn-primary"
-                      type="submit"
-                    >
-                      Connect
-                    </button>
-                  </form>
-                </div>
-                <div
-                  class="mb-4"
-                >
-                  <div
-                    class="mb-4"
-                  >
-                    <span
-                      class="text-3 text-secondary font-weight-semi-bold"
-                    >
-                      DATA SOURCE DETAILS
-                    </span>
-                    <hr
-                      class="my-2"
-                    />
-                  </div>
-                  <div
-                    class="input-group d-flex mt-3"
-                  >
-                    <div
-                      class="input-group-item mr-3 input-group-item-shrink"
-                    >
-                      <label
-                        for="dataSourceType"
-                      >
-                        Data Source Type
-                      </label>
-                      <input
-                        class="form-control"
-                        readonly=""
-                        type="text"
-                        value="Marketo Campaign"
-                      />
-                    </div>
-                    <div
-                      class="input-group-item ml-0 input-group-item-shrink"
-                    >
-                      <label
-                        for="dataSourceId"
-                      >
-                        Data Source ID
-                      </label>
-                      <input
-                        class="form-control"
-                        readonly=""
-                        type="text"
-                        value="1"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="panel mb-4 panel-secondary"
-            >
-              <div
-                class="panel-header"
-              >
-                <h2
-                  class="mb-0 p-2 text-6 text-dark"
-                >
-                  Synced Data
-                </h2>
-              </div>
-              <div
-                class="panel-body p-4"
-              >
-                <div>
-                  <div
-                    class="mb-2"
-                  >
-                    <span
-                      class="text-4 text-secondary"
-                    >
-                      To configure your Marketo data source, go to your Marketo environment to update this app connection.
-                    </span>
-                  </div>
-                  <div
-                    class="mt-3 text-dark"
-                  >
-                    <span
-                      class="text-2 font-weight-semi-bold"
-                    >
-                      SELECT ITEMS TO SYNC
-                    </span>
-                  </div>
-                  <div
-                    class="pt-1"
-                  >
-                    <ul
-                      class="list-group mb-0 show-quick-actions-on-hover"
-                    >
-                      <li
-                        class="list-group-item list-group-item-flex"
-                      >
-                        <div
-                          class="autofit-col"
-                        >
-                          <div
-                            class="custom-control custom-checkbox"
-                          >
-                            <label>
-                              <input
-                                class="custom-control-input"
-                                disabled=""
-                                type="checkbox"
-                              />
-                              <span
-                                class="custom-control-label"
-                              />
-                            </label>
-                          </div>
-                        </div>
-                        <div
-                          class="autofit-col"
-                        >
-                          <span
-                            class="sticker sticker-unstyled"
-                          >
-                            <span
-                              class="sticker-overlay"
-                            >
-                              <svg
-                                class="lexicon-icon lexicon-icon-users text-secondary"
-                                role="presentation"
-                              >
-                                <use
-                                  href="#users"
-                                />
-                              </svg>
-                            </span>
-                          </span>
-                        </div>
-                        <div
-                          class="d-flex justify-content-center autofit-col autofit-col-expand"
-                        >
-                          <p
-                            class="list-group-title"
-                          >
-                            Individuals
-                          </p>
-                          <p
-                            class="list-group-text"
-                          >
-                            Represents fields from the Leads and Companies table within Marketo.
-                          </p>
-                          <p
-                            class="list-group-text"
-                          >
-                            20 Items Synced
-                          </p>
-                        </div>
-                        <div
-                          class="justify-content-center autofit-col"
-                        >
-                          <span
-                            class="label label-inverse-success"
-                          >
-                            <span
-                              class="label-item label-item-expand"
-                            >
-                              Configured
-                            </span>
-                          </span>
-                        </div>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="panel mb-4 panel-secondary"
-            >
-              <div
-                class="panel-header"
-              >
-                <h2
-                  class="mb-0 p-2 text-6 text-dark"
-                >
-                  Assigned Properties
-                </h2>
-              </div>
-              <div
-                class="panel-body p-0"
-              >
-                <div
-                  class="p-4"
-                >
-                  <p
-                    class="text-4 text-secondary"
-                  >
-                    Properties let you consolidate data from individuals, accounts, campaigns, and sites in one place. An individual's data is available in every property they are assigned to.
-                  </p>
-                  <div
-                    class="mb-4"
-                  >
-                    <span
-                      class="text-3 text-secondary font-weight-semi-bold"
-                    >
-                      DATA AVAILABILITY
-                    </span>
-                    <hr
-                      class="my-2"
-                    />
-                  </div>
-                  <p
-                    class="text-4 text-secondary"
-                  >
-                    Choose the properties that will have access to this data source.
-                  </p>
-                  <div
-                    class=""
-                  >
-                    <div
-                      class="custom-control custom-radio custom-control-inline custom-control-outside"
-                    >
-                      <label>
-                        <input
-                          class="custom-control-input"
-                          disabled=""
-                          role="radio"
-                          type="radio"
-                          value="all"
-                        />
-                        <span
-                          class="custom-control-label"
-                        >
-                          <span
-                            class="custom-control-label-text"
-                          >
-                            Make individual data from this data source available in all properties, including those not yet created.
-                          </span>
-                        </span>
-                      </label>
-                    </div>
-                    <div
-                      class="custom-control custom-radio custom-control-inline custom-control-outside"
-                    >
-                      <label>
-                        <input
-                          checked=""
-                          class="custom-control-input"
-                          disabled=""
-                          role="radio"
-                          type="radio"
-                          value="custom"
-                        />
-                        <span
-                          class="custom-control-label"
-                        >
-                          <span
-                            class="custom-control-label-text"
-                          >
-                            Select Properties
-                          </span>
-                        </span>
-                      </label>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="search-toolbar-root"
-                >
-                  <nav
-                    class="navbar navbar-root management-bar management-bar-light navbar-expand"
-                  >
-                    <div
-                      class="container-fluid"
-                    >
-                      <ul
-                        class="nav-root front-nav mr-auto navbar-nav"
-                        role="tablist"
-                      >
-                        <li
-                          class="nav-item"
-                          role="presentation"
-                        >
-                          <div
-                            class="dropdown dropdown-root"
-                          >
-                            <button
-                              aria-expanded="false"
-                              aria-haspopup="true"
-                              class="dropdown-toggle btn btn-outline-borderless btn-sm btn-outline-secondary"
-                              data-testid="order-button"
-                              type="button"
-                            >
-                              <span
-                                class="caret-root"
-                              >
-                                <svg
-                                  class="lexicon-icon lexicon-icon-order-list-down"
-                                  role="presentation"
-                                >
-                                  <use
-                                    href="#order-list-down"
-                                  />
-                                </svg>
-                              </span>
-                              <span
-                                class="mx-2"
-                              >
-                                Order
-                              </span>
-                              <span
-                                class="caret-root"
-                              >
-                                <svg
-                                  class="lexicon-icon lexicon-icon-caret-bottom"
-                                  role="presentation"
-                                >
-                                  <use
-                                    href="#caret-bottom"
-                                  />
-                                </svg>
-                              </span>
-                            </button>
-                          </div>
-                        </li>
-                      </ul>
-                      <div
-                        class="navbar-form navbar-form-autofit mx-2"
-                      >
-                        <div
-                          class="input-group search"
-                        >
-                          <div
-                            class="input-group-item"
-                          >
-                            <input
-                              class="input-root form-control input-group-inset input-group-inset-after"
-                              placeholder="Search"
-                              type="text"
-                              value=""
-                            />
-                            <div
-                              class="input-group-inset-item input-group-inset-item-after"
-                            >
-                              <button
-                                aria-label="Search"
-                                class="button-root btn btn-unstyled"
-                                type="button"
-                              >
-                                <svg
-                                  class="lexicon-icon lexicon-icon-search icon-root"
-                                  role="presentation"
-                                >
-                                  <use
-                                    href="#search"
-                                  />
-                                </svg>
-                              </button>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <button
-                        class="btn btn-primary"
-                        disabled=""
-                        type="button"
-                      >
-                        Select Property
-                      </button>
-                    </div>
-                  </nav>
-                </div>
-                <div
-                  class="py-6 no-results-root flex-grow-1"
-                >
-                  <div
-                    class="no-results-content"
-                  >
-                    <div
-                      class="no-results-icon"
-                    >
-                      <svg
-                        class="lexicon-icon lexicon-icon-ac_satellite icon-root icon-size-xxxl"
-                        data-file="ac_satellite.svg"
-                        role="presentation"
-                      />
-                    </div>
-                    <div
-                      class="h4 mb-3 no-results-title"
-                    >
-                      No Properties Were Found
-                    </div>
-                    <div
-                      class="mb-3 no-results-description"
-                    >
-                      Go to Properties under Workspace Settings to create a property.
-                      <a
-                        class="d-block mb-3"
-                        href="https://learn.liferay.com/w/dxp/personalization/analytics-cloud/workspace-settings/scoping-sites-and-individuals-using-properties"
-                        rel="noreferrer noopener"
-                        target="_blank"
-                      >
-                        Access our documentation to learn more.
-                        <span
-                          class="sr-only"
-                        >
-                          (Opens a new window)
-                        </span>
-                      </a>
-                    </div>
                   </div>
                 </div>
               </div>

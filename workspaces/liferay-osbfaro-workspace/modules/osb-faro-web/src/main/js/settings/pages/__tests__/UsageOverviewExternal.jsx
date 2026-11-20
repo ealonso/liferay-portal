@@ -6,23 +6,13 @@ import {fromJS} from 'immutable';
 import {Project} from 'shared/util/records';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
 import {SubscriptionNames} from 'shared/util/subscriptions';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
+import {WorkspacePage} from 'test/mock-page-context';
+import {mockCurrentUser} from 'test/mock-page-context';
+import {UserRoleNames} from 'shared/util/constants';
 
 jest.mock('shared/hooks/useTimeZone', () => ({
 	useTimeZone: () => ({timeZoneId: 'UTC'})
-}));
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		groupId: '23'
-	})
-}));
-
-jest.mock('shared/hooks/useCurrentUser', () => ({
-	useCurrentUser: jest.fn()
 }));
 
 const defaultProps = {
@@ -38,17 +28,17 @@ const defaultProps = {
 	)
 };
 
-const WrappedComponent = ({store = mockStore(), ...props}) => (
+const WrappedComponent = ({ldpEnabled = false, store = mockStore(), ...props}) => (
 	<Provider store={store}>
-		<MemoryRouter>
+		<WorkspacePage ldpEnabled={ldpEnabled}>
 			<UsageOverviewExternal {...props} />
-		</MemoryRouter>
+		</WorkspacePage>
 	</Provider>
 );
 
 describe('UsageOverviewExternal', () => {
 	it('should render', () => {
-		useCurrentUser.mockImplementation(() => ({isAdmin: () => true}));
+		mockCurrentUser();
 
 		const {container} = render(<WrappedComponent {...defaultProps} />);
 
@@ -68,7 +58,7 @@ describe('UsageOverviewExternal', () => {
 	});
 
 	it('should render the "Go to Customer Portal" button for admin user', () => {
-		useCurrentUser.mockImplementation(() => ({isAdmin: () => true}));
+		mockCurrentUser();
 
 		const {queryByText} = render(<WrappedComponent {...defaultProps} />);
 
@@ -76,7 +66,7 @@ describe('UsageOverviewExternal', () => {
 	});
 
 	it('should not render the "Go to Customer Portal" button for member user', () => {
-		useCurrentUser.mockImplementation(() => ({isAdmin: () => false}));
+		mockCurrentUser({roleName: UserRoleNames.Member});
 
 		const {queryByText} = render(<WrappedComponent {...defaultProps} />);
 
@@ -94,17 +84,17 @@ describe('UsageOverviewExternal', () => {
 describe('UsageOverviewExternal when the subscription is LDP', () => {
 	it('should render the "View Your Workspace Metrics" title', () => {
 		const {getByText} = render(
-			<WrappedComponent {...defaultProps} store={mockStore(mockStoreDataLDP)} />
+			<WrappedComponent {...defaultProps} ldpEnabled store={mockStore(mockStoreDataLDP)} />
 		);
 
 		expect(getByText(/^view your workspace metrics$/i)).toBeInTheDocument();
 	});
 
 	it('should render the "Go to Liferay One" button for admin user', () => {
-		useCurrentUser.mockImplementation(() => ({isAdmin: () => true}));
+		mockCurrentUser();
 
 		const {getByText} = render(
-			<WrappedComponent {...defaultProps} store={mockStore(mockStoreDataLDP)} />
+			<WrappedComponent {...defaultProps} ldpEnabled store={mockStore(mockStoreDataLDP)} />
 		);
 
 		expect(getByText(/^go to liferay one$/i)).toBeInTheDocument();
@@ -112,7 +102,7 @@ describe('UsageOverviewExternal when the subscription is LDP', () => {
 
 	it('should not render the "SaaS plan usage" description', () => {
 		const {queryByText} = render(
-			<WrappedComponent {...defaultProps} store={mockStore(mockStoreDataLDP)} />
+			<WrappedComponent {...defaultProps} ldpEnabled store={mockStore(mockStoreDataLDP)} />
 		);
 
 		expect(
@@ -122,7 +112,7 @@ describe('UsageOverviewExternal when the subscription is LDP', () => {
 
 	it('should redact the metric titles in the "Sites and Users" section', () => {
 		const {container, queryByRole} = render(
-			<WrappedComponent {...defaultProps} store={mockStore(mockStoreDataLDP)} />
+			<WrappedComponent {...defaultProps} ldpEnabled store={mockStore(mockStoreDataLDP)} />
 		);
 
 		expect(

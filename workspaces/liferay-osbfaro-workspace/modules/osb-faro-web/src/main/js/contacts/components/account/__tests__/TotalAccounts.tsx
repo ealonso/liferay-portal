@@ -3,11 +3,7 @@ import TotalAccounts from '../TotalAccounts';
 import {AccountMetricType} from 'contacts/pages/account/utils/types';
 import {render} from '@testing-library/react';
 import {TrendClassification} from 'segment/types';
-
-jest.mock('react-router', () => ({
-	...jest.requireActual('react-router'),
-	useParams: () => ({channelId: '456'}),
-}));
+import {WorkspacePage} from 'test/mock-page-context';
 
 const mockMetrics = () => {
 	const useRequest = require('shared/hooks/useRequest');
@@ -46,7 +42,11 @@ describe('TotalAccounts', () => {
 	it('should render', () => {
 		mockMetrics();
 
-		const {container} = render(<TotalAccounts groupId="123" />);
+		const {container} = render(
+			<WorkspacePage channelId="456">
+				<TotalAccounts groupId="123" />
+			</WorkspacePage>
+		);
 
 		expect(container).toMatchSnapshot();
 	});
@@ -55,7 +55,9 @@ describe('TotalAccounts', () => {
 		mockMetrics();
 
 		const {getAllByText, queryByText} = render(
-			<TotalAccounts groupId="123" />
+			<WorkspacePage channelId="456">
+				<TotalAccounts groupId="123" />
+			</WorkspacePage>
 		);
 
 		expect(getAllByText(/vs\. Previous 90 Days/)).toHaveLength(2);
@@ -68,7 +70,11 @@ describe('TotalAccounts', () => {
 		const useRequest = require('shared/hooks/useRequest');
 		useRequest.useRequest = jest.fn(() => ({}));
 
-		const {container} = render(<TotalAccounts groupId="123" />);
+		const {container} = render(
+			<WorkspacePage channelId="456">
+				<TotalAccounts groupId="123" />
+			</WorkspacePage>
+		);
 
 		expect(container).toMatchSnapshot();
 	});
@@ -76,13 +82,20 @@ describe('TotalAccounts', () => {
 	it('should ask for the metrics of the campaign selected', () => {
 		mockMetrics();
 
-		render(<TotalAccounts campaignId="7" groupId="123" />);
+		render(
+			<WorkspacePage channelId="456">
+				<TotalAccounts campaignId="7" groupId="123" />
+			</WorkspacePage>
+		);
 
 		const useRequest = require('shared/hooks/useRequest');
 
 		expect(useRequest.useRequest).toHaveBeenCalledWith(
 			expect.objectContaining({
-				variables: expect.objectContaining({campaignId: '7'}),
+				variables: expect.objectContaining({
+					campaignId: '7',
+					channelId: '456',
+				}),
 			})
 		);
 	});

@@ -13,11 +13,7 @@ import {List, Map} from 'immutable';
 import {Property, Segment} from 'shared/util/records';
 import {SegmentCategories, SegmentTypes} from 'shared/util/constants';
 import {withReferencedObjectsProvider} from 'segment/segment-editor/dynamic/context/referencedObjects';
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({channelId: '123', groupId: '456'})
-}));
+import {withWorkspacePage} from 'test/mock-page-context';
 
 jest.mock('shared/api', () => ({
 	assets: {
@@ -32,7 +28,9 @@ jest.mock('shared/api', () => ({
 
 describe('BehaviorDisplay', () => {
 	const WrappedBehaviorDisplay =
-		withReferencedObjectsProvider(BehaviorDisplay);
+		withWorkspacePage(
+		withReferencedObjectsProvider(BehaviorDisplay)
+	);
 
 	const mockSegment = data.getImmutableMock(Segment, data.mockSegment, 0, {
 		referencedObjects: {

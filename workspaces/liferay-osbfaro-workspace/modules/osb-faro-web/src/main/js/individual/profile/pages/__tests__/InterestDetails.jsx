@@ -3,8 +3,8 @@ import InterestDetails from '../InterestDetails';
 import React from 'react';
 import {Individual} from 'shared/util/records';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const defaultProps = {
 	active: 'true',
@@ -16,44 +16,41 @@ const defaultProps = {
 
 describe('InterestDetails', () => {
 	it('should render', async () => {
-		const {container, getByText} = render(
-			<MemoryRouter>
-				<InterestDetails {...defaultProps} />
-			</MemoryRouter>
+		const {container, getByRole} = render(
+			<WorkspacePage><InterestDetails {...defaultProps} /></WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(container);
 
-		expect(getByText(/^back to interests$/i)).toBeInTheDocument();
+		expect(getByRole('link', {name: /^back to interests$/i})).toHaveAttribute(
+			'href',
+			'/individual-interests?id=test'
+		);
 	});
 
 	it('should render an active pages list tab', async () => {
-		const {container, getByRole, getByText} = render(
-			<MemoryRouter>
-				<InterestDetails {...defaultProps} />
-			</MemoryRouter>
+		const {container, getByText} = render(
+			<WorkspacePage><InterestDetails {...defaultProps} /></WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(container);
 
 		expect(getByText(/^active pages$/i)).toBeTruthy();
-		expect(
-			getByRole('link', {name: /^active pages$/i})
-		).toHaveAttribute('aria-current', 'page');
+		expect(getByText(/^active pages$/i).parentElement).toHaveClass('active');
+		expect(getByText(/^active pages$/i).closest('a')).toHaveAttribute(
+			'href',
+			'/individual-interest?active=true&id=test&interestId=1'
+		);
 	});
 
 	it('should render an inactive pages list tab', async () => {
-		const {container, getByRole, getByText} = render(
-			<MemoryRouter>
-				<InterestDetails {...defaultProps} active='false' />
-			</MemoryRouter>
+		const {container, getByText} = render(
+			<WorkspacePage><InterestDetails {...defaultProps} active='false' /></WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(container);
 
 		expect(getByText(/^inactive pages$/i)).toBeTruthy();
-		expect(
-			getByRole('link', {name: /^inactive pages$/i})
-		).toHaveAttribute('aria-current', 'page');
+		expect(getByText(/^inactive pages$/i).parentElement).toHaveClass('active');
 	});
 });

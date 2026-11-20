@@ -17,6 +17,7 @@ import {fromJS, List} from 'immutable';
 import {LanguageIds, ProjectStates, UserRoleNames} from 'shared/util/constants';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
+import {WorkspacePage} from './mock-page-context';
 
 export function toRD(data) {
 	return new RemoteData({data, loading: false});
@@ -26,10 +27,6 @@ export const mockStoreData = fromJS({
 	accounts: {
 		test: toRD(new Account(fromJS(data.mockAccount('test'))))
 	},
-	currentUser: new RemoteData({
-		data: '23',
-		loading: false
-	}),
 	dataSources: {
 		23: toRD(new DataSource(fromJS(data.mockLiferayDataSource(23)))),
 		24: toRD(new DataSource(fromJS(data.mockCSVDataSource(24)))),
@@ -155,8 +152,10 @@ export default function mockStore(
 
 export function renderWithStore(Component, props, mapStore = s => s) {
 	return render(
-		<Provider store={mockStore(mapStore(mockStoreData))}>
-			<Component key='child' {...props} />
-		</Provider>
+		<WorkspacePage>
+			<Provider store={mockStore(mapStore(mockStoreData))}>
+				<Component key='child' {...props} />
+			</Provider>
+		</WorkspacePage>
 	);
 }

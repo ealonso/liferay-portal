@@ -14,7 +14,7 @@ import SelectPageAssetInput, {
 import {act, cleanup, fireEvent, render, waitFor} from '@testing-library/react';
 import {OrderedMap} from 'immutable';
 import {Provider} from 'react-redux';
-import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.mock('shared/api', () => ({
 	activities: {
@@ -41,19 +41,17 @@ jest.mock('shared/api', () => ({
 // Object-definition types come only from LDP plans, so the component gates the
 // asset-summary-types request on it; default to enabled and override per test.
 
-jest.mock('shared/hooks/useLDPEnabled', () => ({
-	useLDPEnabled: jest.fn(() => true)
-}));
-
 const defaultProps = {
 	channelId: 'ch-1',
 	groupId: 'gp-1'
 };
 
-const DefaultComponent = props => (
-	<Provider store={mockStore()}>
-		<SelectPageAssetInput {...defaultProps} {...props} />
-	</Provider>
+const DefaultComponent = ({ldpEnabled = true, ...props}) => (
+	<WorkspacePage ldpEnabled={ldpEnabled}>
+		<Provider store={mockStore()}>
+			<SelectPageAssetInput {...defaultProps} {...props} />
+		</Provider>
+	</WorkspacePage>
 );
 
 describe('getAssetTypeLabel', () => {
@@ -143,7 +141,6 @@ describe('SelectPageAssetInput', () => {
 		resetModalProps();
 		API.activities.searchAssets.mockClear();
 		API.assets.searchTypes.mockClear();
-		useLDPEnabled.mockReturnValue(true);
 	});
 
 	const openPicker = (getByRole, name) =>
@@ -674,12 +671,10 @@ describe('SelectPageAssetInput', () => {
 		};
 
 		it('should not request asset-summary-types when the plan is not LDP', () => {
-			useLDPEnabled.mockReturnValue(false);
-
 			// A non-LDP plan has no object-definition types, so the request is
 			// skipped and only the fixed DXP types are offered.
 
-			renderAndFlush({action: 'download'});
+			renderAndFlush({action: 'download', ldpEnabled: false});
 
 			expect(API.assets.searchTypes).not.toHaveBeenCalled();
 		});
@@ -752,10 +747,8 @@ describe('SelectPageAssetInput', () => {
 		});
 
 		it('should render the asset types immediately without loading on a non-LDP plan', () => {
-			useLDPEnabled.mockReturnValue(false);
-
 			const {container, getByRole} = render(
-				<DefaultComponent action='view' />
+				<DefaultComponent action='view' ldpEnabled={false} />
 			);
 
 			// No request is made, so there is no loading — the fixed DXP types

@@ -1,6 +1,7 @@
 import React from 'react';
 import {render, waitFor} from '@testing-library/react';
 import {useModal} from '@clayui/modal';
+import {WorkspacePage} from './mock-page-context';
 
 const ModalHarness = ({children}) => {
 	const {observer} = useModal({defaultOpen: true});
@@ -22,7 +23,9 @@ export const waitForModal = () =>
  */
 export const renderModal = async (renderModal, options) => {
 	const result = render(
-		<ModalHarness>{renderModal}</ModalHarness>,
+		<WorkspacePage>
+			<ModalHarness>{renderModal}</ModalHarness>
+		</WorkspacePage>,
 		options
 	);
 

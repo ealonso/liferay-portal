@@ -9,19 +9,17 @@ import React from 'react';
 import {cleanup, fireEvent, render, screen} from '@testing-library/react';
 import {getImmutableMock, mockMemberUser, mockUser} from 'test/data';
 import {Provider} from 'react-redux';
-import {MemoryRouter} from 'react-router';
 import {User} from 'shared/util/records';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const DefaultComponent = props => (
 	<Provider store={mockStore()}>
-		<MemoryRouter>
-			<NoPropertiesAvailable
-				currentUser={getImmutableMock(User, mockUser)}
-				groupId='123123'
-				{...props}
-			/>
-		</MemoryRouter>
+		<NoPropertiesAvailable
+			currentUser={getImmutableMock(User, mockUser)}
+			groupId='123123'
+			{...props}
+		/>
 	</Provider>
 );
 
@@ -31,7 +29,7 @@ describe('NoPropertiesAvailable', () => {
 	it('should render', async () => {
 		API.dataSource.search.mockReturnValueOnce(Promise.resolve({total: 0}));
 
-		const {container} = render(<DefaultComponent />);
+		const {container} = render(<WorkspacePage><DefaultComponent /></WorkspacePage>);
 
 		jest.runAllTimers();
 
@@ -42,9 +40,9 @@ describe('NoPropertiesAvailable', () => {
 
 	it('should not display the "Start" button to trigger onboarding if the user is not an AC admin', () => {
 		const {queryByRole} = render(
-			<DefaultComponent
+			<WorkspacePage><DefaultComponent
 				currentUser={getImmutableMock(User, mockMemberUser)}
-			/>
+			/></WorkspacePage>
 		);
 
 		jest.runAllTimers();
@@ -55,7 +53,7 @@ describe('NoPropertiesAvailable', () => {
 	it('should open the onboarding modal on "Start" click', async () => {
 		API.dataSource.search.mockReturnValueOnce(Promise.resolve({total: 0}));
 
-		const {container, queryByText} = render(<DefaultComponent />);
+		const {container, queryByText} = render(<WorkspacePage><DefaultComponent /></WorkspacePage>);
 
 		expect(screen.queryByTestId('onboarding-modal')).toBeNull();
 

@@ -1,12 +1,12 @@
 import React from 'react';
-import {MemoryRouter} from 'react-router-dom';
 import {render} from '@testing-library/react';
 import {
 	getAPIRangeParams,
 	useRangeQueryValues,
 } from 'shared/hooks/useRangeQueryValues';
+import {WorkspacePage} from 'test/mock-page-context';
 
-const renderRangeQueryValues = (queryString = '') => {
+const renderRangeQueryValues = (params) => {
 	let rangeQueryValues;
 
 	const TestComponent = () => {
@@ -16,13 +16,9 @@ const renderRangeQueryValues = (queryString = '') => {
 	};
 
 	render(
-		<MemoryRouter
-			initialEntries={[
-				`/workspace/23/321321/contacts/accounts/123123/interests/test${queryString}`,
-			]}
-		>
+		<WorkspacePage params={params}>
 			<TestComponent />
-		</MemoryRouter>
+		</WorkspacePage>
 	);
 
 	return rangeQueryValues;
@@ -30,9 +26,11 @@ const renderRangeQueryValues = (queryString = '') => {
 
 describe('useRangeQueryValues', () => {
 	it('should keep the custom range key on the route params only', () => {
-		const {apiRangeParams, routeRangeParams} = renderRangeQueryValues(
-			'?rangeEnd=2026-02-20&rangeKey=CUSTOM&rangeStart=2026-02-10'
-		);
+		const {apiRangeParams, routeRangeParams} = renderRangeQueryValues({
+			rangeEnd: '2026-02-20',
+			rangeKey: 'CUSTOM',
+			rangeStart: '2026-02-10',
+		});
 
 		expect(apiRangeParams).toEqual({
 			rangeEnd: '2026-02-20',

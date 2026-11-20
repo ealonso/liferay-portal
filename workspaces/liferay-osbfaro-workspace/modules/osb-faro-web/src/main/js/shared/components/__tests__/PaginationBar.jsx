@@ -1,18 +1,15 @@
 import PaginationBar from '../PaginationBar';
 import React from 'react';
 import {cleanup, render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
 
 const DefaultComponent = props => (
-	<MemoryRouter>
-		<PaginationBar
-			href=''
-			page={3}
-			selectedDelta={10}
-			totalItems={100}
-			{...props}
-		/>
-	</MemoryRouter>
+	<PaginationBar
+		href=''
+		page={3}
+		selectedDelta={10}
+		totalItems={100}
+		{...props}
+	/>
 );
 
 describe('PaginationBar', () => {

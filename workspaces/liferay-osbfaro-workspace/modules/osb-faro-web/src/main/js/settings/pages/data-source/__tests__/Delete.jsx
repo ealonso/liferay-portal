@@ -6,9 +6,9 @@ import {cleanup, render} from '@testing-library/react';
 import {DataSource} from 'shared/util/records';
 import {Delete as DataSourceDelete} from '../Delete';
 import {fromJS} from 'immutable';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
+import {mockPageConfig, WorkspacePage} from 'test/mock-page-context';
 
 const defaultProps = {
 	addAlert: jest.fn(),
@@ -19,7 +19,6 @@ const defaultProps = {
 		4: 20
 	},
 	groupId: '23',
-	history: {push: jest.fn()},
 	id: '26'
 };
 
@@ -39,18 +38,9 @@ const Wrapper = ({children}) => (
 			})
 		)}
 	>
-		<MemoryRouter
-			initialEntries={['/workspace/23/settings/data-source/26/delete']}
-		>
-			<RouterRoutes>
-				<Route
-					element={
-						<MockedProvider addTypename={false}>{children}</MockedProvider>
-					}
-					path='/workspace/:groupId/settings/data-source/:id/delete/*'
-				/>
-			</RouterRoutes>
-		</MemoryRouter>
+		<WorkspacePage params={{id: '26'}}>
+			<MockedProvider addTypename={false}>{children}</MockedProvider>
+		</WorkspacePage>
 	</Provider>
 );
 
@@ -69,7 +59,7 @@ describe('DataSourceDelete', () => {
 	it('should render', async () => {
 		const {container} = render(
 			<Wrapper>
-				<DataSourceDelete {...defaultProps} />
+				<DataSourceDelete {...defaultProps} pageConfig={mockPageConfig()} />
 			</Wrapper>
 		);
 

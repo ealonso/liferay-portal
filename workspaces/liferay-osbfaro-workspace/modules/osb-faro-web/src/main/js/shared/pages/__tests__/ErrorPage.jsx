@@ -1,23 +1,21 @@
 import ErrorPage from '../ErrorPage';
 import React from 'react';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const DefaultComponent = props => (
-	<MemoryRouter>
-		<ErrorPage {...props} />
-	</MemoryRouter>
+	<ErrorPage {...props} />
 );
 
 describe('ErrorPage', () => {
 	it('should render', () => {
-		const {container} = render(<DefaultComponent />);
+		const {container} = render(<WorkspacePage><DefaultComponent /></WorkspacePage>);
 
 		expect(container).toMatchSnapshot();
 	});
 
 	it('should render a custom message', () => {
-		const {getByText} = render(<DefaultComponent message='foo bar' />);
+		const {getByText} = render(<WorkspacePage><DefaultComponent message='foo bar' /></WorkspacePage>);
 
 		expect(getByText('foo bar')).toBeTruthy();
 	});

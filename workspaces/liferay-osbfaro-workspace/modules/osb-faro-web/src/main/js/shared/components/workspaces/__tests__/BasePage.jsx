@@ -2,13 +2,9 @@ jest.unmock('shared/components/DocumentTitle');
 
 import React from 'react';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
 import {User} from 'shared/util/records';
 import {WorkspacesBasePage} from '../BasePage';
-
-jest.mock('shared/hooks/useLDPEnabled', () => ({
-	useLDPEnabled: jest.fn(() => false)
-}));
+import {mockPageConfig, WorkspacePage} from 'test/mock-page-context';
 
 const currentUser = new User({
 	emailAddress: 'test@test.com',
@@ -16,24 +12,23 @@ const currentUser = new User({
 });
 
 const DefaultComponent = props => (
-	<MemoryRouter>
-		<WorkspacesBasePage
-			currentUser={currentUser}
-			title='Test Title'
-			{...props}
-		/>
-	</MemoryRouter>
+	<WorkspacesBasePage
+		pageConfig={mockPageConfig()}
+		currentUser={currentUser}
+		title='Test Title'
+		{...props}
+	/>
 );
 
 describe('WorkspacesBasePage', () => {
 	it('should render', () => {
 		const {container} = render(
-			<DefaultComponent
+			<WorkspacePage><DefaultComponent
 				details={[
 					<p key='1'>{'Test Details'}</p>,
 					<p key='2'>{'More Test Details'}</p>
 				]}
-			/>
+			/></WorkspacePage>
 		);
 
 		expect(container).toMatchSnapshot();
@@ -41,7 +36,7 @@ describe('WorkspacesBasePage', () => {
 
 	it('should render when details is jsx', () => {
 		const {queryByText} = render(
-			<DefaultComponent details={<b>{'Test0'}</b>} />
+			<WorkspacePage><DefaultComponent details={<b>{'Test0'}</b>} /></WorkspacePage>
 		);
 
 		expect(queryByText('Test0')).toBeTruthy();
@@ -49,14 +44,14 @@ describe('WorkspacesBasePage', () => {
 
 	it('should render when details is a string', () => {
 		const {queryByText} = render(
-			<DefaultComponent details='Test Details' />
+			<WorkspacePage><DefaultComponent details='Test Details' /></WorkspacePage>
 		);
 
 		expect(queryByText('Test Details')).toBeTruthy();
 	});
 
 	it('should hide the logo container while the LDP plan check is loading', () => {
-		const {container} = render(<DefaultComponent loadingLDPEnabled />);
+		const {container} = render(<WorkspacePage><DefaultComponent loadingLDPEnabled /></WorkspacePage>);
 
 		expect(
 			container.querySelector('.logo-container').className
@@ -64,7 +59,7 @@ describe('WorkspacesBasePage', () => {
 	});
 
 	it('should show the logo container once the LDP plan check resolves', () => {
-		const {container} = render(<DefaultComponent />);
+		const {container} = render(<WorkspacePage><DefaultComponent /></WorkspacePage>);
 
 		expect(
 			container.querySelector('.logo-container').className
@@ -72,24 +67,24 @@ describe('WorkspacesBasePage', () => {
 	});
 
 	it('should append Analytics Cloud to the document title when ldpEnabled is false', () => {
-		render(<DefaultComponent />);
+		render(<WorkspacePage><DefaultComponent /></WorkspacePage>);
 
 		expect(document.title).toEqual('Test Title - Analytics Cloud');
 	});
 
 	it('should append Liferay Data Platform to the document title when ldpEnabled is true', () => {
-		render(<DefaultComponent ldpEnabled />);
+		render(<WorkspacePage><DefaultComponent ldpEnabled /></WorkspacePage>);
 
 		expect(document.title).toEqual('Test Title - Liferay Data Platform');
 	});
 
 	it('should render with back button', () => {
 		const {queryByText} = render(
-			<DefaultComponent
+			<WorkspacePage><DefaultComponent
 				backLabel='Back to Test'
 				backURL='#'
 				details={['Test Details. ', 'More Test Details']}
-			/>
+			/></WorkspacePage>
 		);
 
 		expect(queryByText('Back to Test')).toBeTruthy();

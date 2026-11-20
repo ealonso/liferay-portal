@@ -2,20 +2,20 @@ import * as API from 'shared/api';
 import CampaignUtmParameters from '../CampaignUtmParameters';
 import React from 'react';
 import {fireEvent, render, screen} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const fetchCampaignAcquisitionParameters = API.campaigns
 	.fetchCampaignAcquisitionParameters as jest.Mock;
 
 const renderComponent = () =>
 	render(
-		<MemoryRouter>
+		<WorkspacePage>
 			<CampaignUtmParameters
 				campaignId="7"
 				channelId="123"
 				groupId="23"
 			/>
-		</MemoryRouter>
+		</WorkspacePage>
 	);
 
 describe('CampaignUtmParameters', () => {

@@ -5,510 +5,255 @@ exports[`Recommendations should render 1`] = `
   <div
     class="settings-root"
   >
-    <nav
-      class="align-items-center bg-white sticky-top toolbar-root base-edit-page-toolbar mb-4 tbar component-tbar"
-    >
-      <ul
-        class="align-items-center mx-3 tbar-nav"
-      >
-        <li
-          class="tbar-item"
-        >
-          <a
-            aria-label="Back"
-            class="btn btn-monospaced btn-outline-borderless btn-outline-secondary btn-sm rounded-lg"
-            data-discover="true"
-            data-tooltip-align="bottom"
-            href="/workspace/23"
-            title="Back"
-          >
-            <svg
-              class="lexicon-icon lexicon-icon-angle-left"
-              role="presentation"
-            >
-              <use
-                href="#angle-left"
-              />
-            </svg>
-          </a>
-        </li>
-        <li
-          class="pl-0 tbar-item"
-        >
-          <div
-            class="tbar-section"
-          >
-            <h1
-              class="font-weight-semi-bold m-0 text-5 text-dark text-nowrap"
-            >
-              Settings
-            </h1>
-          </div>
-        </li>
-        <li
-          class="ml-auto tbar-item"
-        >
-          <ul
-            class="base-edit-page-toolbar-actions justify-content-end tbar-nav"
-            data-testid="toolbar-actions"
-          />
-        </li>
-      </ul>
-    </nav>
     <div
-      class="content-wrapper"
+      class="content section-main"
     >
-      <nav
-        class="section-side settings-side-bar"
-      >
-        <div>
-          <h5
-            class="section-title"
-          >
-            Workspace Data
-          </h5>
-          <ul
-            class="nav"
-          >
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/apis/tokens"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-ac_api icon-root"
-                    data-file="ac_api.svg"
-                    role="presentation"
-                  />
-                </span>
-                APIs
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/definitions"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-definitions icon-root"
-                    data-file="definitions.svg"
-                    role="presentation"
-                  />
-                </span>
-                Definitions
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/data-privacy"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-data_privacy_lock icon-root"
-                    data-file="data_privacy_lock.svg"
-                    role="presentation"
-                  />
-                </span>
-                Data Control & Privacy
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/data-source"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-faro_data_source icon-root"
-                    data-file="faro_data_source.svg"
-                    role="presentation"
-                  />
-                </span>
-                Data Sources
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/recommendations"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-ac_star icon-root"
-                    data-file="ac_star.svg"
-                    role="presentation"
-                  />
-                </span>
-                Recommendations
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h5
-            class="section-title"
-          >
-            Workspace Settings
-          </h5>
-          <ul
-            class="nav"
-          >
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/users"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-user_management icon-root"
-                    data-file="user_management.svg"
-                    role="presentation"
-                  />
-                </span>
-                User Management
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/properties"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-ac_page icon-root"
-                    data-file="ac_page.svg"
-                    role="presentation"
-                  />
-                </span>
-                Properties
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/usage"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-usage icon-root"
-                    data-file="usage.svg"
-                    role="presentation"
-                  />
-                </span>
-                Subscription & Usage
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/workspace"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-cog icon-root"
-                    role="presentation"
-                  >
-                    <use
-                      href="#cog"
-                    />
-                  </svg>
-                </span>
-                Workspace
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
       <div
-        class="content section-main"
+        class="settings-base-page-root"
       >
         <div
-          class="settings-base-page-root"
+          class="maintenance-alert-root"
+        />
+        <ol
+          class="breadcrumb breadcrumbs-root"
+        >
+          <li
+            class="breadcrumb-item"
+          >
+            <a
+              class="breadcrumb-text-truncate breadcrumb-link"
+              href="/recommendations"
+            >
+              Recommendations
+            </a>
+          </li>
+          <li
+            class="breadcrumb-item active"
+          >
+            <span
+              class="breadcrumb-text-truncate"
+            >
+              New Model
+            </span>
+          </li>
+        </ol>
+        <div
+          class="content-header"
         >
           <div
-            class="maintenance-alert-root"
-          />
-          <ol
-            class="breadcrumb breadcrumbs-root"
-          >
-            <li
-              class="breadcrumb-item"
-            >
-              <a
-                class="breadcrumb-text-truncate breadcrumb-link"
-                data-discover="true"
-                href="/workspace/23/settings/recommendations"
-              >
-                Recommendations
-              </a>
-            </li>
-            <li
-              class="breadcrumb-item active"
-            >
-              <span
-                class="breadcrumb-text-truncate"
-              >
-                New Model
-              </span>
-            </li>
-          </ol>
-          <div
-            class="content-header"
+            class="header-text"
           >
             <div
-              class="header-text"
+              class="d-flex"
             >
-              <div
-                class="d-flex"
+              <h3
+                class="title-text text-truncate"
               >
-                <h3
-                  class="title-text text-truncate"
+                <span
+                  class="text-truncate"
+                  data-tooltip="false"
+                  title=""
                 >
-                  <span
-                    class="text-truncate"
-                    data-tooltip="false"
-                    title=""
-                  >
-                    New Item Similarity Model
-                  </span>
-                </h3>
-              </div>
-              <div
-                class="description"
-              >
-                Item similarity model uses items and interactions data for training.
-              </div>
+                  New Item Similarity Model
+                </span>
+              </h3>
             </div>
             <div
-              class="page-actions-container"
-            />
+              class="description"
+            >
+              Item similarity model uses items and interactions data for training.
+            </div>
           </div>
-          <div>
+          <div
+            class="page-actions-container"
+          />
+        </div>
+        <div>
+          <div
+            class="row"
+          >
             <div
-              class="row"
+              class="col-xl-8"
             >
               <div
-                class="col-xl-8"
+                class="card card-root recommendation-step-card-root"
               >
-                <div
-                  class="card card-root recommendation-step-card-root"
+                <form
+                  class="form-root"
                 >
-                  <form
-                    class="form-root"
+                  <div
+                    class="card-header"
                   >
                     <div
-                      class="card-header"
+                      class="timeline-root"
                     >
                       <div
-                        class="timeline-root"
+                        class="step active"
                       >
                         <div
-                          class="step active"
+                          class="title"
                         >
-                          <div
-                            class="title"
-                          >
-                            Basic Settings
-                          </div>
-                          <div
-                            class="circle"
-                          >
-                            1
-                          </div>
+                          Basic Settings
                         </div>
-                        <span
-                          class="bar"
-                        />
                         <div
-                          class="step"
+                          class="circle"
                         >
-                          <div
-                            class="title"
-                          >
-                            Interactions
-                          </div>
-                          <div
-                            class="circle"
-                          >
-                            2
-                          </div>
+                          1
                         </div>
-                        <span
-                          class="bar"
-                        />
+                      </div>
+                      <span
+                        class="bar"
+                      />
+                      <div
+                        class="step"
+                      >
                         <div
-                          class="step"
+                          class="title"
                         >
-                          <div
-                            class="title"
-                          >
-                            Items
-                          </div>
-                          <div
-                            class="circle"
-                          >
-                            3
-                          </div>
+                          Interactions
                         </div>
-                        <span
-                          class="bar"
-                        />
                         <div
-                          class="step"
+                          class="circle"
                         >
-                          <div
-                            class="title"
-                          >
-                            Summary
-                          </div>
-                          <div
-                            class="circle"
-                          >
-                            4
-                          </div>
+                          2
+                        </div>
+                      </div>
+                      <span
+                        class="bar"
+                      />
+                      <div
+                        class="step"
+                      >
+                        <div
+                          class="title"
+                        >
+                          Items
+                        </div>
+                        <div
+                          class="circle"
+                        >
+                          3
+                        </div>
+                      </div>
+                      <span
+                        class="bar"
+                      />
+                      <div
+                        class="step"
+                      >
+                        <div
+                          class="title"
+                        >
+                          Summary
+                        </div>
+                        <div
+                          class="circle"
+                        >
+                          4
                         </div>
                       </div>
                     </div>
+                  </div>
+                  <div
+                    class="card-body"
+                  >
                     <div
-                      class="card-body"
+                      class="basic-settings-root"
                     >
                       <div
-                        class="basic-settings-root"
+                        class="form-group"
                       >
                         <div
-                          class="form-group"
+                          class=""
                         >
-                          <div
-                            class=""
+                          <label
+                            class="form-control-label label-root required"
+                            for="name"
                           >
-                            <label
-                              class="form-control-label label-root required"
-                              for="name"
+                            <span
+                              class="content-container"
                             >
-                              <span
-                                class="content-container"
-                              >
-                                Model Name
-                              </span>
-                            </label>
-                            <input
-                              aria-required="true"
-                              class="input-root form-control"
-                              id="name"
-                              name="name"
-                              type="text"
-                              value=""
-                            />
-                          </div>
+                              Model Name
+                            </span>
+                          </label>
+                          <input
+                            aria-required="true"
+                            class="input-root form-control"
+                            id="name"
+                            name="name"
+                            type="text"
+                            value=""
+                          />
                         </div>
+                      </div>
+                      <div
+                        class="form-group"
+                      >
                         <div
-                          class="form-group"
+                          class=""
                         >
-                          <div
-                            class=""
+                          <label
+                            class="form-control-label label-root"
+                            for="runFrequency"
                           >
-                            <label
-                              class="form-control-label label-root"
-                              for="runFrequency"
+                            <span
+                              class="content-container"
                             >
-                              <span
-                                class="content-container"
-                              >
-                                Training Frequency
-                              </span>
-                            </label>
-                            <select
-                              class="form-control select-root"
-                              id="runFrequency"
-                              name="runFrequency"
+                              Training Frequency
+                            </span>
+                          </label>
+                          <select
+                            class="form-control select-root"
+                            id="runFrequency"
+                            name="runFrequency"
+                          >
+                            <option
+                              value="MANUAL"
                             >
-                              <option
-                                value="MANUAL"
-                              >
-                                Run Manually
-                              </option>
-                              <option
-                                value="EVERY_7_DAYS"
-                              >
-                                Every 7 days
-                              </option>
-                              <option
-                                value="EVERY_14_DAYS"
-                              >
-                                Every 14 days
-                              </option>
-                              <option
-                                value="EVERY_30_DAYS"
-                              >
-                                Every 30 days
-                              </option>
-                            </select>
-                          </div>
+                              Run Manually
+                            </option>
+                            <option
+                              value="EVERY_7_DAYS"
+                            >
+                              Every 7 days
+                            </option>
+                            <option
+                              value="EVERY_14_DAYS"
+                            >
+                              Every 14 days
+                            </option>
+                            <option
+                              value="EVERY_30_DAYS"
+                            >
+                              Every 30 days
+                            </option>
+                          </select>
                         </div>
                       </div>
                     </div>
+                  </div>
+                  <div
+                    class="card-footer"
+                  >
                     <div
-                      class="card-footer"
+                      class="form-navigation-root"
                     >
-                      <div
-                        class="form-navigation-root"
+                      <a
+                        class="button-root cancel btn btn-secondary"
+                        href="/recommendations"
                       >
-                        <a
-                          class="button-root cancel btn btn-secondary"
-                          href="/workspace/23/settings/recommendations"
-                        >
-                          Cancel
-                        </a>
-                        <button
-                          class="button-root btn btn-primary"
-                          disabled=""
-                          type="button"
-                        >
-                          Next
-                        </button>
-                      </div>
+                        Cancel
+                      </a>
+                      <button
+                        class="button-root btn btn-primary"
+                        disabled=""
+                        type="button"
+                      >
+                        Next
+                      </button>
                     </div>
-                  </form>
-                </div>
+                  </div>
+                </form>
               </div>
             </div>
           </div>

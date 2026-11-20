@@ -45,8 +45,9 @@ exports[`TabsCard should render 1`] = `
                 class="nav-item"
               >
                 <a
-                  class="nav-link"
-                  href="/workspace/23/settings/definitions/events/default"
+                  aria-current="page"
+                  class="nav-link active"
+                  href="/event-definitions"
                 >
                   <span>
                     Default Events
@@ -58,7 +59,7 @@ exports[`TabsCard should render 1`] = `
               >
                 <a
                   class="nav-link"
-                  href="/workspace/23/settings/definitions/events/custom"
+                  href="/event-definitions?tab=custom"
                 >
                   <span>
                     Custom Events

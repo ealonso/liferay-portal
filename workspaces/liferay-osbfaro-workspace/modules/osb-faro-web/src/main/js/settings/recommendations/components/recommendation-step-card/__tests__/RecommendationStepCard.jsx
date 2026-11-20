@@ -5,25 +5,18 @@ import RecommendationStepCard from '../index';
 import {ApolloProvider} from '@apollo/client';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useBlocker: () => ({state: 'unblocked'}),
-}));
+import {WorkspacePage} from 'test/mock-page-context';
 
 describe('RecommendationStepCard', () => {
 	it('should render', () => {
 		const {container} = render(
-			<ApolloProvider client={client}>
+			<WorkspacePage><ApolloProvider client={client}>
 				<Provider store={mockStore()}>
-					<MemoryRouter>
-						<RecommendationStepCard
-							router={{params: {groupId: '123'}}}
-						/>
-					</MemoryRouter>
+					<RecommendationStepCard
+						router={{params: {groupId: '123'}}}
+					/>
 				</Provider>
-			</ApolloProvider>
+			</ApolloProvider></WorkspacePage>
 		);
 
 		expect(container).toMatchSnapshot();

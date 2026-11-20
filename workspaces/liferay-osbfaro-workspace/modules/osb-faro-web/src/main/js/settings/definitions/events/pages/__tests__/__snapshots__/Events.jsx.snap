@@ -5,397 +5,143 @@ exports[`Events should render 1`] = `
   <div
     class="settings-root"
   >
-    <nav
-      class="align-items-center bg-white sticky-top toolbar-root base-edit-page-toolbar mb-4 tbar component-tbar"
+    <div
+      class="content section-main"
     >
-      <ul
-        class="align-items-center mx-3 tbar-nav"
+      <div
+        class="settings-base-page-root"
       >
-        <li
-          class="tbar-item"
+        <div
+          class="maintenance-alert-root"
+        />
+        <ol
+          class="breadcrumb breadcrumbs-root"
         >
-          <a
-            aria-label="Back"
-            class="btn btn-monospaced btn-outline-borderless btn-outline-secondary btn-sm rounded-lg"
-            data-discover="true"
-            data-tooltip-align="bottom"
-            href="/workspace/23"
-            title="Back"
+          <li
+            class="breadcrumb-item"
           >
-            <svg
-              class="lexicon-icon lexicon-icon-angle-left"
-              role="presentation"
+            <a
+              class="breadcrumb-text-truncate breadcrumb-link"
+              href="/definitions"
             >
-              <use
-                href="#angle-left"
-              />
-            </svg>
-          </a>
-        </li>
-        <li
-          class="pl-0 tbar-item"
+              Definitions
+            </a>
+          </li>
+          <li
+            class="breadcrumb-item active"
+          >
+            <span
+              class="breadcrumb-text-truncate"
+            >
+              Events
+            </span>
+          </li>
+        </ol>
+        <div
+          class="content-header"
         >
           <div
-            class="tbar-section"
+            class="header-text"
           >
-            <h1
-              class="font-weight-semi-bold m-0 text-5 text-dark text-nowrap"
+            <div
+              class="d-flex"
             >
-              Settings
-            </h1>
+              <h3
+                class="title-text text-truncate"
+              >
+                <span
+                  class="text-truncate"
+                  data-tooltip="false"
+                  title=""
+                >
+                  Events
+                </span>
+              </h3>
+            </div>
+            <div
+              class="description"
+            >
+              This is the data model of events sent to Analytics Cloud.
+            </div>
           </div>
-        </li>
-        <li
-          class="ml-auto tbar-item"
-        >
-          <ul
-            class="base-edit-page-toolbar-actions justify-content-end tbar-nav"
-            data-testid="toolbar-actions"
+          <div
+            class="page-actions-container"
           />
-        </li>
-      </ul>
-    </nav>
-    <div
-      class="content-wrapper"
-    >
-      <nav
-        class="section-side settings-side-bar"
-      >
-        <div>
-          <h5
-            class="section-title"
-          >
-            Workspace Data
-          </h5>
-          <ul
-            class="nav"
-          >
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/apis/tokens"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-ac_api icon-root"
-                    data-file="ac_api.svg"
-                    role="presentation"
-                  />
-                </span>
-                APIs
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/definitions"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-definitions icon-root"
-                    data-file="definitions.svg"
-                    role="presentation"
-                  />
-                </span>
-                Definitions
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/data-privacy"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-data_privacy_lock icon-root"
-                    data-file="data_privacy_lock.svg"
-                    role="presentation"
-                  />
-                </span>
-                Data Control & Privacy
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/data-source"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-faro_data_source icon-root"
-                    data-file="faro_data_source.svg"
-                    role="presentation"
-                  />
-                </span>
-                Data Sources
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/recommendations"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-ac_star icon-root"
-                    data-file="ac_star.svg"
-                    role="presentation"
-                  />
-                </span>
-                Recommendations
-              </a>
-            </li>
-          </ul>
         </div>
         <div>
-          <h5
-            class="section-title"
+          <div
+            class="card card-root page-display"
           >
-            Workspace Settings
-          </h5>
-          <ul
-            class="nav"
-          >
-            <li
-              class="item"
+            <nav
+              class="my-3 navbar navbar-collapse-relative navbar-expand-md navbar-underline navigation-bar navigation-bar-light"
             >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/users"
+              <div
+                class="container-fluid container-fluid-max-xl"
               >
-                <span
-                  class="icon-wrapper"
+                <button
+                  aria-expanded="false"
+                  aria-label="Open Menu, Current Page: Default Events"
+                  class="navbar-toggler navbar-toggler-link collapsed btn btn-unstyled"
+                  data-testid="navbarToggler"
+                  type="button"
                 >
+                  <span
+                    class="navbar-text-truncate"
+                  >
+                    Default Events
+                  </span>
                   <svg
-                    class="lexicon-icon lexicon-icon-user_management icon-root"
-                    data-file="user_management.svg"
-                    role="presentation"
-                  />
-                </span>
-                User Management
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/properties"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-ac_page icon-root"
-                    data-file="ac_page.svg"
-                    role="presentation"
-                  />
-                </span>
-                Properties
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/usage"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-usage icon-root"
-                    data-file="usage.svg"
-                    role="presentation"
-                  />
-                </span>
-                Subscription & Usage
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/workspace"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-cog icon-root"
+                    class="lexicon-icon lexicon-icon-caret-bottom"
                     role="presentation"
                   >
                     <use
-                      href="#cog"
+                      href="#caret-bottom"
                     />
                   </svg>
-                </span>
-                Workspace
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-      <div
-        class="content section-main"
-      >
-        <div
-          class="settings-base-page-root"
-        >
-          <div
-            class="maintenance-alert-root"
-          />
-          <ol
-            class="breadcrumb breadcrumbs-root"
-          >
-            <li
-              class="breadcrumb-item"
-            >
-              <a
-                class="breadcrumb-text-truncate breadcrumb-link"
-                data-discover="true"
-                href="/workspace/23/settings/definitions"
-              >
-                Definitions
-              </a>
-            </li>
-            <li
-              class="breadcrumb-item active"
-            >
-              <span
-                class="breadcrumb-text-truncate"
-              >
-                Events
-              </span>
-            </li>
-          </ol>
-          <div
-            class="content-header"
-          >
-            <div
-              class="header-text"
-            >
-              <div
-                class="d-flex"
-              >
-                <h3
-                  class="title-text text-truncate"
-                >
-                  <span
-                    class="text-truncate"
-                    data-tooltip="false"
-                    title=""
-                  >
-                    Events
-                  </span>
-                </h3>
-              </div>
-              <div
-                class="description"
-              >
-                This is the data model of events sent to Analytics Cloud.
-              </div>
-            </div>
-            <div
-              class="page-actions-container"
-            />
-          </div>
-          <div>
-            <div
-              class="card card-root page-display"
-            >
-              <nav
-                class="my-3 navbar navbar-collapse-relative navbar-expand-md navbar-underline navigation-bar navigation-bar-light"
-              >
+                </button>
                 <div
-                  class="container-fluid container-fluid-max-xl"
+                  class="navbar-collapse collapse"
                 >
-                  <button
-                    aria-expanded="false"
-                    aria-label="Open Menu, Current Page: Default Events"
-                    class="navbar-toggler navbar-toggler-link collapsed btn btn-unstyled"
-                    data-testid="navbarToggler"
-                    type="button"
-                  >
-                    <span
-                      class="navbar-text-truncate"
-                    >
-                      Default Events
-                    </span>
-                    <svg
-                      class="lexicon-icon lexicon-icon-caret-bottom"
-                      role="presentation"
-                    >
-                      <use
-                        href="#caret-bottom"
-                      />
-                    </svg>
-                  </button>
                   <div
-                    class="navbar-collapse collapse"
+                    class="container-fluid container-fluid-max-xl"
                   >
-                    <div
-                      class="container-fluid container-fluid-max-xl"
+                    <ul
+                      class="navbar-nav"
                     >
-                      <ul
-                        class="navbar-nav"
+                      <li
+                        class="nav-item"
                       >
-                        <li
-                          class="nav-item"
+                        <a
+                          aria-current="page"
+                          class="nav-link active"
+                          href="/event-definitions"
                         >
-                          <a
-                            class="nav-link"
-                            href="/workspace/23/settings/definitions/events/default"
-                          >
-                            <span>
-                              Default Events
-                            </span>
-                          </a>
-                        </li>
-                        <li
-                          class="nav-item"
+                          <span>
+                            Default Events
+                          </span>
+                        </a>
+                      </li>
+                      <li
+                        class="nav-item"
+                      >
+                        <a
+                          class="nav-link"
+                          href="/event-definitions?tab=custom"
                         >
-                          <a
-                            class="nav-link"
-                            href="/workspace/23/settings/definitions/events/custom"
-                          >
-                            <span>
-                              Custom Events
-                            </span>
-                          </a>
-                        </li>
-                      </ul>
-                    </div>
+                          <span>
+                            Custom Events
+                          </span>
+                        </a>
+                      </li>
+                    </ul>
                   </div>
                 </div>
-              </nav>
-              <span
-                aria-hidden="true"
-                class="loading-root center loading-animation"
-              />
-            </div>
+              </div>
+            </nav>
+            <span
+              aria-hidden="true"
+              class="loading-root center loading-animation"
+            />
           </div>
         </div>
       </div>

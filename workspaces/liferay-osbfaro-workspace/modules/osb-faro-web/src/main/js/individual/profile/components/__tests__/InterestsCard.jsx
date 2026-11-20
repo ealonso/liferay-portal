@@ -3,22 +3,15 @@ import InterestsCard, {InterestsList} from '../InterestsCard';
 import React from 'react';
 import {cleanup, render} from '@testing-library/react';
 import {mockSegment} from 'test/data';
-import {SEGMENTS} from 'shared/util/constants';
-import {MemoryRouter} from 'react-router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 describe('InterestsCard', () => {
 	afterEach(cleanup);
 
 	it('should render', async () => {
 		const {container} = render(
-			<MemoryRouter>
-				<InterestsCard
-					entity={mockSegment(15)}
-					groupId='23'
-					type={SEGMENTS}
-				/>
-			</MemoryRouter>
+			<WorkspacePage><InterestsCard entity={mockSegment(15)} groupId='23' /></WorkspacePage>
 		);
 
 		jest.runAllTimers();
@@ -32,14 +25,11 @@ describe('InterestsCard', () => {
 describe('InterestsList', () => {
 	it('should render', () => {
 		const {container} = render(
-			<MemoryRouter>
-				<InterestsList
-					groupId='23'
-					id='foo'
-					interests={[data.mockInterestData()]}
-					type={SEGMENTS}
-				/>
-			</MemoryRouter>
+			<WorkspacePage><InterestsList
+				groupId='23'
+				id='foo'
+				interests={[data.mockInterestData()]}
+			/></WorkspacePage>
 		);
 
 		jest.runAllTimers();

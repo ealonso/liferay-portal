@@ -5,7 +5,7 @@ import React from 'react';
 import {fireEvent, render} from '@testing-library/react';
 import {Provider} from 'react-redux';
 import {range} from 'lodash';
-import {MemoryRouter} from 'react-router';
+import {WorkspacePage} from 'test/mock-page-context';
 
 describe('EventDetailsCard', () => {
 	const eventAttributes = range(5).map(i =>
@@ -14,15 +14,13 @@ describe('EventDetailsCard', () => {
 
 	it('should render', () => {
 		const {container} = render(
-			<Provider store={mockStore()}>
-				<MemoryRouter>
-					<EventDetailsCard
-						eventAttributes={eventAttributes}
-						eventName='viewArticle'
-						groupId='23'
-					/>
-				</MemoryRouter>
-			</Provider>
+			<WorkspacePage><Provider store={mockStore()}>
+				<EventDetailsCard
+					eventAttributes={eventAttributes}
+					eventName='viewArticle'
+					groupId='23'
+				/>
+			</Provider></WorkspacePage>
 		);
 
 		expect(container).toMatchSnapshot();
@@ -30,15 +28,13 @@ describe('EventDetailsCard', () => {
 
 	it('should match the displayed code with the selected attributes', () => {
 		const {container} = render(
-			<Provider store={mockStore()}>
-				<MemoryRouter>
-					<EventDetailsCard
-						eventAttributes={eventAttributes}
-						eventName='viewArticle'
-						groupId='23'
-					/>
-				</MemoryRouter>
-			</Provider>
+			<WorkspacePage><Provider store={mockStore()}>
+				<EventDetailsCard
+					eventAttributes={eventAttributes}
+					eventName='viewArticle'
+					groupId='23'
+				/>
+			</Provider></WorkspacePage>
 		);
 
 		fireEvent.click(container.querySelector('.clickable'));

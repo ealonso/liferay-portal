@@ -7,8 +7,8 @@ import {Provider} from 'react-redux';
 import {render, screen} from '@testing-library/react';
 import {Segment} from 'shared/util/records';
 import {SegmentTypes} from 'shared/util/constants';
-import {MemoryRouter} from 'react-router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const defaultProps = {
 	channelId: '123',
@@ -23,14 +23,12 @@ const defaultProps = {
 describe('Membership', () => {
 	const WrappedComponent = props => (
 		<Provider store={mockStore()}>
-			<MemoryRouter>
-				<Membership {...defaultProps} {...props} />
-			</MemoryRouter>
+			<Membership {...defaultProps} {...props} />
 		</Provider>
 	);
 
 	it('should render', async () => {
-		const {container} = render(<WrappedComponent />);
+		const {container} = render(<WorkspacePage><WrappedComponent /></WorkspacePage>);
 
 		jest.runAllTimers();
 
@@ -50,14 +48,14 @@ describe('Membership', () => {
 			const growthSpy = jest.spyOn(Growth, 'default');
 
 			const {container} = render(
-				<WrappedComponent
+				<WorkspacePage><WrappedComponent
 					segment={data.getImmutableMock(
 						Segment,
 						data.mockSegment,
 						0,
 						{lastMembershipUpdateDate}
 					)}
-				/>
+				/></WorkspacePage>
 			);
 
 			jest.runAllTimers();
@@ -76,13 +74,11 @@ describe('Membership', () => {
 
 describe('MembershipChart', () => {
 	const WrappedComponent = props => (
-		<MemoryRouter>
-			<MembershipChart {...defaultProps} {...props} />
-		</MemoryRouter>
+		<MembershipChart {...defaultProps} {...props} />
 	);
 
 	it('should render', async () => {
-		const {container} = render(<WrappedComponent />);
+		const {container} = render(<WorkspacePage><WrappedComponent /></WorkspacePage>);
 
 		jest.runAllTimers();
 

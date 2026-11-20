@@ -3,12 +3,12 @@ import React from 'react';
 import {cleanup, fireEvent, render} from '@testing-library/react';
 import {DropdownRangeKey} from '../DropdownRangeKey';
 import {InMemoryCache} from '@apollo/client';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockPreferenceReq, mockTimeRangeReq} from 'test/graphql-data';
 import {Provider} from 'react-redux';
 import {SEVEN_MONTHS} from 'shared/util/constants';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.mock('shared/hooks/useTimeZone', () => ({
 	useTimeZone: () => ({
@@ -18,29 +18,20 @@ jest.mock('shared/hooks/useTimeZone', () => ({
 
 const WrapperComponent = ({children, retentionPeriodTimeRange}) => (
 	<Provider store={mockStore()}>
-		<MemoryRouter initialEntries={['/workspace/23']}>
-			<RouterRoutes>
-				<Route
-					element={
-						<MockedProvider
-							cache={
-								new InMemoryCache({
-									addTypename: false,
-									freezeResults: false
-								})
-							}
-							mocks={[
-								mockTimeRangeReq(),
-								mockPreferenceReq(retentionPeriodTimeRange)
-							]}
-						>
-							{children}
-						</MockedProvider>
-					}
-					path='/workspace/:groupId/*'
-				/>
-			</RouterRoutes>
-		</MemoryRouter>
+		<MockedProvider
+			cache={
+				new InMemoryCache({
+					addTypename: false,
+					freezeResults: false
+				})
+			}
+			mocks={[
+				mockTimeRangeReq(),
+				mockPreferenceReq(retentionPeriodTimeRange)
+			]}
+		>
+			{children}
+		</MockedProvider>
 	</Provider>
 );
 
@@ -49,9 +40,9 @@ describe('DropdownRangeKey', () => {
 
 	it('should render', async () => {
 		const {container} = render(
-			<WrapperComponent>
+			<WorkspacePage><WrapperComponent>
 				<DropdownRangeKey />
-			</WrapperComponent>
+			</WrapperComponent></WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(container);
@@ -61,9 +52,9 @@ describe('DropdownRangeKey', () => {
 
 	it('should render a calendar icon in the trigger button', async () => {
 		const {container} = render(
-			<WrapperComponent>
+			<WorkspacePage><WrapperComponent>
 				<DropdownRangeKey />
-			</WrapperComponent>
+			</WrapperComponent></WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(container);
@@ -76,9 +67,9 @@ describe('DropdownRangeKey', () => {
 
 	it('should focus the first additional period when showing more preset periods', async () => {
 		const {getByRole, getByText} = render(
-			<WrapperComponent>
+			<WorkspacePage><WrapperComponent>
 				<DropdownRangeKey legacy={false} />
-			</WrapperComponent>
+			</WrapperComponent></WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(document.body);
@@ -92,9 +83,9 @@ describe('DropdownRangeKey', () => {
 
 	it('should display a message with retention period for 13 months on date picker', async () => {
 		const {getByTestId, getByText} = render(
-			<WrapperComponent>
+			<WorkspacePage><WrapperComponent>
 				<DropdownRangeKey legacy={false} />
-			</WrapperComponent>
+			</WrapperComponent></WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(document.body);
@@ -124,9 +115,9 @@ describe('DropdownRangeKey', () => {
 
 	it('should display a message with retention period for 7 months on date picker', async () => {
 		const {getByTestId, getByText} = render(
-			<WrapperComponent retentionPeriodTimeRange={SEVEN_MONTHS}>
+			<WorkspacePage><WrapperComponent retentionPeriodTimeRange={SEVEN_MONTHS}>
 				<DropdownRangeKey legacy={false} />
-			</WrapperComponent>
+			</WrapperComponent></WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(document.body);

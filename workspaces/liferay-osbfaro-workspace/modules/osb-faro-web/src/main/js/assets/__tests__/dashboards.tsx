@@ -2,11 +2,10 @@ import AssetDashboard from 'assets/pages/Dashboard';
 import mockStore from 'test/mock-store';
 import React from 'react';
 
-import {MemoryRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {render, screen} from '@testing-library/react';
-import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
 import {useQueryRangeSelectors} from 'shared/hooks/useQueryRangeSelectors';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.mock('shared/components/download-report/DownloadCSVReport', () => ({
 	__esModule: true,
@@ -82,10 +81,6 @@ jest.mock('shared/hooks/useQueryRangeSelectors', () => ({
 	useQueryRangeSelectors: jest.fn(),
 }));
 
-jest.mock('shared/hooks/useLDPEnabled', () => ({
-	useLDPEnabled: jest.fn(),
-}));
-
 /**
  * Every asset dashboard renders the account filter the same way, so the suite
  * below runs once per dashboard.
@@ -128,12 +123,19 @@ describe.each(DASHBOARDS)('$name', ({assetType, label, slug}) => {
 		query: {},
 	};
 
-	const renderDashboard = (initialEntries = ['/']) =>
+	const renderDashboard = (
+		ldpEnabled: boolean,
+		params: {[name: string]: string} = {}
+	) =>
 		render(
 			<Provider store={mockStore()}>
-				<MemoryRouter initialEntries={initialEntries}>
-					<AssetDashboard className="" router={router as any} />
-				</MemoryRouter>
+				<WorkspacePage ldpEnabled={ldpEnabled} params={params}>
+					<AssetDashboard
+						className=""
+						router={router as any}
+						tabId="page"
+					/>
+				</WorkspacePage>
 			</Provider>
 		);
 
@@ -144,9 +146,7 @@ describe.each(DASHBOARDS)('$name', ({assetType, label, slug}) => {
 	});
 
 	it('shows the account filter on the overview route for LDP workspaces', () => {
-		(useLDPEnabled as jest.Mock).mockReturnValue(true);
-
-		renderDashboard();
+		renderDashboard(true);
 
 		expect(screen.getByTestId('filter-by-account')).toHaveAttribute(
 			'data-asset-type',
@@ -155,17 +155,13 @@ describe.each(DASHBOARDS)('$name', ({assetType, label, slug}) => {
 	});
 
 	it('hides the account filter on the overview route for non-LDP workspaces', () => {
-		(useLDPEnabled as jest.Mock).mockReturnValue(false);
-
-		renderDashboard();
+		renderDashboard(false);
 
 		expect(screen.queryByTestId('filter-by-account')).toBeNull();
 	});
 
 	it('seeds the account filter from the accountId/accountName URL query params', () => {
-		(useLDPEnabled as jest.Mock).mockReturnValue(true);
-
-		renderDashboard(['/?accountId=100&accountName=Account+100']);
+		renderDashboard(true, {accountId: '100', accountName: 'Account 100'});
 
 		expect(screen.getByTestId('filter-by-account')).toHaveAttribute(
 			'data-initial-account-id',
@@ -178,25 +174,19 @@ describe.each(DASHBOARDS)('$name', ({assetType, label, slug}) => {
 	});
 
 	it('shows the segment filter on the overview route for LDP workspaces', () => {
-		(useLDPEnabled as jest.Mock).mockReturnValue(true);
-
-		renderDashboard();
+		renderDashboard(true);
 
 		expect(screen.getByTestId('filter-by-segment')).toBeInTheDocument();
 	});
 
 	it('hides the segment filter on the overview route for non-LDP workspaces', () => {
-		(useLDPEnabled as jest.Mock).mockReturnValue(false);
-
-		renderDashboard();
+		renderDashboard(false);
 
 		expect(screen.queryByTestId('filter-by-segment')).toBeNull();
 	});
 
 	it('seeds the segment filter from the segmentId/segmentName URL query params', () => {
-		(useLDPEnabled as jest.Mock).mockReturnValue(true);
-
-		renderDashboard(['/?segmentId=100&segmentName=Segment+100']);
+		renderDashboard(true, {segmentId: '100', segmentName: 'Segment 100'});
 
 		expect(screen.getByTestId('filter-by-segment')).toHaveAttribute(
 			'data-initial-segment-id',
@@ -208,72 +198,8 @@ describe.each(DASHBOARDS)('$name', ({assetType, label, slug}) => {
 		);
 	});
 
-	it('shows the visitors tab for LDP workspaces', () => {
-		(useLDPEnabled as jest.Mock).mockReturnValue(true);
-
-		renderDashboard();
-
-		expect(screen.queryByText(/^visitors$/i)).toBeTruthy();
-	});
-
-	it('hides the visitors tab for non-LDP workspaces', () => {
-		(useLDPEnabled as jest.Mock).mockReturnValue(false);
-
-		renderDashboard();
-
-		expect(screen.queryByText(/^visitors$/i)).toBeNull();
-	});
-
-	it('shows the known individuals tab for non-LDP workspaces', () => {
-		(useLDPEnabled as jest.Mock).mockReturnValue(false);
-
-		renderDashboard();
-
-		expect(screen.queryByText(/^known individuals$/i)).toBeTruthy();
-	});
-
-	it('hides the known individuals tab for LDP workspaces', () => {
-		(useLDPEnabled as jest.Mock).mockReturnValue(true);
-
-		renderDashboard();
-
-		expect(screen.queryByText(/^known individuals$/i)).toBeNull();
-	});
-
-	it('carries the account filter and the date range over to the tab links', () => {
-		(useLDPEnabled as jest.Mock).mockReturnValue(true);
-
-		renderDashboard(['/?accountId=100&accountName=Account+100']);
-
-		const href = screen
-			.getByText(/^visitors$/i)
-			.closest('a')
-			?.getAttribute('href');
-
-		expect(href).toContain('accountId=100');
-		expect(href).toContain('accountName=Account');
-		expect(href).toContain('rangeKey=30');
-	});
-
-	it('leaves the tab links free of account params when no account is selected', () => {
-		(useLDPEnabled as jest.Mock).mockReturnValue(true);
-
-		renderDashboard();
-
-		const href = screen
-			.getByText(/^visitors$/i)
-			.closest('a')
-			?.getAttribute('href');
-
-		expect(href).not.toContain('accountId');
-		expect(href).not.toContain('accountName');
-		expect(href).toContain('rangeKey=30');
-	});
-
 	it('carries the date range back through the assets breadcrumb', () => {
-		(useLDPEnabled as jest.Mock).mockReturnValue(true);
-
-		renderDashboard();
+		renderDashboard(true);
 
 		const href = screen
 			.getByText(/^assets$/i)
@@ -286,15 +212,13 @@ describe.each(DASHBOARDS)('$name', ({assetType, label, slug}) => {
 	// All three parts have to come back; without the key the list ignores them.
 
 	it('carries a custom range back through the assets breadcrumb', () => {
-		(useLDPEnabled as jest.Mock).mockReturnValue(true);
-
 		(useQueryRangeSelectors as jest.Mock).mockReturnValue({
 			rangeEnd: '2026-05-28',
 			rangeKey: 'CUSTOM',
 			rangeStart: '2026-02-17',
 		});
 
-		renderDashboard();
+		renderDashboard(true);
 
 		const href = screen
 			.getByText(/^assets$/i)
@@ -307,11 +231,12 @@ describe.each(DASHBOARDS)('$name', ({assetType, label, slug}) => {
 	});
 
 	it('carries the account and segment back through the assets breadcrumb', () => {
-		(useLDPEnabled as jest.Mock).mockReturnValue(true);
-
-		renderDashboard([
-			'/?accountId=100&accountName=Account+100&segmentId=200&segmentName=Segment+200',
-		]);
+		renderDashboard(true, {
+			accountId: '100',
+			accountName: 'Account 100',
+			segmentId: '200',
+			segmentName: 'Segment 200',
+		});
 
 		const href = screen
 			.getByText(/^assets$/i)
@@ -323,9 +248,7 @@ describe.each(DASHBOARDS)('$name', ({assetType, label, slug}) => {
 	});
 
 	it('leaves the assets breadcrumb clean when nothing is selected', () => {
-		(useLDPEnabled as jest.Mock).mockReturnValue(true);
-
-		renderDashboard();
+		renderDashboard(true);
 
 		const href = screen
 			.getByText(/^assets$/i)
@@ -334,33 +257,5 @@ describe.each(DASHBOARDS)('$name', ({assetType, label, slug}) => {
 
 		expect(href).not.toContain('accountId');
 		expect(href).not.toContain('segmentId');
-	});
-
-	it('carries the segment filter over to the tab links', () => {
-		(useLDPEnabled as jest.Mock).mockReturnValue(true);
-
-		renderDashboard(['/?segmentId=100&segmentName=Segment+100']);
-
-		const href = screen
-			.getByText(/^visitors$/i)
-			.closest('a')
-			?.getAttribute('href');
-
-		expect(href).toContain('segmentId=100');
-		expect(href).toContain('segmentName=Segment');
-	});
-
-	it('leaves the tab links free of segment params when no segment is selected', () => {
-		(useLDPEnabled as jest.Mock).mockReturnValue(true);
-
-		renderDashboard();
-
-		const href = screen
-			.getByText(/^visitors$/i)
-			.closest('a')
-			?.getAttribute('href');
-
-		expect(href).not.toContain('segmentId');
-		expect(href).not.toContain('segmentName');
 	});
 });

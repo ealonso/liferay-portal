@@ -3,11 +3,8 @@ import {AssignedPropertiesTable} from '../AssignedPropertiesTable';
 import {DataSourceStatuses, DataSourceTypes} from 'shared/util/constants';
 import {fireEvent, render, screen} from '@testing-library/react';
 import {fromJS} from 'immutable';
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({groupId: '23'}),
-}));
+import {WorkspacePage} from 'test/mock-page-context';
+import {mockCurrentUser} from 'test/mock-page-context';
 
 let mockSelectChannelsModalProps: any;
 
@@ -31,9 +28,7 @@ jest.mock('shared/hoc/CrossPageSelect', () => ({
 	),
 }));
 
-jest.mock('shared/hooks/useCurrentUser', () => ({
-	useCurrentUser: () => ({isAdmin: () => true}),
-}));
+beforeEach(() => mockCurrentUser());
 
 jest.mock('shared/hooks/useQueryPagination', () => ({
 	useQueryPagination: () => ({
@@ -67,10 +62,12 @@ const defaultProps = {
 
 const openSelectChannelsModal = (providerType: DataSourceTypes) => {
 	render(
-		<AssignedPropertiesTable
-			{...defaultProps}
-			dataSource={mockDataSource(providerType)}
-		/>
+		<WorkspacePage>
+			<AssignedPropertiesTable
+				{...defaultProps}
+				dataSource={mockDataSource(providerType)}
+			/>
+		</WorkspacePage>
 	);
 
 	expect(screen.queryByTestId('select-channels-modal')).toBeNull();

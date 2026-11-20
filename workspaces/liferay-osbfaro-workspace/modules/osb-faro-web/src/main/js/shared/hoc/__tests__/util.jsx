@@ -1,7 +1,7 @@
 import React from 'react';
 import {cleanup, render} from '@testing-library/react';
 import {SafeResults, withEmpty, withError, withLoading} from '../util';
-import {MemoryRouter} from 'react-router';
+import {WorkspacePage} from 'test/mock-page-context';
 
 describe('HOC Util', () => {
 	afterEach(cleanup);
@@ -9,9 +9,9 @@ describe('HOC Util', () => {
 	describe('SafeResults', () => {
 		it('should pass the children when error and loading are false', () => {
 			const {getByText} = render(
-				<SafeResults error={false} loading={false}>
+				<WorkspacePage><SafeResults error={false} loading={false}>
 					{() => 'foo'}
-				</SafeResults>
+				</SafeResults></WorkspacePage>
 			);
 
 			expect(getByText('foo')).toBeTruthy();
@@ -19,9 +19,9 @@ describe('HOC Util', () => {
 
 		it('should return a loading screen when loading is true', () => {
 			const {container} = render(
-				<SafeResults error={false} loading>
+				<WorkspacePage><SafeResults error={false} loading>
 					{() => 'foo'}
-				</SafeResults>
+				</SafeResults></WorkspacePage>
 			);
 
 			expect(container.querySelector('.loading-root')).toBeTruthy();
@@ -29,9 +29,7 @@ describe('HOC Util', () => {
 
 		it('should return an error screen when error is true', () => {
 			const {container} = render(
-				<MemoryRouter>
-					<SafeResults error>{() => 'foo'}</SafeResults>
-				</MemoryRouter>
+				<WorkspacePage><SafeResults error>{() => 'foo'}</SafeResults></WorkspacePage>
 			);
 
 			expect(container.querySelector('.error-page-root')).toBeTruthy();
@@ -42,7 +40,7 @@ describe('HOC Util', () => {
 		it('should render with an empty state', () => {
 			const WrappedComponent = withEmpty()(() => 'test');
 
-			const {container} = render(<WrappedComponent data={{total: 0}} />);
+			const {container} = render(<WorkspacePage><WrappedComponent data={{total: 0}} /></WorkspacePage>);
 
 			expect(container.querySelector('.no-results-root')).toBeTruthy();
 		});
@@ -52,7 +50,7 @@ describe('HOC Util', () => {
 
 			const WrappedComponent = withEmpty()(componentSpy);
 
-			render(<WrappedComponent data={{total: 1}} />);
+			render(<WorkspacePage><WrappedComponent data={{total: 1}} /></WorkspacePage>);
 
 			expect(componentSpy).toHaveBeenCalled();
 		});
@@ -63,9 +61,7 @@ describe('HOC Util', () => {
 			const WrappedComponent = withError()(jest.fn(() => 'test'));
 
 			const {container} = render(
-				<MemoryRouter>
-					<WrappedComponent error />
-				</MemoryRouter>
+				<WorkspacePage><WrappedComponent error /></WorkspacePage>
 			);
 
 			expect(container.querySelector('.error-page-root')).toBeTruthy();
@@ -76,7 +72,7 @@ describe('HOC Util', () => {
 				jest.fn(() => 'test')
 			);
 
-			const {container} = render(<WrappedComponent error />);
+			const {container} = render(<WorkspacePage><WrappedComponent error /></WorkspacePage>);
 
 			expect(container.querySelector('.error-display-root')).toBeTruthy();
 		});
@@ -86,7 +82,7 @@ describe('HOC Util', () => {
 
 			const WrappedComponent = withError()(componentSpy);
 
-			render(<WrappedComponent error={false} />);
+			render(<WorkspacePage><WrappedComponent error={false} /></WorkspacePage>);
 
 			expect(componentSpy).toHaveBeenCalled();
 		});
@@ -99,9 +95,7 @@ describe('HOC Util', () => {
 			);
 
 			const {getByText} = render(
-				<MemoryRouter>
-					<WrappedComponent error />
-				</MemoryRouter>
+				<WorkspacePage><WrappedComponent error /></WorkspacePage>
 			);
 
 			expect(getByText(customMessage)).toBeTruthy();
@@ -112,7 +106,7 @@ describe('HOC Util', () => {
 		it('should render with a loading page', () => {
 			const WrappedComponent = withLoading()(jest.fn(() => 'test'));
 
-			const {container} = render(<WrappedComponent loading />);
+			const {container} = render(<WorkspacePage><WrappedComponent loading /></WorkspacePage>);
 
 			expect(container.querySelector('.loading-root')).toBeTruthy();
 		});
@@ -120,7 +114,7 @@ describe('HOC Util', () => {
 		it('should render w/ loading', () => {
 			const WrappedComponent = withLoading()(jest.fn(() => 'test'));
 
-			const {container} = render(<WrappedComponent loading />);
+			const {container} = render(<WorkspacePage><WrappedComponent loading /></WorkspacePage>);
 
 			expect(container.querySelector('.loading-root')).toBeTruthy();
 		});
@@ -130,7 +124,7 @@ describe('HOC Util', () => {
 
 			const WrappedComponent = withLoading()(componentSpy);
 
-			render(<WrappedComponent loading={false} />);
+			render(<WorkspacePage><WrappedComponent loading={false} /></WorkspacePage>);
 
 			expect(componentSpy).toHaveBeenCalled();
 		});

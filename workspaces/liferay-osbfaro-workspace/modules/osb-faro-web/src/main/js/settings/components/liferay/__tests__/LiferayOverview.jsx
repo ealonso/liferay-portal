@@ -3,16 +3,13 @@ import LiferayOverview from '../LiferayOverview';
 import mockStore from 'test/mock-store';
 import React from 'react';
 import {DataSource} from 'shared/util/records';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
+import {WorkspacePage} from 'test/mock-page-context';
+import {mockCurrentUser} from 'test/mock-page-context';
 
-jest.mock('shared/hooks/useCurrentUser', () => ({
-	useCurrentUser: () => ({
-		isAdmin: () => true
-	})
-}));
+beforeEach(() => mockCurrentUser());
 
 jest.mock('shared/hooks/useRequest', () => ({
 	useRequest: () => ({
@@ -31,20 +28,11 @@ const defaultProps = {
 
 const WrappedComponent = props => (
 	<Provider store={mockStore()}>
-		<MemoryRouter
-			initialEntries={['/workspace/23/settings/data-source/test']}
-		>
-			<RouterRoutes>
-				<Route
-					element={
-						<MockedProvider>
-							<LiferayOverview {...defaultProps} {...props} />
-						</MockedProvider>
-					}
-					path='/workspace/:groupId/settings/data-source/:id/*'
-				/>
-			</RouterRoutes>
-		</MemoryRouter>
+		<WorkspacePage params={{id: 'test'}}>
+			<MockedProvider>
+				<LiferayOverview {...defaultProps} {...props} />
+			</MockedProvider>
+		</WorkspacePage>
 	</Provider>
 );
 

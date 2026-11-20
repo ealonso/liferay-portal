@@ -6,9 +6,9 @@ import React from 'react';
 import UserList from '../UserList';
 import {ClayIconSpriteContext} from '@clayui/icon';
 import {cleanup, fireEvent, render, screen} from '@testing-library/react';
-import {MemoryRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.mock('shared/actions/alerts', () => ({
 	actionTypes: {},
@@ -53,11 +53,9 @@ const mockUsers = {
 
 const Wrapper = ({children, store = mockStore()}) => (
 	<Provider store={store}>
-		<MemoryRouter>
-			<ClayIconSpriteContext.Provider value='/o/osb-faro-web/dist/sprite.svg'>
-				{children}
-			</ClayIconSpriteContext.Provider>
-		</MemoryRouter>
+		<ClayIconSpriteContext.Provider value='/o/osb-faro-web/dist/sprite.svg'>
+			{children}
+		</ClayIconSpriteContext.Provider>
 	</Provider>
 );
 
@@ -74,9 +72,9 @@ describe('ChannelUserList', () => {
 
 	it('should render', async () => {
 		const {container} = render(
-			<Wrapper>
+			<WorkspacePage><Wrapper>
 				<UserList {...defaultProps} />
-			</Wrapper>
+			</Wrapper></WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(container);
@@ -91,9 +89,9 @@ describe('ChannelUserList', () => {
 
 	it('should render without checkboxes if user is not an AC admin', async () => {
 		const {container} = render(
-			<Wrapper>
+			<WorkspacePage><Wrapper>
 				<UserList {...defaultProps} authorized={false} />
-			</Wrapper>
+			</Wrapper></WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved(container);
@@ -104,9 +102,9 @@ describe('ChannelUserList', () => {
 
 	it('should open a modal to add users', async () => {
 		render(
-			<Wrapper>
+			<WorkspacePage><Wrapper>
 				<UserList {...defaultProps} />
-			</Wrapper>
+			</Wrapper></WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved();
@@ -120,9 +118,9 @@ describe('ChannelUserList', () => {
 
 	it('should open a modal to remove users', async () => {
 		render(
-			<Wrapper>
+			<WorkspacePage><Wrapper>
 				<UserList {...defaultProps} />
-			</Wrapper>
+			</Wrapper></WorkspacePage>
 		);
 
 		await waitForLoadingToBeRemoved();

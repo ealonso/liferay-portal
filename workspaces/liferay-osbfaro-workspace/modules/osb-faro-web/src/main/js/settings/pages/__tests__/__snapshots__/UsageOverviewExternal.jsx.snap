@@ -5,525 +5,271 @@ exports[`UsageOverviewExternal should render 1`] = `
   <div
     class="settings-root"
   >
-    <nav
-      class="align-items-center bg-white sticky-top toolbar-root base-edit-page-toolbar mb-4 tbar component-tbar"
-    >
-      <ul
-        class="align-items-center mx-3 tbar-nav"
-      >
-        <li
-          class="tbar-item"
-        >
-          <a
-            aria-label="Back"
-            class="btn btn-monospaced btn-outline-borderless btn-outline-secondary btn-sm rounded-lg"
-            data-discover="true"
-            data-tooltip-align="bottom"
-            href="/workspace/23"
-            title="Back"
-          >
-            <svg
-              class="lexicon-icon lexicon-icon-angle-left"
-              role="presentation"
-            >
-              <use
-                href="#angle-left"
-              />
-            </svg>
-          </a>
-        </li>
-        <li
-          class="pl-0 tbar-item"
-        >
-          <div
-            class="tbar-section"
-          >
-            <h1
-              class="font-weight-semi-bold m-0 text-5 text-dark text-nowrap"
-            >
-              Settings
-            </h1>
-          </div>
-        </li>
-        <li
-          class="ml-auto tbar-item"
-        >
-          <ul
-            class="base-edit-page-toolbar-actions justify-content-end tbar-nav"
-            data-testid="toolbar-actions"
-          />
-        </li>
-      </ul>
-    </nav>
     <div
-      class="content-wrapper"
+      class="content section-main"
     >
-      <nav
-        class="section-side settings-side-bar"
-      >
-        <div>
-          <h5
-            class="section-title"
-          >
-            Workspace Data
-          </h5>
-          <ul
-            class="nav"
-          >
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/apis/tokens"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-ac_api icon-root"
-                    data-file="ac_api.svg"
-                    role="presentation"
-                  />
-                </span>
-                APIs
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/definitions"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-definitions icon-root"
-                    data-file="definitions.svg"
-                    role="presentation"
-                  />
-                </span>
-                Definitions
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/data-privacy"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-data_privacy_lock icon-root"
-                    data-file="data_privacy_lock.svg"
-                    role="presentation"
-                  />
-                </span>
-                Data Control & Privacy
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/data-source"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-faro_data_source icon-root"
-                    data-file="faro_data_source.svg"
-                    role="presentation"
-                  />
-                </span>
-                Data Sources
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/recommendations"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-ac_star icon-root"
-                    data-file="ac_star.svg"
-                    role="presentation"
-                  />
-                </span>
-                Recommendations
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div>
-          <h5
-            class="section-title"
-          >
-            Workspace Settings
-          </h5>
-          <ul
-            class="nav"
-          >
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/users"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-user_management icon-root"
-                    data-file="user_management.svg"
-                    role="presentation"
-                  />
-                </span>
-                User Management
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/properties"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-ac_page icon-root"
-                    data-file="ac_page.svg"
-                    role="presentation"
-                  />
-                </span>
-                Properties
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/usage"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-usage icon-root"
-                    data-file="usage.svg"
-                    role="presentation"
-                  />
-                </span>
-                Subscription & Usage
-              </a>
-            </li>
-            <li
-              class="item"
-            >
-              <a
-                class="button-root"
-                href="/workspace/23/settings/workspace"
-              >
-                <span
-                  class="icon-wrapper"
-                >
-                  <svg
-                    class="lexicon-icon lexicon-icon-cog icon-root"
-                    role="presentation"
-                  >
-                    <use
-                      href="#cog"
-                    />
-                  </svg>
-                </span>
-                Workspace
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
       <div
-        class="content section-main"
+        class="settings-base-page-root"
       >
         <div
-          class="settings-base-page-root"
+          class="maintenance-alert-root"
+        />
+        <div
+          class="content-header has-page-actions"
         >
           <div
-            class="maintenance-alert-root"
-          />
-          <div
-            class="content-header has-page-actions"
+            class="header-text"
           >
             <div
-              class="header-text"
+              class="d-flex"
             >
-              <div
-                class="d-flex"
+              <h3
+                class="title-text text-truncate"
               >
-                <h3
-                  class="title-text text-truncate"
+                <span
+                  class="text-truncate"
+                  data-tooltip="false"
+                  title=""
                 >
-                  <span
-                    class="text-truncate"
-                    data-tooltip="false"
-                    title=""
-                  >
-                    Subscription & Usage
-                  </span>
-                </h3>
-              </div>
-              <div
-                class="description"
-              >
-                SaaS plan usage is determined by MALUs and APVs.
-              </div>
+                  Subscription & Usage
+                </span>
+              </h3>
             </div>
             <div
-              class="page-actions-container"
+              class="description"
             >
-              <a
-                class="button-root btn btn-primary"
-                href="https://support.liferay.com/"
-                rel="noreferrer noopener"
-                target="_blank"
-              >
-                <svg
-                  class="lexicon-icon lexicon-icon-shortcut mr-2"
-                  role="presentation"
-                >
-                  <use
-                    href="#shortcut"
-                  />
-                </svg>
-                Go to Customer Portal
-                <span
-                  class="sr-only"
-                >
-                  (Opens a new window)
-                </span>
-              </a>
+              SaaS plan usage is determined by MALUs and APVs.
             </div>
           </div>
-          <div>
+          <div
+            class="page-actions-container"
+          >
+            <a
+              class="button-root btn btn-primary"
+              href="https://support.liferay.com/"
+              rel="noreferrer noopener"
+              target="_blank"
+            >
+              <svg
+                class="lexicon-icon lexicon-icon-shortcut mr-2"
+                role="presentation"
+              >
+                <use
+                  href="#shortcut"
+                />
+              </svg>
+              Go to Customer Portal
+              <span
+                class="sr-only"
+              >
+                (Opens a new window)
+              </span>
+            </a>
+          </div>
+        </div>
+        <div>
+          <div
+            class="saas-banner p-5 sm:p-8 md:p-10 xl:p-4"
+          >
             <div
-              class="saas-banner p-5 sm:p-8 md:p-10 xl:p-4"
+              class="text-white"
+            >
+              <h2
+                class="title"
+              >
+                View Your SaaS Project Metrics
+              </h2>
+              <p
+                class="w-50 d-flex mb-0"
+              >
+                As a SaaS customer, you can view your project usage metrics directly in the Customer Portal. This includes details on resource usage, site users, and storage capacity, along with key project information, all accessible in one place.
+              </p>
+            </div>
+          </div>
+          <div
+            class="gradient-opaque mt-5"
+          >
+            <div
+              class="mt-2"
             >
               <div
-                class="text-white"
+                class="w-100"
               >
                 <h2
                   class="title"
                 >
-                  View Your SaaS Project Metrics
+                  Sites and Users
                 </h2>
-                <p
-                  class="w-50 d-flex mb-0"
+              </div>
+              <div
+                class="row"
+              >
+                <div
+                  class="col-xl-4"
                 >
-                  As a SaaS customer, you can view your project usage metrics directly in the Customer Portal. This includes details on resource usage, site users, and storage capacity, along with key project information, all accessible in one place.
-                </p>
+                  <div
+                    class="card card-root mt-4"
+                  >
+                    <div
+                      class="card-header"
+                    >
+                      <div
+                        class="card-title"
+                      >
+                        <h3>
+                          Number of Sites
+                        </h3>
+                      </div>
+                    </div>
+                    <div
+                      class="card-body"
+                    >
+                      <div
+                        class="chart-bars"
+                      >
+                        <div
+                          class="small-bar"
+                        />
+                        <div
+                          class="big-bar"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="col-xl-4"
+                >
+                  <div
+                    class="card card-root mt-4"
+                  >
+                    <div
+                      class="card-header"
+                    >
+                      <div
+                        class="card-title"
+                      >
+                        <h3>
+                          Authenticated Logins (MALU's)
+                        </h3>
+                      </div>
+                    </div>
+                    <div
+                      class="card-body"
+                    >
+                      <div
+                        class="chart-bars"
+                      >
+                        <div
+                          class="small-bar"
+                        />
+                        <div
+                          class="big-bar"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="col-xl-4"
+                >
+                  <div
+                    class="card card-root mt-4"
+                  >
+                    <div
+                      class="card-header"
+                    >
+                      <div
+                        class="card-title"
+                      >
+                        <h3>
+                          Anonymous Page Views (APV)
+                        </h3>
+                      </div>
+                    </div>
+                    <div
+                      class="card-body"
+                    >
+                      <div
+                        class="chart-bars"
+                      >
+                        <div
+                          class="small-bar"
+                        />
+                        <div
+                          class="big-bar"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
             <div
-              class="gradient-opaque mt-5"
+              class="mt-2"
             >
               <div
-                class="mt-2"
+                class="w-100"
               >
-                <div
-                  class="w-100"
+                <h2
+                  class="title"
                 >
-                  <h2
-                    class="title"
-                  >
-                    Sites and Users
-                  </h2>
-                </div>
-                <div
-                  class="row"
-                >
-                  <div
-                    class="col-xl-4"
-                  >
-                    <div
-                      class="card card-root mt-4"
-                    >
-                      <div
-                        class="card-header"
-                      >
-                        <div
-                          class="card-title"
-                        >
-                          <h3>
-                            Number of Sites
-                          </h3>
-                        </div>
-                      </div>
-                      <div
-                        class="card-body"
-                      >
-                        <div
-                          class="chart-bars"
-                        >
-                          <div
-                            class="small-bar"
-                          />
-                          <div
-                            class="big-bar"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="col-xl-4"
-                  >
-                    <div
-                      class="card card-root mt-4"
-                    >
-                      <div
-                        class="card-header"
-                      >
-                        <div
-                          class="card-title"
-                        >
-                          <h3>
-                            Authenticated Logins (MALU's)
-                          </h3>
-                        </div>
-                      </div>
-                      <div
-                        class="card-body"
-                      >
-                        <div
-                          class="chart-bars"
-                        >
-                          <div
-                            class="small-bar"
-                          />
-                          <div
-                            class="big-bar"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="col-xl-4"
-                  >
-                    <div
-                      class="card card-root mt-4"
-                    >
-                      <div
-                        class="card-header"
-                      >
-                        <div
-                          class="card-title"
-                        >
-                          <h3>
-                            Anonymous Page Views (APV)
-                          </h3>
-                        </div>
-                      </div>
-                      <div
-                        class="card-body"
-                      >
-                        <div
-                          class="chart-bars"
-                        >
-                          <div
-                            class="small-bar"
-                          />
-                          <div
-                            class="big-bar"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                  Resource Usage
+                </h2>
               </div>
               <div
-                class="mt-2"
+                class="row"
               >
                 <div
-                  class="w-100"
+                  class="d-flex mt-4 donut-chart-item col-xl-4"
                 >
-                  <h2
-                    class="title"
+                  <div
+                    class="recharts-responsive-container"
+                    style="width: 50%; height: 100%; min-width: 0;"
+                  />
+                  <div
+                    class="d-flex flex-column justify-content-center"
                   >
-                    Resource Usage
-                  </h2>
+                    <h4>
+                      Extension Capacity
+                    </h4>
+                    <h4>
+                      RAM
+                    </h4>
+                  </div>
                 </div>
                 <div
-                  class="row"
+                  class="d-flex mt-4 donut-chart-item col-xl-4"
                 >
                   <div
-                    class="d-flex mt-4 donut-chart-item col-xl-4"
-                  >
-                    <div
-                      class="recharts-responsive-container"
-                      style="width: 50%; height: 100%; min-width: 0;"
-                    />
-                    <div
-                      class="d-flex flex-column justify-content-center"
-                    >
-                      <h4>
-                        Extension Capacity
-                      </h4>
-                      <h4>
-                        RAM
-                      </h4>
-                    </div>
-                  </div>
+                    class="recharts-responsive-container"
+                    style="width: 50%; height: 100%; min-width: 0;"
+                  />
                   <div
-                    class="d-flex mt-4 donut-chart-item col-xl-4"
+                    class="d-flex flex-column justify-content-center"
                   >
-                    <div
-                      class="recharts-responsive-container"
-                      style="width: 50%; height: 100%; min-width: 0;"
-                    />
-                    <div
-                      class="d-flex flex-column justify-content-center"
-                    >
-                      <h4>
-                        Extension Capacity
-                      </h4>
-                      <h4>
-                        vCPU
-                      </h4>
-                    </div>
+                    <h4>
+                      Extension Capacity
+                    </h4>
+                    <h4>
+                      vCPU
+                    </h4>
                   </div>
+                </div>
+                <div
+                  class="d-flex mt-4 donut-chart-item col-xl-4"
+                >
                   <div
-                    class="d-flex mt-4 donut-chart-item col-xl-4"
+                    class="recharts-responsive-container"
+                    style="width: 50%; height: 100%; min-width: 0;"
+                  />
+                  <div
+                    class="d-flex flex-column justify-content-center"
                   >
-                    <div
-                      class="recharts-responsive-container"
-                      style="width: 50%; height: 100%; min-width: 0;"
-                    />
-                    <div
-                      class="d-flex flex-column justify-content-center"
-                    >
-                      <h4>
-                        Storage Capacity
-                      </h4>
-                      <h4 />
-                    </div>
+                    <h4>
+                      Storage Capacity
+                    </h4>
+                    <h4 />
                   </div>
                 </div>
               </div>

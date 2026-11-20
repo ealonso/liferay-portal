@@ -1,32 +1,22 @@
 import * as API from 'shared/api';
 import * as data from 'test/data';
 import InterestTopics from '../InterestTopics';
-import mockStore, {mockStoreData, toRD} from 'test/mock-store';
+import mockStore from 'test/mock-store';
 import React from 'react';
 import {cleanup, render} from '@testing-library/react';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {Provider} from 'react-redux';
-import {Routes} from 'shared/util/router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
+import {mockCurrentUser} from 'test/mock-page-context';
+import {UserRoleNames} from 'shared/util/constants';
 
 const defaultProps = {
 	groupId: '23'
 };
 
-const Wrapper = ({children, queryString = '', store = mockStore()}) => (
+const Wrapper = ({children, params = {}, store = mockStore()}) => (
 	<Provider store={store}>
-		<MemoryRouter
-			initialEntries={[
-				`/workspace/23/settings/definitions/interest-topics${queryString}`
-			]}
-		>
-			<RouterRoutes>
-				<Route
-					element={children}
-					path={`${Routes.SETTINGS_DEFINITIONS_INTEREST_TOPICS}/*`}
-				/>
-			</RouterRoutes>
-		</MemoryRouter>
+		<WorkspacePage params={params}>{children}</WorkspacePage>
 	</Provider>
 );
 
@@ -55,7 +45,7 @@ describe('InterestTopics', () => {
 		);
 
 		const {container} = render(
-			<Wrapper queryString='?page=33'>
+			<Wrapper params={{page: '33'}}>
 				<InterestTopics {...defaultProps} />
 			</Wrapper>
 		);
@@ -70,9 +60,9 @@ describe('InterestTopics', () => {
 			Promise.resolve({items: [], total: 0})
 		);
 
-		const memberStore = mockStore(
-			mockStoreData.setIn(['currentUser'], toRD('24'))
-		);
+		mockCurrentUser({roleName: UserRoleNames.Member});
+
+		const memberStore = mockStore();
 
 		const {container, queryByText} = render(
 			<Wrapper store={memberStore}>
@@ -91,7 +81,7 @@ describe('InterestTopics', () => {
 		);
 
 		const {container} = render(
-			<Wrapper queryString='?query=foo'>
+			<Wrapper params={{query: 'foo'}}>
 				<InterestTopics {...defaultProps} />
 			</Wrapper>
 		);
@@ -122,9 +112,9 @@ describe('InterestTopics', () => {
 			Promise.resolve({items: [], total: 0})
 		);
 
-		const memberStore = mockStore(
-			mockStoreData.setIn(['currentUser'], toRD('24'))
-		);
+		mockCurrentUser({roleName: UserRoleNames.Member});
+
+		const memberStore = mockStore();
 
 		const {container} = render(
 			<Wrapper store={memberStore}>

@@ -6,15 +6,8 @@ import {cleanup, render} from '@testing-library/react';
 import {IndividualsDistribution} from '../Distribution';
 import {mockEmptyState, mockSuccessState} from 'test/__mocks__/mock-objects';
 import {Provider} from 'react-redux';
-import {MemoryRouter} from 'react-router-dom';
 import {User} from 'shared/util/records';
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		groupId: '123'
-	})
-}));
+import {WorkspacePage} from 'test/mock-page-context';
 
 const mockUseDataSource = useDataSources;
 
@@ -25,9 +18,9 @@ const defaultProps = {
 
 const WrappedComponent = () => (
 	<Provider store={mockStore()}>
-		<MemoryRouter>
+		<WorkspacePage groupId='123'>
 			<IndividualsDistribution {...defaultProps} />
-		</MemoryRouter>
+		</WorkspacePage>
 	</Provider>
 );
 

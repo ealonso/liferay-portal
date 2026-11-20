@@ -5,11 +5,12 @@ import SalesforceOverview from '../SalesforceOverview';
 import {cleanup, render} from '@testing-library/react';
 import {DataSource} from 'shared/util/records';
 import {fetchChannelDatasources} from 'shared/api/data-source';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
 import {useRequest} from 'shared/hooks/useRequest';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
+import {mockCurrentUser} from 'test/mock-page-context';
 
 jest.mock('shared/api/connector', () => ({
 	fetchConnectorEntityCount: entity => entity
@@ -29,9 +30,7 @@ const mockCountResponses = countResponses => {
 	});
 };
 
-jest.mock('shared/hooks/useCurrentUser', () => ({
-	useCurrentUser: () => ({isAdmin: () => true})
-}));
+beforeEach(() => mockCurrentUser());
 
 const defaultProps = {
 	dataSource: data.getImmutableMock(DataSource, data.mockSalesforceDataSource)
@@ -39,20 +38,11 @@ const defaultProps = {
 
 const WrappedComponent = props => (
 	<Provider store={mockStore()}>
-		<MemoryRouter
-			initialEntries={['/workspace/23/settings/data-source/test']}
-		>
-			<RouterRoutes>
-				<Route
-					element={
-						<MockedProvider addTypename={false}>
-							<SalesforceOverview {...defaultProps} {...props} />
-						</MockedProvider>
-					}
-					path='/workspace/:groupId/settings/data-source/:id/*'
-				/>
-			</RouterRoutes>
-		</MemoryRouter>
+		<WorkspacePage params={{id: 'test'}}>
+			<MockedProvider addTypename={false}>
+				<SalesforceOverview {...defaultProps} {...props} />
+			</MockedProvider>
+		</WorkspacePage>
 	</Provider>
 );
 

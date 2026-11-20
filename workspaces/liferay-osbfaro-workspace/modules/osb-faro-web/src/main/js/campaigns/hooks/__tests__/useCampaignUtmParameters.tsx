@@ -2,7 +2,7 @@ import * as API from 'shared/api';
 import React from 'react';
 import {act, renderHook, waitFor} from '@testing-library/react';
 import {useCampaignUtmParameters} from '../useCampaignUtmParameters';
-import {MemoryRouter} from 'react-router-dom';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const fetchCampaignAcquisitionParameters = API.campaigns
 	.fetchCampaignAcquisitionParameters as jest.Mock;
@@ -14,7 +14,7 @@ const parameter = (name: string, standard: boolean, value: string) => ({
 	value,
 });
 
-const renderUseCampaignUtmParameters = (initialEntry = '/') =>
+const renderUseCampaignUtmParameters = (query = '') =>
 	renderHook(
 		({campaignId}: {campaignId: string}) =>
 			useCampaignUtmParameters({
@@ -25,9 +25,12 @@ const renderUseCampaignUtmParameters = (initialEntry = '/') =>
 		{
 			initialProps: {campaignId: '7'},
 			wrapper: ({children}) => (
-				<MemoryRouter initialEntries={[initialEntry]}>
+				<WorkspacePage
+					channelId="123"
+					params={Object.fromEntries(new URLSearchParams(query))}
+				>
 					{children}
-				</MemoryRouter>
+				</WorkspacePage>
 			),
 		}
 	);
@@ -39,7 +42,7 @@ describe('useCampaignUtmParameters', () => {
 	});
 
 	it('should ask for the campaign it names, within the selected range', async () => {
-		renderUseCampaignUtmParameters('/?rangeKey=7');
+		renderUseCampaignUtmParameters('?rangeKey=7');
 
 		await waitFor(() =>
 			expect(fetchCampaignAcquisitionParameters).toHaveBeenCalledWith({
@@ -53,7 +56,7 @@ describe('useCampaignUtmParameters', () => {
 
 	it('should send a custom range as its bounds alone', async () => {
 		renderUseCampaignUtmParameters(
-			'/?rangeEnd=2026-10-31&rangeKey=CUSTOM&rangeStart=2026-10-01'
+			'?rangeEnd=2026-10-31&rangeKey=CUSTOM&rangeStart=2026-10-01'
 		);
 
 		await waitFor(() =>

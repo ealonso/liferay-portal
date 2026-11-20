@@ -1,117 +1,102 @@
-import mockStore from 'test/mock-store';
 import NavigationWarning from '../NavigationWarning';
 import React from 'react';
-import {
-	cleanup,
-	fireEvent,
-	render,
-	screen,
-	waitFor,
-} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
-import {Provider} from 'react-redux';
-import {useBlocker} from 'react-router-dom';
+import {act, cleanup, fireEvent, render, screen} from '@testing-library/react';
 
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useBlocker: jest.fn(),
-}));
+const dispatchBeforeUnload = () => {
+	const event = new Event('beforeunload', {cancelable: true});
 
-// Like the router, the blocker leaves the `blocked` state once it is reset or
-// allowed to proceed.
+	window.dispatchEvent(event);
 
-const mockBlocker = () => {
-	let state = 'blocked';
-
-	const proceed = jest.fn(() => {
-		state = 'proceeding';
-	});
-
-	const reset = jest.fn(() => {
-		state = 'unblocked';
-	});
-
-	useBlocker.mockImplementation(() => ({proceed, reset, state}));
-
-	return {proceed, reset};
+	return event;
 };
 
-const renderComponent = () =>
-	render(
-		<Provider store={mockStore()}>
-			<MemoryRouter>
-				<NavigationWarning when />
-			</MemoryRouter>
-		</Provider>
+const navigateWithSenna = (path) => {
+	const [, handleBeforeNavigate] = Liferay.on.mock.calls.find(
+		([eventName]) => eventName === 'beforeNavigate'
 	);
+
+	const originalEvent = {preventDefault: jest.fn()};
+
+	act(() => handleBeforeNavigate({originalEvent, path}));
+
+	return originalEvent;
+};
 
 describe('NavigationWarning', () => {
 	afterEach(() => {
 		cleanup();
 
-		useBlocker.mockReset();
+		jest.clearAllMocks();
 	});
 
-	it('should render nothing while the navigation is not blocked', () => {
-		useBlocker.mockReturnValue({state: 'unblocked'});
+	it('renders nothing', () => {
+		const {container} = render(<NavigationWarning when />);
 
-		renderComponent();
-
-		expect(screen.queryByRole('dialog')).toBeNull();
+		expect(container).toBeEmptyDOMElement();
 	});
 
-	it('opens the confirmation modal when the navigation is blocked', async () => {
-		useBlocker.mockReturnValue({
-			proceed: jest.fn(),
-			reset: jest.fn(),
-			state: 'blocked',
-		});
+	it('asks to confirm leaving the page while there are unsaved changes', () => {
+		render(<NavigationWarning when />);
 
-		renderComponent();
-
-		expect(await screen.findByRole('dialog')).toBeInTheDocument();
-		expect(
-			await screen.findByRole('heading', {name: /unsaved changes/i})
-		).toBeInTheDocument();
+		expect(dispatchBeforeUnload().defaultPrevented).toBe(true);
 	});
 
-	it('proceeds with the navigation when the user leaves the page', async () => {
-		const {proceed, reset} = mockBlocker();
+	it('lets the user leave the page without unsaved changes', () => {
+		render(<NavigationWarning when={false} />);
 
-		renderComponent();
-
-		fireEvent.click(await screen.findByText(/leave page/i));
-
-		await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
-
-		expect(proceed).toHaveBeenCalledTimes(1);
-		expect(reset).not.toHaveBeenCalled();
+		expect(dispatchBeforeUnload().defaultPrevented).toBe(false);
 	});
 
-	it('resets the navigation when the user stays on the page', async () => {
-		const {proceed, reset} = mockBlocker();
+	it('stops asking once it is unmounted', () => {
+		const {unmount} = render(<NavigationWarning when />);
 
-		renderComponent();
+		unmount();
 
-		fireEvent.click(await screen.findByText(/stay on page/i));
-
-		await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
-
-		expect(reset).toHaveBeenCalledTimes(1);
-		expect(proceed).not.toHaveBeenCalled();
+		expect(dispatchBeforeUnload().defaultPrevented).toBe(false);
 	});
 
-	it('resets the navigation when the modal is dismissed with Esc', async () => {
-		const {proceed, reset} = mockBlocker();
+	it('stops a page navigation and asks to confirm it while there are unsaved changes', async () => {
+		render(<NavigationWarning when />);
 
-		renderComponent();
+		const originalEvent = navigateWithSenna('/web/workspace/events');
 
-		await screen.findByText(/leave page/i);
+		expect(originalEvent.preventDefault).toHaveBeenCalled();
+		expect(await screen.findByText('Unsaved Changes')).toBeInTheDocument();
+		expect(Liferay.Util.navigate).not.toHaveBeenCalled();
+	});
 
-		fireEvent.keyDown(document, {key: 'Escape'});
+	it('stays on the page when the user chooses to stay', async () => {
+		render(<NavigationWarning when />);
 
-		await waitFor(() => expect(reset).toHaveBeenCalledTimes(1));
+		navigateWithSenna('/web/workspace/events');
 
-		expect(proceed).not.toHaveBeenCalled();
+		fireEvent.click(
+			await screen.findByRole('button', {name: 'Stay on Page'})
+		);
+
+		expect(Liferay.Util.navigate).not.toHaveBeenCalled();
+	});
+
+	it('goes to the requested page when the user chooses to leave', async () => {
+		render(<NavigationWarning when />);
+
+		navigateWithSenna('/web/workspace/events');
+
+		fireEvent.click(
+			await screen.findByRole('button', {name: 'Leave Page'})
+		);
+
+		expect(Liferay.Util.navigate).toHaveBeenCalledWith(
+			'/web/workspace/events'
+		);
+	});
+
+	it('does not listen to page navigations without unsaved changes', () => {
+		render(<NavigationWarning when={false} />);
+
+		expect(Liferay.on).not.toHaveBeenCalledWith(
+			'beforeNavigate',
+			expect.any(Function)
+		);
 	});
 });

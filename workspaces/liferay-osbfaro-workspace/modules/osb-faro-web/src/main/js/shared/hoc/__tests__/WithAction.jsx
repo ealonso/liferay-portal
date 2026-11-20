@@ -1,9 +1,7 @@
 import React from 'react';
 import withAction from '../WithAction';
-import {compose} from 'redux';
 import {RemoteData} from '../../util/records';
 import {renderWithStore} from 'test/mock-store';
-import {withStaticRouter} from 'test/mock-router';
 
 describe('withAction', () => {
 	const action = () => ({type: 'NO_OP'});
@@ -41,9 +39,9 @@ describe('withAction', () => {
 	});
 
 	it('should render error if the RemoteData has error', () => {
-		const WrappedComponent = compose(
-			withStaticRouter,
-			withAction(action, () => new RemoteData({error: true}))
+		const WrappedComponent = withAction(
+			action,
+			() => new RemoteData({error: true})
 		)(jest.fn());
 
 		const {container} = renderWithStore(WrappedComponent);
@@ -52,12 +50,9 @@ describe('withAction', () => {
 	});
 
 	it('should render a permission error instead of the 404 when the request failed with a 403', () => {
-		const WrappedComponent = compose(
-			withStaticRouter,
-			withAction(
-				action,
-				() => new RemoteData({error: true, errorStatus: 403})
-			)
+		const WrappedComponent = withAction(
+			action,
+			() => new RemoteData({error: true, errorStatus: 403})
 		)(jest.fn());
 
 		const {container} = renderWithStore(WrappedComponent);
@@ -71,9 +66,9 @@ describe('withAction', () => {
 	});
 
 	it('should still render the 404 when the failure carries no status', () => {
-		const WrappedComponent = compose(
-			withStaticRouter,
-			withAction(action, () => new RemoteData({error: true}))
+		const WrappedComponent = withAction(
+			action,
+			() => new RemoteData({error: true})
 		)(jest.fn());
 
 		const {container} = renderWithStore(WrappedComponent);
@@ -84,13 +79,14 @@ describe('withAction', () => {
 	});
 
 	it('should render a custom error message', () => {
-		const WrappedComponent = compose(
-			withStaticRouter,
-			withAction(action, () => new RemoteData({error: true}), {
+		const WrappedComponent = withAction(
+			action,
+			() => new RemoteData({error: true}),
+			{
 				errorPageProps: {
 					message: 'my fancy message, oh so fancy'
 				}
-			})
+			}
 		)(jest.fn());
 
 		const {container} = renderWithStore(WrappedComponent);
@@ -99,13 +95,10 @@ describe('withAction', () => {
 	});
 
 	it('should render the wrapped component if bypassErrorPage is true even if the RemoteData has an error', () => {
-		const WrappedComponent = compose(
-			withStaticRouter,
-			withAction(
-				action,
-				() => new RemoteData({data: {test: 'test'}, error: true}),
-				{bypassErrorPage: true}
-			)
+		const WrappedComponent = withAction(
+			action,
+			() => new RemoteData({data: {test: 'test'}, error: true}),
+			{bypassErrorPage: true}
 		)(() => <div>{'foo'}</div>);
 
 		const {container} = renderWithStore(WrappedComponent);

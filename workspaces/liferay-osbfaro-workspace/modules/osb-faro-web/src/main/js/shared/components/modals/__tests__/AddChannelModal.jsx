@@ -10,31 +10,28 @@ import {
 	waitFor
 } from '@testing-library/react';
 import {InMemoryCache} from '@apollo/client';
-import {MemoryRouter} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
 import {renderModal} from 'test/render-modal';
 
 const DefaultComponent = ({observer, ...props}) => (
 	<Provider store={mockStore()}>
-		<MemoryRouter>
-			<MockedProvider
-				cache={
-					new InMemoryCache({
-						addTypename: false
-					})
-				}
-				mocks={[]}
-			>
-				<AddChannelModal
-					groupId='23'
-					observer={observer}
-					onClose={jest.fn()}
-					onSubmit={jest.fn()}
-					{...props}
-				/>
-			</MockedProvider>
-		</MemoryRouter>
+		<MockedProvider
+			cache={
+				new InMemoryCache({
+					addTypename: false
+				})
+			}
+			mocks={[]}
+		>
+			<AddChannelModal
+				groupId='23'
+				observer={observer}
+				onClose={jest.fn()}
+				onSubmit={jest.fn()}
+				{...props}
+			/>
+		</MockedProvider>
 	</Provider>
 );
 

@@ -1,29 +1,27 @@
 import BaseCard from '../index';
 import mockStore from 'test/mock-store';
 import React from 'react';
-import {MemoryRouter} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
+import {WorkspacePage} from 'test/mock-page-context';
 
 const Wrapper = ({children}) => (
 	<Provider store={mockStore()}>
-		<MemoryRouter>
-			<MockedProvider addTypename={false} freezeResults={false}>
-				{children}
-			</MockedProvider>
-		</MemoryRouter>
+		<MockedProvider addTypename={false} freezeResults={false}>
+			{children}
+		</MockedProvider>
 	</Provider>
 );
 
 describe('BaseCard', () => {
 	it('should render component', () => {
 		const {container} = render(
-			<Wrapper>
+			<WorkspacePage><Wrapper>
 				<BaseCard className='my-component-classname' label='My title'>
 					{() => <div>{'My body component'}</div>}
 				</BaseCard>
-			</Wrapper>
+			</Wrapper></WorkspacePage>
 		);
 
 		expect(container).toMatchSnapshot();
@@ -33,11 +31,11 @@ describe('BaseCard', () => {
 		const Header = () => <div>{'My custom header component'}</div>;
 
 		const {getByText} = render(
-			<Wrapper>
+			<WorkspacePage><Wrapper>
 				<BaseCard Header={Header} label='My title'>
 					{() => <div>{'My body component'}</div>}
 				</BaseCard>
-			</Wrapper>
+			</Wrapper></WorkspacePage>
 		);
 
 		expect(getByText('My body component')).toBeTruthy();
@@ -47,7 +45,7 @@ describe('BaseCard', () => {
 		let customBodyProps = {};
 
 		render(
-			<Wrapper>
+			<WorkspacePage><Wrapper>
 				<BaseCard label='My title'>
 					{props => {
 						customBodyProps = props;
@@ -55,7 +53,7 @@ describe('BaseCard', () => {
 						return <div>{'My custom body component'}</div>;
 					}}
 				</BaseCard>
-			</Wrapper>
+			</Wrapper></WorkspacePage>
 		);
 
 		expect(customBodyProps).toEqual(
@@ -72,11 +70,11 @@ describe('BaseCard', () => {
 
 	it('should render a Card Header with an interval selector', () => {
 		const {container, getByText} = render(
-			<Wrapper>
+			<WorkspacePage><Wrapper>
 				<BaseCard label='My title' showInterval>
 					{() => <div>{'My body component'}</div>}
 				</BaseCard>
-			</Wrapper>
+			</Wrapper></WorkspacePage>
 		);
 
 		expect(container.querySelector('.interval-selector-root')).toBeTruthy();

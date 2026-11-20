@@ -14,8 +14,8 @@ import {DataSource} from 'shared/util/records';
 import {DeleteDataSource} from '../DeleteDataSource';
 import {EntityTypes} from 'shared/util/constants';
 import {fromJS} from 'immutable';
-import {MemoryRouter} from 'react-router-dom';
 import {Provider} from 'react-redux';
+import {mockPageConfig, WorkspacePage} from 'test/mock-page-context';
 
 let mockEntitiesModalProps;
 
@@ -69,8 +69,9 @@ describe('DeleteDataSource', () => {
 
 	const DefaultComponent = props => (
 		<Provider store={store}>
-			<MemoryRouter>
+			<WorkspacePage>
 				<DeleteDataSource
+					pageConfig={mockPageConfig()}
 					actionRequestFn={jest.fn()}
 					dataSource={dataSource}
 					deleteMessage='Test delete message'
@@ -82,7 +83,7 @@ describe('DeleteDataSource', () => {
 					pageActionText={Liferay.Language.get('delete-data-source')}
 					{...props}
 				/>
-			</MemoryRouter>
+			</WorkspacePage>
 		</Provider>
 	);
 

@@ -4,13 +4,7 @@ import TypeTrendCard from '../TypeTrendCard';
 import {cleanup, render} from '@testing-library/react';
 import {MockedProvider} from '@apollo/client/testing';
 import {mockIndividualMetricsReq} from 'test/graphql-data';
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		channelId: '123123'
-	})
-}));
+import {WorkspacePage} from 'test/mock-page-context';
 
 ReactDOM.createPortal = jest.fn();
 
@@ -20,7 +14,9 @@ describe('TypeTrendCard', () => {
 	xit('should render', () => {
 		const {container} = render(
 			<MockedProvider mocks={[mockIndividualMetricsReq()]}>
-				<TypeTrendCard channelId='123123' />
+				<WorkspacePage channelId='123123'>
+					<TypeTrendCard channelId='123123' />
+				</WorkspacePage>
 			</MockedProvider>
 		);
 

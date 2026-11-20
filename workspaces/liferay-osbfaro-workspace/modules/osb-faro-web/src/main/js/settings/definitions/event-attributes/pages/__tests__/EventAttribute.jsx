@@ -3,22 +3,28 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => ({
-		groupId: '23'
-	})
-}));
+import {WorkspacePage} from 'test/mock-page-context';
 
 describe('EventAttributes', () => {
 	it('should render', () => {
 		const {container} = render(
 			<Provider store={mockStore()}>
-				<MemoryRouter>
-					<Events groupId='23' />
-				</MemoryRouter>
+				<WorkspacePage
+					navigationItems={[
+					{
+						active: true,
+						href: '/event-attributes',
+						label: 'Global Attributes'
+					},
+					{
+						active: false,
+						href: '/event-attributes?tab=local',
+						label: 'Attributes'
+					}
+				]}
+				>
+					<Events />
+				</WorkspacePage>
 			</Provider>
 		);
 

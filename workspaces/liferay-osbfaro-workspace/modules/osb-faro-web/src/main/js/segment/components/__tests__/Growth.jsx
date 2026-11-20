@@ -5,10 +5,9 @@ import SegmentGrowthWithList, {
 	SegmentGrowthChart,
 	SelectedPointInfo
 } from '../Growth';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {render, screen} from '@testing-library/react';
-import {Routes} from 'shared/util/router';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
+import {WorkspacePage} from 'test/mock-page-context';
 
 jest.mock('recharts', () => {
 	const OriginalModule = jest.requireActual('recharts');
@@ -26,32 +25,19 @@ jest.mock('recharts', () => {
 describe('SegmentGrowthWithList', () => {
 	it('should render', async () => {
 		const {container} = render(
-			<MemoryRouter
-				initialEntries={[
-					'/workspace/23/123123/contacts/segments/321321/membership'
+			<WorkspacePage><SegmentGrowthWithList
+				channelId='123'
+				data={[
+					{
+						added: 1,
+						modifiedDate: data.getTimestamp(),
+						removed: 3
+					}
 				]}
-			>
-				<RouterRoutes>
-					<Route
-						element={
-							<SegmentGrowthWithList
-								channelId='123'
-								data={[
-									{
-										added: 1,
-										modifiedDate: data.getTimestamp(),
-										removed: 3
-									}
-								]}
-								groupId='23'
-								id='3'
-								onPointSelect={jest.fn()}
-							/>
-						}
-						path={`${Routes.CONTACTS_SEGMENT_MEMBERSHIP}/*`}
-					/>
-				</RouterRoutes>
-			</MemoryRouter>
+				groupId='23'
+				id='3'
+				onPointSelect={jest.fn()}
+			/></WorkspacePage>
 		);
 
 		jest.runAllTimers();
@@ -63,33 +49,20 @@ describe('SegmentGrowthWithList', () => {
 
 	it('requests only known individuals when the segment excludes anonymous users', async () => {
 		const {container} = render(
-			<MemoryRouter
-				initialEntries={[
-					'/workspace/23/123123/contacts/segments/321321/membership'
+			<WorkspacePage><SegmentGrowthWithList
+				channelId='123'
+				data={[
+					{
+						added: 1,
+						modifiedDate: data.getTimestamp(),
+						removed: 3
+					}
 				]}
-			>
-				<RouterRoutes>
-					<Route
-						element={
-							<SegmentGrowthWithList
-								channelId='123'
-								data={[
-									{
-										added: 1,
-										modifiedDate: data.getTimestamp(),
-										removed: 3
-									}
-								]}
-								groupId='23'
-								id='3'
-								includeAnonymousUsers={false}
-								onPointSelect={jest.fn()}
-							/>
-						}
-						path={`${Routes.CONTACTS_SEGMENT_MEMBERSHIP}/*`}
-					/>
-				</RouterRoutes>
-			</MemoryRouter>
+				groupId='23'
+				id='3'
+				includeAnonymousUsers={false}
+				onPointSelect={jest.fn()}
+			/></WorkspacePage>
 		);
 
 		jest.runAllTimers();
@@ -104,7 +77,7 @@ describe('SegmentGrowthWithList', () => {
 
 describe('SegmentGrowthChart', () => {
 	it('should render', () => {
-		render(<SegmentGrowthChart data={[]} onPointSelect={jest.fn()} />);
+		render(<WorkspacePage><SegmentGrowthChart data={[]} onPointSelect={jest.fn()} /></WorkspacePage>);
 
 		expect(
 			screen.getByText(/^there is no data for segment membership\.$/i)
@@ -113,7 +86,7 @@ describe('SegmentGrowthChart', () => {
 
 	it('renders the selected point tooltip header with the custom date format', () => {
 		render(
-			<SegmentGrowthChart
+			<WorkspacePage><SegmentGrowthChart
 				data={[
 					{
 						added: 2,
@@ -134,7 +107,7 @@ describe('SegmentGrowthChart', () => {
 				]}
 				hasSelectedPoint
 				selectedPoint={1}
-			/>
+			/></WorkspacePage>
 		);
 
 		expect(screen.getByText('As of Jun 10, 2026')).toBeInTheDocument();
@@ -144,7 +117,7 @@ describe('SegmentGrowthChart', () => {
 describe('SelectedPointInfo', () => {
 	it('should render', () => {
 		render(
-			<SelectedPointInfo
+			<WorkspacePage><SelectedPointInfo
 				data={[
 					{
 						added: 1,
@@ -155,7 +128,7 @@ describe('SelectedPointInfo', () => {
 				hasSelectedPoint
 				onClearSelection={jest.fn()}
 				selectedPoint={0}
-			/>
+			/></WorkspacePage>
 		);
 
 		expect(screen.getByText(/^members$/i)).toBeInTheDocument();

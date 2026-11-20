@@ -2,19 +2,25 @@ import React from 'react';
 import {render} from '@testing-library/react';
 import {useRangeSelectorChange} from 'shared/hooks/useRangeSelectorChange';
 
-const mockPush = jest.fn();
-
-jest.mock('shared/hooks/useHistoryAdapter', () => ({
-	useHistoryAdapter: () => ({push: mockPush}),
-}));
-
 describe('useRangeSelectorChange', () => {
+	const {location} = window;
+
+	afterEach(() => {
+		Object.defineProperty(window, 'location', {
+			configurable: true,
+			value: location,
+		});
+	});
+
 	it('should drop the custom bounds when a preset is selected', () => {
-		window.history.replaceState(
-			{},
-			'',
-			'/?rangeEnd=2026-02-20&rangeKey=CUSTOM&rangeStart=2026-02-10'
-		);
+		const navigate = Liferay.Util.navigate;
+
+		Object.defineProperty(window, 'location', {
+			configurable: true,
+			value: {
+				href: 'http://localhost/?rangeEnd=2026-02-20&rangeKey=CUSTOM&rangeStart=2026-02-10',
+			},
+		});
 
 		let handleRangeSelectorChange;
 
@@ -32,8 +38,6 @@ describe('useRangeSelectorChange', () => {
 			rangeStart: null,
 		});
 
-		expect(mockPush).toHaveBeenCalledWith('/?rangeKey=90');
-
-		window.history.replaceState({}, '', '/');
+		expect(navigate).toHaveBeenCalledWith('/?rangeKey=90');
 	});
 });

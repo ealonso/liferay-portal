@@ -651,6 +651,7 @@ module.exports = {
 			},
 		],
 	],
+	setupFiles: ['<rootDir>/src/main/js/test/liferay.js'],
 	setupFilesAfterEnv: ['<rootDir>/src/main/js/test/setup.js'],
 	testEnvironment: 'jsdom',
 	testEnvironmentOptions: {

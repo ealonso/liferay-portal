@@ -12,14 +12,14 @@ import {
 	waitFor,
 	within,
 } from '@testing-library/react';
-import {MemoryRouter, matchPath, useLocation} from 'react-router-dom';
 import {mockChannelContext} from 'test/mock-channel-context';
 import {Provider} from 'react-redux';
-import {Routes, toRoute} from 'shared/util/router';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useDataSources} from 'shared/context/dataSources';
 import {useRequest} from 'shared/hooks/useRequest';
 import {setBodyWidth} from 'test/body-width';
+import {WorkspacePage} from 'test/mock-page-context';
+import {mockCurrentUser} from 'test/mock-page-context';
+import {UserRoleNames} from 'shared/util/constants';
 
 jest.mock('shared/hooks/useRequest', () => ({
 	useRequest: jest.fn(),
@@ -29,23 +29,12 @@ jest.mock('shared/context/dataSources', () => ({
 	useDataSources: jest.fn(),
 }));
 
-jest.mock('shared/hooks/useCurrentUser', () => ({
-	useCurrentUser: jest.fn(),
-}));
-
 jest.mock('shared/util/breadcrumbs', () => ({
 	...jest.requireActual('shared/util/breadcrumbs'),
 	getHome: jest.fn(({label}: {label?: string} = {}) => ({
 		active: false,
 		label: label || 'Home',
 	})),
-}));
-
-const mockUseParams = jest.fn();
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => mockUseParams(),
 }));
 
 jest.mock('lifecycle/components/FilterPicker', () => {
@@ -124,7 +113,6 @@ jest.mock('shared/components/SegmentDropdown', () => ({
 	),
 }));
 
-const mockedUseCurrentUser = useCurrentUser as jest.Mock;
 const mockedUseDataSources = useDataSources as jest.Mock;
 const mockedUseRequest = useRequest as jest.Mock;
 
@@ -197,24 +185,40 @@ const useRequestImpl =
 		};
 	};
 
-const LocationProbe = () => (
-	<div data-testid="location">{useLocation().pathname}</div>
+const Page = ({params}: {params: {[name: string]: string}}) => (
+	<Provider store={mockStore()}>
+		<ChannelContext.Provider value={mockChannelContext() as any}>
+			<WorkspacePage channelId="123" groupId="23" params={params}>
+				<BaseLifecycle />
+			</WorkspacePage>
+		</ChannelContext.Provider>
+	</Provider>
 );
 
-const renderPage = (initialEntries = ['/workspace/23/123/lifecycle/erc-1']) =>
-	render(
-		<Provider store={mockStore()}>
-			<ChannelContext.Provider value={mockChannelContext() as any}>
-				<MemoryRouter initialEntries={initialEntries}>
-					<BaseLifecycle />
+const renderPage = (
+	params: {[name: string]: string} = {lifecycleId: 'erc-1'}
+) => render(<Page params={params} />);
 
-					<LocationProbe />
-				</MemoryRouter>
-			</ChannelContext.Provider>
-		</Provider>
-	);
+const originalLocation = window.location;
+
+const navigate = Liferay.Util.navigate as jest.Mock;
+const replace = jest.fn();
 
 describe('BaseLifecycle', () => {
+	beforeAll(() => {
+		Object.defineProperty(window, 'location', {
+			configurable: true,
+			value: {...originalLocation, replace},
+		});
+	});
+
+	afterAll(() => {
+		Object.defineProperty(window, 'location', {
+			configurable: true,
+			value: originalLocation,
+		});
+	});
+
 	beforeEach(() => {
 		jest.clearAllMocks();
 
@@ -229,15 +233,9 @@ describe('BaseLifecycle', () => {
 			setDefaultLifecycle: jest.fn(() => Promise.resolve()),
 		};
 
-		mockUseParams.mockReturnValue({
-			channelId: '123',
-			groupId: '23',
-			lifecycleId: 'erc-1',
-		});
-
 		setBodyWidth(1440);
 
-		mockedUseCurrentUser.mockReturnValue({isAdmin: () => true});
+		mockCurrentUser();
 		mockedUseDataSources.mockReturnValue({empty: false, loading: false});
 		mockedUseRequest.mockImplementation(useRequestImpl({totalCount: 5}));
 	});
@@ -264,27 +262,11 @@ describe('BaseLifecycle', () => {
 			'ENGAGED'
 		);
 
-		mockUseParams.mockReturnValue({
-			channelId: '123',
-			groupId: '23',
-			lifecycleId: 'erc-2',
-		});
-
 		mockedUseRequest.mockImplementation(
 			useRequestImpl({lifecycle: {id: '2'}, totalCount: 5})
 		);
 
-		rerender(
-			<Provider store={mockStore()}>
-				<ChannelContext.Provider value={mockChannelContext() as any}>
-					<MemoryRouter
-						initialEntries={['/workspace/23/123/lifecycle/erc-2']}
-					>
-						<BaseLifecycle />
-					</MemoryRouter>
-				</ChannelContext.Provider>
-			</Provider>
-		);
+		rerender(<Page params={{lifecycleId: 'erc-2'}} />);
 
 		expect(screen.getByTestId('filter-industryFilter')).toHaveAttribute(
 			'data-value',
@@ -351,10 +333,7 @@ describe('BaseLifecycle', () => {
 
 		expect(
 			screen.getByRole('link', {name: /^lifecycles$/i})
-		).toHaveAttribute(
-			'href',
-			toRoute(Routes.LIFECYCLE, {channelId: '123', groupId: '23'})
-		);
+		).toHaveAttribute('href', '/lifecycles');
 		expect(screen.getAllByText('Growth Hub').length).toBeGreaterThan(1);
 	});
 
@@ -399,10 +378,7 @@ describe('BaseLifecycle', () => {
 
 			expect(
 				screen.getByRole('link', {name: /go to lifecycles/i})
-			).toHaveAttribute(
-				'href',
-				toRoute(Routes.LIFECYCLE, {channelId: '123', groupId: '23'})
-			);
+			).toHaveAttribute('href', '/lifecycles');
 		});
 	});
 
@@ -535,7 +511,7 @@ describe('BaseLifecycle', () => {
 		});
 
 		it('hides the connect action for non-admins', () => {
-			mockedUseCurrentUser.mockReturnValue({isAdmin: () => false});
+			mockCurrentUser({roleName: UserRoleNames.Member});
 
 			renderPage();
 
@@ -595,7 +571,7 @@ describe('BaseLifecycle', () => {
 		});
 
 		it('renders the contact-administrator message for non-admins', () => {
-			mockedUseCurrentUser.mockReturnValue({isAdmin: () => false});
+			mockCurrentUser({roleName: UserRoleNames.Member});
 
 			renderPage();
 
@@ -643,10 +619,7 @@ describe('BaseLifecycle', () => {
 
 			expect(button).toHaveAttribute(
 				'href',
-				toRoute(Routes.LIFECYCLE_CREATE, {
-					channelId: '123',
-					groupId: '23',
-				})
+				'/edit-lifecycle?backLifecycleId=erc-1'
 			);
 		});
 
@@ -663,7 +636,7 @@ describe('BaseLifecycle', () => {
 		});
 
 		it('is hidden for non-admins', () => {
-			mockedUseCurrentUser.mockReturnValue({isAdmin: () => false});
+			mockCurrentUser({roleName: UserRoleNames.Member});
 
 			renderPage();
 
@@ -681,17 +654,13 @@ describe('BaseLifecycle', () => {
 
 			fireEvent.click(screen.getByRole('menuitem', {name: /^edit$/i}));
 
-			expect(screen.getByTestId('location')).toHaveTextContent(
-				toRoute(Routes.LIFECYCLE_EDIT, {
-					channelId: '123',
-					groupId: '23',
-					lifecycleId: 'erc-1',
-				})
+			expect(navigate).toHaveBeenCalledWith(
+				'/edit-lifecycle?lifecycleId=erc-1'
 			);
 		});
 
 		it('is hidden for non-admins', () => {
-			mockedUseCurrentUser.mockReturnValue({isAdmin: () => false});
+			mockCurrentUser({roleName: UserRoleNames.Member});
 
 			renderPage();
 
@@ -840,14 +809,7 @@ describe('BaseLifecycle', () => {
 			});
 
 			await waitFor(() =>
-				expect(screen.getByTestId('location')).toHaveTextContent(
-					new RegExp(
-						`^${toRoute(Routes.LIFECYCLE, {
-							channelId: '123',
-							groupId: '23',
-						})}$`
-					)
-				)
+				expect(replace).toHaveBeenCalledWith('/lifecycles')
 			);
 		});
 	});
@@ -903,7 +865,7 @@ describe('BaseLifecycle', () => {
 		});
 
 		it('is available for non-admins', () => {
-			mockedUseCurrentUser.mockReturnValue({isAdmin: () => false});
+			mockCurrentUser({roleName: UserRoleNames.Member});
 
 			renderPage();
 
@@ -1088,9 +1050,8 @@ describe('BaseLifecycle', () => {
 			expect(
 				screen.getByRole('button', {name: /switch dashboard/i})
 			).toHaveAttribute('aria-expanded', 'true');
-			expect(screen.getByTestId('location')).toHaveTextContent(
-				'/workspace/23/123/lifecycle/erc-1'
-			);
+			expect(navigate).not.toHaveBeenCalled();
+			expect(replace).not.toHaveBeenCalled();
 		});
 
 		it('pins the open lifecycle when the deleted default hands it over', async () => {
@@ -1137,9 +1098,8 @@ describe('BaseLifecycle', () => {
 			expect(
 				screen.getByRole('button', {name: /switch dashboard/i})
 			).toHaveAttribute('aria-expanded', 'true');
-			expect(screen.getByTestId('location')).toHaveTextContent(
-				'/workspace/23/123/lifecycle/erc-1'
-			);
+			expect(navigate).not.toHaveBeenCalled();
+			expect(replace).not.toHaveBeenCalled();
 
 			openActionsMenu();
 
@@ -1191,15 +1151,6 @@ describe('BaseLifecycle', () => {
 	});
 
 	it('opens the default lifecycle of the channel without requesting it again', () => {
-		mockUseParams.mockImplementation(() => ({
-			channelId: '123',
-			groupId: '23',
-			lifecycleId: matchPath(
-				'/workspace/:groupId/:channelId/lifecycle/:lifecycleId',
-				useLocation().pathname
-			)?.params.lifecycleId,
-		}));
-
 		mockedUseRequest.mockImplementation(
 			useRequestImpl({
 				lifecycle: {id: '8', name: 'Growth Hub'},
@@ -1207,17 +1158,9 @@ describe('BaseLifecycle', () => {
 			})
 		);
 
-		renderPage([
-			toRoute(Routes.LIFECYCLE, {channelId: '123', groupId: '23'}),
-		]);
+		renderPage({});
 
-		expect(screen.getByTestId('location')).toHaveTextContent(
-			toRoute(Routes.LIFECYCLE_DASHBOARD, {
-				channelId: '123',
-				groupId: '23',
-				lifecycleId: 'erc-8',
-			})
-		);
+		expect(replace).toHaveBeenCalledWith('/lifecycle?lifecycleId=erc-8');
 		expect(
 			screen.getByRole('heading', {name: 'Growth Hub'})
 		).toBeInTheDocument();

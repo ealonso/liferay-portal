@@ -3,24 +3,16 @@ import mockStore from 'test/mock-store';
 import React from 'react';
 import {addAlert} from 'shared/actions/alerts';
 import {cleanup, render} from '@testing-library/react';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {Project, User} from 'shared/util/records';
 import {Provider} from 'react-redux';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {Workspace} from '../Workspace';
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useBlocker: () => ({state: 'unblocked'}),
-}));
+import {WorkspacePage} from 'test/mock-page-context';
+import {mockCurrentUser} from 'test/mock-page-context';
+import {UserRoleNames} from 'shared/util/constants';
 
 jest.mock('shared/actions/alerts', () => ({
 	actionTypes: {},
 	addAlert: jest.fn(() => ({meta: {}, payload: {}, type: 'addAlert'}))
-}));
-
-jest.mock('shared/hooks/useCurrentUser', () => ({
-	useCurrentUser: jest.fn()
 }));
 
 const defaultProps = {
@@ -32,16 +24,9 @@ const defaultProps = {
 
 const DefaultComponent = props => (
 	<Provider store={mockStore()}>
-		<MemoryRouter initialEntries={['/workspace/23/settings/workspace']}>
-			<RouterRoutes>
-				<Route
-					element={
-						<Workspace {...defaultProps} {...props} />
-					}
-					path='/workspace/:groupId/settings/workspace/*'
-				/>
-			</RouterRoutes>
-		</MemoryRouter>
+		<WorkspacePage>
+			<Workspace {...defaultProps} {...props} />
+		</WorkspacePage>
 	</Provider>
 );
 
@@ -49,9 +34,7 @@ describe('Workspace Settting', () => {
 	afterEach(cleanup);
 
 	it('should render', () => {
-		useCurrentUser.mockImplementation(() => ({
-			isAdmin: () => true
-		}));
+		mockCurrentUser();
 
 		const {container} = render(<DefaultComponent />);
 
@@ -59,9 +42,7 @@ describe('Workspace Settting', () => {
 	});
 
 	it('should render as disabled if the user is not an AC admin', () => {
-		useCurrentUser.mockImplementation(() => ({
-			isAdmin: () => false
-		}));
+		mockCurrentUser({roleName: UserRoleNames.Member});
 
 		const {container, getByDisplayValue, getByLabelText} = render(
 			<DefaultComponent

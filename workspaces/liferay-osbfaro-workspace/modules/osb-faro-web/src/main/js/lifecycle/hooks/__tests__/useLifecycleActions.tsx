@@ -12,29 +12,16 @@ import {
 import {addAlert} from 'shared/actions/alerts';
 import {Alert} from 'shared/types';
 import {ILifecycle} from 'shared/api/lifecycle';
-import {MemoryRouter, useLocation} from 'react-router-dom';
 import {Provider} from 'react-redux';
-import {Routes, toRoute} from 'shared/util/router';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useLifecycleActions} from '../useLifecycleActions';
+import {WorkspacePage} from 'test/mock-page-context';
+import {mockCurrentUser} from 'test/mock-page-context';
+import {UserRoleNames} from 'shared/util/constants';
 
 jest.mock('shared/actions/alerts', () => ({
 	...jest.requireActual('shared/actions/alerts'),
 	addAlert: jest.fn((payload) => ({payload, type: 'ADD_ALERT'})),
 }));
-
-jest.mock('shared/hooks/useCurrentUser', () => ({
-	useCurrentUser: jest.fn(),
-}));
-
-const mockUseParams = jest.fn();
-
-jest.mock('react-router-dom', () => ({
-	...jest.requireActual('react-router-dom'),
-	useParams: () => mockUseParams(),
-}));
-
-const mockedUseCurrentUser = useCurrentUser as jest.Mock;
 
 const ActionsProbe = ({
 	lifecycle,
@@ -81,31 +68,45 @@ const ActionsProbe = ({
 	);
 };
 
-const LocationProbe = () => (
-	<div data-testid="location">{useLocation().pathname}</div>
-);
-
-const renderActions = (props: React.ComponentProps<typeof ActionsProbe>) =>
+const renderActions = (
+	props: React.ComponentProps<typeof ActionsProbe>,
+	params: {[name: string]: string} = {}
+) =>
 	render(
 		<Provider store={mockStore()}>
-			<MemoryRouter initialEntries={['/workspace/23/123/lifecycle/1']}>
+			<WorkspacePage channelId="123" groupId="23" params={params}>
 				<ActionsProbe {...props} />
-
-				<LocationProbe />
-			</MemoryRouter>
+			</WorkspacePage>
 		</Provider>
 	);
 
 const getLabels = () =>
 	screen.getAllByRole('button').map(({textContent}) => textContent);
 
+const originalLocation = window.location;
+
+const navigate = Liferay.Util.navigate as jest.Mock;
+const replace = jest.fn();
+
 describe('useLifecycleActions', () => {
+	beforeAll(() => {
+		Object.defineProperty(window, 'location', {
+			configurable: true,
+			value: {...originalLocation, replace},
+		});
+	});
+
+	afterAll(() => {
+		Object.defineProperty(window, 'location', {
+			configurable: true,
+			value: originalLocation,
+		});
+	});
+
 	beforeEach(() => {
 		jest.clearAllMocks();
 
-		mockedUseCurrentUser.mockReturnValue({isAdmin: () => true});
-
-		mockUseParams.mockReturnValue({channelId: '123', groupId: '23'});
+		mockCurrentUser();
 	});
 
 	afterEach(cleanup);
@@ -155,7 +156,7 @@ describe('useLifecycleActions', () => {
 	});
 
 	it('hides Edit and Duplicate for non-admins', () => {
-		mockedUseCurrentUser.mockReturnValue({isAdmin: () => false});
+		mockCurrentUser({roleName: UserRoleNames.Member});
 
 		renderActions({lifecycle: {externalReferenceCode: 'erc-1', id: '1'}});
 
@@ -194,13 +195,7 @@ describe('useLifecycleActions', () => {
 
 		fireEvent.click(screen.getByRole('button', {name: /^view$/i}));
 
-		expect(screen.getByTestId('location')).toHaveTextContent(
-			toRoute(Routes.LIFECYCLE_DASHBOARD, {
-				channelId: '123',
-				groupId: '23',
-				lifecycleId: 'erc-5',
-			})
-		);
+		expect(navigate).toHaveBeenCalledWith('/lifecycle?lifecycleId=erc-5');
 		expect(onView).toHaveBeenCalled();
 	});
 
@@ -209,12 +204,8 @@ describe('useLifecycleActions', () => {
 
 		fireEvent.click(screen.getByRole('button', {name: /^edit$/i}));
 
-		expect(screen.getByTestId('location')).toHaveTextContent(
-			toRoute(Routes.LIFECYCLE_EDIT, {
-				channelId: '123',
-				groupId: '23',
-				lifecycleId: 'erc-5',
-			})
+		expect(navigate).toHaveBeenCalledWith(
+			'/edit-lifecycle?lifecycleId=erc-5'
 		);
 	});
 
@@ -237,12 +228,8 @@ describe('useLifecycleActions', () => {
 
 		fireEvent.click(screen.getByRole('button', {name: /^duplicate$/i}));
 
-		expect(screen.getByTestId('location')).toHaveTextContent(
-			toRoute(Routes.LIFECYCLE_DUPLICATE, {
-				channelId: '123',
-				groupId: '23',
-				sourceLifecycleId: 'erc-5',
-			})
+		expect(navigate).toHaveBeenCalledWith(
+			'/edit-lifecycle?sourceLifecycleId=erc-5'
 		);
 	});
 
@@ -364,7 +351,7 @@ describe('useLifecycleActions', () => {
 		});
 
 		it('is hidden for non-admins', () => {
-			mockedUseCurrentUser.mockReturnValue({isAdmin: () => false});
+			mockCurrentUser({roleName: UserRoleNames.Member});
 
 			renderActions({lifecycle: growthHub});
 
@@ -430,35 +417,23 @@ describe('useLifecycleActions', () => {
 					message: expect.stringMatching(/growth hub was deleted/i),
 				})
 			);
-			expect(screen.getByTestId('location')).toHaveTextContent(
-				'/workspace/23/123/lifecycle/1'
-			);
+			expect(replace).not.toHaveBeenCalled();
 		});
 
 		it('opens the default lifecycle after deleting the open one', async () => {
 			const onDelete = jest.fn();
 
-			mockUseParams.mockReturnValue({
-				channelId: '123',
-				groupId: '23',
-				lifecycleId: 'erc-5',
-			});
-
-			renderActions({lifecycle: growthHub, onDelete});
+			renderActions(
+				{lifecycle: growthHub, onDelete},
+				{lifecycleId: 'erc-5'}
+			);
 
 			openDeleteModal();
 
 			await confirmDelete();
 
 			await waitFor(() =>
-				expect(screen.getByTestId('location')).toHaveTextContent(
-					new RegExp(
-						`^${toRoute(Routes.LIFECYCLE, {
-							channelId: '123',
-							groupId: '23',
-						})}$`
-					)
-				)
+				expect(replace).toHaveBeenCalledWith('/lifecycles')
 			);
 
 			expect(onDelete).not.toHaveBeenCalled();

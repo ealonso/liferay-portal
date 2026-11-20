@@ -2,16 +2,16 @@ import * as data from 'test/data';
 import mockStore from 'test/mock-store';
 import React from 'react';
 import SelectWorkspaceAccount, {routingFn} from '../SelectWorkspaceAccount';
-import {BrowserRouter} from 'react-router-dom';
 import {DataSourceStates} from 'shared/util/constants';
 import {fromJS} from 'immutable';
 import {Project} from 'shared/util/records';
 import {Provider} from 'react-redux';
 import {render} from '@testing-library/react';
-import {setUriQueryValue} from 'shared/util/url';
-import {Routes, toRoute} from 'shared/util/router';
 import {SubscriptionNames} from 'shared/util/subscriptions';
 import {useFetchProjects} from 'shared/hooks/useProjects';
+import {mockCurrentUser, mockPageConfig, WorkspacePage} from 'test/mock-page-context';
+
+const config = mockPageConfig();
 
 const mockBusinessProject = new Project(
 	data.mockProject(123, {
@@ -28,11 +28,7 @@ const mockBasicSubscription = data.mockSubscription({
 	name: SubscriptionNames.LiferayAnalyticsCloudBasic
 });
 
-jest.mock('shared/hooks/useCurrentUser', () => ({
-	useCurrentUser: () => ({
-		emailAddress: 'test@liferay.com'
-	})
-}));
+beforeEach(() => mockCurrentUser({emailAddress: 'test@liferay.com'}));
 
 jest.mock('shared/hooks/useProjects', () => ({
 	useFetchProjects: jest.fn()
@@ -64,11 +60,9 @@ describe('SelectWorkspaceAccount', () => {
 		}));
 
 		const {getByText} = render(
-			<Provider store={mockStore()}>
-				<BrowserRouter>
-					<SelectWorkspaceAccount />
-				</BrowserRouter>
-			</Provider>
+			<WorkspacePage><Provider store={mockStore()}>
+				<SelectWorkspaceAccount />
+			</Provider></WorkspacePage>
 		);
 
 		jest.runAllTimers();
@@ -79,11 +73,7 @@ describe('SelectWorkspaceAccount', () => {
 
 describe('routingFn', () => {
 	it('should route the user to the workspaces list if there are multiple basic workspaces and all are configured', () => {
-		const expectedRoute = setUriQueryValue(
-			toRoute(Routes.WORKSPACES),
-			'allBasicConfigured',
-			true
-		);
+		const expectedRoute = '/workspaces?allBasicConfigured=true';
 
 		const mockProjects = [
 			new Project(
@@ -100,35 +90,29 @@ describe('routingFn', () => {
 			)
 		];
 
-		expect(routingFn({projects: mockProjects})).toBe(expectedRoute);
+		expect(routingFn({projects: mockProjects}, config)).toBe(expectedRoute);
 	});
 
 	it('should route the user to the workspace homepage if there is only one basic tier workspace and it is configured', () => {
-		const expectedRoute = toRoute(Routes.WORKSPACE_WITH_ID, {
-			groupId: '127'
-		});
+		const expectedRoute = '/web/workspace-127';
 
 		const mockProjects = [
 			mockBusinessProject,
 			new Project(
 				data.mockProject(127, {
 					faroSubscription: fromJS(mockBasicSubscription),
-					name: 'Project B'
+					name: 'Project B',
+					url: '/web/workspace-127'
 				})
 			)
 		];
 
-		expect(routingFn({projects: mockProjects})).toBe(expectedRoute);
+		expect(routingFn({projects: mockProjects}, config)).toBe(expectedRoute);
 	});
 
 	it('should route the user to the create workspace form if there is only one basic tier workspace and it is NOT configured', () => {
 		const corpProjectUuid = 'corpProjectId-124';
-		const expectedRoute = toRoute(
-			Routes.WORKSPACE_ADD_WITH_CORP_PROJECT_UUID,
-			{
-				corpProjectUuid
-			}
-		);
+		const expectedRoute = `/add-workspace?corpProjectUuid=${corpProjectUuid}`;
 
 		const mockProjects = [
 			mockBusinessProject,
@@ -141,6 +125,6 @@ describe('routingFn', () => {
 			)
 		];
 
-		expect(routingFn({projects: mockProjects})).toBe(expectedRoute);
+		expect(routingFn({projects: mockProjects}, config)).toBe(expectedRoute);
 	});
 });

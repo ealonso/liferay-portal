@@ -3,16 +3,13 @@ import PreferenceQuery from 'shared/queries/PreferenceQuery';
 import React from 'react';
 import {DATA_RETENTION_PERIOD_KEY} from 'shared/util/constants';
 import {fireEvent, render} from '@testing-library/react';
-import {MemoryRouter, Route, Routes as RouterRoutes} from 'react-router-dom';
 import {MockedProvider} from '@apollo/client/testing';
 import {Overview} from '../Overview';
 import {Provider} from 'react-redux';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {waitForLoadingToBeRemoved} from 'test/helpers';
-
-jest.mock('shared/hooks/useCurrentUser', () => ({
-	useCurrentUser: jest.fn()
-}));
+import {WorkspacePage} from 'test/mock-page-context';
+import {mockCurrentUser} from 'test/mock-page-context';
+import {UserRoleNames} from 'shared/util/constants';
 
 const mockPreferenceReq = (value = '18144000000') => ({
 	request: {
@@ -34,26 +31,17 @@ const mockPreferenceReq = (value = '18144000000') => ({
 
 const DefaultComponent = ({mocks = [mockPreferenceReq()], ...props}) => (
 	<Provider store={mockStore()}>
-		<MemoryRouter initialEntries={['/workspace/23/settings/data-privacy']}>
-			<RouterRoutes>
-				<Route
-					element={
-						<MockedProvider mocks={mocks}>
-							<Overview groupId='23' {...props} />
-						</MockedProvider>
-					}
-					path='/workspace/:groupId/settings/data-privacy/*'
-				/>
-			</RouterRoutes>
-		</MemoryRouter>
+		<WorkspacePage>
+			<MockedProvider mocks={mocks}>
+				<Overview groupId='23' {...props} />
+			</MockedProvider>
+		</WorkspacePage>
 	</Provider>
 );
 
 describe('Data Privacy Overview', () => {
 	it('should render', async () => {
-		useCurrentUser.mockImplementation(() => ({
-			isAdmin: () => true
-		}));
+		mockCurrentUser();
 
 		const {container, getByText} = render(<DefaultComponent />);
 
@@ -67,9 +55,7 @@ describe('Data Privacy Overview', () => {
 	});
 
 	it('should render with disabled buttons in the Suppressed Users section if the user is not an AC admin', async () => {
-		useCurrentUser.mockImplementation(() => ({
-			isAdmin: () => false
-		}));
+		mockCurrentUser({roleName: UserRoleNames.Member});
 
 		const {container, getByTestId} = render(<DefaultComponent />);
 

@@ -3,22 +3,6 @@ import {actionTypes} from '../../actions/store';
 import {Map} from 'immutable';
 
 describe('store', () => {
-	afterAll(() => {
-		global.localStorage.removeItem('maintenanceSeen');
-		global.localStorage.removeItem('sidebar');
-	});
-
-	beforeAll(() => {
-		global.localStorage.setItem(
-			'maintenanceSeen',
-			btoa(JSON.stringify({321: true}))
-		);
-		global.localStorage.setItem(
-			'sidebar',
-			btoa(JSON.stringify({123: false, 321: true}))
-		);
-	});
-
 	it('should be a function', () => {
 		expect(typeof reducer).toBe('function');
 	});
@@ -35,8 +19,6 @@ describe('store', () => {
 			action
 		);
 
-		expect(state.get('segment')).toBeUndefined();
-		expect(state.get('maintenanceSeen').size).toBe(1);
-		expect(state.get('sidebar').size).toBe(2);
+		expect(state.size).toBe(0);
 	});
 });

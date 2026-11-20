@@ -1,26 +1,23 @@
 import CriteriaSidebarDataSourceEmptyState from '../CriteriaSidebarDataSourceEmptyState';
 import React from 'react';
 import {cleanup, render, screen} from '@testing-library/react';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
-
-jest.mock('shared/hooks/useCurrentUser', () => ({useCurrentUser: jest.fn()}));
-
-jest.mock('react-router-dom', () => ({
-	useParams: () => ({groupId: '12345'})
-}));
+import {mockCurrentUser, WorkspacePage} from 'test/mock-page-context';
+import {UserRoleNames} from 'shared/util/constants';
 
 const EmptyState = () => (
-	<CriteriaSidebarDataSourceEmptyState
-		description='Connect a data source.'
-		title='No Data Has Been Synced'
-	/>
+	<WorkspacePage>
+		<CriteriaSidebarDataSourceEmptyState
+			description='Connect a data source.'
+			title='No Data Has Been Synced'
+		/>
+	</WorkspacePage>
 );
 
 describe('CriteriaSidebarDataSourceEmptyState', () => {
 	afterEach(cleanup);
 
 	it('should offer an administrator to connect a data source', () => {
-		useCurrentUser.mockReturnValue({isAdmin: () => true});
+		mockCurrentUser();
 
 		render(<EmptyState />);
 
@@ -29,11 +26,11 @@ describe('CriteriaSidebarDataSourceEmptyState', () => {
 		).toBeInTheDocument();
 		expect(
 			screen.getByRole('link', {name: /^connect data source$/i})
-		).toHaveAttribute('href', '/workspace/12345/settings/data-source');
+		).toHaveAttribute('href', '/data-sources');
 	});
 
 	it('should not offer to connect a data source to a user who cannot', () => {
-		useCurrentUser.mockReturnValue({isAdmin: () => false});
+		mockCurrentUser({roleName: UserRoleNames.Member});
 
 		render(<EmptyState />);
 

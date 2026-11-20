@@ -1,34 +1,22 @@
 import Header from '../Header';
 import mockStore from 'test/mock-store';
 import React from 'react';
-import {BrowserRouter} from 'react-router-dom';
-import {cleanup, render} from '@testing-library/react';
+import {cleanup, render, screen} from '@testing-library/react';
+import {WorkspacePage} from 'test/mock-page-context';
 import {Provider} from 'react-redux';
-import {Routes} from 'shared/util/router';
-import {MemoryRouter} from 'react-router';
 
 const WrappedComponent = props => (
 	<Provider store={mockStore()}>
-		<MemoryRouter>
-			<Header {...props}></Header>
-		</MemoryRouter>
+		<Header {...props}></Header>
 	</Provider>
 );
 
 describe('BasePage.Header', () => {
 	afterEach(cleanup);
 
-	beforeAll(() => {
-		delete window.location;
-
-		window.location = {
-			pathname: '/workspace/123/sites/contacts/accounts/321'
-		};
-	});
-
 	it('renders Header', () => {
 		const {container} = render(
-			<WrappedComponent>{'Test Test'}</WrappedComponent>
+			<WorkspacePage><WrappedComponent>{'Test Test'}</WrappedComponent></WorkspacePage>
 		);
 
 		expect(container).toMatchSnapshot();
@@ -36,63 +24,48 @@ describe('BasePage.Header', () => {
 
 	it('renders Header w/ Breadcrumbs', () => {
 		const {container} = render(
-			<WrappedComponent
+			<WorkspacePage><WrappedComponent
 				breadcrumbs={[
 					{active: false, label: 'Foo'},
 					{active: true, label: 'Bar'}
 				]}
 			>
 				{'Test Test'}
-			</WrappedComponent>
+			</WrappedComponent></WorkspacePage>
 		);
 
 		expect(container).toMatchSnapshot();
 	});
 
 	describe('NavBar', () => {
-		it('renders NavBar', () => {
-			const {container} = render(
-				<BrowserRouter>
-					<Header.NavBar
-						items={[
-							{
-								exact: true,
-								label: 'Test',
-								route: Routes.CONTACTS_ACCOUNT
-							}
-						]}
-						routeParams={{
-							groupId: '123',
-							id: '321'
-						}}
-						routeQueries={{rangeKey: '30'}}
-					/>
-				</BrowserRouter>
+		const renderNavBar = navigationItems =>
+			render(
+				<WorkspacePage navigationItems={navigationItems}>
+					<Header.NavBar />
+				</WorkspacePage>
 			);
+
+		it('renders NavBar', () => {
+			const {container} = renderNavBar([
+				{
+					active: true,
+					href: '/account?id=321&rangeKey=30',
+					label: 'Test'
+				}
+			]);
 
 			expect(container).toMatchSnapshot();
 		});
 
 		it('renders NavBar with deprecated label', () => {
-			const {container} = render(
-				<BrowserRouter>
-					<Header.NavBar
-						items={[
-							{
-								deprecated: true,
-								exact: true,
-								label: 'Test',
-								route: Routes.CONTACTS_ACCOUNT
-							}
-						]}
-						routeParams={{
-							groupId: '123',
-							id: '321'
-						}}
-						routeQueries={{rangeKey: '30'}}
-					/>
-				</BrowserRouter>
-			);
+			const {container} = renderNavBar([
+				{
+					active: true,
+					deprecated: true,
+					href: '/account?id=321&rangeKey=30',
+					label: 'Test'
+				}
+			]);
 
 			const deprecatedBadge = document.querySelector(
 				'.badge.badge-warning.badge-translucent'
@@ -103,33 +76,37 @@ describe('BasePage.Header', () => {
 			expect(deprecatedBadge).toHaveTextContent('DEPRECATED');
 		});
 
-		it('renders NavBar w/o routeQueries', () => {
-			const {container} = render(
-				<BrowserRouter>
-					<Header.NavBar
-						items={[
-							{
-								exact: true,
-								label: 'Test',
-								route: Routes.CONTACTS_ACCOUNT
-							}
-						]}
-						routeParams={{groupId: '123', id: '321'}}
-					/>
-				</BrowserRouter>
-			);
+		it('marks the navigation item of the current page as active', () => {
+			renderNavBar([
+				{href: '/account?id=321', label: 'Overview'},
+				{
+					active: true,
+					href: '/account-individuals?id=321',
+					label: 'Individuals'
+				}
+			]);
 
-			expect(container).toMatchSnapshot();
+			expect(
+				screen.getByRole('link', {name: 'Individuals'})
+			).toHaveAttribute('aria-current', 'page');
+			expect(
+				screen.getByRole('link', {name: 'Overview'})
+			).not.toHaveAttribute('aria-current');
+			expect(
+				screen.getByRole('button', {
+					name: 'Open Menu, Current Page: Individuals'
+				})
+			).toBeInTheDocument();
 		});
 	});
 
 	describe('PageActions', () => {
 		it('renders PageActions', () => {
 			const {container} = render(
-				<Header.PageActions
+				<WorkspacePage><Header.PageActions
 					actions={[{label: 'Test Action'}]}
 					label='Test Label'
-				/>
+				/></WorkspacePage>
 			);
 
 			expect(container).toMatchSnapshot();
@@ -139,7 +116,7 @@ describe('BasePage.Header', () => {
 	describe('Section', () => {
 		it('renders Section', () => {
 			const {container} = render(
-				<Header.Section>{'Test Test'}</Header.Section>
+				<WorkspacePage><Header.Section>{'Test Test'}</Header.Section></WorkspacePage>
 			);
 
 			expect(container).toMatchSnapshot();
@@ -149,7 +126,7 @@ describe('BasePage.Header', () => {
 	describe('TitleSection', () => {
 		it('renders TitleSection w/ Title', () => {
 			const {container} = render(
-				<Header.TitleSection>{'Test Test'}</Header.TitleSection>
+				<WorkspacePage><Header.TitleSection>{'Test Test'}</Header.TitleSection></WorkspacePage>
 			);
 
 			expect(container).toMatchSnapshot();
@@ -157,10 +134,10 @@ describe('BasePage.Header', () => {
 
 		it('renders TitleSection w/ a sticker before the title', () => {
 			const {getByTestId, getByText} = render(
-				<Header.TitleSection
+				<WorkspacePage><Header.TitleSection
 					sticker={<span data-testid='sticker' />}
 					title='Test Title'
-				/>
+				/></WorkspacePage>
 			);
 
 			expect(
@@ -172,7 +149,7 @@ describe('BasePage.Header', () => {
 
 		it('renders TitleSection w/ title & no children', () => {
 			const {container} = render(
-				<Header.TitleSection title='Test Title' />
+				<WorkspacePage><Header.TitleSection title='Test Title' /></WorkspacePage>
 			);
 
 			expect(container).toMatchSnapshot();
@@ -180,9 +157,9 @@ describe('BasePage.Header', () => {
 
 		it('renders TitleSection w/ subtitle', () => {
 			const {container} = render(
-				<Header.TitleSection subtitle='Test Subtitle'>
+				<WorkspacePage><Header.TitleSection subtitle='Test Subtitle'>
 					{'Test Test'}
-				</Header.TitleSection>
+				</Header.TitleSection></WorkspacePage>
 			);
 
 			expect(container).toMatchSnapshot();
@@ -190,9 +167,9 @@ describe('BasePage.Header', () => {
 
 		it('renders TitleSection w/ subtitle & label', () => {
 			const {container} = render(
-				<Header.TitleSection label subtitle='Test Label'>
+				<WorkspacePage><Header.TitleSection label subtitle='Test Label'>
 					{'Test Test'}
-				</Header.TitleSection>
+				</Header.TitleSection></WorkspacePage>
 			);
 
 			expect(container).toMatchSnapshot();
@@ -200,7 +177,7 @@ describe('BasePage.Header', () => {
 
 		it('renders TitleSection w/ label & no subtitle', () => {
 			const {container} = render(
-				<Header.TitleSection label>{'Test Test'}</Header.TitleSection>
+				<WorkspacePage><Header.TitleSection label>{'Test Test'}</Header.TitleSection></WorkspacePage>
 			);
 
 			expect(container).toMatchSnapshot();

@@ -1,7 +1,7 @@
 import InterestPagesList from '../InterestPagesList';
 import React from 'react';
 import {render, waitFor} from '@testing-library/react';
-import {MemoryRouter} from 'react-router';
+import {WorkspacePage} from 'test/mock-page-context';
 
 /**
  * For ActivePagesList (active: true) validation, It's possible to order by
@@ -12,9 +12,7 @@ import {MemoryRouter} from 'react-router';
 describe('InterestPagesList', () => {
 	it('should render', async () => {
 		const {container} = render(
-			<MemoryRouter>
-				<InterestPagesList dataSourceParams={{active: true}} />
-			</MemoryRouter>
+			<WorkspacePage><InterestPagesList dataSourceParams={{active: true}} /></WorkspacePage>
 		);
 
 		await waitFor(() => {});

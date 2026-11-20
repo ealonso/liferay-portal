@@ -25,7 +25,7 @@ exports[`InterestsCard should render 1`] = `
         >
           <a
             class="text-decoration-none"
-            href="/workspace/23/contacts/individuals/known-individuals/15/interests/Bar0"
+            href="/individual-interest?id=15&interestId=Bar0"
           >
             Bar0
           </a>
@@ -37,7 +37,7 @@ exports[`InterestsCard should render 1`] = `
     >
       <a
         class="button-root btn btn-outline-borderless btn-sm btn-outline-secondary"
-        href="/workspace/23/contacts/individuals/known-individuals/15/interests"
+        href="/individual-interests?id=15"
       >
         View All Interests
         <svg
@@ -67,7 +67,7 @@ exports[`InterestsList should render 1`] = `
       >
         <a
           class="text-decoration-none"
-          href="/workspace/23/contacts/individuals/known-individuals/foo/interests/Bar0"
+          href="/individual-interest?id=foo&interestId=Bar0"
         >
           Bar0
         </a>
