@@ -41,6 +41,7 @@ interface IFetchMetricsParams {
 	campaignId?: string;
 	channelId?: string;
 	groupId?: string;
+	rangeKey?: string;
 }
 
 interface ISearchParams {
@@ -159,9 +160,10 @@ export function fetchMetrics({
 	campaignId,
 	channelId,
 	groupId,
+	rangeKey,
 }: IFetchMetricsParams) {
 	return sendRequest({
-		data: {campaignId, channelId},
+		data: {campaignId, channelId, rangeKey},
 		method: 'GET',
 		path: `contacts/${groupId}/account/metrics`,
 	});
