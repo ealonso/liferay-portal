@@ -14,6 +14,7 @@ export interface IBackendConfig {
 	channelId?: string;
 	friendlyURL?: string;
 	groupId?: string;
+	ldpEnabled?: boolean;
 	navigationItems?: INavigationItem[] | null;
 	pageURLs?: {[friendlyURL: string]: string};
 	params?: {[name: string]: string | undefined} | null;
@@ -26,6 +27,7 @@ export type Config = {
 	readonly channelId: string;
 	readonly friendlyURL: string;
 	readonly groupId: string;
+	readonly ldpEnabled: boolean;
 	readonly navigationItems: INavigationItem[] | null;
 	readonly params: Readonly<{[name: string]: string}>;
 	readonly signOutURL: string;
@@ -35,6 +37,7 @@ export function buildConfig({
 	channelId = '',
 	friendlyURL = '',
 	groupId = '',
+	ldpEnabled = false,
 	navigationItems,
 	pageURLs = {},
 	params,
@@ -59,6 +62,7 @@ export function buildConfig({
 		channelId,
 		friendlyURL,
 		groupId,
+		ldpEnabled,
 		navigationItems: navigationItems ?? null,
 		params: Object.freeze(pageParams),
 		signOutURL,

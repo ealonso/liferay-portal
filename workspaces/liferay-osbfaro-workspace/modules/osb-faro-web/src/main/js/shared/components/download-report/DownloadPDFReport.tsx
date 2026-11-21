@@ -17,9 +17,8 @@ import {sub} from 'shared/util/lang';
 import {Text} from '@clayui/core';
 import {useDispatch} from 'react-redux';
 import {useDownloadReportContext} from './DownloadReportContext';
-import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
 import {useModal} from '@clayui/modal';
-import {useParams} from 'react-router-dom';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 export enum ReportContainer {
 	AcquisitionsCard = 'container.report.acquisitionsCard',
@@ -380,13 +379,12 @@ const DownloadPDFReport: React.FC<IDownloadReport> = ({
 	title,
 	url,
 }) => {
+	const {ldpEnabled} = usePageConfig();
+
 	const [loading, setLoading] = useState(false);
 	const {observer, onOpenChange, open} = useModal();
 	const {reportContainers} = useDownloadReportContext();
 	const [containers, setContainers] = useState<ContainerList | {}>({});
-	const {groupId = ''} = useParams<{groupId?: string}>();
-
-	const ldpEnabled = useLDPEnabled({groupId});
 
 	const dispatch = useDispatch();
 

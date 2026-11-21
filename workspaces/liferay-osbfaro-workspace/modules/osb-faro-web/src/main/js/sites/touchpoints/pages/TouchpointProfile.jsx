@@ -19,7 +19,6 @@ import {removeUriQueryParam, setUriQueryValues} from 'shared/util/url';
 import {useAccountFilter} from 'shared/hooks/useAccountFilter';
 import {useChannelContext} from 'shared/context/channel';
 import {useDataSources} from 'shared/context/dataSources';
-import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
 import {getAPIRangeParams} from 'shared/hooks/useRangeQueryValues';
 import {useQueryRangeSelectors} from 'shared/hooks/useQueryRangeSelectors';
 import {useSegmentFilter} from 'shared/hooks/useSegmentFilter';
@@ -37,16 +36,17 @@ function TouchpointProfile({className, renderContent, router}) {
 	} = router.params;
 	const {accountId, accountName, setAccount} = useAccountFilter();
 	const {segmentId, segmentName, setSegment} = useSegmentFilter();
-	const LDPEnabled = useLDPEnabled({groupId});
 	const [pathRangeSelectors, setPathRangeSelectors] =
 		useState(rangeSelectors);
 	const {selectedChannel} = useChannelContext();
-	const {friendlyURL} = usePageConfig();
+	const config = usePageConfig();
+
+	const {friendlyURL, ldpEnabled} = config;
 	const decodedTitle = getSafeDecodedURIComponent(title);
 	const decodedTouchpoint = getSafeDecodedURIComponent(touchpoint);
 	const [experienceId, setExperienceId] = useState(experienceIdfromURL);
 
-	const accountDropdown = LDPEnabled && (
+	const accountDropdown = ldpEnabled && (
 		<AccountDropdown
 			assetType='page'
 			className='mr-3'
@@ -57,7 +57,7 @@ function TouchpointProfile({className, renderContent, router}) {
 		/>
 	);
 
-	const segmentDropdown = LDPEnabled && (
+	const segmentDropdown = ldpEnabled && (
 		<SegmentDropdown
 			className='mr-3'
 			initialSegmentId={segmentId}
@@ -81,9 +81,9 @@ function TouchpointProfile({className, renderContent, router}) {
 						channelId,
 						groupId,
 						label: selectedChannel && selectedChannel.name
-					}),
-					breadcrumbs.getSites(),
-					breadcrumbs.getPages(),
+					}, config),
+					breadcrumbs.getSites(config),
+					breadcrumbs.getPages(config),
 					breadcrumbs.getEntityName({label: decodedTitle})
 				]}
 				groupId={groupId}
@@ -110,7 +110,7 @@ function TouchpointProfile({className, renderContent, router}) {
 
 					{segmentDropdown}
 
-					{LDPEnabled && (
+					{ldpEnabled && (
 						<ExperienceDropdown
 							groupId={groupId}
 							onChange={experienceId => {

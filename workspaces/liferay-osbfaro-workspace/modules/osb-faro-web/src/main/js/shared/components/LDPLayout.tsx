@@ -1,7 +1,7 @@
 import ErrorPage from 'shared/pages/ErrorPage';
 import React from 'react';
-import {Outlet, useParams} from 'react-router-dom';
-import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
+import {Outlet} from 'react-router-dom';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface ILDPElementProps {
 	children: React.ReactNode;
@@ -12,11 +12,9 @@ export const LDPElement: React.FC<ILDPElementProps> = ({
 	children,
 	fallback,
 }) => {
-	const {groupId = ''} = useParams<{groupId: string}>();
+	const {ldpEnabled} = usePageConfig();
 
-	const LDPEnabled = useLDPEnabled({groupId});
-
-	return <>{LDPEnabled ? children : fallback}</>;
+	return <>{ldpEnabled ? children : fallback}</>;
 };
 
 const LDPLayout: React.FC = () => (

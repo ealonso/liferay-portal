@@ -17,7 +17,7 @@ import {sub} from 'shared/util/lang';
 import {useAccountFilter} from 'shared/hooks/useAccountFilter';
 import {useChannelContext} from 'shared/context/channel';
 import {useDataSources} from 'shared/context/dataSources';
-import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
+import {usePageConfig} from 'shared/context/pageConfig';
 import {useRangeQueryValues} from 'shared/hooks/useRangeQueryValues';
 import {useSegmentFilter} from 'shared/hooks/useSegmentFilter';
 
@@ -45,6 +45,8 @@ const AssetDashboard: React.FC<{
 	className: string;
 	router: Router;
 }> = ({className, router}) => {
+	const {ldpEnabled} = usePageConfig();
+
 	const {
 		params: {
 			assetId,
@@ -58,8 +60,6 @@ const AssetDashboard: React.FC<{
 	} = router;
 
 	const descriptor = getAssetDescriptorBySlug(slug);
-
-	const LDPEnabled = useLDPEnabled({groupId});
 
 	const [filters] = useState({});
 
@@ -130,7 +130,7 @@ const AssetDashboard: React.FC<{
 			{tabId !== ACCOUNTS_TAB_ID &&
 				tabId !== KNOWN_INDIVIDUALS_TAB_ID && (
 					<BasePage.SubHeader>
-						{LDPEnabled && (
+						{ldpEnabled && (
 							<AccountDropdown
 								assetType={graphQLType}
 								className="mr-3"
@@ -141,7 +141,7 @@ const AssetDashboard: React.FC<{
 							/>
 						)}
 
-						{LDPEnabled && (
+						{ldpEnabled && (
 							<SegmentDropdown
 								initialSegmentId={segmentId}
 								initialSegmentName={segmentName}

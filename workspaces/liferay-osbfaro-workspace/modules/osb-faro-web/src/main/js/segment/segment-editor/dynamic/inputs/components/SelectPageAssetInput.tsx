@@ -15,7 +15,7 @@ import {
 import {getEventId} from '../../utils/activity-keys';
 import {Option, Picker} from '@clayui/core';
 import {OrderedMap} from 'immutable';
-import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
+import {usePageConfig} from 'shared/context/pageConfig';
 import {useModal} from '@clayui/modal';
 import {useRequest} from 'shared/hooks/useRequest';
 
@@ -233,6 +233,8 @@ const SelectPageAssetInput: React.FC<ISelectPageAssetInputProps> = ({
 	onSelectionsChange,
 	selectedItems = [],
 }) => {
+	const {ldpEnabled} = usePageConfig();
+
 	const assetsModal = useModal();
 
 	const isAssetOnly = !!action && ASSET_ONLY_ACTIONS.includes(action);
@@ -261,10 +263,6 @@ const SelectPageAssetInput: React.FC<ISelectPageAssetInputProps> = ({
 	// Object definitions only exist on LDP plans, so a non-LDP plan has no
 	// object-definition types to fetch — it offers just the fixed DXP types.
 
-	const ldpEnabled = useLDPEnabled({groupId});
-
-	const shouldRequestAssetTypes = ldpEnabled;
-
 	const {data: assetTypesData, loading} = useRequest<
 		{
 			channelId: string;
@@ -276,7 +274,7 @@ const SelectPageAssetInput: React.FC<ISelectPageAssetInputProps> = ({
 		{items: AssetSummaryType[]}
 	>({
 		dataSourceFn: (variables) => API.assets.searchTypes(variables),
-		skipRequest: !shouldRequestAssetTypes,
+		skipRequest: !ldpEnabled,
 		variables: {
 			channelId,
 			groupId,
@@ -288,10 +286,10 @@ const SelectPageAssetInput: React.FC<ISelectPageAssetInputProps> = ({
 
 	// All-or-nothing loading: while the (LDP-only) asset-summary-types request is
 	// in flight, the type picker shows a loading indicator instead of a partial
-	// list. Guarded by shouldRequestAssetTypes because useRequest leaves `loading`
+	// list. Guarded by ldpEnabled because useRequest leaves `loading`
 	// true when the request is skipped (non-LDP), which must not block the picker.
 
-	const isLoadingAssetTypes = shouldRequestAssetTypes && loading;
+	const isLoadingAssetTypes = ldpEnabled && loading;
 
 	const compatibleAssetTypes = useMemo(
 		() => getCompatibleAssetTypes(assetTypesData?.items ?? []),
@@ -335,7 +333,7 @@ const SelectPageAssetInput: React.FC<ISelectPageAssetInputProps> = ({
 			didPreselectRef.current ||
 			!applicationId ||
 			applicationId === 'Page' ||
-			(shouldRequestAssetTypes && !assetTypesData)
+			(ldpEnabled && !assetTypesData)
 		) {
 			return;
 		}
@@ -359,7 +357,6 @@ const SelectPageAssetInput: React.FC<ISelectPageAssetInputProps> = ({
 		assetTypesData,
 		compatibleAssetTypes,
 		objectDefinitionName,
-		shouldRequestAssetTypes,
 	]);
 
 	const isPage = !isAssetOnly && selectorType === 'page';

@@ -14,7 +14,7 @@ import {CSVType} from 'shared/components/download-report/utils';
 import {getMatchedRoute, Routes} from 'shared/util/router';
 import {Route, Routes as RouterRoutes} from 'react-router-dom';
 import {useDataSources} from 'shared/context/dataSources';
-import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
+import {usePageConfig} from 'shared/context/pageConfig';
 import {useRequest} from 'shared/hooks/useRequest';
 
 const AssociatedSegments = lazy(
@@ -83,9 +83,9 @@ export const IndividualProfileRoutes = ({
 	id,
 	individual,
 }: IIndividualProfileRoutesProps) => {
-	const dataSourceStates = useDataSources();
+	const {ldpEnabled} = usePageConfig();
 
-	const LDPEnabled = useLDPEnabled({groupId});
+	const dataSourceStates = useDataSources();
 
 	const {selectedChannel} = useContext(ChannelContext);
 
@@ -124,7 +124,7 @@ export const IndividualProfileRoutes = ({
 					breadcrumbs.getIndividuals({
 						channelId,
 						groupId,
-						LDPEnabled,
+						LDPEnabled: ldpEnabled,
 					}),
 					breadcrumbs.getEntityName({label: entityName}),
 				]}

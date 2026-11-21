@@ -68,9 +68,9 @@ import {useModal} from '@clayui/modal';
 import {useChannelContext} from 'shared/context/channel';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useDeleteSegments} from 'segment/hooks/useDeleteSegments';
-import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
 import {useRequest} from 'shared/hooks/useRequest';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 function fetchDisabledSegments(
 	channelId: string,
@@ -198,8 +198,9 @@ const ORDER_BY_OPTIONS = [
 ];
 
 export const List: React.FC<IListProps> = ({channelId, groupId, history}) => {
+	const {ldpEnabled} = usePageConfig();
+
 	const currentUser = useCurrentUser();
-	const LDPEnabled = useLDPEnabled({groupId});
 	const {selectedChannel} = useChannelContext();
 	const {deleteSegments, deleteSegmentsModal} = useDeleteSegments(groupId);
 	const notificationsModal = useModal();
@@ -431,7 +432,7 @@ export const List: React.FC<IListProps> = ({channelId, groupId, history}) => {
 				<Nav>
 					<Nav.Item>
 						<div className="d-flex align-items-center">
-							{!LDPEnabled && (
+							{!ldpEnabled && (
 								<ClayLink
 									aria-disabled={error || loading}
 									button
@@ -454,7 +455,7 @@ export const List: React.FC<IListProps> = ({channelId, groupId, history}) => {
 								</ClayLink>
 							)}
 
-							{LDPEnabled && (
+							{ldpEnabled && (
 								<ClayDropDown
 									alignmentPosition={Align.BottomRight}
 									trigger={

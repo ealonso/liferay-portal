@@ -20,8 +20,8 @@ import {useAccountFilter} from 'shared/hooks/useAccountFilter';
 import {useChannelContext} from 'shared/context/channel';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useDataSources} from 'shared/context/dataSources';
-import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
 import {useSegmentFilter} from 'shared/hooks/useSegmentFilter';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const InterestDetails = lazy(
 	() =>
@@ -80,6 +80,8 @@ interface IDashboardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const Dashboard: React.FC<IDashboardProps> = ({router}) => {
+	const {ldpEnabled} = usePageConfig();
+
 	const {channelId, groupId = ''} = useParams<{
 		channelId: string;
 		groupId: string;
@@ -87,7 +89,6 @@ export const Dashboard: React.FC<IDashboardProps> = ({router}) => {
 	const {accountId, accountName, setAccount} = useAccountFilter();
 	const {segmentId, segmentName, setSegment} = useSegmentFilter();
 	const dataSourceStates = useDataSources();
-	const LDPEnabled = useLDPEnabled({groupId});
 	const {selectedChannel} = useChannelContext();
 	const currentUser = useCurrentUser();
 
@@ -127,7 +128,7 @@ export const Dashboard: React.FC<IDashboardProps> = ({router}) => {
 			</BasePage.Header>
 
 			<BasePage.SubHeader>
-				{LDPEnabled && (
+				{ldpEnabled && (
 					<AccountDropdown
 						className="mr-2"
 						initialAccountId={accountId}
@@ -136,7 +137,7 @@ export const Dashboard: React.FC<IDashboardProps> = ({router}) => {
 					/>
 				)}
 
-				{LDPEnabled && (
+				{ldpEnabled && (
 					<SegmentDropdown
 						className="mr-2"
 						initialSegmentId={segmentId}

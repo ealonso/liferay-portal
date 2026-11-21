@@ -8,8 +8,7 @@ import {compose, withProject} from 'shared/hoc';
 import {GenericBarsCard} from 'settings/components/usage-overview/GenericBarsCard';
 import {GenericDonutChart} from 'settings/components/usage-overview/GenericDonutChart';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
-import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
-import {useParams} from 'react-router-dom';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 export type Resource = {
 	capacity: string;
@@ -17,9 +16,9 @@ export type Resource = {
 };
 
 export const UsageOverviewExternal = () => {
+	const {ldpEnabled} = usePageConfig();
+
 	const currentUser = useCurrentUser();
-	const {groupId = ''} = useParams<{groupId: string}>();
-	const isLDP = useLDPEnabled({groupId});
 
 	let pageActions: {
 		displayType: string;
@@ -33,13 +32,13 @@ export const UsageOverviewExternal = () => {
 		pageActions = [
 			{
 				displayType: 'primary',
-				href: isLDP
+				href: ldpEnabled
 					? 'https://one.liferay.com/'
 					: 'https://support.liferay.com/',
 				icon: {
 					symbol: 'shortcut',
 				},
-				label: isLDP
+				label: ldpEnabled
 					? Liferay.Language.get('go-to-liferay-one')
 					: Liferay.Language.get('go-to-customer-portal'),
 				target: '_blank',
@@ -73,7 +72,7 @@ export const UsageOverviewExternal = () => {
 			key="UsageOverview"
 			pageActions={pageActions}
 			pageDescription={
-				!isLDP &&
+				!ldpEnabled &&
 				Liferay.Language.get(
 					'saas-plan-usage-is-determined-by-malus-and-apvs'
 				)
@@ -83,7 +82,7 @@ export const UsageOverviewExternal = () => {
 			<div className="saas-banner p-5 sm:p-8 md:p-10 xl:p-4">
 				<div className="text-white">
 					<h2 className="title">
-						{isLDP
+						{ldpEnabled
 							? Liferay.Language.get(
 									'view-your-workspace-metrics'
 								)
@@ -92,7 +91,7 @@ export const UsageOverviewExternal = () => {
 								)}
 					</h2>
 					<p className="w-50 d-flex mb-0">
-						{isLDP
+						{ldpEnabled
 							? Liferay.Language.get(
 									'you-can-view-your-project-usage-metrics-directly-in-liferay-one'
 								)
@@ -114,7 +113,7 @@ export const UsageOverviewExternal = () => {
 							<GenericBarsCard
 								cardTitle={title}
 								key={title}
-								redactTitle={isLDP}
+								redactTitle={ldpEnabled}
 							/>
 						))}
 					</ClayLayout.Row>

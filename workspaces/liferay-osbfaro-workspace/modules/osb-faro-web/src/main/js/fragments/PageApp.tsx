@@ -21,6 +21,7 @@ export interface IPageAppProps<
 	channelScoped?: boolean;
 	friendlyURL: string;
 	groupId: string;
+	ldpEnabled: boolean;
 	navigationItems?: INavigationItem[] | null;
 	pageURLs: {[friendlyURL: string]: string};
 	params?: Params | null;
@@ -69,6 +70,7 @@ const PageApp: React.FC<IPageAppProps & {children: React.ReactNode}> = ({
 	children,
 	friendlyURL,
 	groupId,
+	ldpEnabled,
 	navigationItems,
 	pageURLs,
 	params,
@@ -81,6 +83,7 @@ const PageApp: React.FC<IPageAppProps & {children: React.ReactNode}> = ({
 			channelId,
 			friendlyURL,
 			groupId,
+			ldpEnabled,
 			navigationItems,
 			pageURLs,
 			params,

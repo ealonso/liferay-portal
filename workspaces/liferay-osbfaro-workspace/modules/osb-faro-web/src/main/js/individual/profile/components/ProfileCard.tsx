@@ -34,7 +34,7 @@ import {Interval, RangeSelectors} from 'shared/types';
 import {isHourlyRangeKey} from 'shared/util/time';
 import {mapListResultsToProps} from 'shared/util/mappers';
 import {SessionEntityTypes, Sizes} from 'shared/util/constants';
-import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
+import {usePageConfig} from 'shared/context/pageConfig';
 import {useQuery} from '@apollo/client';
 import {useSelectedPoint} from 'shared/hooks/useSelectedPoint';
 import {withEmpty} from 'cerebro-shared/hocs/utils';
@@ -83,10 +83,12 @@ const ProfileCard: React.FC<IProfileCardProps> = ({
 	resetPage,
 	timeZoneId,
 }) => {
+	const config = usePageConfig();
+
+	const {ldpEnabled} = config;
+
 	const {hasSelectedPoint, onPointSelect, selectedPoint} = useSelectedPoint();
 	const [searchValue, setSearchValue] = useState<string>('');
-
-	const LDPEnabled = useLDPEnabled({groupId});
 
 	const activityResponse = useQuery<EventMetricsData, EventMetricsVariables>(
 		EventMetricQuery,
@@ -138,7 +140,7 @@ const ProfileCard: React.FC<IProfileCardProps> = ({
 	const sessionsMappedResults = mapListResultsToProps(
 		sessionsResponse,
 		({eventsByUserSessions: {totalPageGroupsMetric, userSessions}}) => ({
-			items: formatSessions(userSessions, {
+			items: formatSessions(config, userSessions, {
 				channelId,
 				groupId,
 				rangeSelectors,
@@ -284,7 +286,7 @@ const ProfileCard: React.FC<IProfileCardProps> = ({
 						alwaysShowSelectedTooltip
 						history={activityHistory}
 						interval={interval}
-						LDPEnabled={LDPEnabled}
+						LDPEnabled={ldpEnabled}
 						onPointSelect={handleChangeSelection}
 						rangeSelectors={rangeSelectors}
 						selectedPoint={selectedPoint}
@@ -333,7 +335,7 @@ const ProfileCard: React.FC<IProfileCardProps> = ({
 				{...sessionsMappedResults}
 				delta={delta}
 				initialExpanded={false}
-				LDPEnabled={LDPEnabled}
+				LDPEnabled={ldpEnabled}
 				noResultsRenderer={renderNoResults()}
 				onDeltaChange={onDeltaChange}
 				onPageChange={onPageChange}

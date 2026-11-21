@@ -29,8 +29,8 @@ import {toThousands} from 'shared/util/numbers';
 import {useChannelContext} from 'shared/context/channel';
 import {useLocation, useParams} from 'react-router-dom';
 import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
-import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
 import {useQueryRangeSelectors} from 'shared/hooks/useQueryRangeSelectors';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const {cur: DEFAULT_CUR} = FaroConstants.pagination;
 
@@ -211,12 +211,13 @@ const TABLE_FIELDS = [
 ];
 
 const List = () => {
+	const {ldpEnabled} = usePageConfig();
+
 	const history = useHistoryAdapter();
 	const {search} = useLocation();
 	const {selectedChannel} = useChannelContext();
 	const {channelId, groupId} = useParams();
 	const initialRangeSelectors = useQueryRangeSelectors();
-	const LDPEnabled = useLDPEnabled({groupId: groupId!});
 
 	const searchParams = new URLSearchParams(search);
 	const accountId = searchParams.get('accountId');
@@ -258,7 +259,7 @@ const List = () => {
 
 	const filters = useMemo(
 		() => [
-			...(LDPEnabled
+			...(ldpEnabled
 				? [
 						{
 							apiURL: `/o/faro/contacts/${groupId}/account/search?channelId=${channelId}&filter=(rangeKey eq '${rangeSelectors.rangeKey}')`,
@@ -386,7 +387,6 @@ const List = () => {
 			accountName,
 			channelId,
 			groupId,
-			LDPEnabled,
 			objectType,
 			rangeSelectorParams,
 			segmentId,
@@ -515,7 +515,7 @@ const List = () => {
 								],
 								label: Liferay.Language.get('filter-by'),
 							},
-							...(LDPEnabled
+							...(ldpEnabled
 								? [
 										{
 											filters: [

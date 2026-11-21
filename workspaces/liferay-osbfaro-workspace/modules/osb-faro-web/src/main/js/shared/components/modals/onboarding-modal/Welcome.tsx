@@ -3,7 +3,7 @@ import ClayModal from '@clayui/modal';
 import welcomeURL from '../../../../../images/analytics_onboarding_welcome.svg?url';
 import React from 'react';
 import {Text} from '@clayui/core';
-import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface IWelcomeProps {
 	groupId?: string;
@@ -11,8 +11,8 @@ interface IWelcomeProps {
 	onNext: (increment?: number) => void;
 }
 
-const Welcome: React.FC<IWelcomeProps> = ({groupId = '', onNext}) => {
-	const LDPEnabled = useLDPEnabled({groupId});
+const Welcome: React.FC<IWelcomeProps> = ({onNext}) => {
+	const {ldpEnabled} = usePageConfig();
 
 	return (
 		<>
@@ -30,7 +30,7 @@ const Welcome: React.FC<IWelcomeProps> = ({groupId = '', onNext}) => {
 
 				<div className="text-center">
 					<Text size={6} weight="bold">
-						{LDPEnabled
+						{ldpEnabled
 							? Liferay.Language.get(
 									'welcome-to-liferay-data-platform'
 								)

@@ -31,8 +31,8 @@ import {sub} from 'shared/util/lang';
 import {Text} from '@clayui/core';
 import {useInterval} from 'shared/hooks/useInterval';
 import {useLazyQuery} from '@apollo/client';
-import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
 import {withHistory} from 'shared/hoc';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const TIMEOUT_INTERVAL = 5000;
 
@@ -98,9 +98,10 @@ const ConnectDXP: React.FC<IConnectDXPWrapperProps & IConnectDXPProps> = ({
 	onNext,
 	onboarding,
 }) => {
+	const {ldpEnabled} = usePageConfig();
+
 	const {channelDispatch} = useChannelContext();
 	const [token, setToken] = useState<string>('');
-	const LDPEnabled = useLDPEnabled({groupId});
 
 	const [getDataSources, {data}] = useLazyQuery<DataSourceData>(
 		DataSourceQuery,
@@ -221,7 +222,7 @@ const ConnectDXP: React.FC<IConnectDXPWrapperProps & IConnectDXPProps> = ({
 						style={
 							dxpConnected ? undefined : {filter: 'grayscale(1)'}
 						}
-						symbol={LDPEnabled ? 'ldp_logo' : 'ac_logo'}
+						symbol={ldpEnabled ? 'ldp_logo' : 'ac_logo'}
 					/>
 				</div>
 

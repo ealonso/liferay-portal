@@ -2,8 +2,7 @@ import acFaviconURL from '../../../images/favicons/ac_favicon.svg?url';
 import ldpFaviconURL from '../../../images/favicons/ldp_favicon.svg?url';
 import React from 'react';
 import {useEffect} from 'react';
-import {useLDPEnabled} from 'shared/hooks/useLDPEnabled';
-import {useParams} from 'react-router-dom';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface IDocumentTitleProps {
 	ldpEnabled?: boolean;
@@ -16,10 +15,9 @@ const DocumentTitle: React.FC<IDocumentTitleProps> = ({
 	loadingLDPEnabled,
 	title,
 }) => {
-	const {groupId = ''} = useParams<{groupId?: string}>();
-	const routeLDPEnabled = useLDPEnabled({groupId});
+	const config = usePageConfig();
 
-	const LDPEnabled = ldpEnabled ?? routeLDPEnabled;
+	const LDPEnabled = ldpEnabled ?? config.ldpEnabled;
 
 	// The theme serves a single static favicon for the whole instance, so the
 	// branding can only be resolved here, where the plan is known.
