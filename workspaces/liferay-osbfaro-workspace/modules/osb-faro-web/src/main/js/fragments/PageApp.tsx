@@ -4,11 +4,13 @@ import HelpWidget from 'shared/components/HelpWidget';
 import Loading from 'shared/components/Loading';
 import NoPropertiesAvailable from 'shared/pages/NoPropertiesAvailable';
 import React, {Suspense, useState} from 'react';
+import store from 'shared/store';
 import WorkspaceGate from 'shared/components/WorkspaceGate';
 import {INavigationItem, buildConfig} from 'shared/util/config';
 import {PageConfigProvider} from 'shared/context/pageConfig';
 import {Channel} from 'shared/components/channels-menu';
 import {setDefaultGroupId} from 'shared/apollo/client';
+import {receiveProject} from 'shared/actions/projects';
 import {useChannelContext} from 'shared/context/channel';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useModalNotifications} from 'shared/hooks/useModalNotifications';
@@ -27,6 +29,7 @@ export interface IPageAppProps<
 	navigationItems?: INavigationItem[] | null;
 	pageURLs: {[friendlyURL: string]: string};
 	params?: Params | null;
+	project?: {[key: string]: unknown} | null;
 	signOutURL: string;
 }
 
@@ -77,10 +80,15 @@ const PageApp: React.FC<IPageAppProps & {children: React.ReactNode}> = ({
 	navigationItems,
 	pageURLs,
 	params,
+	project,
 	signOutURL,
 }) => {
 	const [config] = useState(() => {
 		setDefaultGroupId(groupId);
+
+		if (project) {
+			store.dispatch(receiveProject(groupId, project));
+		}
 
 		return buildConfig({
 			channelId,

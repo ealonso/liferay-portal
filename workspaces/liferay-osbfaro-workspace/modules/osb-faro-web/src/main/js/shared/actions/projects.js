@@ -87,6 +87,14 @@ export function fetchProject({groupId}) {
 	};
 }
 
+export function receiveProject(groupId, payload) {
+	return {
+		meta: {schema: project(groupId)},
+		payload,
+		type: actionTypes.FETCH_PROJECT_SUCCESS,
+	};
+}
+
 export function fetchProjects() {
 	return {
 		meta: {
