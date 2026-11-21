@@ -7,6 +7,7 @@ import React, {Suspense, useState} from 'react';
 import WorkspaceGate from 'shared/components/WorkspaceGate';
 import {INavigationItem, buildConfig} from 'shared/util/config';
 import {PageConfigProvider} from 'shared/context/pageConfig';
+import {Channel} from 'shared/components/channels-menu';
 import {setDefaultGroupId} from 'shared/apollo/client';
 import {useChannelContext} from 'shared/context/channel';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
@@ -19,6 +20,7 @@ export interface IPageAppProps<
 > {
 	channelId: string;
 	channelScoped?: boolean;
+	channels?: Channel[] | null;
 	friendlyURL: string;
 	groupId: string;
 	ldpEnabled: boolean;
@@ -67,6 +69,7 @@ const PropertyGate: React.FC<IPageLayoutProps> = ({children, groupId}) => {
 const PageApp: React.FC<IPageAppProps & {children: React.ReactNode}> = ({
 	channelId,
 	channelScoped = true,
+	channels,
 	children,
 	friendlyURL,
 	groupId,
@@ -81,6 +84,7 @@ const PageApp: React.FC<IPageAppProps & {children: React.ReactNode}> = ({
 
 		return buildConfig({
 			channelId,
+			channels,
 			friendlyURL,
 			groupId,
 			ldpEnabled,

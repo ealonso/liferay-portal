@@ -7,9 +7,11 @@ import {useRequest} from 'shared/hooks/useRequest';
 export const useChannels = ({
 	channelId,
 	groupId,
+	initialChannels,
 }: {
 	channelId?: string;
 	groupId: string;
+	initialChannels?: Channel[] | null;
 }) => {
 	const {channelDispatch} = useChannelContext();
 
@@ -18,6 +20,12 @@ export const useChannels = ({
 		{items: Channel[]}
 	>({
 		dataSourceFn: API.channels.fetchAll,
+		initialState: {
+			data: initialChannels ? {items: initialChannels} : null,
+			error: false,
+			loading: !initialChannels,
+		},
+		skipRequest: !!initialChannels,
 		variables: {groupId},
 	});
 

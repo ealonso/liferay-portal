@@ -7,6 +7,7 @@ import {DownloadReportProvider} from 'shared/components/download-report/Download
 import {isValidChannel} from 'shared/components/channels-menu';
 import {matchPath, Outlet, useLocation, useParams} from 'react-router-dom';
 import {Routes} from 'shared/util/router';
+import {usePageConfig} from 'shared/context/pageConfig';
 import {useChannelContext} from 'shared/context/channel';
 import {useChannels} from 'shared/hooks/useChannels';
 import {useOnboardingModal} from 'shared/hooks/useOnboardingModal';
@@ -45,6 +46,8 @@ interface IChannelGateProps {
 }
 
 const ChannelGate: React.FC<IChannelGateProps> = ({children, groupId}) => {
+	const {channels: initialChannels} = usePageConfig();
+
 	const {channelId} = useParams<{channelId?: string}>();
 
 	const {pathname} = useLocation();
@@ -52,6 +55,7 @@ const ChannelGate: React.FC<IChannelGateProps> = ({children, groupId}) => {
 	const {channels, error, loading} = useChannels({
 		channelId,
 		groupId,
+		initialChannels,
 	});
 
 	const {selectedChannel} = useChannelContext();

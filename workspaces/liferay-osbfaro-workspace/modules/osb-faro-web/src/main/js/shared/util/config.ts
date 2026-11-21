@@ -1,3 +1,4 @@
+import type {Channel} from 'shared/components/channels-menu';
 import {camelCase} from 'lodash';
 
 export interface INavigationItem {
@@ -12,6 +13,7 @@ export interface INavigationItem {
 
 export interface IBackendConfig {
 	channelId?: string;
+	channels?: Channel[] | null;
 	friendlyURL?: string;
 	groupId?: string;
 	ldpEnabled?: boolean;
@@ -25,6 +27,7 @@ export type Config = {
 	readonly [key: `${string}URL`]: string;
 } & {
 	readonly channelId: string;
+	readonly channels: Channel[] | null;
 	readonly friendlyURL: string;
 	readonly groupId: string;
 	readonly ldpEnabled: boolean;
@@ -35,6 +38,7 @@ export type Config = {
 
 export function buildConfig({
 	channelId = '',
+	channels,
 	friendlyURL = '',
 	groupId = '',
 	ldpEnabled = false,
@@ -60,6 +64,7 @@ export function buildConfig({
 	return Object.freeze({
 		...urls,
 		channelId,
+		channels: channels ?? null,
 		friendlyURL,
 		groupId,
 		ldpEnabled,
