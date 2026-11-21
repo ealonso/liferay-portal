@@ -1,44 +1,5 @@
-import {fetchCurrentUser} from 'shared/actions/users';
-import {resolveLocale, setLocale} from 'shared/util/locale';
-import {useDispatch, useSelector} from 'react-redux';
-import {useEffect} from 'react';
+import {useSelector} from 'react-redux';
 import {User} from 'shared/util/records';
-
-/**
- * Used only on the first time on App.tsx to fetch data from backend.
- * To get currentUser, you can use WithCurrentUser (for HOC) or useCurrentUser (for HOOK).
- */
-export const useFetchCurrentUser = (initialGroupId: string = '0') => {
-	const currentUser = useSelector<any, any>((state) =>
-		state.get('currentUser')
-	);
-	const error = currentUser.get('error');
-	const loading = currentUser.get('loading');
-
-	const data = useCurrentUser();
-
-	const dispatch = useDispatch();
-
-	useEffect(() => {
-		let groupId = '0';
-
-		if (initialGroupId && initialGroupId !== 'add') {
-			groupId = initialGroupId;
-		}
-
-		dispatch(fetchCurrentUser(groupId));
-	}, [initialGroupId]);
-
-	useEffect(() => {
-		setLocale(resolveLocale(data.languageId));
-	}, [data.languageId]);
-
-	return {
-		data,
-		error,
-		loading,
-	};
-};
 
 /**
  * Get currentUser from redux store.

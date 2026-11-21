@@ -6,7 +6,8 @@ import {FaroEnv} from 'shared/util/constants';
 import {Pendo, TrackingConsentValues} from 'shared/util/pendo';
 import {Project} from 'shared/util/records';
 import {syncAIHubChatbot} from 'shared/util/ai-hub-chatbot';
-import {useFetchCurrentUser} from 'shared/hooks/useCurrentUser';
+import {resolveLocale, setLocale} from 'shared/util/locale';
+import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useSelector} from 'react-redux';
 
 interface IAppShellProps {
@@ -21,10 +22,14 @@ const AppShell: React.FC<IAppShellProps> = ({children, groupId}) => {
 		state.getIn(['projects', projectGroupId, 'data'])
 	);
 
-	const {data: currentUser, loading} = useFetchCurrentUser(projectGroupId);
+	const currentUser = useCurrentUser();
 
 	const [trackingConsent, setTrackingConsent] =
 		useState<TrackingConsentValues | null>(null);
+
+	useEffect(() => {
+		setLocale(resolveLocale(currentUser.languageId));
+	}, [currentUser.languageId]);
 
 	// The chatbot is provisioned per workspace, so it follows the route.
 
@@ -49,10 +54,6 @@ const AppShell: React.FC<IAppShellProps> = ({children, groupId}) => {
 			pendo.initialize({currentUser, project});
 		}
 	}, [currentUser?.id, project?.groupId, trackingConsent]);
-
-	if (loading) {
-		return <Loading />;
-	}
 
 	return (
 		<>

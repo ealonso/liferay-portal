@@ -10,6 +10,7 @@ import {INavigationItem, buildConfig} from 'shared/util/config';
 import {PageConfigProvider} from 'shared/context/pageConfig';
 import {Channel} from 'shared/components/channels-menu';
 import {setDefaultGroupId} from 'shared/apollo/client';
+import {receiveCurrentUser} from 'shared/actions/users';
 import {receiveProject} from 'shared/actions/projects';
 import {useChannelContext} from 'shared/context/channel';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
@@ -23,6 +24,7 @@ export interface IPageAppProps<
 	channelId: string;
 	channelScoped?: boolean;
 	channels?: Channel[] | null;
+	currentUser: {[key: string]: unknown};
 	friendlyURL: string;
 	groupId: string;
 	ldpEnabled: boolean;
@@ -74,6 +76,7 @@ const PageApp: React.FC<IPageAppProps & {children: React.ReactNode}> = ({
 	channelScoped = true,
 	channels,
 	children,
+	currentUser,
 	friendlyURL,
 	groupId,
 	ldpEnabled,
@@ -85,6 +88,8 @@ const PageApp: React.FC<IPageAppProps & {children: React.ReactNode}> = ({
 }) => {
 	const [config] = useState(() => {
 		setDefaultGroupId(groupId);
+
+		store.dispatch(receiveCurrentUser(currentUser));
 
 		if (project) {
 			store.dispatch(receiveProject(groupId, project));
