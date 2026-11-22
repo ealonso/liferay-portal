@@ -12,8 +12,8 @@ import URLConstants from 'shared/util/url-constants';
 import {Individual} from 'shared/util/records';
 import {isNil} from 'lodash';
 import {Routes, toRoute} from 'shared/util/router';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useRequest} from 'shared/hooks/useRequest';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 enum IndividualProfileCDPCards {
 	AccountMembership = 'ACCOUNT_MEMBERSHIP',
@@ -41,6 +41,8 @@ const ProfileCDPEmptyState: React.FC<IProfileCDPEmptyStateProps> = ({
 	pageDisplay = true,
 	type = IndividualProfileCDPCards.IndividualsAttributes,
 }) => {
+	const config = usePageConfig();
+
 	if (isNil(dataSourceData?.total) || dataSourceData?.total === 0) {
 		const isAccount = type === IndividualProfileCDPCards.AccountMembership;
 
@@ -131,6 +133,8 @@ const IndividualProfileCDP: React.FC<IIndividualProfileCDPProps> = ({
 	groupId,
 	individual,
 }) => {
+	const {currentUser} = usePageConfig();
+
 	const individualId = individual.get('id');
 
 	const {data: dataSourceData, loading: dataSourceLoading} = useRequest({
@@ -140,8 +144,6 @@ const IndividualProfileCDP: React.FC<IIndividualProfileCDPProps> = ({
 			groupId,
 		},
 	});
-
-	const currentUser = useCurrentUser();
 
 	const authorized = currentUser.isAdmin();
 

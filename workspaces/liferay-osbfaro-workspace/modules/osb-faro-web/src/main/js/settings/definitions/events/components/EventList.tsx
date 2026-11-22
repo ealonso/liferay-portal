@@ -30,7 +30,6 @@ import {get} from 'lodash';
 import {OrderedMap} from 'immutable';
 import {Sizes} from 'shared/util/constants';
 import {sub} from 'shared/util/lang';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useModal} from '@clayui/modal';
 import {useMutation, useQuery} from '@apollo/client';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
@@ -38,6 +37,7 @@ import {
 	useSelectionContext,
 	withSelectionProvider,
 } from 'shared/context/selection';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const connector = connect(null, {addAlert});
 
@@ -48,6 +48,8 @@ interface IEventListProps extends PropsFromRedux {
 }
 
 const EventList: React.FC<IEventListProps> = ({addAlert, groupId}) => {
+	const {currentUser} = usePageConfig();
+
 	const {selectedItems, selectionDispatch} = useSelectionContext();
 
 	const {delta, orderIOMap, page, query} = useQueryPagination({
@@ -109,8 +111,6 @@ const EventList: React.FC<IEventListProps> = ({addAlert, groupId}) => {
 			}
 		},
 	});
-
-	const currentUser = useCurrentUser();
 
 	const hideModal = useModal();
 

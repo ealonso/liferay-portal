@@ -1,6 +1,5 @@
 import accounts from './accounts';
 import alerts from './alerts';
-import currentUser from './current-user';
 import dataSources from './data-sources';
 import distributions from './distributions';
 import individuals from './individuals';
@@ -21,7 +20,6 @@ export default composeReducers(
 	combineReducers({
 		accounts,
 		alerts,
-		currentUser,
 		dataSources,
 		distributions,
 		individuals,

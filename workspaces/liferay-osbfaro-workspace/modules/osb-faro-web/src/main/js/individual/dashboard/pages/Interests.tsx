@@ -5,13 +5,14 @@ import React from 'react';
 import StatesRenderer from 'shared/components/states-renderer/StatesRenderer';
 import URLConstants from 'shared/util/url-constants';
 import {Routes, toRoute} from 'shared/util/router';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useDataSources} from 'shared/context/dataSources';
 import {useParams} from 'react-router-dom';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const InterestsPage = () => {
+	const {currentUser} = usePageConfig();
+
 	const {groupId} = useParams();
-	const currentUser = useCurrentUser();
 	const authorized = currentUser.isAdmin();
 
 	const dataSourceStates = useDataSources();

@@ -13,9 +13,9 @@ import URLConstants from 'shared/util/url-constants';
 import {DataSource} from 'shared/util/records';
 import {fromJS} from 'immutable';
 import {Routes, toRoute} from 'shared/util/router';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useDataSources} from 'shared/context/dataSources';
 import {useParams} from 'react-router-dom';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const {
 	pagination: {cur},
@@ -24,12 +24,13 @@ const {
 const MAX_DELTA = 500;
 
 const Overview = () => {
+	const {currentUser} = usePageConfig();
+
 	const [dataSources, setDataSources] = useState<DataSource[] | null>(null);
 	const {channelId = '', groupId = ''} = useParams<{
 		channelId: string;
 		groupId: string;
 	}>();
-	const currentUser = useCurrentUser();
 	const authorized = currentUser.isAdmin();
 	const dataSourceStates = useDataSources();
 

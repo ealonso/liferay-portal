@@ -3,11 +3,11 @@ import React from 'react';
 import SuppressedUserList from '../hocs/SuppressedUserList';
 import {getDataPrivacy} from 'shared/util/breadcrumbs';
 import {Router} from 'shared/types';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useTimeZone} from 'shared/hooks/useTimeZone';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 export const SuppressedUsers = ({router}: {router: Router}) => {
-	const currentUser = useCurrentUser();
+	const {currentUser} = usePageConfig();
 	const {timeZoneId} = useTimeZone();
 
 	const groupId = router.params.groupId ?? '';

@@ -42,10 +42,10 @@ import {setUriQueryValues} from 'shared/util/url';
 import {Routes, toRoute} from 'shared/util/router';
 import {Sizes} from 'shared/util/constants';
 import {sub} from 'shared/util/lang';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useModal} from '@clayui/modal';
 import {useMutation, useQuery} from '@apollo/client';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
+import {usePageConfig} from 'shared/context/pageConfig';
 import {
 	useSelectionContext,
 	withSelectionProvider,
@@ -82,6 +82,8 @@ const BlockListCard: React.FC<IBlockListCardProps> = ({
 	removeAlert,
 	timeZoneId,
 }) => {
+	const {currentUser} = usePageConfig();
+
 	const {selectedItems, selectionDispatch} = useSelectionContext();
 
 	const {delta, orderIOMap, page, query} = useQueryPagination({
@@ -147,8 +149,6 @@ const BlockListCard: React.FC<IBlockListCardProps> = ({
 			}
 		},
 	});
-
-	const currentUser = useCurrentUser();
 
 	const hideModal = useModal();
 

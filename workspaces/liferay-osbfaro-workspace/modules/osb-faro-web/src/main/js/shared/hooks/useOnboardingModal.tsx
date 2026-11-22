@@ -5,9 +5,9 @@ import React, {useContext, useEffect, useState} from 'react';
 import SitesDashboardQuery from 'shared/queries/SitesDashboardQuery';
 import {isArray} from 'lodash';
 import {OnboardingContext} from 'shared/context/onboarding';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useModal} from '@clayui/modal';
 import {useQuery} from '@apollo/client';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 /**
  * Opens the onboarding for an administrator of a workspace with no data
@@ -19,12 +19,12 @@ export const useOnboardingModal = ({
 }: {
 	groupId: string;
 }): React.ReactNode => {
+	const {currentUser} = usePageConfig();
+
 	const modal = useModal();
 
 	const {onboardingTriggered, setOnboardingTriggered} =
 		useContext(OnboardingContext);
-
-	const currentUser = useCurrentUser();
 
 	const {data, loading} = useQuery(SitesDashboardQuery, {
 		variables: {type: null},

@@ -15,9 +15,9 @@ import {
 import {get} from 'lodash';
 import {Routes, toRoute} from 'shared/util/router';
 import {Sizes} from 'shared/util/constants';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useDataSources} from 'shared/context/dataSources';
 import {useParams} from 'react-router-dom';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const connector = connect(null, {
 	fetchDistribution: fetchIndividualsDistribution,
@@ -32,9 +32,10 @@ interface IIndividualsDistributionProps extends PropsFromRedux {
 export const IndividualsDistribution: React.FC<
 	IIndividualsDistributionProps
 > = ({knownIndividualCount, ...otherProps}) => {
+	const {currentUser} = usePageConfig();
+
 	const {groupId} = useParams();
 	const dataSourceStates = useDataSources();
-	const currentUser = useCurrentUser();
 	const authorized = currentUser.isAdmin();
 
 	return (

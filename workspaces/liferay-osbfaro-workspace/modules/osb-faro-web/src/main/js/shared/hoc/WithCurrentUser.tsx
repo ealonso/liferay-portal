@@ -1,13 +1,13 @@
 import React from 'react';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 /**
  * CurrentUser HOC
- * @deprecated Use useCurrentUser Hook for functional components.
+ * @deprecated Use usePageConfig().currentUser for functional components.
  */
 export default <P extends object>(Component: React.ComponentType<P>) =>
 	(props: P) => {
-		const currentUser = useCurrentUser();
+		const {currentUser} = usePageConfig();
 
 		return <Component {...props} currentUser={currentUser} />;
 	};

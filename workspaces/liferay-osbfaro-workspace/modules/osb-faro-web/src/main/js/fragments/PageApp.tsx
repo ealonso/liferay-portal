@@ -7,13 +7,11 @@ import React, {Suspense, useState} from 'react';
 import store from 'shared/store';
 import WorkspaceGate from 'shared/components/WorkspaceGate';
 import {INavigationItem, buildConfig} from 'shared/util/config';
-import {PageConfigProvider} from 'shared/context/pageConfig';
+import {PageConfigProvider, usePageConfig} from 'shared/context/pageConfig';
 import {Channel} from 'shared/components/channels-menu';
 import {setDefaultGroupId} from 'shared/apollo/client';
-import {receiveCurrentUser} from 'shared/actions/users';
 import {receiveProject} from 'shared/actions/projects';
 import {useChannelContext} from 'shared/context/channel';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useModalNotifications} from 'shared/hooks/useModalNotifications';
 
 export interface IPageAppProps<
@@ -57,7 +55,7 @@ const PageLayout: React.FC<IPageLayoutProps> = ({children, groupId}) => {
 const PropertyGate: React.FC<IPageLayoutProps> = ({children, groupId}) => {
 	const {selectedChannel} = useChannelContext();
 
-	const currentUser = useCurrentUser();
+	const {currentUser} = usePageConfig();
 
 	if (!selectedChannel) {
 		return (
@@ -89,8 +87,6 @@ const PageApp: React.FC<IPageAppProps & {children: React.ReactNode}> = ({
 	const [config] = useState(() => {
 		setDefaultGroupId(groupId);
 
-		store.dispatch(receiveCurrentUser(currentUser));
-
 		if (project) {
 			store.dispatch(receiveProject(groupId, project));
 		}
@@ -98,6 +94,7 @@ const PageApp: React.FC<IPageAppProps & {children: React.ReactNode}> = ({
 		return buildConfig({
 			channelId,
 			channels,
+			currentUser,
 			friendlyURL,
 			groupId,
 			ldpEnabled,

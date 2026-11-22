@@ -35,11 +35,11 @@ import {RootState} from 'shared/store';
 import {Routes, toRoute} from 'shared/util/router';
 import {Sizes} from 'shared/util/constants';
 import {updateDefaultChannelId} from 'shared/actions/preferences';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useModal} from '@clayui/modal';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
 import {useRequest} from 'shared/hooks/useRequest';
 import {useTimeZone} from 'shared/hooks/useTimeZone';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 type ChannelNameFn = (attrs: {
 	data: {id: string; name: string};
@@ -88,6 +88,8 @@ const ChannelList: React.FC<IChannelListProps> = ({
 	history,
 	updateDefaultChannelId,
 }) => {
+	const {currentUser} = usePageConfig();
+
 	const {selectedItems, selectionDispatch} = useSelectionContext();
 
 	const {delta, orderIOMap, page, query} = useQueryPagination({
@@ -109,8 +111,6 @@ const ChannelList: React.FC<IChannelListProps> = ({
 			query,
 		},
 	});
-
-	const currentUser = useCurrentUser();
 
 	const {timeZoneId} = useTimeZone();
 

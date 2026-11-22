@@ -9,8 +9,8 @@ import {connect, ConnectedProps} from 'react-redux';
 import {Project} from 'shared/util/records';
 import {Routes, toRoute} from 'shared/util/router';
 import {updateProject} from 'shared/actions/projects';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {withProject} from 'shared/hoc/WithProject';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 type History = {
 	push: (path: string) => void;
@@ -40,7 +40,7 @@ export const Workspace: React.FC<IWorkspaceProps> = ({
 	project,
 	updateProject,
 }) => {
-	const currentUser = useCurrentUser();
+	const {currentUser} = usePageConfig();
 
 	const handleSubmit = ({
 		emailAddressDomains,

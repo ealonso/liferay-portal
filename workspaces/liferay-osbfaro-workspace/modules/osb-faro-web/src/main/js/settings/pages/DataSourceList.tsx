@@ -35,7 +35,6 @@ import {Link, useParams} from 'react-router-dom';
 import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
 import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
 import {useRequest} from 'shared/hooks/useRequest';
 import {useTimeZone} from 'shared/hooks/useTimeZone';
@@ -219,10 +218,10 @@ export const AddDataSourceNav: React.FC<IAddDataSourceNavProps> = ({items}) => {
 interface IDataSourceListProps extends React.HTMLAttributes<HTMLElement> {}
 
 const DataSourceList: React.FC<IDataSourceListProps> = ({className}) => {
-	const currentUser = useCurrentUser();
+	const {currentUser, ldpEnabled} = usePageConfig();
+
 	const history = useHistoryAdapter();
 	const {groupId = ''} = useParams<{groupId: string}>();
-	const {ldpEnabled} = usePageConfig();
 	const [alerts, setAlerts] = useState<
 		{
 			iconSymbol: string;

@@ -23,11 +23,11 @@ import {Sizes} from 'shared/util/constants';
 import {sub} from 'shared/util/lang';
 import {toThousands} from 'shared/util/numbers';
 import {useCampaignFilter} from 'shared/hooks/useCampaignFilter';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useDataSources} from 'shared/context/dataSources';
 import {useParams} from 'react-router-dom';
 import {useQuery} from '@apollo/client';
 import {useRequest} from 'shared/hooks/useRequest';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface IIndividualsOverviewEmptyStateProps {
 	authorized: boolean;
@@ -125,12 +125,12 @@ const IndividualsOverviewEmptyState: React.FC<
 };
 
 const IndividualsOverviewCDP = () => {
+	const {currentUser} = usePageConfig();
+
 	const {channelId = '', groupId = ''} = useParams<{
 		channelId: string;
 		groupId: string;
 	}>();
-
-	const currentUser = useCurrentUser();
 
 	const {campaignId, campaignName, setCampaign} = useCampaignFilter();
 

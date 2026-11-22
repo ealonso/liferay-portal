@@ -7,8 +7,8 @@ import {Pendo, TrackingConsentValues} from 'shared/util/pendo';
 import {Project} from 'shared/util/records';
 import {syncAIHubChatbot} from 'shared/util/ai-hub-chatbot';
 import {resolveLocale, setLocale} from 'shared/util/locale';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useSelector} from 'react-redux';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface IAppShellProps {
 	children: React.ReactNode;
@@ -16,13 +16,13 @@ interface IAppShellProps {
 }
 
 const AppShell: React.FC<IAppShellProps> = ({children, groupId}) => {
+	const {currentUser} = usePageConfig();
+
 	const projectGroupId = groupId ?? '0';
 
 	const project: Project = useSelector<any, any>((state) =>
 		state.getIn(['projects', projectGroupId, 'data'])
 	);
-
-	const currentUser = useCurrentUser();
 
 	const [trackingConsent, setTrackingConsent] =
 		useState<TrackingConsentValues | null>(null);

@@ -31,9 +31,9 @@ import {SafeResults} from 'shared/hoc/util';
 import {sequence} from 'shared/util/promise';
 import {sub} from 'shared/util/lang';
 import {updateDefaultChannelId} from 'shared/actions/preferences';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useModal} from '@clayui/modal';
 import {useRequest} from 'shared/hooks/useRequest';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const {channelPermissionTypes} = Constants;
 
@@ -123,7 +123,7 @@ const View: React.FC<IViewProps> = ({
 	updateDefaultChannelId,
 	...otherProps
 }) => {
-	const currentUser = useCurrentUser();
+	const {currentUser} = usePageConfig();
 
 	const [name, setName] = useState(channel.name);
 	const [permissionType, setPermissionType] = useState(

@@ -3,14 +3,14 @@ import LifecyclesPage from 'lifecycle/components/LifecyclesPage';
 import React from 'react';
 import {LifecycleAccountDataEmptyState} from 'lifecycle/components/LifecycleEmptyStates';
 import {useLifecycleAccountData} from 'lifecycle/hooks/useLifecycleAccountData';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useParams} from 'react-router-dom';
 import {AccountDataStatus} from 'lifecycle/utils/types';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const CreateLifecycle = () => {
-	const {groupId} = useParams();
+	const {currentUser} = usePageConfig();
 
-	const currentUser = useCurrentUser();
+	const {groupId} = useParams();
 
 	const {refetch: refetchAccountData, status: accountDataStatus} =
 		useLifecycleAccountData();

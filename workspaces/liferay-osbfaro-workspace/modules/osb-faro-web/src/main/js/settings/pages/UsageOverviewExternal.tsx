@@ -7,7 +7,6 @@ import React from 'react';
 import {compose, withProject} from 'shared/hoc';
 import {GenericBarsCard} from 'settings/components/usage-overview/GenericBarsCard';
 import {GenericDonutChart} from 'settings/components/usage-overview/GenericDonutChart';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {usePageConfig} from 'shared/context/pageConfig';
 
 export type Resource = {
@@ -16,9 +15,7 @@ export type Resource = {
 };
 
 export const UsageOverviewExternal = () => {
-	const {ldpEnabled} = usePageConfig();
-
-	const currentUser = useCurrentUser();
+	const {currentUser, ldpEnabled} = usePageConfig();
 
 	let pageActions: {
 		displayType: string;

@@ -19,10 +19,10 @@ import {Routes, toRoute} from 'shared/util/router';
 import {SectionHeader} from 'shared/components/SectionHeader';
 import {useCampaignFilter} from 'shared/hooks/useCampaignFilter';
 import {useChannelContext} from 'shared/context/channel';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useDispatch} from 'react-redux';
 import {useLifecycleDetails} from 'lifecycle/hooks/useLifecycleDetails';
 import {useRequest} from 'shared/hooks/useRequest';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface IListProps {
 	channelId: string;
@@ -30,7 +30,7 @@ interface IListProps {
 }
 
 const List: React.FC<IListProps> = ({channelId, groupId}) => {
-	const currentUser = useCurrentUser();
+	const {currentUser} = usePageConfig();
 
 	const {campaignId, campaignName, setCampaign} = useCampaignFilter();
 

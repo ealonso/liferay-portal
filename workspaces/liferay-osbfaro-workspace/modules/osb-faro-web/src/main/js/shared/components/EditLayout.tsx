@@ -7,14 +7,14 @@ import NotificationAlertList, {
 import React, {Suspense} from 'react';
 import {Outlet, useParams} from 'react-router-dom';
 import {useChannelContext} from 'shared/context/channel';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const EditLayout: React.FC = () => {
+	const {currentUser} = usePageConfig();
+
 	const {groupId = ''} = useParams<{groupId: string}>();
 
 	const {selectedChannel} = useChannelContext();
-
-	const currentUser = useCurrentUser();
 
 	const notificationResponse = useNotificationsAPI(groupId);
 

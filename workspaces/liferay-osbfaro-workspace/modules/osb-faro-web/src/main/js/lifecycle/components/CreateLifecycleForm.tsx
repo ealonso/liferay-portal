@@ -7,9 +7,9 @@ import {buildCreateLifecyclePayload} from 'lifecycle/utils/lifecyclePayload';
 import {IStageConfig} from 'lifecycle/utils/stageConfiguration';
 import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useLifecycleSettingsForm} from 'lifecycle/hooks/useLifecycleSettingsForm';
 import {useParams} from 'react-router-dom';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface ICreateLifecycleFormProps {
 	description: string;
@@ -24,9 +24,9 @@ const CreateLifecycleForm: React.FC<ICreateLifecycleFormProps> = ({
 	segmentId,
 	stageConfigs: initialStageConfigs,
 }) => {
-	const {channelId, groupId} = useParams();
+	const {currentUser} = usePageConfig();
 
-	const currentUser = useCurrentUser();
+	const {channelId, groupId} = useParams();
 
 	const form = useLifecycleSettingsForm({
 		description,

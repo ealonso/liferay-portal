@@ -17,10 +17,10 @@ import {connect} from 'react-redux';
 import {FieldArray, FormikTouched, FormikValues} from 'formik';
 import {Routes, toRoute} from 'shared/util/router';
 import {sequence} from 'shared/util/promise';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useModal} from '@clayui/modal';
 import {useMutation, useQuery} from '@apollo/client';
 import {WrapSafeResults} from 'shared/hoc/util';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const QUERY_STRING_SIZE_LIMIT = 512;
 const SEARCH_QUERY_STRINGS_KEY = 'search-query-strings';
@@ -67,7 +67,7 @@ export const SearchCard: React.FC<ISearchCardProps> = ({
 	groupId,
 	history,
 }) => {
-	const currentUser = useCurrentUser();
+	const {currentUser} = usePageConfig();
 	const exitModal = useModal();
 	const {
 		data: searchQueryStringsData,

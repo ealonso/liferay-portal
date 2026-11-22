@@ -14,9 +14,9 @@ import {
 	useParams,
 } from 'react-router-dom';
 import {useChannelContext} from 'shared/context/channel';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {setDefaultGroupId} from 'shared/apollo/client';
 import {useModalNotifications} from 'shared/hooks/useModalNotifications';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface ISectionAppProps {
 	channelId?: string;
@@ -38,11 +38,11 @@ const FullPageLoad = () => {
 };
 
 const PropertyGate = () => {
+	const {currentUser} = usePageConfig();
+
 	const {groupId = ''} = useParams<{groupId: string}>();
 
 	const {selectedChannel} = useChannelContext();
-
-	const currentUser = useCurrentUser();
 
 	if (!selectedChannel) {
 		return (

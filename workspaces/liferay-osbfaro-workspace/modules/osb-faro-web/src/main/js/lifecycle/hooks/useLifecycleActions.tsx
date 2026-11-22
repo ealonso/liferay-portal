@@ -8,11 +8,11 @@ import {getLifecycleSaveErrorMessage} from 'lifecycle/utils/lifecycleErrors';
 import {ILifecycle} from 'shared/api/lifecycle';
 import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useDispatch} from 'react-redux';
 import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
 import {useModal} from '@clayui/modal';
 import {useParams} from 'react-router-dom';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface ILifecycleAction {
 	className?: string;
@@ -42,7 +42,7 @@ export const useLifecycleActions = ({
 	onShowDetails,
 	onView,
 }: IUseLifecycleActionsOptions): IUseLifecycleActionsResult => {
-	const currentUser = useCurrentUser();
+	const {currentUser} = usePageConfig();
 
 	const deleteModal = useModal();
 

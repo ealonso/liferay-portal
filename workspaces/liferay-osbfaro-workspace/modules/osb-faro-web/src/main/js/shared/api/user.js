@@ -12,13 +12,6 @@ function delete$({groupId, ids}) {
 
 export {delete$ as delete};
 
-export function fetchCurrentUser({groupId}) {
-	return sendRequest({
-		method: 'GET',
-		path: `main/${groupId}/user/current`,
-	});
-}
-
 export function fetchMany({
 	delta,
 	groupId,

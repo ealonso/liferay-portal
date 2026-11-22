@@ -14,14 +14,16 @@ import {EXPERIMENT_LIST_QUERY} from '../queries/ExperimentQuery';
 import {get} from 'lodash';
 import {Routes, toRoute} from 'shared/util/router';
 import {useChannelContext} from 'shared/context/channel';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useDataSources} from 'shared/context/dataSources';
 import {useParams} from 'react-router-dom';
 import {useQuery} from '@apollo/client';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
 import {useTimeZone} from 'shared/hooks/useTimeZone';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const ExperimentsListPage = () => {
+	const {currentUser} = usePageConfig();
+
 	const {channelId = '', groupId = ''} = useParams<{
 		channelId: string;
 		groupId: string;
@@ -31,7 +33,6 @@ const ExperimentsListPage = () => {
 	});
 	const dataSourceStates = useDataSources();
 	const {selectedChannel} = useChannelContext();
-	const currentUser = useCurrentUser();
 	const {timeZoneId} = useTimeZone();
 
 	const {

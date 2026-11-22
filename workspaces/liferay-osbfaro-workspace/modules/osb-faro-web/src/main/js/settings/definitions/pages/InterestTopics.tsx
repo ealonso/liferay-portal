@@ -30,11 +30,11 @@ import {Routes, toRoute} from 'shared/util/router';
 import {Sizes} from 'shared/util/constants';
 import {sub} from 'shared/util/lang';
 import {UNAUTHORIZED_ACCESS} from 'shared/util/request';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useModal} from '@clayui/modal';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
 import {useRequest} from 'shared/hooks/useRequest';
 import {useTimeZone} from 'shared/hooks/useTimeZone';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const INITIAL_PAGE = 1;
 
@@ -50,7 +50,7 @@ const InterestTopics: React.FC<IInterestTopicsProps> = ({
 	addAlert,
 	groupId,
 }) => {
-	const currentUser = useCurrentUser();
+	const {currentUser} = usePageConfig();
 	const {timeZoneId} = useTimeZone();
 	const {selectedItems, selectionDispatch} = useSelectionContext();
 

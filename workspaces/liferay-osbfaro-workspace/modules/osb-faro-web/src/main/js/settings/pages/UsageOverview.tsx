@@ -19,8 +19,8 @@ import {sub} from 'shared/util/lang';
 import {SubscriptionDetails} from 'settings/components/usage-overview/SubscriptionDetails';
 import {SubscriptionStatuses} from 'shared/util/constants';
 import {Text} from '@clayui/core';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useTimeZone} from 'shared/hooks/useTimeZone';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const subscriptionStatuses = (admin: boolean) => ({
 	[SubscriptionStatuses.Approaching]: {
@@ -72,8 +72,9 @@ export const UsageOverview = ({
 }: {
 	project: {faroSubscription: any};
 }) => {
+	const {currentUser} = usePageConfig();
+
 	const [showAlert, setShowAlert] = useState(true);
-	const currentUser = useCurrentUser();
 	const admin = currentUser.isAdmin();
 	const currentPlan = formatPlanData(project.faroSubscription);
 	const {timeZoneId} = useTimeZone();

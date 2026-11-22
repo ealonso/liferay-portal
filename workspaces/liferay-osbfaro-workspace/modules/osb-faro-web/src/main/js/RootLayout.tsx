@@ -7,18 +7,18 @@ import {Outlet, ScrollRestoration, useMatch} from 'react-router-dom';
 import {Pendo, TrackingConsentValues} from 'shared/util/pendo';
 import {Project} from 'shared/util/records';
 import {syncAIHubChatbot} from 'shared/util/ai-hub-chatbot';
-import {useFetchCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useSelector} from 'react-redux';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const RootLayout = () => {
+	const {currentUser} = usePageConfig();
+
 	const match = useMatch('/workspace/:groupId/*');
 	const groupId = match?.params.groupId ?? '0';
 
 	const project: Project = useSelector<any, any>((state) =>
 		state.getIn(['projects', groupId, 'data'])
 	);
-
-	const {data: currentUser, loading} = useFetchCurrentUser(groupId);
 
 	const [trackingConsent, setTrackingConsent] =
 		useState<TrackingConsentValues | null>(null);
@@ -46,10 +46,6 @@ const RootLayout = () => {
 			pendo.initialize({currentUser, project});
 		}
 	}, [currentUser?.id, project?.groupId, trackingConsent]);
-
-	if (loading) {
-		return <Loading />;
-	}
 
 	return (
 		<>

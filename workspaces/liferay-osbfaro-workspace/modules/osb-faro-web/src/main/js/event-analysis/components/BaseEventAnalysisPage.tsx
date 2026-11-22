@@ -31,7 +31,6 @@ import {Routes, toRoute} from 'shared/util/router';
 import {SortableChipTypes} from '../components/event-analysis-editor/event-analysis-builder/SortableChipTypes';
 import {useAttributes} from '../components/event-analysis-editor/context/attributes';
 import {useChannelContext} from 'shared/context/channel';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useDataSources} from 'shared/context/dataSources';
 import {useDispatch} from 'react-redux';
 import {useModal} from '@clayui/modal';
@@ -40,6 +39,7 @@ import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
 import {useMutation} from '@apollo/client';
 import {useParams} from 'react-router-dom';
 import {useReportContainer} from 'shared/components/download-report/DownloadReportContext';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 enum MessageKeys {
 	NameCannotBeBlank = 'name-cannot-be-blank',
@@ -99,6 +99,8 @@ const BaseEventAnalysisPage: React.FC<IBaseEventAnalysisPageProps> = ({
 	name: initialName = '',
 	rangeSelectors: rangeSelectorsProp,
 }) => {
+	const {currentUser} = usePageConfig();
+
 	const dispatch = useDispatch();
 
 	const loadingModal = useModal();
@@ -130,8 +132,6 @@ const BaseEventAnalysisPage: React.FC<IBaseEventAnalysisPageProps> = ({
 	>(initialRangeSelectors);
 	const [submitted, setSubmitted] = useState<boolean>(false);
 	const [type, setType] = useState<CalculationTypes>(CalculationTypes.Total);
-
-	const currentUser = useCurrentUser();
 
 	const {
 		breakdownOrder,

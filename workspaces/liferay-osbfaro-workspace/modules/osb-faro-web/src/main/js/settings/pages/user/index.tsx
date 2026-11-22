@@ -11,8 +11,8 @@ import Loading from 'shared/components/Loading';
 import React, {lazy, Suspense, useState} from 'react';
 import {getMatchedRoute, Routes, toRoute} from 'shared/util/router';
 import {Route, Routes as RouterRoutes, useParams} from 'react-router-dom';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {UserStatuses} from 'shared/util/constants';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const UserList = lazy(
 	() => import(/* webpackChunkName: "UserManagement" */ './UserList')
@@ -22,8 +22,9 @@ const UserRequest = lazy(
 );
 
 export const User = ({className}: {className?: string}) => {
+	const {currentUser} = usePageConfig();
+
 	const {groupId = ''} = useParams<{groupId: string}>();
-	const currentUser = useCurrentUser();
 	const [userRequest, setUserRequest] = useState<number>(0);
 
 	const onSetUserRequest = (userRequest: number) =>

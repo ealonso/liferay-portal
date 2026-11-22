@@ -18,7 +18,6 @@ import {Route, Routes as RouterRoutes, useParams} from 'react-router-dom';
 import {Router} from 'shared/types';
 import {useAccountFilter} from 'shared/hooks/useAccountFilter';
 import {useChannelContext} from 'shared/context/channel';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useDataSources} from 'shared/context/dataSources';
 import {useSegmentFilter} from 'shared/hooks/useSegmentFilter';
 import {usePageConfig} from 'shared/context/pageConfig';
@@ -80,7 +79,7 @@ interface IDashboardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 export const Dashboard: React.FC<IDashboardProps> = ({router}) => {
-	const {ldpEnabled} = usePageConfig();
+	const {currentUser, ldpEnabled} = usePageConfig();
 
 	const {channelId, groupId = ''} = useParams<{
 		channelId: string;
@@ -90,7 +89,6 @@ export const Dashboard: React.FC<IDashboardProps> = ({router}) => {
 	const {segmentId, segmentName, setSegment} = useSegmentFilter();
 	const dataSourceStates = useDataSources();
 	const {selectedChannel} = useChannelContext();
-	const currentUser = useCurrentUser();
 
 	if (!channelId) {
 		return null;

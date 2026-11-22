@@ -20,8 +20,8 @@ import {sequence} from 'shared/util/promise';
 import {sub} from 'shared/util/lang';
 import {Text} from '@clayui/core';
 import {updateProject} from 'shared/actions/projects';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useRequest} from 'shared/hooks/useRequest';
+import {usePageConfig} from 'shared/context/pageConfig';
 import {
 	validateEmailDomain,
 	validateEmailDomainArr,
@@ -57,9 +57,10 @@ const ConfigureWorkspaceWithEmailAddressDomains: React.FC<
 	onNext,
 	updateProject,
 }) => {
+	const {currentUser} = usePageConfig();
+
 	const store = useStore();
 	const project = store.getState().getIn(['projects', groupId, 'data']);
-	const currentUser = useCurrentUser();
 	const disabled = !currentUser.isAdmin();
 	const formRef = useRef<any>(null);
 	const [emailAddressDomains, setEmailAddressDomains] = useState(

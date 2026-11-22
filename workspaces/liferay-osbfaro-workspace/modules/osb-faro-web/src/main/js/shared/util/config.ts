@@ -1,5 +1,7 @@
 import type {Channel} from 'shared/components/channels-menu';
+import User from 'shared/util/records/User';
 import {camelCase} from 'lodash';
+import {fromJS} from 'immutable';
 
 export interface INavigationItem {
 	active?: boolean;
@@ -14,6 +16,7 @@ export interface INavigationItem {
 export interface IBackendConfig {
 	channelId?: string;
 	channels?: Channel[] | null;
+	currentUser?: {[key: string]: unknown} | null;
 	friendlyURL?: string;
 	groupId?: string;
 	ldpEnabled?: boolean;
@@ -28,6 +31,7 @@ export type Config = {
 } & {
 	readonly channelId: string;
 	readonly channels: Channel[] | null;
+	readonly currentUser: User;
 	readonly friendlyURL: string;
 	readonly groupId: string;
 	readonly ldpEnabled: boolean;
@@ -39,6 +43,7 @@ export type Config = {
 export function buildConfig({
 	channelId = '',
 	channels,
+	currentUser,
 	friendlyURL = '',
 	groupId = '',
 	ldpEnabled = false,
@@ -65,6 +70,7 @@ export function buildConfig({
 		...urls,
 		channelId,
 		channels: channels ?? null,
+		currentUser: new User(fromJS(currentUser ?? {})),
 		friendlyURL,
 		groupId,
 		ldpEnabled,

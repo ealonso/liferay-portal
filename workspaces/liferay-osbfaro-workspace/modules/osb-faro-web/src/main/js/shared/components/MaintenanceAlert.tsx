@@ -9,6 +9,7 @@ import {ProjectStates} from 'shared/util/constants';
 import {setMaintenanceSeen} from 'shared/actions/maintenance-seen';
 import {sub} from 'shared/util/lang';
 import {useParams} from 'react-router-dom';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface IMaintenanceAlertProps {
 	alertDismissed: boolean;
@@ -88,9 +89,7 @@ export class MaintenanceAlert extends React.Component<IMaintenanceAlertProps> {
 	}
 }
 
-export const mapState = (store: any, {groupId}: any) => {
-	const currentUserId = store.getIn(['currentUser', 'data']);
-
+export const mapState = (store: any, {currentUserId, groupId}: any) => {
 	const project = store.getIn(['projects', groupId, 'data'], new Project());
 
 	const prevStateStartDate = store.getIn([
@@ -111,9 +110,16 @@ const ConnectedMaintenanceAlert = connect(mapState, {setMaintenanceSeen})(
 );
 
 const MaintenanceAlertWithParams = (props: any) => {
+	const {currentUser} = usePageConfig();
 	const {groupId} = useParams<{groupId: string}>();
 
-	return <ConnectedMaintenanceAlert {...props} groupId={groupId} />;
+	return (
+		<ConnectedMaintenanceAlert
+			{...props}
+			currentUserId={currentUser.id}
+			groupId={groupId}
+		/>
+	);
 };
 
 export default MaintenanceAlertWithParams;

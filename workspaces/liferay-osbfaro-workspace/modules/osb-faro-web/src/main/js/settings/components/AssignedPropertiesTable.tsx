@@ -17,10 +17,10 @@ import {getChannelsAutoSelectFilter} from 'shared/util/data-sources';
 import {Link, useParams} from 'react-router-dom';
 import {Routes, toRoute} from 'shared/util/router';
 import {Text} from '@clayui/core';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useModal} from '@clayui/modal';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
 import {useRequest} from 'shared/hooks/useRequest';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface IChannel {
 	channelId: string;
@@ -44,12 +44,12 @@ const AssignedPropertiesTable = ({
 	loading: initialLoading = false,
 	updateDataSourceFn,
 }: IAssignedPropertiesTableProps) => {
+	const {currentUser} = usePageConfig();
+
 	const [loading, setLoading] = useState(initialLoading);
 
 	const selectChannelsModal = useModal();
 	const {groupId} = useParams();
-
-	const currentUser = useCurrentUser();
 
 	const {delta, orderIOMap, page, query} = useQueryPagination({
 		initialOrderIOMap: createOrderIOMap(NAME),

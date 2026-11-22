@@ -22,11 +22,11 @@ import {
 import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
 import {useModal} from '@clayui/modal';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useMutation, useQuery} from '@apollo/client';
 import {useParams} from 'react-router-dom';
 import {useTimeZone} from 'shared/hooks/useTimeZone';
 import {withHistory} from 'shared/hoc';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const {
 	pagination: {orderDescending},
@@ -43,12 +43,13 @@ interface IViewProps extends PropsFromRedux {
 }
 
 const View: React.FC<IViewProps> = ({addAlert, history, job}) => {
+	const {currentUser} = usePageConfig();
+
 	const {groupId = '', jobId = ''} = useParams<{
 		groupId: string;
 		jobId: string;
 	}>();
 	const {timeZoneId} = useTimeZone();
-	const currentUser = useCurrentUser();
 	const deleteModal = useModal();
 	const retrainModal = useModal();
 

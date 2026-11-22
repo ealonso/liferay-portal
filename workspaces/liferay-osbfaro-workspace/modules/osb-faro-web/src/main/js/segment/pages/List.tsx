@@ -66,7 +66,6 @@ import {sub} from 'shared/util/lang';
 import {toThousands} from 'shared/util/numbers';
 import {useModal} from '@clayui/modal';
 import {useChannelContext} from 'shared/context/channel';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useDeleteSegments} from 'segment/hooks/useDeleteSegments';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
 import {useRequest} from 'shared/hooks/useRequest';
@@ -198,9 +197,8 @@ const ORDER_BY_OPTIONS = [
 ];
 
 export const List: React.FC<IListProps> = ({channelId, groupId, history}) => {
-	const {ldpEnabled} = usePageConfig();
+	const {currentUser, ldpEnabled} = usePageConfig();
 
-	const currentUser = useCurrentUser();
 	const {selectedChannel} = useChannelContext();
 	const {deleteSegments, deleteSegmentsModal} = useDeleteSegments(groupId);
 	const notificationsModal = useModal();

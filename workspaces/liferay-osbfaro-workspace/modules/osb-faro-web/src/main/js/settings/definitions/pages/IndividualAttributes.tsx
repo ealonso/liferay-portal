@@ -18,9 +18,9 @@ import {Routes, toRoute} from 'shared/util/router';
 import {Sizes} from 'shared/util/constants';
 import {sub} from 'shared/util/lang';
 import {useModal} from '@clayui/modal';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {User} from 'shared/util/records';
 import {useTimeZone} from 'shared/hooks/useTimeZone';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const SearchableEntityTableHOC = withStatefulPagination(
 	SearchableEntityTable,
@@ -38,7 +38,7 @@ interface IIndividualAttributesProps extends React.HTMLAttributes<HTMLElement> {
 const IndividualAttributes: React.FC<IIndividualAttributesProps> = ({
 	groupId,
 }) => {
-	const currentUser = useCurrentUser();
+	const {currentUser} = usePageConfig();
 	const {timeZoneId} = useTimeZone();
 
 	const attributesModal = useModal();

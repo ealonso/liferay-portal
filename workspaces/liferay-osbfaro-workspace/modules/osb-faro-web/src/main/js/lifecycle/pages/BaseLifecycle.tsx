@@ -34,13 +34,13 @@ import {useNavigate, useParams} from 'react-router-dom';
 import {RangeKeyTimeRanges} from 'shared/util/constants';
 import {Routes, toRoute} from 'shared/util/router';
 import {SectionHeader} from 'shared/components/SectionHeader';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useLifecycleAccountData} from 'lifecycle/hooks/useLifecycleAccountData';
 import {useLifecycleActions} from 'lifecycle/hooks/useLifecycleActions';
 import {useRequest} from 'shared/hooks/useRequest';
 import {useSegmentFilter} from 'shared/hooks/useSegmentFilter';
 import {noop} from 'lodash';
 import {AccountDataStatus} from 'lifecycle/utils/types';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const ProcessingLifecycleEmptyState = () => (
 	<div className="card mt-4 py-8">
@@ -146,7 +146,7 @@ const LifecycleAccounts = () => {
 };
 
 const BaseLifecycle = () => {
-	const currentUser = useCurrentUser();
+	const {currentUser} = usePageConfig();
 	const {selectedChannel} = useContext(ChannelContext);
 
 	const navigate = useNavigate();

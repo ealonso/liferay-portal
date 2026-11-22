@@ -37,11 +37,11 @@ import {getConnectorStatus} from './getConnectorStatus';
 import {getConnectorStatusDisplay} from './getConnectorStatusDisplay';
 import {revoke} from 'shared/api/api-tokens';
 import {Text} from '@clayui/core';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useDisconnectDataSource} from '../data-source/utils';
 import {useParams} from 'react-router-dom';
 import {useRequest} from 'shared/hooks/useRequest';
 import {withSelectionProvider} from 'shared/context/selection';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const connector = connect(null, {
 	addAlert,
@@ -67,7 +67,7 @@ const ConnectorOverview: React.FC<IConnectorOverviewProps> = ({
 		groupId: string;
 		id: string;
 	}>();
-	const currentUser = useCurrentUser();
+	const {currentUser} = usePageConfig();
 
 	const endpointURL = `${window.location.origin}${config.endpointPath}`;
 

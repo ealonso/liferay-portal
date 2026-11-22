@@ -23,7 +23,6 @@ import {isNil} from 'lodash';
 import {IndividualTypes} from 'segment/segment-editor/dynamic/utils/constants';
 import {Routes, toRoute} from 'shared/util/router';
 import {RangeKeyTimeRanges, Sizes} from 'shared/util/constants';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useDataSources} from 'shared/context/dataSources';
 import {useParams} from 'react-router-dom';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
@@ -31,6 +30,7 @@ import {User} from 'shared/util/records';
 import {useRequest} from 'shared/hooks/useRequest';
 import {useTimeZone} from 'shared/hooks/useTimeZone';
 import {withSelectionProvider} from 'shared/context/selection';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const connector = connect(null, {addAlert});
 
@@ -43,6 +43,8 @@ interface IKnownIndividualsProps
 }
 
 const KnownIndividuals: React.FC<IKnownIndividualsProps> = () => {
+	const {currentUser} = usePageConfig();
+
 	const {channelId, groupId} = useParams();
 
 	const {delta, orderIOMap, page, query} = useQueryPagination({
@@ -58,8 +60,6 @@ const KnownIndividuals: React.FC<IKnownIndividualsProps> = () => {
 	});
 
 	const dataSourceStates = useDataSources();
-
-	const currentUser = useCurrentUser();
 
 	const authorized = currentUser.isAdmin();
 

@@ -45,9 +45,9 @@ import {setUriQueryValues} from 'shared/util/url';
 import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
 import {useModal} from '@clayui/modal';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useMutation, useQuery} from '@apollo/client';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 const {
 	pagination: {cur: defaultPage},
@@ -82,6 +82,8 @@ const RecommendationList: React.FC<IRecommendationListProps> = ({
 	history,
 	timeZoneId,
 }: IRecommendationListProps) => {
+	const {currentUser} = usePageConfig();
+
 	const {selectedItems, selectionDispatch} = useSelectionContext();
 
 	const {delta, orderIOMap, page, query} = useQueryPagination({
@@ -101,8 +103,6 @@ const RecommendationList: React.FC<IRecommendationListProps> = ({
 	const [deleteRecommendationJobs] = useMutation(
 		RECOMMENDATION_DELETE_MUTATION
 	);
-
-	const currentUser = useCurrentUser();
 
 	const deleteModal = useModal();
 

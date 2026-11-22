@@ -2,7 +2,7 @@ import BasePage from 'settings/components/base-page/BasePage';
 import React from 'react';
 import TrackedBehaviorsList from '../hocs/TrackedBehaviorsList';
 import {getDefinitions} from 'shared/util/breadcrumbs';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface ITrackedBehaviorsProps {
 	groupId: string;
@@ -11,7 +11,7 @@ interface ITrackedBehaviorsProps {
 export const TrackedBehaviors: React.FC<ITrackedBehaviorsProps> = ({
 	groupId,
 }) => {
-	const currentUser = useCurrentUser();
+	const {currentUser} = usePageConfig();
 
 	return (
 		<BasePage

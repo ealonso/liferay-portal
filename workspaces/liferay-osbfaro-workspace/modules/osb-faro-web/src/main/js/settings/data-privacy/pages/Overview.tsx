@@ -24,9 +24,9 @@ import {get} from 'lodash';
 import {Option, Picker} from '@clayui/core';
 import {Routes, toRoute} from 'shared/util/router';
 import {sub} from 'shared/util/lang';
-import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useModal} from '@clayui/modal';
 import {useMutation, useQuery} from '@apollo/client';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 let RETENTION_OPTIONS = [SEVEN_MONTHS, THIRTEEN_MONTHS];
 
@@ -73,13 +73,13 @@ interface IOverviewProps {
 }
 
 export const Overview: React.FC<IOverviewProps> = ({groupId}) => {
+	const {currentUser} = usePageConfig();
+
 	const [updatePreference] = useMutation(PreferenceMutation);
 
 	const {data} = useQuery(PreferenceQuery, {
 		variables: {key: DATA_RETENTION_PERIOD_KEY},
 	});
-
-	const currentUser = useCurrentUser();
 
 	const requestLogModal = useModal();
 	const retentionModal = useModal();
