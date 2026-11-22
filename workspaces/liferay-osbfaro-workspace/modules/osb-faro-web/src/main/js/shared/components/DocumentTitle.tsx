@@ -1,5 +1,3 @@
-import acFaviconURL from '../../../images/favicons/ac_favicon.svg?url';
-import ldpFaviconURL from '../../../images/favicons/ldp_favicon.svg?url';
 import React from 'react';
 import {useEffect} from 'react';
 import {usePageConfig} from 'shared/context/pageConfig';
@@ -18,40 +16,6 @@ const DocumentTitle: React.FC<IDocumentTitleProps> = ({
 	const config = usePageConfig();
 
 	const LDPEnabled = ldpEnabled ?? config.ldpEnabled;
-
-	// The theme serves a single static favicon for the whole instance, so the
-	// branding can only be resolved here, where the plan is known.
-
-	useEffect(() => {
-
-		// The plan is still unknown, so claiming a brand now would flash the
-		// wrong icon before the check resolves. Leaving the theme's own favicon
-		// in place is the neutral state.
-
-		if (loadingLDPEnabled) {
-			return;
-		}
-
-		// The selector matches both "icon" and "shortcut icon" because the
-		// theme emits the latter.
-
-		let link = document.querySelector("link[rel~='icon']");
-
-		if (!link) {
-			link = document.createElement('link');
-
-			link.setAttribute('rel', 'icon');
-
-			document.head.appendChild(link);
-		}
-
-		link.setAttribute('href', LDPEnabled ? ldpFaviconURL : acFaviconURL);
-
-		// The theme's favicon is an ICO, so a stale type would make the browser
-		// reject the SVG.
-
-		link.setAttribute('type', 'image/svg+xml');
-	}, [LDPEnabled, loadingLDPEnabled]);
 
 	useEffect(() => {
 		if (loadingLDPEnabled) {
