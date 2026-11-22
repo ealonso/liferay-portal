@@ -1,4 +1,5 @@
-import React, {useReducer} from 'react';
+import React, {useEffect, useReducer} from 'react';
+import {usePageConfig} from 'shared/context/pageConfig';
 import {isNil} from 'lodash';
 import {Segment} from 'shared/util/records';
 
@@ -58,13 +59,27 @@ export const UnassignedSegmentsProvider = ({
 	children,
 	unassignedSegments: initialSegments,
 }: unassignedSegmentsProviderProps) => {
+	const {dismissedAlerts} = usePageConfig();
+
 	const [
 		{showUnassignedAlert, unassignedSegments},
 		unassignedSegmentsDispatch,
 	] = useReducer(unassignedSegmentsReducer, {
-		showUnassignedAlert: true,
+		showUnassignedAlert: !dismissedAlerts.unassignedSegments,
 		unassignedSegments: initialSegments || [],
 	});
+
+	useEffect(() => {
+		if (showUnassignedAlert || dismissedAlerts.unassignedSegments) {
+			return;
+		}
+
+		Liferay.Util.Session.set(
+			'osb-faro-web_dismissedAlerts_unassignedSegments',
+			'true',
+			{useHttpSession: true}
+		);
+	}, [showUnassignedAlert]);
 
 	return (
 		<UnassignedSegmentsContext.Provider

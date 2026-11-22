@@ -13,10 +13,15 @@ export interface INavigationItem {
 	navigationItems?: INavigationItem[];
 }
 
+export interface IDismissedAlerts {
+	unassignedSegments?: boolean;
+}
+
 export interface IBackendConfig {
 	channelId?: string;
 	channels?: Channel[] | null;
 	currentUser?: {[key: string]: unknown} | null;
+	dismissedAlerts?: IDismissedAlerts | null;
 	friendlyURL?: string;
 	groupId?: string;
 	ldpEnabled?: boolean;
@@ -32,6 +37,9 @@ export type Config = {
 	readonly channelId: string;
 	readonly channels: Channel[] | null;
 	readonly currentUser: User;
+	readonly dismissedAlerts: {
+		readonly unassignedSegments: boolean;
+	};
 	readonly friendlyURL: string;
 	readonly groupId: string;
 	readonly ldpEnabled: boolean;
@@ -44,6 +52,7 @@ export function buildConfig({
 	channelId = '',
 	channels,
 	currentUser,
+	dismissedAlerts,
 	friendlyURL = '',
 	groupId = '',
 	ldpEnabled = false,
@@ -71,6 +80,9 @@ export function buildConfig({
 		channelId,
 		channels: channels ?? null,
 		currentUser: new User(fromJS(currentUser ?? {})),
+		dismissedAlerts: Object.freeze({
+			unassignedSegments: dismissedAlerts?.unassignedSegments ?? false,
+		}),
 		friendlyURL,
 		groupId,
 		ldpEnabled,

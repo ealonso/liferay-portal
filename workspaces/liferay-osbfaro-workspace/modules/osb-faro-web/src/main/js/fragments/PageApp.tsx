@@ -6,7 +6,11 @@ import NoPropertiesAvailable from 'shared/pages/NoPropertiesAvailable';
 import React, {Suspense, useState} from 'react';
 import store from 'shared/store';
 import WorkspaceGate from 'shared/components/WorkspaceGate';
-import {INavigationItem, buildConfig} from 'shared/util/config';
+import {
+	IDismissedAlerts,
+	INavigationItem,
+	buildConfig,
+} from 'shared/util/config';
 import {PageConfigProvider, usePageConfig} from 'shared/context/pageConfig';
 import {Channel} from 'shared/components/channels-menu';
 import {setDefaultGroupId} from 'shared/apollo/client';
@@ -23,6 +27,7 @@ export interface IPageAppProps<
 	channelScoped?: boolean;
 	channels?: Channel[] | null;
 	currentUser: {[key: string]: unknown};
+	dismissedAlerts?: IDismissedAlerts | null;
 	friendlyURL: string;
 	groupId: string;
 	ldpEnabled: boolean;
@@ -75,6 +80,7 @@ const PageApp: React.FC<IPageAppProps & {children: React.ReactNode}> = ({
 	channels,
 	children,
 	currentUser,
+	dismissedAlerts,
 	friendlyURL,
 	groupId,
 	ldpEnabled,
@@ -95,6 +101,7 @@ const PageApp: React.FC<IPageAppProps & {children: React.ReactNode}> = ({
 			channelId,
 			channels,
 			currentUser,
+			dismissedAlerts,
 			friendlyURL,
 			groupId,
 			ldpEnabled,
