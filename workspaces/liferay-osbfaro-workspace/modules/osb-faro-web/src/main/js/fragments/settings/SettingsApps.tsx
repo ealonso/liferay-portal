@@ -355,25 +355,6 @@ const SettingsRedirect: React.FC = () => {
 	return <Loading />;
 };
 
-const UsageContent: React.FC = () => {
-	const {groupId = ''} = config;
-	const store = useStore();
-
-	const project = store.getState().getIn(['projects', groupId, 'data']);
-
-	const subscriptionName = project?.faroSubscription?.get('name');
-
-	return (
-		<BundleRouter
-			data={
-				subscriptionName?.includes('SaaS') || config.ldpEnabled
-					? UsageOverviewExternal
-					: UsageOverview
-			}
-		/>
-	);
-};
-
 interface IListParams {
 	[name: string]: string | undefined;
 	delta?: string;
@@ -572,7 +553,13 @@ export const RecommendationsApp = createSettingsApp<IListParams>(
 
 export const SettingsApp = createSettingsApp(<SettingsRedirect />);
 
-export const UsageApp = createSettingsApp(<UsageContent />);
+export const UsageApp = createSettingsApp(
+	<BundleRouter data={UsageOverview} />
+);
+
+export const UsageExternalApp = createSettingsApp(
+	<BundleRouter data={UsageOverviewExternal} />
+);
 
 export const UsersApp = createSettingsApp<IListParams>(
 	<User

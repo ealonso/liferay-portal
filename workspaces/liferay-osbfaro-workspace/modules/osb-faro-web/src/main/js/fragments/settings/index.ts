@@ -25,6 +25,7 @@ export {
 	RecommendationsApp as Recommendations,
 	SettingsApp as Settings,
 	UsageApp as Usage,
+	UsageExternalApp as UsageExternal,
 	UsersApp as Users,
 	WorkspaceSettingsApp as WorkspaceSettings,
 } from './SettingsApps';
