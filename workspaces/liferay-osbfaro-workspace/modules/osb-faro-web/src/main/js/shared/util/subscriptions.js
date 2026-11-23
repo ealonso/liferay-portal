@@ -467,10 +467,6 @@ export function isBasicPlan(currentPlan) {
 	);
 }
 
-export function isLDPPlan(subscriptionName) {
-	return subscriptionName?.includes('Data Platform') ?? false;
-}
-
 export function isUnlimitedLimit(limit) {
 	return limit < 0;
 }

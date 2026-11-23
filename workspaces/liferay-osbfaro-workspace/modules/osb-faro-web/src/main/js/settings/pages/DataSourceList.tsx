@@ -31,7 +31,6 @@ import {
 } from 'settings/components/3rd-party-connector/registry';
 import {getConnectorStatusDisplay} from 'settings/components/3rd-party-connector/getConnectorStatusDisplay';
 import {getDataSourceDisplayObject} from 'shared/util/data-sources';
-import {isLDPPlan} from 'shared/util/subscriptions';
 import {Link, useParams} from 'react-router-dom';
 import {useHistoryAdapter} from 'shared/hooks/useHistoryAdapter';
 import {Routes, toRoute} from 'shared/util/router';
@@ -39,8 +38,8 @@ import {sub} from 'shared/util/lang';
 import {useCurrentUser} from 'shared/hooks/useCurrentUser';
 import {useQueryPagination} from 'shared/hooks/useQueryPagination';
 import {useRequest} from 'shared/hooks/useRequest';
-import {useSubscriptionName} from 'shared/hooks/useSubscriptionName';
 import {useTimeZone} from 'shared/hooks/useTimeZone';
+import {usePageConfig} from 'shared/context/pageConfig';
 
 interface StandaloneDataSourceDescriptor {
 	label: string;
@@ -223,6 +222,7 @@ const DataSourceList: React.FC<IDataSourceListProps> = ({className}) => {
 	const currentUser = useCurrentUser();
 	const history = useHistoryAdapter();
 	const {groupId = ''} = useParams<{groupId: string}>();
+	const {ldpEnabled} = usePageConfig();
 	const [alerts, setAlerts] = useState<
 		{
 			iconSymbol: string;
@@ -231,7 +231,6 @@ const DataSourceList: React.FC<IDataSourceListProps> = ({className}) => {
 			type: AlertTypes;
 		}[]
 	>([]);
-	const subscriptionName = useSubscriptionName({groupId});
 	const {timeZoneId} = useTimeZone();
 
 	const {delta, orderIOMap, page, query} = useQueryPagination({
@@ -287,11 +286,9 @@ const DataSourceList: React.FC<IDataSourceListProps> = ({className}) => {
 		)
 	);
 
-	const ldpAllowed = isLDPPlan(subscriptionName);
-
 	const connectorItems = listAvailableConnectors(
 		existingConnectorTypes,
-		subscriptionName
+		ldpEnabled
 	).map((config) => ({
 		label: config.displayName,
 		onClick: () => {
@@ -305,7 +302,7 @@ const DataSourceList: React.FC<IDataSourceListProps> = ({className}) => {
 	}));
 
 	const dataSourceItems = STANDALONE_DATA_SOURCES.filter(
-		({requiresLDP}) => !requiresLDP || ldpAllowed
+		({requiresLDP}) => !requiresLDP || ldpEnabled
 	).map(({label, type}) => ({
 		label,
 		onClick: () => {
@@ -379,7 +376,7 @@ const DataSourceList: React.FC<IDataSourceListProps> = ({className}) => {
 			className={className}
 			key="dataSourceListpage"
 			pageDescription={
-				ldpAllowed
+				ldpEnabled
 					? Liferay.Language.get(
 							'manage-and-connect-data-sources-to-bring-in-data-from-various-sources-into-liferay-data-platform'
 						)
