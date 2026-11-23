@@ -4,7 +4,6 @@ import WorkspaceListItem from './ListItem';
 import {DataSourceStates} from 'shared/util/constants';
 import {
 	getPlanLabel,
-	isLDPPlan,
 	SubscriptionNames
 } from 'shared/util/subscriptions';
 import {noop} from 'lodash';
@@ -90,6 +89,7 @@ export default class WorkspaceList extends React.Component {
 							corpProjectName,
 							faroSubscription,
 							groupId,
+							ldpEnabled,
 							name,
 							requested,
 							state
@@ -112,9 +112,7 @@ export default class WorkspaceList extends React.Component {
 								href={this.getRoute(project)}
 								isJoinableProjects={isJoinableProjects}
 								key={name}
-								ldpEnabled={isLDPPlan(
-									faroSubscription?.get('name')
-								)}
+								ldpEnabled={ldpEnabled}
 								name={name}
 								planInfo={
 									displayPlanInfo

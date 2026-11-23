@@ -8,7 +8,7 @@ import URLConstants from 'shared/util/url-constants';
 import WorkspaceList from 'shared/components/workspaces/workspace-list';
 import WorkspacesBasePage from 'shared/components/workspaces/BasePage';
 import {ENABLE_ADD_TRIAL_WORKSPACE} from 'shared/util/constants';
-import {isLDPPlan, PLANS} from 'shared/util/subscriptions';
+import {PLANS} from 'shared/util/subscriptions';
 import {isString} from 'lodash';
 import {Navigate} from 'react-router-dom';
 import {Routes, toRoute} from 'shared/util/router';
@@ -118,9 +118,7 @@ const Workspaces: any = () => {
 	const {data: joinableProjects, loading: loadingJoinableProjects} =
 		useFetchJoinableProjects();
 
-	const ldpEnabled = projects.some(({faroSubscription}) =>
-		isLDPPlan(faroSubscription?.get('name'))
-	);
+	const ldpEnabled = projects.some((project) => project.ldpEnabled);
 
 	const handleDetails = () => {
 		if (projects.length) {
