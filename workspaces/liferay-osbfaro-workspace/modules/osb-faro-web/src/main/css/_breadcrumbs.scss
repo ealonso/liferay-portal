@@ -1,8 +1,17 @@
 .breadcrumbs-root {
+	font-size: 0.875rem;
 	margin-bottom: 18px;
 
 	.breadcrumb-item {
+		font-size: 0.875rem;
 		line-height: 26px;
+
+		+ .breadcrumb-item::before {
+			background-image: url("data:image/svg+xml;charset=utf8,%3Csvg%20viewBox='0%200%20512%20512'%20xmlns='http://www.w3.org/2000/svg'%3E%3Cpath%20class='lexicon-icon-outline'%20d='M375.2%20239.2%20173.3%2037c-23.6-23-59.9%2011.9-36%2035.1l183%20183.9-182.9%20183.8c-24%2023.5%2012.5%2058.2%2036.1%2035.2l201.7-202.1c10.2-10.1%209.3-24.4%200-33.7z'%20fill='%236b6c7e'/%3E%3C/svg%3E");
+			height: 0.6em;
+			margin-top: calc(0.6em / -2);
+			width: 0.6em;
+		}
 
 		&.active {
 			font-weight: $fontWeightSemiBold;

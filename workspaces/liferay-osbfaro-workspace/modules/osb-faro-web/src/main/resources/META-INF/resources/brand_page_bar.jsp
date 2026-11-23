@@ -12,16 +12,16 @@
 		<c:when test="<%= FaroNavigationUtil.isLDPEnabled(themeDisplay.getScopeGroupId()) %>">
 			<img alt="" class="mr-3" height="20" src="<%= PortalUtil.getStaticResourceURL(request, "/o/osb-faro-web/images/ldp_logo.svg") %>" />
 
-			<h1 class="cms-title component-title d-none d-sm-block">
+			<span class="d-none d-sm-block font-weight-semi-bold text-5 text-dark text-nowrap">
 				<liferay-ui:message key="liferay-data-platform" />
-			</h1>
+			</span>
 		</c:when>
 		<c:otherwise>
 			<img alt="" class="mr-3" height="20" src="<%= PortalUtil.getStaticResourceURL(request, "/o/osb-faro-web/images/ac_logo.svg") %>" />
 
-			<h1 class="cms-title component-title d-none d-sm-block">
+			<span class="d-none d-sm-block font-weight-semi-bold text-5 text-dark text-nowrap">
 				<liferay-ui:message key="analytics-cloud" />
-			</h1>
+			</span>
 		</c:otherwise>
 	</c:choose>
 </div>

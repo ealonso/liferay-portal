@@ -29,7 +29,7 @@
 		margin: 0 auto;
 		max-width: $maxPageWidth + ($pagePadding * 2);
 		min-width: $minPageWidthContent;
-		padding: 0 $pagePadding;
+		padding: 24px $pagePadding 0;
 		width: 100%;
 
 		.content-header {
