@@ -17,7 +17,6 @@ export interface IBackendConfig {
 	navigationItems?: INavigationItem[] | null;
 	pageURLs?: {[friendlyURL: string]: string};
 	params?: {[name: string]: string | undefined} | null;
-	sidebarNavigationItems?: INavigationItem[] | null;
 	signOutURL?: string;
 }
 
@@ -29,7 +28,6 @@ export type Config = {
 	readonly groupId: string;
 	readonly navigationItems: INavigationItem[] | null;
 	readonly params: Readonly<{[name: string]: string}>;
-	readonly sidebarNavigationItems: INavigationItem[] | null;
 	readonly signOutURL: string;
 };
 
@@ -40,7 +38,6 @@ export function buildConfig({
 	navigationItems,
 	pageURLs = {},
 	params,
-	sidebarNavigationItems,
 	signOutURL = '',
 }: IBackendConfig): Config {
 	const pageParams: {[name: string]: string} = {};
@@ -64,7 +61,6 @@ export function buildConfig({
 		groupId,
 		navigationItems: navigationItems ?? null,
 		params: Object.freeze(pageParams),
-		sidebarNavigationItems: sidebarNavigationItems ?? null,
 		signOutURL,
 	}) as Config;
 }

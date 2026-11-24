@@ -24,7 +24,6 @@ export interface IPageAppProps<
 	navigationItems?: INavigationItem[] | null;
 	pageURLs: {[friendlyURL: string]: string};
 	params?: Params | null;
-	sidebarNavigationItems?: INavigationItem[] | null;
 	signOutURL: string;
 }
 
@@ -73,7 +72,6 @@ const PageApp: React.FC<IPageAppProps & {children: React.ReactNode}> = ({
 	navigationItems,
 	pageURLs,
 	params,
-	sidebarNavigationItems,
 	signOutURL,
 }) => {
 	const [config] = useState(() => {
@@ -86,7 +84,6 @@ const PageApp: React.FC<IPageAppProps & {children: React.ReactNode}> = ({
 			navigationItems,
 			pageURLs,
 			params,
-			sidebarNavigationItems,
 			signOutURL,
 		});
 	});

@@ -1,5 +1,5 @@
 .settings-root {
-	min-width: $sidebarOpenWidth + $minPageWidthContent + ($pagePadding * 2);
+	min-width: $minPageWidthContent + ($pagePadding * 2);
 
 	.breadcrumb {
 		font-size: $fontSizeSmall;
@@ -22,18 +22,6 @@
 
 		.lexicon-icon-user_management {
 			font-size: 1.8rem;
-		}
-	}
-
-	.settings-side-bar {
-		.icon-wrapper {
-			height: 32px;
-			margin-right: 16px;
-			width: 32px;
-		}
-
-		.button-root {
-			white-space: nowrap;
 		}
 	}
 
@@ -68,71 +56,10 @@
 		}
 	}
 
-	.section-side {
-		min-width: $sidebarOpenWidth;
-	}
-
-	> .content-wrapper {
-		display: flex;
-		height: 100%;
-
-		.content {
-			.description {
-				color: $mainLighten28;
-				margin-bottom: 16px;
-			}
-		}
-
-		.settings-side-bar {
-			.item {
-				border-left: 4px solid transparent;
-
-				&.active {
-					border-left: 4px solid $primary;
-
-					.button-root {
-						color: $main;
-						text-decoration: none;
-
-						.icon-root {
-							color: $primary;
-						}
-					}
-				}
-
-				.button-root {
-					align-items: center;
-					color: $mainLighten28;
-					display: flex;
-					font-size: $fontSizeSmall;
-					font-weight: $fontWeightSemiBold;
-					height: 40px;
-					line-height: 18px;
-					padding: 8px 24px;
-					width: 100%;
-
-					&:hover {
-						color: $main;
-						text-decoration: none;
-					}
-				}
-			}
-
-			.nav {
-				display: flex;
-				flex-direction: column;
-				margin-bottom: 24px;
-			}
-
-			.section-title {
-				color: $mainLighten28;
-				font-size: $fontSizeExtraSmall;
-				letter-spacing: 0.5px;
-				margin-bottom: 16px;
-				padding: 0 32px;
-				text-transform: uppercase;
-				white-space: nowrap;
-			}
+	.content {
+		.description {
+			color: $mainLighten28;
+			margin-bottom: 16px;
 		}
 	}
 }
