@@ -2,7 +2,7 @@ import middleware from './configure-middleware';
 import reducers from '../reducers';
 import {compose, createStore, StoreEnhancer} from 'redux';
 
-export default function configureStore(initialState: any) {
+export default function configureStore(initialState?: any) {
 	return createStore(
 		reducers,
 		initialState,

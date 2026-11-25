@@ -1,6 +1,6 @@
 import ChannelProvider from 'shared/context/channel';
 import client from 'shared/apollo/client';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import store from 'shared/store';
 import UnassignedSegmentsProvider from 'shared/context/unassignedSegments';
 import {
@@ -13,8 +13,6 @@ import {CLAY_ICONS_SPRITEMAP} from 'shared/components/Icon';
 import {ClayTooltipProvider} from '@clayui/tooltip';
 import {OnboardingContext} from 'shared/context/onboarding';
 import {Provider} from 'react-redux';
-import {saveState} from 'shared/store/local-storage';
-import {throttle} from 'lodash';
 
 const ONBOARDING_TRIGGERED_KEY = 'onboardingTriggered';
 
@@ -34,10 +32,6 @@ const AppProviders: React.FC<IAppProvidersProps> = ({children}) => {
 			return false;
 		}
 	});
-
-	useEffect(() => {
-		store.subscribe(throttle(() => saveState(store.getState()), 1000));
-	}, []);
 
 	return (
 		<ApolloProvider client={client}>

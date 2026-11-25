@@ -4,7 +4,6 @@ import dataSources from './data-sources';
 import distributions from './distributions';
 import individuals from './individuals';
 import interests from './interests';
-import maintenanceSeen from './maintenance-seen';
 import normalizer from './normalizer';
 import preferences from './preferences';
 import projects from './projects';
@@ -24,7 +23,6 @@ export default composeReducers(
 		distributions,
 		individuals,
 		interests,
-		maintenanceSeen,
 		preferences,
 		projects,
 		segments,

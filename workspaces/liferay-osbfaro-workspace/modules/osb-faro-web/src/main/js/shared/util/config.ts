@@ -14,6 +14,7 @@ export interface INavigationItem {
 }
 
 export interface IDismissedAlerts {
+	maintenanceDate?: string | null;
 	unassignedSegments?: boolean;
 }
 
@@ -38,6 +39,7 @@ export type Config = {
 	readonly channels: Channel[] | null;
 	readonly currentUser: User;
 	readonly dismissedAlerts: {
+		readonly maintenanceDate: string;
 		readonly unassignedSegments: boolean;
 	};
 	readonly friendlyURL: string;
@@ -81,6 +83,7 @@ export function buildConfig({
 		channels: channels ?? null,
 		currentUser: new User(fromJS(currentUser ?? {})),
 		dismissedAlerts: Object.freeze({
+			maintenanceDate: dismissedAlerts?.maintenanceDate ?? '',
 			unassignedSegments: dismissedAlerts?.unassignedSegments ?? false,
 		}),
 		friendlyURL,
