@@ -6,7 +6,7 @@ import React, {useState} from 'react';
 import RequestActionsRenderer from 'settings/components/user-list/RequestActionsRenderer';
 import {addAlert} from 'shared/actions/alerts';
 import {Alert} from 'shared/types';
-import {compose, withAdminPermission} from 'shared/hoc';
+import {compose} from 'shared/hoc';
 import {connect, ConnectedProps} from 'react-redux';
 import {createOrderIOMap, EMAIL_ADDRESS, NAME} from 'shared/util/pagination';
 import {sub} from 'shared/util/lang';
@@ -201,4 +201,4 @@ const UserRequest: React.FC<IUserRequestProps> = ({
 	);
 };
 
-export default compose<any>(withAdminPermission, connector)(UserRequest);
+export default compose<any>(connector)(UserRequest);

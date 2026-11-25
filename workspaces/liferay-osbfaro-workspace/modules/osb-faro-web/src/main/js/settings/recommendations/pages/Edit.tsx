@@ -7,7 +7,6 @@ import {get} from 'lodash';
 import {getRecommendations} from 'shared/util/breadcrumbs';
 import {Job} from '../utils/utils';
 import {Router} from 'shared/types';
-import {withAdminPermission} from 'shared/hoc';
 import {usePageConfig} from 'shared/context/pageConfig';
 import {setUriQueryValues} from 'shared/util/url';
 
@@ -55,7 +54,4 @@ const Edit: React.FC<IEditProps> = ({job, router}) => {
 	);
 };
 
-export default compose<React.ComponentType<any>>(
-	withAdminPermission,
-	withRecommendation
-)(Edit);
+export default compose<React.ComponentType<any>>(withRecommendation)(Edit);

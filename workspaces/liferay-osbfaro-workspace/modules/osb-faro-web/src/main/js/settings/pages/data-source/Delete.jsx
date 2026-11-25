@@ -9,7 +9,6 @@ import {addAlert} from 'shared/actions/alerts';
 import {Alert} from 'shared/types';
 import {
 	compose,
-	withAdminPermission,
 	withDataSource,
 	withRequest,
 	withSheet
@@ -138,7 +137,6 @@ export class Delete extends React.Component {
 }
 
 export default compose(
-	withAdminPermission,
 	withDataSource,
 	connect(null, {addAlert, deleteDataSource}),
 	withPageConfig

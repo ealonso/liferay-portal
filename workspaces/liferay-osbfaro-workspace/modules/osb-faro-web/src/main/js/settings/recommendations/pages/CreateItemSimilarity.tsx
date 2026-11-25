@@ -4,7 +4,6 @@ import RecommendationStepCard from '../components/recommendation-step-card';
 import {getRecommendations} from 'shared/util/breadcrumbs';
 import {JobTypes} from 'shared/util/constants';
 import {Router} from 'shared/types';
-import {withAdminPermission} from 'shared/hoc';
 import {usePageConfig} from 'shared/context/pageConfig';
 
 interface ICreateItemSimilarityProps {
@@ -45,4 +44,4 @@ const CreateItemSimilarity: React.FC<ICreateItemSimilarityProps> = ({
 	);
 };
 
-export default withAdminPermission(CreateItemSimilarity);
+export default CreateItemSimilarity;

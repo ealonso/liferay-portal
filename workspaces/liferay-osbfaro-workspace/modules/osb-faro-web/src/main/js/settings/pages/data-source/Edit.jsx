@@ -1,6 +1,6 @@
 import omitDefinedProps from 'shared/util/omitDefinedProps';
 import React from 'react';
-import {compose, withAdminPermission, withDataSource} from 'shared/hoc';
+import {compose, withDataSource} from 'shared/hoc';
 import {ConfigureCSV} from './ConfigureCSV';
 import {DataSource} from 'shared/util/records';
 import {DataSourceTypes} from 'shared/util/constants';
@@ -31,4 +31,4 @@ export class Edit extends React.Component {
 	}
 }
 
-export default compose(withAdminPermission, withDataSource)(Edit);
+export default compose(withDataSource)(Edit);

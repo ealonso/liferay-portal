@@ -25,12 +25,7 @@ import {formatDateToTimeZone, getDateNow} from 'shared/util/date';
 import {RootState} from 'shared/store';
 import {sub} from 'shared/util/lang';
 import {useModal} from '@clayui/modal';
-import {
-	withAdminPermission,
-	withError,
-	withLoading,
-	withQuery,
-} from 'shared/hoc';
+import {withError, withLoading, withQuery} from 'shared/hoc';
 import type {Column} from 'shared/components/table/Row';
 
 export const isExpired = (expirationDate: string) =>
@@ -325,4 +320,4 @@ export const AccessTokenList: React.FC<IAccessTokenListProps> = ({groupId}) => (
 	</BasePage>
 );
 
-export default withAdminPermission(AccessTokenList);
+export default AccessTokenList;

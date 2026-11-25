@@ -11,7 +11,7 @@ import Sheet from 'shared/components/Sheet';
 import TextTruncate from 'shared/components/TextTruncate';
 import {addAlert} from 'shared/actions/alerts';
 import {Alert} from 'shared/types';
-import {compose, withAdminPermission} from 'shared/hoc';
+import {compose} from 'shared/hoc';
 import {connect} from 'react-redux';
 import {DataSource} from 'shared/util/records';
 import {hasChanges} from 'shared/util/react';
@@ -179,7 +179,6 @@ const ConnectedConfigureCSV = connect(null, {addAlert})(
 export {ConnectedConfigureCSV as ConfigureCSV};
 
 export default compose(
-	withAdminPermission,
 	connect(null, {addAlert}),
 	withPageConfig
 )(ConfigureCSV);
