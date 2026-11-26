@@ -9,11 +9,12 @@ import {usePageConfig} from 'shared/context/pageConfig';
 const WorkspaceNotFound: React.FC<React.HTMLAttributes<HTMLElement>> = ({
 	className,
 }) => {
-	const {workspacesURL} = usePageConfig();
+	const {ldpEnabled, workspacesURL} = usePageConfig();
 
 	return (
 		<WorkspacesBasePage
 			className={getCN('workspace-not-found-root text-center', className)}
+			ldpEnabled={ldpEnabled}
 			title=""
 		>
 			<Sheet>
