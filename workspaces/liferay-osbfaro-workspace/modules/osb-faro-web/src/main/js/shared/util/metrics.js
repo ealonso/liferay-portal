@@ -47,13 +47,3 @@ export const getStatsColor = (str) => {
  * Return the current number sign
  * @param {number} number
  */
-
-export function getTrendSign(number) {
-	if (number > 0) {
-		return '+';
-	}
-	if (number < 0) {
-		return '-';
-	}
-	return '';
-}

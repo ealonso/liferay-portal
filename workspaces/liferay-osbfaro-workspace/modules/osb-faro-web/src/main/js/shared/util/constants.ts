@@ -6,19 +6,6 @@ export enum AcquisitionTypes {
 	SourceMedium = 'SOURCE_MEDIUM',
 }
 
-export enum ActivityActions {
-	Comments = 3,
-	Downloads = 0,
-	Impressions = 4,
-	Submissions = 1,
-	Visits = 2,
-}
-
-export enum Applications {
-	Contacts = 'contacts',
-	Main = 'main',
-}
-
 export enum EventNames {
 	Click = 'click',
 	Comment = 'comment',
@@ -92,14 +79,6 @@ export enum CredentialTypes {
 	OAuth1 = 'OAuth 1 Authentication',
 	OAuth2 = 'OAuth 2 Authentication',
 	Token = 'Token Authentication',
-}
-
-export enum DataSourceDisplayStatuses {
-	Active = 'ACTIVE',
-	Configuring = 'CONFIGURING',
-	DeleteError = 'DELETE_ERROR',
-	InDeletion = 'IN_DELETION',
-	Inactive = 'INACTIVE',
 }
 
 export enum DataSourceStates {
@@ -374,65 +353,6 @@ export const ALIGNMENTS_MAP = {
 	'top-left': ALIGN_POSITIONS.TopLeft,
 	'top-right': ALIGN_POSITIONS.TopRight,
 };
-
-export const ASSET_METRICS = [
-	{
-		key: 'abandonmentsMetric',
-		selectTitle: `${Liferay.Language.get(
-			'form-abandonment'
-		)} (${Liferay.Language.get('ratio').toLowerCase()})`,
-		title: Liferay.Language.get('form-abandonment'),
-		type: 'percentage',
-	},
-	{
-		key: 'clicksMetric',
-		selectTitle: `${Liferay.Language.get(
-			'asset-clicks'
-		)} (${Liferay.Language.get('sum').toLowerCase()})`,
-		title: Liferay.Language.get('clicks'),
-		type: 'number',
-	},
-	{
-		key: 'completionTimeMetric',
-		selectTitle: `${Liferay.Language.get(
-			'form-completion-time'
-		)} (${Liferay.Language.get('average').toLowerCase()})`,
-		title: Liferay.Language.get('completion-time'),
-		type: 'time',
-	},
-	{
-		key: 'downloadsMetric',
-		selectTitle: `${Liferay.Language.get(
-			'asset-downloads'
-		)} (${Liferay.Language.get('sum').toLowerCase()})`,
-		title: Liferay.Language.get('downloads'),
-		type: 'number',
-	},
-	{
-		key: 'readingTimeMetric',
-		selectTitle: `${Liferay.Language.get(
-			'asset-interaction-time'
-		)} (${Liferay.Language.get('average').toLowerCase()})`,
-		title: Liferay.Language.get('interaction-time'),
-		type: 'time',
-	},
-	{
-		key: 'submissionsMetric',
-		selectTitle: `${Liferay.Language.get(
-			'form-submissions'
-		)} (${Liferay.Language.get('sum').toLowerCase()})`,
-		title: Liferay.Language.get('form-submissions'),
-		type: 'number',
-	},
-	{
-		key: 'viewsMetric',
-		selectTitle: `${Liferay.Language.get(
-			'asset-views'
-		)} (${Liferay.Language.get('sum').toLowerCase()})`,
-		title: Liferay.Language.get('views'),
-		type: 'number',
-	},
-];
 
 export const DATA_RETENTION_PERIOD_KEY = 'data-retention-period';
 

@@ -1,7 +1,6 @@
 import moment from 'moment';
 import TimeZone from 'shared/util/records/TimeZone';
 import {
-	ActivityActions,
 	AssetTypes,
 	CredentialTypes,
 	DataSourceStates,
@@ -708,7 +707,7 @@ export function mockSession(seed = 0, data = {}, actionData) {
 
 export function mockAction(seed = 0, data = {}) {
 	return {
-		action: ActivityActions.Visits,
+		action: 2,
 		activityKey: `key_${seed}`,
 		assetType: AssetTypes.Form,
 		canonicalUrl: `https://www.liferay${seed}.com`,

@@ -1,4 +1,3 @@
-import AccountName from 'shared/components/table/cell-components/AccountName';
 import Checkbox from 'shared/components/Checkbox';
 import ClayIcon from 'shared/components/Icon';
 import ClayLabel from '@clayui/label';
@@ -7,7 +6,6 @@ import getCN from 'classnames';
 import IndividualType from 'shared/components/table/cell-components/IndividualTypes';
 import InfoPopover from 'shared/components/InfoPopover';
 import MemberCell from 'shared/components/table/cell-components/MemberCell';
-import MembershipChanges from 'shared/components/table/cell-components/MembershipChanges';
 import moment from 'moment';
 import React from 'react';
 import SegmentSticker from 'segment/components/SegmentSticker';
@@ -151,27 +149,6 @@ export const activityAssetsListColumns = {
 };
 
 /**
- * Assets List Columns
- */
-export const assetsListColumns = {
-	canonicalUrl: {
-		accessor: 'canonicalUrl',
-		className: 'table-cell-expand text-truncate',
-		label: Liferay.Language.get('url'),
-	},
-	name: {
-		accessor: 'name',
-		cellRenderer: NameCell,
-		className: 'table-cell-expand',
-		label: Liferay.Language.get('name'),
-	},
-	type: {
-		accessor: 'type',
-		label: Liferay.Language.get('type'),
-	},
-};
-
-/**
  * Attribute List Columns
  */
 
@@ -221,72 +198,6 @@ export const attributeListColumns = {
 		className: 'table-cell-expand-smaller text-truncate',
 		label: Liferay.Language.get('sample-raw-data'),
 		sortable: false,
-	},
-};
-
-export const membershipChangesColumns = {
-	accountNames: {
-		accessor: 'accountName',
-		cellRenderer: AccountName,
-		label: Liferay.Language.get('account-name'),
-		sortable: true,
-	},
-	firstSeen: {
-		accessor: 'firstSeenTime',
-		cellRenderer: ({
-			className,
-			data: {firstSeenTime},
-		}: {
-			className?: string;
-			data: {firstSeenTime: string | number};
-		}) => (
-			<td className={getCN('name-cell-root', className)}>
-				<div className="text-truncate">
-					<DataValue type="date" value={firstSeenTime} />
-				</div>
-			</td>
-		),
-		label: Liferay.Language.get('first-seen'),
-		sortable: true,
-	},
-	individualName: {
-		accessor: 'name',
-		cellRenderer: MemberCell,
-		className: 'table-cell-expand',
-		label: `${Liferay.Language.get('member-name')} | ${Liferay.Language.get(
-			'email'
-		)}`,
-		sortable: true,
-	},
-	lastActive: {
-		accessor: 'lastActivityTime',
-		cellRenderer: ({
-			className,
-			data: {lastActivityTime},
-		}: {
-			className?: string;
-			data: {lastActivityTime: string | number};
-		}) => (
-			<td className={getCN('name-cell-root', className)}>
-				<div className="text-truncate">
-					<DataValue type="date" value={lastActivityTime} />
-				</div>
-			</td>
-		),
-		label: Liferay.Language.get('last-active'),
-		sortable: true,
-	},
-	membershipChanges: {
-		accessor: 'type',
-		cellRenderer: MembershipChanges,
-		label: Liferay.Language.get('membership-change'),
-		sortable: true,
-	},
-	profileType: {
-		accessor: 'profileType',
-		cellRenderer: IndividualType,
-		label: Liferay.Language.get('profile-type'),
-		sortable: true,
 	},
 };
 

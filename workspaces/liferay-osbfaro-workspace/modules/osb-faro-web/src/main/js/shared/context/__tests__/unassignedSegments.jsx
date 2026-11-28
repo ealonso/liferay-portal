@@ -3,8 +3,7 @@ import {
 	ActionType,
 	UnassignedSegmentsProvider,
 	unassignedSegmentsReducer,
-	useUnassignedSegmentsContext,
-	withUnassignedSegmentsProvider
+	useUnassignedSegmentsContext
 } from '../unassignedSegments';
 import {WorkspacePage} from 'test/mock-page-context';
 import {cleanup, fireEvent, render, screen} from '@testing-library/react';
@@ -128,17 +127,5 @@ describe('useUnassignedSegmentsContext', () => {
 		);
 
 		expect(container).toHaveTextContent(successMsg);
-	});
-});
-
-describe('withUnassignedSegmentsProvider', () => {
-	afterEach(cleanup);
-
-	it('should pass the WrappedComponent', () => {
-		const WrappedComponent = withUnassignedSegmentsProvider(() => (
-			<div>{'foo'}</div>
-		));
-		const {container} = render(<WorkspacePage><WrappedComponent /></WorkspacePage>);
-		expect(container).toHaveTextContent('foo');
 	});
 });

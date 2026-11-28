@@ -215,11 +215,6 @@ export const STATUS_DISPLAY_MAP = {
 	[SubscriptionStatuses.Over]: 'danger',
 };
 
-export const DEFAULT_ADDONS = {
-	[INDIVIDUALS]: ADD_ONS[INDIVIDUALS].business,
-	[PAGEVIEWS]: ADD_ONS[PAGEVIEWS].business,
-};
-
 export function getPlanAddOns(currentPlan) {
 	if (isBasicPlan(currentPlan)) {
 		return {};
@@ -308,17 +303,6 @@ export function getPlanLabel(name) {
 		case PLANS.lxcEnterprise?.name:
 			return Liferay.Language.get('enterprise-plan');
 
-		default:
-			return '';
-	}
-}
-
-export function getPropIcon(name) {
-	switch (name) {
-		case INDIVIDUALS:
-			return 'ac_individual';
-		case PAGEVIEWS:
-			return 'faro_page_views';
 		default:
 			return '';
 	}

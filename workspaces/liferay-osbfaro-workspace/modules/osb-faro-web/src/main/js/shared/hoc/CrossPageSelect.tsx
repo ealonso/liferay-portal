@@ -104,33 +104,6 @@ export const fetchLocalData = ({
 	};
 };
 
-export const withLocalData =
-	() =>
-	<P extends {[key: string]: any}>(
-		WrappedComponent: React.ComponentType<P>
-	) =>
-	(props: P) => {
-		const {delta, filterBy, orderIOMap, page, query, searchSelectedFn} =
-			props;
-
-		const {selectedItems} = useSelectionContext();
-
-		return (
-			<WrappedComponent
-				{...props}
-				{...fetchLocalData({
-					delta,
-					filterBy,
-					items: selectedItems,
-					orderIOMap,
-					page,
-					query,
-					searchSelectedFn,
-				})}
-			/>
-		);
-	};
-
 interface IwithSelectionProps {
 	checkDisabled?: (item?: object) => boolean;
 	items: {id: string}[];

@@ -1,14 +1,8 @@
 import ValidationError from 'shared/util/ValidationError';
-import {forEach, get, keys, mapValues} from 'lodash';
+import {forEach, keys, mapValues} from 'lodash';
 import {reloadPage} from 'shared/util/url';
 
 export const UNAUTHORIZED_ACCESS = 'Unauthorized Access';
-
-export function addParams(url, params) {
-	const separator = url.includes('?') ? '&' : '?';
-
-	return `${url}${separator}${serializeQueryString(params)}`;
-}
 
 export function getFormData(data) {
 	const formData = new FormData();
@@ -34,17 +28,6 @@ export function parseFromJSON(value) {
 	catch (err) {}
 
 	return result;
-}
-
-/**
- * Return parsed error if it matches one of the response error codes.
- * @param {Object} error - The error object.
- * @returns {object|null} - The parsed error or null if not one of the response error codes.
- */
-export function getServiceError(err) {
-	const parsedError = parseFromJSON(err.message);
-
-	return get(parsedError, 'status') ? parsedError : null;
 }
 
 export function serializeQueryString(params) {

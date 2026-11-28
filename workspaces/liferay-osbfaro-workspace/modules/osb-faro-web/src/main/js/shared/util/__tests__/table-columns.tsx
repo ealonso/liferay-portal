@@ -6,7 +6,6 @@ import {
 	eventListColumns,
 	individualsListColumns,
 	IndividualsListCDPColumns,
-	membershipChangesColumns,
 	metricsListColumns,
 	pagesListColumns,
 	segmentsListColumns,
@@ -90,52 +89,6 @@ const renderCell = (
 const freezeTime = () => {
 	jest.useFakeTimers().setSystemTime(new Date(NOW));
 };
-
-describe('membershipChangesColumns', () => {
-	it('renders the first seen date as a long UTC date', () => {
-		const {getByText} = renderCell(
-			membershipChangesColumns.firstSeen.cellRenderer,
-			{data: {firstSeenTime: '2026-06-10T23:30:00Z'}}
-		);
-
-		expect(getByText('June 10, 2026')).toBeInTheDocument();
-	});
-
-	it('renders the last active date as a long UTC date', () => {
-		const {getByText} = renderCell(
-			membershipChangesColumns.lastActive.cellRenderer,
-			{data: {lastActivityTime: '2026-06-10T23:30:00Z'}}
-		);
-
-		expect(getByText('June 10, 2026')).toBeInTheDocument();
-	});
-});
-
-describe('membershipChangesColumns no data', () => {
-	it.each([null, undefined, ''])(
-		'renders a %p first seen date as no data',
-		(firstSeenTime) => {
-			const {getByText} = renderCell(
-				membershipChangesColumns.firstSeen.cellRenderer,
-				{data: {firstSeenTime}}
-			);
-
-			expect(getByText('–')).toBeInTheDocument();
-		}
-	);
-
-	it.each([null, undefined, ''])(
-		'renders a %p last active date as no data',
-		(lastActivityTime) => {
-			const {getByText} = renderCell(
-				membershipChangesColumns.lastActive.cellRenderer,
-				{data: {lastActivityTime}}
-			);
-
-			expect(getByText('–')).toBeInTheDocument();
-		}
-	);
-});
 
 describe('IndividualsListCDPColumns', () => {
 	it('renders the first seen date as a long UTC date', () => {

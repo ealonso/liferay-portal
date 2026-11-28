@@ -6,25 +6,7 @@ import {
 	ERROR_TYPES,
 	EVENT_TYPES,
 	getTempCredentials,
-	isOAuthErrorString,
-	OAUTH_ERROR_CODES,
 } from '../oauth';
-
-describe('isOAuthErrorString', () => {
-	it('should return true is the error is considered an OAuth error type', () => {
-		OAUTH_ERROR_CODES.map((code) => {
-			expect(isOAuthErrorString(code)).toBe(true);
-		});
-	});
-
-	it('should return false if the error is NOT considered to be an OAuth error type', () => {
-		expect(isOAuthErrorString(undefined)).toBe(false);
-
-		expect(isOAuthErrorString(null)).toBe(false);
-
-		expect(isOAuthErrorString('not_an_oauth_error')).toBe(false);
-	});
-});
 
 describe('oauth-token', () => {
 	class MockWindow {

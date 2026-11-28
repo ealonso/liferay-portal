@@ -3,9 +3,7 @@ import {
 	formatPlanData,
 	getPlanAddOns,
 	getPlanLabel,
-	getPropIcon,
 	getPropLabel,
-	INDIVIDUALS,
 	isUnlimitedLimit,
 	PAGEVIEWS,
 	SubscriptionNames,
@@ -109,14 +107,6 @@ describe('subscriptions', () => {
 
 		it('should return an empty string for an unknown plan', () => {
 			expect(getPlanLabel('something-unknown')).toEqual('');
-		});
-	});
-
-	describe('getPropIcon', () => {
-		it('should return the prop icon symbol', () => {
-			const symbol = getPropIcon(INDIVIDUALS);
-
-			expect(symbol).toEqual('ac_individual');
 		});
 	});
 

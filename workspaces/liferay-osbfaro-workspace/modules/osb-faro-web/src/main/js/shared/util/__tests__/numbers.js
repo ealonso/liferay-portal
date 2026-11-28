@@ -10,7 +10,6 @@ import {
 	toRounded,
 	toThousands,
 	toThousandsBase,
-	undoThousands,
 } from '../numbers';
 
 describe('toLocale', () => {
@@ -268,41 +267,5 @@ describe('toCurrency', () => {
 
 	it('should format a plain locale-aware number when no currency code is given', () => {
 		expect(toCurrency(1234.5, undefined, 'en-US')).toEqual('1,234.5');
-	});
-});
-
-describe('undoThousands', () => {
-	it('should return a number aproximation for a formatted number', () => {
-		expect(undoThousands('145')).toEqual(145);
-		expect(undoThousands('23.5B')).toEqual(23500000000);
-		expect(undoThousands('23.5K')).toEqual(23500);
-		expect(undoThousands('23.5M')).toEqual(23500000);
-	});
-
-	it('should return the sum two numbers using method toThousand', () => {
-		const formattedA = '1.5K';
-		const formattedB = '2.5K';
-		const formattedC = '140';
-
-		const numberA = undoThousands(formattedA);
-		const numberB = undoThousands(formattedB);
-		const numberC = undoThousands(formattedC);
-
-		expect(toThousands(numberA + numberB)).toEqual('4K');
-		expect(toThousands(numberA + numberC)).toEqual('1.6K');
-	});
-
-	it('should return zero when no formatted value is specified', () => {
-		expect(undoThousands()).toEqual(0);
-	});
-
-	it('should return zero when formatted value no matches', () => {
-		expect(undoThousands('E$')).toEqual(0);
-	});
-
-	it('should return the number without multiplier when formatted doesnt have multipliter declared', () => {
-		expect(undoThousands('50X')).toEqual(50);
-		expect(undoThousands('100Y')).toEqual(100);
-		expect(undoThousands('150Z')).toEqual(150);
 	});
 });

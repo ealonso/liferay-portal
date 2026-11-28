@@ -10,21 +10,12 @@ import {
 	getCustomDateFormat,
 } from 'shared/util/date';
 import {getSafeDecodedURIComponent, isBlank} from './util';
-import {AssetTypes, TimeIntervals} from 'shared/util/constants';
+import {AssetTypes} from 'shared/util/constants';
 import {PayloadLayout} from 'shared/util/payloadTables';
-import {RangeSelectors} from 'shared/types';
 import {sub} from 'shared/util/lang';
 import {UserSession, UserSessionEvent} from 'shared/queries/UserSessionQuery';
 import {Config} from 'shared/util/config';
 import {setUriQueryValues} from 'shared/util/url';
-
-export const CHART_ID = 'individualActivity';
-
-export const INTERVAL_MAP = {
-	D: TimeIntervals.Day,
-	M: TimeIntervals.Month,
-	W: TimeIntervals.Week,
-};
 
 /**
  * The Salesforce Campaign a touch carried. `campaignId` is the raw value the
@@ -732,13 +723,3 @@ export const getActivityLabel = (totalEvents: number): React.ReactNode[] =>
 		[<b key="ACTIVITIES">{totalEvents}</b>],
 		false
 	) as React.ReactNode[];
-
-export const getSafeRangeKey = (
-	rangeKey: RangeSelectors['rangeKey']
-): RangeSelectors['rangeKey'] | null => {
-	if (rangeKey === 'CUSTOM') {
-		return null;
-	}
-
-	return rangeKey;
-};

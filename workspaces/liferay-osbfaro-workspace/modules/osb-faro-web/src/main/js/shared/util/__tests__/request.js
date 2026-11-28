@@ -2,35 +2,13 @@ jest.mock('../url');
 
 import 'whatwg-fetch';
 import request, {
-	addParams,
 	getFormData,
 	getRequestData,
-	getServiceError,
 	parseFromJSON,
 	serializeQueryString,
 	stringifyValues,
 } from '../request';
 import {reloadPage} from '../url';
-
-describe('addParams', () => {
-	it('should correctly append query string params', () => {
-		const result = addParams('http://www.test.com', {
-			name: 'joe',
-			title: 'blogger',
-		});
-
-		expect(result).toContain('joe');
-		expect(result).toContain('blogger');
-	});
-
-	it('should use correct param separator', () => {
-		const result = addParams('http://www.test.com?parameter=1', {
-			name: 'joe',
-		});
-
-		expect(result.split('?').length - 1).toBe(1);
-	});
-});
 
 describe('getFormData', () => {
 	it('should return a FormData object', () => {
@@ -55,24 +33,6 @@ describe('parseFromJSON', () => {
 		const expected = {foo: 'bar'};
 
 		expect(parseFromJSON(JSON.stringify(expected))).toEqual(expected);
-	});
-});
-
-describe('getServiceError', () => {
-	it('should return a parsed service error', () => {
-		const nestedError = {status: 403};
-
-		const err = {message: JSON.stringify(nestedError)};
-
-		expect(getServiceError(err)).toEqual(nestedError);
-	});
-
-	it('should return null if not a service error', () => {
-		const nestedError = {status: 500};
-
-		const err = {message: JSON.stringify(nestedError)};
-
-		expect(getServiceError(JSON.stringify(err))).toBeNull();
 	});
 });
 

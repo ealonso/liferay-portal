@@ -19,12 +19,6 @@ export function resolveLocale(languageId?: string | null): string {
 	return resolveLanguageId(languageId).replace(/_/g, '-');
 }
 
-export function getLanguageLabel(languageId?: string | null): string {
-	const [language, country] = (languageId || DEFAULT_LANGUAGE_ID).split('_');
-
-	return `${language.toUpperCase()} (${country})`;
-}
-
 let currentLocale: string = DEFAULT_LOCALE;
 
 /**

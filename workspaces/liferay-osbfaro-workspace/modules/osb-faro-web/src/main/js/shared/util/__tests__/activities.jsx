@@ -8,7 +8,6 @@ import {
 	formatSessions,
 	getActivityLabel,
 	getDisplayableFields,
-	getSafeRangeKey,
 	groupEventsByPage,
 	groupSessionsByDay,
 	mapEventMetricToActivityHistory,
@@ -613,12 +612,5 @@ describe('activities', () => {
 
 		expect(text).toBe(label);
 		expect(count.props.children).toBe(totalEvents);
-	});
-
-	it.each([
-		['30', '30'],
-		['CUSTOM', null]
-	])('keeps the range key %p as %p, since a custom range has no key', (rangeKey, expected) => {
-		expect(getSafeRangeKey(rangeKey)).toBe(expected);
 	});
 });

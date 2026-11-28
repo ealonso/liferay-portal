@@ -80,10 +80,6 @@ export function getLargestNaturalUnit(
 	return unit;
 }
 
-export function getUnitLabel(unit: number): string {
-	return UNIT_LABELS[unit];
-}
-
 export function isHourlyRangeKey(rangeKey: RangeKeyTimeRanges): boolean {
 	return [
 		RangeKeyTimeRanges.Last24Hours,

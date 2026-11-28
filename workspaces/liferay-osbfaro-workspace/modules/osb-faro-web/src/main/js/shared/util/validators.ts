@@ -127,20 +127,6 @@ export function validateMinLength(minLength: number) {
 	};
 }
 
-export function validateMinValue(minValue: number) {
-	return (value: string) => {
-		let error = '';
-
-		if (Number(value) < minValue) {
-			error = sub(Liferay.Language.get('must-be-greater-than-x'), [
-				minValue - 1,
-			]) as string;
-		}
-
-		return toPromise(error);
-	};
-}
-
 export function validateMaxLength(maxLength: number) {
 	return (value: string) => {
 		let error = '';
@@ -171,13 +157,6 @@ export function validatePattern(
 export const validateMarketoDomain = validatePattern(
 	/^https:\/\/.*$/,
 	Liferay.Language.get('please-enter-a-valid-marketo-url')
-);
-
-export const validateProtocol = validatePattern(
-	/^(http[s]?:\/\/)/i,
-	Liferay.Language.get(
-		'your-url-is-missing-the-protocol.-please-include-http-or-https'
-	)
 );
 
 export const validateSalesforceDomain = validatePattern(

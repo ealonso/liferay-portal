@@ -1,6 +1,6 @@
 import moment from 'moment';
 import momentTimezone from 'moment-timezone';
-import {flow, get, head, last, rangeRight} from 'lodash/fp';
+import {flow, get, head, last} from 'lodash/fp';
 import {getLocale} from 'shared/util/locale';
 import {INTERVAL_KEY_MAP} from 'shared/util/time';
 import {sub} from 'shared/util/lang';
@@ -40,8 +40,6 @@ export const DATE_TIME_MASK = [
 export const DEFAULT_DATE_FORMAT = 'YYYY-MM-DD';
 
 export const DEFAULT_TIMEZONE_ID = 'UTC';
-
-export const ISO_8601_DATE_FORMAT = 'YYYY-MM-DDTHH:mm:ss.SSS[Z]';
 
 // Every locale-sensitive text goes through Intl in the current user's locale,
 // so any language the portal makes available formats without predefined
@@ -146,12 +144,6 @@ const MONTH_YEAR_FORMAT = createDateFormat({month: 'short', year: 'numeric'});
 export const LONG_DATE_FORMAT = createDateFormat({dateStyle: 'long'});
 
 export const MONTH_FORMAT = createDateFormat({month: 'long'});
-
-export const NUMERIC_DATE_FORMAT = createDateFormat({
-	day: 'numeric',
-	month: 'numeric',
-	year: 'numeric',
-});
 
 export const NUMERIC_DATE_TIME_FORMAT = createDottedDayPeriodDateFormat({
 	day: '2-digit',
@@ -394,10 +386,6 @@ export function convertMillisecondsToDays(milliseconds) {
 	return Math.round(milliseconds / 1000 / 60 / 60 / 24);
 }
 
-export function convertMillisecondsToHours(milliseconds) {
-	return Math.round(milliseconds / 1000 / 60 / 60);
-}
-
 export function convertMillisecondsToMonths(milliseconds) {
 	return Math.round(milliseconds / 1000 / 60 / 60 / 24 / 30);
 }
@@ -438,12 +426,6 @@ export function formatDateToTimeZone(
 
 export function applyTimeZone(date, timeZoneId = DEFAULT_TIMEZONE_ID) {
 	return momentTimezone.utc(date).tz(timeZoneId);
-}
-
-export function generateDateRange(period = 30, interval = 'days') {
-	return rangeRight(0, period).map((cur) =>
-		moment.utc().startOf(interval).subtract(cur, interval).valueOf()
-	);
 }
 
 /**
@@ -501,15 +483,6 @@ export function getEndDate(date, interval) {
 }
 
 /**
- *  Gets the first date of the array.
- *  @param {Array.<Aggregation>} aggregations - Array of objects.
- *  @returns {number} Date in unix time.
- */
-export function getFirstDate(dates, key) {
-	return flow(head, get(key))(dates);
-}
-
-/**
  *  Gets the last date of the array.
  *  @param {Array.<Aggregation>} aggregations - Array of objects.
  *  @returns {number} Date in unix time.
@@ -518,19 +491,6 @@ export function getLastDate(dates, interval, key) {
 	const date = flow(last, get(key))(dates);
 
 	return getEndDate(date, interval);
-}
-
-/**
- * Get total days to date
- * @param {object} date
- */
-export function getTotalDaysToDate(createDate) {
-	const duration = moment.duration({
-		from: moment(createDate).clone(),
-		to: new Date(),
-	});
-
-	return Math.floor(duration.asDays());
 }
 
 export function toUnix(stringOrMoment) {

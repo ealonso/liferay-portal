@@ -3,12 +3,10 @@ import {
 	applyTimeZone,
 	formatUTCDate,
 	formatUTCDateFromUnix,
-	generateDateRange,
 	getDate,
 	getDateNow,
 	getDateRangeLabel,
 	getDateRangeLabelFromDate,
-	getFirstDate,
 	getISODate,
 	getLastDate,
 	toUnix,
@@ -39,20 +37,6 @@ describe('date', () => {
 				'Nov 20, 2019'
 			);
 		});
-	});
-
-	describe('generateDateRange', () => {
-		it.each`
-			period | interval
-			${30}  | ${'days'}
-			${12}  | ${'months'}
-			${3}   | ${'years'}
-		`(
-			'should generate an array containing timestamps equal to the length of $period and sectioned by $interval',
-			({interval, period}) => {
-				expect(generateDateRange(period, interval).length).toBe(period);
-			}
-		);
 	});
 
 	describe('getDate', () => {
@@ -162,16 +146,6 @@ describe('date', () => {
 			${'abc'}                     | ${null}
 		`('should convert $date to $expected', ({date, expected}) => {
 			expect(toUnix(date)).toBe(expected);
-		});
-	});
-
-	describe('getFirstDate', () => {
-		it('should return the date from the first item in the history array', () => {
-			const {activityAggregations} = data.mockActivityHistory();
-
-			expect(
-				getFirstDate(activityAggregations, 'intervalInitDate')
-			).toEqual(data.getTimestamp(-1));
 		});
 	});
 

@@ -70,15 +70,3 @@ export const replaceWithMultipleAtIndex = (
 	...items,
 	...list.slice(index + 1, list.length),
 ];
-
-/**
- * Get an array containing all the elements of arr1 that are
- * not in arr2 and vice-versa.
- * @returns {Array}
- */
-export function getDifferences<T>(arr1: T[], arr2: T[]): T[] {
-	const x = arr1.filter((x) => !arr2.includes(x));
-	const y = arr2.filter((x) => !arr1.includes(x));
-
-	return x.concat(y);
-}

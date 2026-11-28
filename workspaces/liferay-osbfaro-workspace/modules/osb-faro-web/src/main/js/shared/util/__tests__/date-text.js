@@ -16,7 +16,6 @@ import {
 	getMonthYearFormat,
 	getShortWeekdayNames,
 	MONTH_FORMAT,
-	NUMERIC_DATE_FORMAT,
 	SHORT_MONTH_FORMAT,
 	SHORT_NUMERIC_DATE_FORMAT,
 	TIME_FORMAT,
@@ -125,10 +124,6 @@ describe.each`
 );
 
 describe('formatted date text for fixed formats in en_US', () => {
-	it('renders the numeric date', () => {
-		expect(formatUTCDate(DATE, NUMERIC_DATE_FORMAT)).toBe('6/10/2026');
-	});
-
 	it('renders the short numeric date', () => {
 		expect(
 			formatDateToTimeZone(DATE, SHORT_NUMERIC_DATE_FORMAT, TIME_ZONE_ID)

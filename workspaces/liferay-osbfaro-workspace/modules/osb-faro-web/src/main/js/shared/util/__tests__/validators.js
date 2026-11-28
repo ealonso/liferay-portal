@@ -8,9 +8,7 @@ import {
 	validateMaxLength,
 	validateMinDuration,
 	validateMinLength,
-	validateMinValue,
 	validatePattern,
-	validateProtocol,
 	validateRequired,
 } from '../validators';
 
@@ -152,24 +150,6 @@ describe('validateIsInteger', () => {
 	});
 });
 
-describe('validateMinValue', () => {
-	it('should validate min value as not valid', () => {
-		expect.assertions(1);
-
-		const response = validateMinValue(30)(10);
-
-		return expect(response).resolves.toEqual('Must be greater than 29.');
-	});
-
-	it('should validate min value as valid', () => {
-		expect.assertions(1);
-
-		const response = validateMinValue(5)(10);
-
-		return expect(response).resolves.toBe('');
-	});
-});
-
 describe('validatePattern', () => {
 	it('should validate a regex pattern as not valid', () => {
 		expect.assertions(1);
@@ -185,26 +165,6 @@ describe('validatePattern', () => {
 		expect.assertions(1);
 
 		const response = validatePattern(/^\d+$/, 'can only be a number')('1');
-
-		return expect(response).resolves.toBe('');
-	});
-});
-
-describe('validateProtocol', () => {
-	it('should validate protocol as not valid', () => {
-		expect.assertions(1);
-
-		const response = validateProtocol('liferay.com');
-
-		return expect(response).resolves.toEqual(
-			'Your URL is missing the protocol. Please include "http://" or "https://".'
-		);
-	});
-
-	it('should validate protocol as valid', () => {
-		expect.assertions(1);
-
-		const response = validateProtocol('https://liferay.com');
 
 		return expect(response).resolves.toBe('');
 	});

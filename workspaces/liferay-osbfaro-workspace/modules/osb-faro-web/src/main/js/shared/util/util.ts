@@ -160,25 +160,6 @@ export const downloadDataAsFile = ({
 };
 
 /**
- * Remove Protocol
- * @param {string} url
- */
-export const removeProtocol = (url: string) =>
-	getSafeDecodedURIComponent(url).replace(/^http(s)?:\/\//i, '');
-
-/**
- * Remove numbers using regex
- * @param {string} str
- */
-export const removeNumbers = (str: string) => str.replace(/\d+/g, ' ');
-
-/**
- * Remove spacing using regex
- * @param {string} str
- */
-export const removeSpacing = (str: string) => str.replace(/\s+/g, '');
-
-/**
  * Returns the percent number passing as
  * parameter the current number and total number.
  * @param {number} number1

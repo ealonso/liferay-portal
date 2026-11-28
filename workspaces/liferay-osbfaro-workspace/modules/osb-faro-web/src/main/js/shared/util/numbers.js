@@ -155,38 +155,6 @@ export const toDuration = (
 	return moment.duration(time, measurement).format(format);
 };
 
-const multipliers = {
-	B: 1000000000,
-	K: 1000,
-	M: 1000000,
-};
-
-/**
- * Undo Thousands
- * @param {string} formatted
- */
-export const undoThousands = (formatted) => {
-	if (!formatted) {
-		return 0;
-	}
-
-	const regex = /(\d+((.|,)\d+)?)([a-zA-Z])?/;
-	const matches = formatted.match(regex);
-
-	if (!matches) {
-		return 0;
-	}
-
-	const number = parseFloat(matches[1]);
-	const multiplier = matches[4];
-
-	if (multiplier) {
-		return number * (multipliers[multiplier] || 1);
-	}
-
-	return toInt(number);
-};
-
 /**
  * Formats a 0-1 ratio as a locale-aware percentage string, e.g.
  * formatPercentFromRatio(0.073) => '7.3%' (en-US) / '7,3 %' (es-ES).

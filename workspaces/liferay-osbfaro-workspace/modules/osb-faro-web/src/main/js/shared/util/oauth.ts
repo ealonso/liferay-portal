@@ -2,14 +2,6 @@ import * as API from 'shared/api';
 
 export const OAUTH_CALLBACK_URL = `${location.origin}/oauth/receive`;
 
-export const OAUTH_ERROR_CODES = [
-	'invalid_client',
-	'invalid_grant',
-	'invalid_request',
-	'unauthorized_client',
-	'unsupported_grant_type',
-];
-
 /**
  * OAuth 1 Flow
  * Represents the TempCredentials to be passed to the backend, who
@@ -73,14 +65,6 @@ function createError(message: string, type: ERROR_TYPES) {
  * @property {string!} oAuthToken - The oauth_token.
  * @property {string!} oAuthVerifier - The oauth_verifier.
  */
-
-/**
- * Check if the error string matches an OAuth type error code.
- * @param {string} - The error message to check.
- */
-export function isOAuthErrorString(error: string): boolean {
-	return OAUTH_ERROR_CODES.includes(error);
-}
 
 /**
  * Opens the OAuth Authorization window and resolves with
