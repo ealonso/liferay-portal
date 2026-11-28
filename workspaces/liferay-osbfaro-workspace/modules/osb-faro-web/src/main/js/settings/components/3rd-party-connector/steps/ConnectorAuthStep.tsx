@@ -2,7 +2,7 @@ import ConnectorAuth from '../ConnectorAuth';
 import React from 'react';
 import {Alert} from 'shared/types';
 import {ConnectorConfig} from '../types';
-import {updateSearchParams} from 'settings/components/base-page/utis';
+import {updateSearchParams} from 'settings/components/base-page/utils';
 import {useWizardPage} from '../../base-page/WizardPageContext';
 import {usePageConfig} from 'shared/context/pageConfig';
 

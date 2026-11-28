@@ -7,7 +7,7 @@ import {ConnectMarketoCampaignAuth} from 'settings/components/marketo/ConnectMar
 import {DataSourceStatuses} from 'shared/util/constants';
 import {disconnect} from 'shared/api/data-source';
 import {sub} from 'shared/util/lang';
-import {updateSearchParams} from 'settings/components/base-page/utis';
+import {updateSearchParams} from 'settings/components/base-page/utils';
 import {useModal} from '@clayui/modal';
 import {useWizardPage} from '../../base-page/WizardPageContext';
 import {WizardPageButtonGroup} from 'settings/components/base-page/WizardPageButtonGroup';

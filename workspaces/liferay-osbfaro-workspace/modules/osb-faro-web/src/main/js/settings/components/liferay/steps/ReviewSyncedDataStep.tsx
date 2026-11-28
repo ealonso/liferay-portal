@@ -7,7 +7,7 @@ import React, {useEffect, useState} from 'react';
 import {CREATE_DATE} from 'shared/util/pagination';
 import {DataSourceTypes, OrderByDirections} from 'shared/util/constants';
 import {ReviewSyncedDataFragment} from '../ReviewSyncedDataFragment';
-import {updateSearchParams} from 'settings/components/base-page/utis';
+import {updateSearchParams} from 'settings/components/base-page/utils';
 import {useInterval} from 'shared/hooks/useInterval';
 import {useLazyQuery} from '@apollo/client';
 import {WizardPageButtonGroup} from 'settings/components/base-page/WizardPageButtonGroup';

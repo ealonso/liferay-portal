@@ -6,7 +6,7 @@ import {Alert} from 'shared/types';
 import {ConnectSalesforceAuth} from 'settings/components/salesforce/ConnectSalesforceAuth';
 import {DataSourceStatuses} from 'shared/util/constants';
 import {disconnect} from 'shared/api/data-source';
-import {updateSearchParams} from 'settings/components/base-page/utis';
+import {updateSearchParams} from 'settings/components/base-page/utils';
 import {useModal} from '@clayui/modal';
 import {useWizardPage} from '../../base-page/WizardPageContext';
 import {WizardPageButtonGroup} from 'settings/components/base-page/WizardPageButtonGroup';

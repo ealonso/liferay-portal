@@ -1,7 +1,7 @@
 import {ConnectorAuthStep} from '../../steps/ConnectorAuthStep';
 import {ConnectorConfig} from '../../types';
 import {render} from '@testing-library/react';
-import {updateSearchParams} from 'settings/components/base-page/utis';
+import {updateSearchParams} from 'settings/components/base-page/utils';
 import {WorkspacePage} from 'test/mock-page-context';
 
 const useWizardPageMock = jest.fn();
@@ -10,7 +10,7 @@ jest.mock('settings/components/base-page/WizardPageContext', () => ({
 	useWizardPage: () => useWizardPageMock(),
 }));
 
-jest.mock('settings/components/base-page/utis', () => ({
+jest.mock('settings/components/base-page/utils', () => ({
 	updateSearchParams: jest.fn(),
 }));
 

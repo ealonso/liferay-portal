@@ -8,7 +8,7 @@ import {addAlert} from 'shared/actions/alerts';
 import {connect, ConnectedProps} from 'react-redux';
 import {Heading, Text} from '@clayui/core';
 import {sub} from 'shared/util/lang';
-import {updateSearchParams} from './utis';
+import {updateSearchParams} from './utils';
 import {useWizardPage, WizardPageProvider} from './WizardPageContext';
 import {usePageConfig} from 'shared/context/pageConfig';
 
