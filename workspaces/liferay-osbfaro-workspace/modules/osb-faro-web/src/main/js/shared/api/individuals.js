@@ -34,31 +34,6 @@ export function fetchEnrichedProfilesCount({channelId, groupId}) {
 	});
 }
 
-export function fetchMembership({
-	delta,
-	groupId,
-	individualSegmentId,
-	orderIOMap,
-	page,
-	query,
-}) {
-	const orderParams = orderIOMap.first();
-
-	const orderByFields = buildOrderByFields(orderParams, INDIVIDUALS);
-
-	return sendRequest({
-		data: {
-			cur: page,
-			delta,
-			individualSegmentId,
-			orderByFields,
-			query,
-		},
-		method: 'GET',
-		path: `contacts/${groupId}/individual`,
-	});
-}
-
 export function fetchFieldValues({
 	channelId,
 	delta = DEFAULT_DELTA,

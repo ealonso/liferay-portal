@@ -5,8 +5,6 @@ import {
 	mockSegment,
 } from 'test/data';
 
-export const addIndividuals = jest.fn(() => Promise.resolve(mockSegment()));
-
 const delete$ = jest.fn(() => Promise.resolve(''));
 
 export {delete$ as delete};
@@ -18,10 +16,6 @@ export const create = jest.fn(() => Promise.resolve(mockSegment()));
 export const update = jest.fn(() => Promise.resolve(mockSegment()));
 
 export const updateChannel = jest.fn(() => Promise.resolve(mockSegment()));
-
-export const addMemberships = jest.fn(() => Promise.resolve(mockSegment()));
-
-export const removeMemberships = jest.fn(() => Promise.resolve(mockSegment()));
 
 export const fetchMembershipChanges = jest.fn(() =>
 	Promise.resolve(mockSearch(mockMembershipChange))

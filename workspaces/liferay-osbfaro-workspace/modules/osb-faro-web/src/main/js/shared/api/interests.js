@@ -6,7 +6,6 @@ import sendRequest from 'shared/util/request';
 import {
 	buildOrderByFields,
 	createOrderIOMap,
-	INDIVIDUAL_COUNT,
 	INTERESTS,
 	NAME,
 	SCORE,
@@ -81,33 +80,5 @@ export function searchKeywords(params) {
 		},
 		method: 'GET',
 		path: `contacts/${groupId}/interest/keywords`,
-	});
-}
-export function searchKeywordAggregations(params) {
-	const {
-		contactsEntityId,
-		contactsEntityType,
-		delta = DEFAULT_DELTA,
-		groupId,
-		orderIOMap = createOrderIOMap(INDIVIDUAL_COUNT),
-		page = DEFAULT_PAGE,
-		query = '',
-	} = params;
-
-	const orderParams = orderIOMap.first();
-
-	const orderByFields = buildOrderByFields(orderParams);
-
-	return sendRequest({
-		data: {
-			contactsEntityId,
-			contactsEntityType,
-			cur: page,
-			delta,
-			orderByFields,
-			query,
-		},
-		method: 'GET',
-		path: `contacts/${groupId}/interest/keywords/aggregations`,
 	});
 }

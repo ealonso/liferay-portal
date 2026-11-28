@@ -63,10 +63,6 @@ export const fetchMappingsLite = jest.fn(() =>
 	])
 );
 
-export const fetchProgress = jest.fn(() =>
-	Promise.resolve(data.mockProgress())
-);
-
 export const fetchOAuthUrl = jest.fn(() =>
 	Promise.resolve({
 		oAuthAuthorizationURL: 'https://foobar.biz',
@@ -88,8 +84,4 @@ export const updateCSV = jest.fn(() =>
 );
 export const updateLiferay = jest.fn(() =>
 	Promise.resolve(data.mockLiferayDataSource())
-);
-
-export const fetchCompanies = jest.fn(() =>
-	Promise.resolve([data.mockCompany()])
 );

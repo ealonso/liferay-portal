@@ -14,16 +14,6 @@ const DEFAULT_MAX = 30;
 
 const DEFAULT_INTERVAL = TimeIntervals.Day;
 
-export function addIndividuals({groupId, individualIds, selectedSegmentId}) {
-	return sendRequest({
-		data: {
-			individualIds,
-		},
-		method: 'PUT',
-		path: `contacts/${groupId}/individual_segment/${selectedSegmentId}/memberships`,
-	});
-}
-
 function delete$({groupId, ids}) {
 	return sendRequest({
 		data: {
@@ -110,26 +100,6 @@ export function updateChannel({channelId, groupId, id}) {
 	return sendRequest({
 		method: 'PUT',
 		path: `contacts/${groupId}/individual_segment/${id}/channel/${channelId}`,
-	});
-}
-
-export function addMemberships({groupId, id, individualIds}) {
-	return sendRequest({
-		data: {
-			individualIds,
-		},
-		method: 'PUT',
-		path: `contacts/${groupId}/individual_segment/${id}/memberships`,
-	});
-}
-
-export function removeMemberships({groupId, id, individualIds}) {
-	return sendRequest({
-		data: {
-			individualIds,
-		},
-		method: 'DELETE',
-		path: `contacts/${groupId}/individual_segment/${id}/memberships`,
 	});
 }
 

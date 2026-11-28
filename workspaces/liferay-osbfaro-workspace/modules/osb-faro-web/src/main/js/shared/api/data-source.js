@@ -6,12 +6,6 @@ import {
 } from 'shared/util/pagination';
 import {get, pickBy} from 'lodash';
 
-export const clearData = ({groupId, id}) =>
-	sendRequest({
-		method: 'POST',
-		path: `contacts/${groupId}/data_source/${id}/clear`,
-	});
-
 export const disconnect = ({groupId, id}) =>
 	sendRequest({
 		method: 'POST',
@@ -63,14 +57,6 @@ export function fetchChannels({
 	});
 }
 
-export function fetchDataSourceId({groupId, token}) {
-	return sendRequest({
-		data: {token},
-		method: 'POST',
-		path: `contacts/${groupId}/data_source/data_source_id`,
-	});
-}
-
 export function fetchDeletePreview({groupId, id}) {
 	return sendRequest({
 		method: 'GET',
@@ -108,13 +94,6 @@ export function fetchMappingsLite({context, fileVersionId, groupId, id}) {
 		data: {context, fileVersionId},
 		method: 'GET',
 		path: `contacts/${groupId}/data_source/${id}/mappings/lite`,
-	});
-}
-
-export function fetchProgress({groupId, id}) {
-	return sendRequest({
-		method: 'GET',
-		path: `contacts/${groupId}/data_source/${id}/progress`,
 	});
 }
 
@@ -422,13 +401,6 @@ export function fetchChannelDatasources({
 		},
 		method: 'GET',
 		path: `contacts/${groupId}/data_source/${id}/channel-data-sources`,
-	});
-}
-
-export function fetchCompanies({groupId}) {
-	return sendRequest({
-		method: 'GET',
-		path: `contacts/${groupId}/data_source/companies`,
 	});
 }
 

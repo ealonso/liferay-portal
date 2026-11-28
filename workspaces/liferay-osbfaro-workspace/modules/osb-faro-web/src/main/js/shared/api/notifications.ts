@@ -13,12 +13,6 @@ export const fetchNotifications = ({
 		path: `main/${groupId}/notification`,
 	});
 
-export const deleteNotification = (groupId: string, notificationId: string) =>
-	sendRequest({
-		method: 'DELETE',
-		path: `main/${groupId}/notification/${notificationId}`,
-	});
-
 export const readNotification = (groupId: string, notificationId: string) =>
 	sendRequest({
 		method: 'POST',
