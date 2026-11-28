@@ -127,21 +127,6 @@ public class UserFaroController extends BaseFaroController {
 	}
 
 	@GET
-	@Path("/current")
-	@PermitAll
-	public FaroUserDisplay getCurrentFaroUserDisplay(
-			@PathParam("groupId") long groupId)
-		throws Exception {
-
-		if (groupId == 0) {
-			return new FaroUserDisplay(getUser());
-		}
-
-		return new FaroUserDisplay(
-			_faroUserLocalService.getFaroUser(groupId, getUserId()));
-	}
-
-	@GET
 	@Path("/{id}")
 	@RolesAllowed(RoleConstants.SITE_MEMBER)
 	public FaroUserDisplay getFaroUserDisplay(
