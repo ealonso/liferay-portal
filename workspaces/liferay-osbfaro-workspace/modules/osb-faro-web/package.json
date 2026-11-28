@@ -40,8 +40,6 @@
 		"@clayui/tooltip": "3.166.0",
 		"classnames": "^2.2.5",
 		"clipboard": "^1.7.1",
-		"core-js": "^2.5.7",
-		"custom-event-polyfill": "^1.0.7",
 		"d3": "^5.9.1",
 		"d3-sankey": "^0.7.1",
 		"d3plus-text": "^0.9.43",
@@ -70,9 +68,7 @@
 		"redux-toolbox": "^1.0.0",
 		"text-mask-addons": "^3.7.2",
 		"text-mask-core": "^5.1.0",
-		"unorm": "^1.6.0",
-		"uuid": "11.1.1",
-		"whatwg-fetch": "^3.0.0"
+		"uuid": "11.1.1"
 	},
 	"description": "Liferay Data Platform",
 	"devDependencies": {
@@ -150,7 +146,8 @@
 		"webpack-cli": "^5.1.4",
 		"webpack-dev-middleware": "^7.0.0",
 		"webpack-dev-server": "^6.0.0",
-		"webpack-merge": "^5.10.0"
+		"webpack-merge": "^5.10.0",
+		"whatwg-fetch": "^3.0.0"
 	},
 	"globals": {
 		"CEREBRO_PATHS_GEOMAP_KEY": "paths"

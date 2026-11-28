@@ -14,19 +14,10 @@ function resolveModule(name = '') {
 
 const include = [resolveModule()];
 
-const POLYFILLS = [
-	'core-js/fn/array/fill',
-	'core-js/fn/string/code-point-at',
-	'core-js/fn/typed',
-	'custom-event-polyfill',
-	'unorm',
-	'whatwg-fetch',
-];
-
 function getComponentEntry(name) {
 	return {
 		filename: '../__liferay__/[name].js',
-		import: [...POLYFILLS, resolveModule(`fragments/${name}/index.ts`)],
+		import: resolveModule(`fragments/${name}/index.ts`),
 		library: {
 			type: 'module',
 		},
