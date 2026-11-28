@@ -102,13 +102,6 @@ export enum DataSourceDisplayStatuses {
 	Inactive = 'INACTIVE',
 }
 
-export enum DataSourceProgressStatuses {
-	Completed = 'COMPLETED',
-	Failed = 'FAILED',
-	InProgress = 'IN_PROGRESS',
-	Started = 'STARTED',
-}
-
 export enum DataSourceStates {
 	ActionNeeded = 'ACTION_NEEDED',
 	AnalyticsClientConfigurationFailure = 'ANALYTICS_CLIENT_CONFIGURATION_FAILURE',

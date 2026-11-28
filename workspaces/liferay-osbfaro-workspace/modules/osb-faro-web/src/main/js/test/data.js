@@ -4,7 +4,6 @@ import {
 	ActivityActions,
 	AssetTypes,
 	CredentialTypes,
-	DataSourceProgressStatuses,
 	DataSourceStates,
 	DataSourceStatuses,
 	DataSourceTypes,
@@ -266,19 +265,6 @@ export function mockAsset(seed = 0, data = {}) {
 	};
 }
 
-export function mockCompany(seed = 0, data = {}) {
-	return {
-		companyId: 20155,
-		id: String(seed),
-		installationId: 13183,
-		name: `Test Company ${seed}`,
-		status: 1,
-		url: 'http://www.liferay.com',
-		version: '7.1',
-		...data,
-	};
-}
-
 export function mockBlockedKeyword(seed = 0, data = {}) {
 	return {
 		createDate: 1575394162758,
@@ -472,24 +458,6 @@ export function mockMetricFragment(seed = 0, data = {}) {
 			trendClassification: 'POSITIVE',
 		},
 		value: seed,
-		...data,
-	};
-}
-
-export function mockProgress(data) {
-	return {
-		accounts: {
-			dateRecorded: getTimestamp(),
-			processedOperations: 100,
-			status: DataSourceProgressStatuses.Completed,
-			totalOperations: 100,
-		},
-		individuals: {
-			dateRecorded: getTimestamp(),
-			processedOperations: 100,
-			status: DataSourceProgressStatuses.Completed,
-			totalOperations: 100,
-		},
 		...data,
 	};
 }
