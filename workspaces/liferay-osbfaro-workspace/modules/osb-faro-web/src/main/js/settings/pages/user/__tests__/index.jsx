@@ -1,3 +1,4 @@
+import * as API from 'shared/api';
 import BundleRouter from 'route-middleware/BundleRouter';
 import mockStore from 'test/mock-store';
 import React, {lazy} from 'react';
@@ -72,5 +73,17 @@ describe('UserRoutes', () => {
 
 		expect(screen.queryByRole('link', {name: /^manage users$/i})).toBeNull();
 		expect(screen.queryByRole('link', {name: /^requests$/i})).toBeNull();
+	});
+
+	it('fetches the access request count once, not on every render', () => {
+		mockCurrentUser();
+
+		API.user.fetchCount.mockClear();
+
+		const {rerender} = render(<DefaultComponent />);
+
+		rerender(<DefaultComponent />);
+
+		expect(API.user.fetchCount).toHaveBeenCalledTimes(1);
 	});
 });
