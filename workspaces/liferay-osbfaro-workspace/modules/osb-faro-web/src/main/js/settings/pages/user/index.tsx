@@ -6,7 +6,7 @@ import ClayLink from '@clayui/link';
 import ClayNavigationBar from '@clayui/navigation-bar';
 import getCN from 'classnames';
 import Loading from 'shared/components/Loading';
-import React, {Suspense, useState} from 'react';
+import React, {Suspense, useEffect, useState} from 'react';
 import {User as UserRecord} from 'shared/util/records';
 import {UserStatuses} from 'shared/util/constants';
 import {usePageConfig} from 'shared/context/pageConfig';
@@ -30,12 +30,14 @@ export const User: React.FC<IUserProps> = ({className, renderContent}) => {
 	const onSetUserRequest = (userRequest: number) =>
 		setUserRequest(userRequest);
 
-	API.user
-		.fetchCount({
-			groupId,
-			statuses: [UserStatuses.Requested],
-		})
-		.then(setUserRequest);
+	useEffect(() => {
+		API.user
+			.fetchCount({
+				groupId,
+				statuses: [UserStatuses.Requested],
+			})
+			.then(setUserRequest);
+	}, [groupId]);
 
 	const navigationItems = config.navigationItems ?? [];
 
