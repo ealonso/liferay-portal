@@ -8,7 +8,6 @@ import {CustomFunctionOperators, NotOperators} from '../../utils/constants';
 import {
 	getRemoteCriterionTypeByOperator,
 	getRemoteCriterionTypeByPropertyKey,
-	isRemoteCriterionOperator,
 	REMOTE_CRITERION_TYPES,
 } from '../registry';
 import {tagCriterionType} from '../tagCriterionType';
@@ -159,37 +158,6 @@ describe('criterion-types/registry', () => {
 			expect(getRemoteCriterionTypeByOperator('')).toBe(undefined);
 			expect(getRemoteCriterionTypeByOperator(null)).toBe(undefined);
 			expect(getRemoteCriterionTypeByOperator(undefined)).toBe(undefined);
-		});
-	});
-
-	describe('isRemoteCriterionOperator', () => {
-		it('should return true for all remote operators', () => {
-			expect(
-				isRemoteCriterionOperator(
-					CustomFunctionOperators.VocabulariesFilter
-				)
-			).toBe(true);
-			expect(
-				isRemoteCriterionOperator(NotOperators.NotVocabulariesFilter)
-			).toBe(true);
-			expect(
-				isRemoteCriterionOperator(CustomFunctionOperators.TagsFilter)
-			).toBe(true);
-			expect(isRemoteCriterionOperator(NotOperators.NotTagsFilter)).toBe(
-				true
-			);
-		});
-
-		it('should return false for non-remote operators and empty inputs', () => {
-			expect(
-				isRemoteCriterionOperator(
-					CustomFunctionOperators.AccountsFilter
-				)
-			).toBe(false);
-			expect(isRemoteCriterionOperator('eq')).toBe(false);
-			expect(isRemoteCriterionOperator('')).toBe(false);
-			expect(isRemoteCriterionOperator(null)).toBe(false);
-			expect(isRemoteCriterionOperator(undefined)).toBe(false);
 		});
 	});
 });

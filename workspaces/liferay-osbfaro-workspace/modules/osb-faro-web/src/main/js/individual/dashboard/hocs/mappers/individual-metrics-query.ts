@@ -18,11 +18,6 @@ interface IIndividualMetricsResult {
 export const CHART_DATA_ID_1 = 'knownIndividuals';
 export const CHART_DATA_ID_2 = 'anonymousIndividuals';
 
-export const LANG_MAP = {
-	[CHART_DATA_ID_1]: Liferay.Language.get('known-visitors'),
-	[CHART_DATA_ID_2]: Liferay.Language.get('anonymous-visitors'),
-};
-
 export const mapPropsToOptions = ({
 	channelId,
 	interval,

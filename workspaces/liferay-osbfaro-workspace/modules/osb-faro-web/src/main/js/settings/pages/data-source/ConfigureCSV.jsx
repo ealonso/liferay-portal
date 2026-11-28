@@ -171,8 +171,6 @@ class ConfigureCSV extends React.Component {
 	}
 }
 
-export {ConfigureCSV as ConfigureCSVTesting};
-
 const ConnectedConfigureCSV = connect(null, {addAlert})(
 	withPageConfig(ConfigureCSV)
 );

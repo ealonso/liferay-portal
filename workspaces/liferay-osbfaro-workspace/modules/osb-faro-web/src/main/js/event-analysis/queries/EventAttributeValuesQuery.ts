@@ -5,15 +5,6 @@ export interface EventAttributeValuesData {
 	total: number;
 }
 
-export interface EventAttributeValuesVariables {
-	channelId: string;
-	eventAttributeDefinitionId: string;
-	eventDefinitionId: string;
-	keywords: string;
-	start: number;
-	size: number;
-}
-
 export default gql`
 	query EventAttributeValues(
 		$channelId: String!

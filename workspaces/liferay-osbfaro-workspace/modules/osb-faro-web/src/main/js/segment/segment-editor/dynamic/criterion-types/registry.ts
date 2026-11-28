@@ -26,7 +26,3 @@ export const getRemoteCriterionTypeByOperator = (
 	operatorName: string | null | undefined
 ): RemoteCriterionType | undefined =>
 	operatorName ? BY_OPERATOR.get(operatorName) : undefined;
-
-export const isRemoteCriterionOperator = (
-	operatorName: string | null | undefined
-): boolean => !!operatorName && BY_OPERATOR.has(operatorName);

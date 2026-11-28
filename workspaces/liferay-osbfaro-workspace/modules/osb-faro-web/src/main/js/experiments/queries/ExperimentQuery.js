@@ -120,15 +120,3 @@ export const EXPERIMENT_STATUS_QUERY = gql`
 		}
 	}
 `;
-
-export const EXPERIMENT_ESTIMATED_DAYS_DURATION = gql`
-	query ExperimentEstimatedDaysDuration(
-		$experimentId: String!
-		$experimentSettings: ExperimentSettings!
-	) {
-		experimentEstimatedDaysDuration(
-			experimentId: $experimentId
-			experimentSettings: $experimentSettings
-		)
-	}
-`;

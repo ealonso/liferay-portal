@@ -15,15 +15,6 @@ interface ITabItemProps {
 	title: string;
 }
 
-export type ITab = {
-	context: string;
-	id: string;
-	numberOfBins: number;
-	propertyId: string;
-	propertyType: string;
-	title: string;
-};
-
 const TabItem: React.FC<ITabItemProps> = ({
 	active,
 	disabled,

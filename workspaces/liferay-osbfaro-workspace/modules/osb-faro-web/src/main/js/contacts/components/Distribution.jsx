@@ -105,19 +105,6 @@ function formatTickVal(name, percent, showPercentage) {
 	})} ${suffix}`;
 }
 
-/**
- * Get the chart height and bar config by calculating
- * the length of the data multiplied by bar width.
- * @param {number} dataLength - The length of the data.
- * @param {boolean} histogram - Whether the chart is a histogram type.
- * @returns {Object} Chart height and bar width config.
- */
-export function getChartSizeConfig(dataLength, histogram) {
-	const height = BAR_WIDTH * dataLength + CHART_PADDING;
-
-	return histogram ? {height} : {bar: {width: {ratio: 0.8}}, height};
-}
-
 @hasRequest
 export class Distribution extends React.Component {
 	static defaultProps = {

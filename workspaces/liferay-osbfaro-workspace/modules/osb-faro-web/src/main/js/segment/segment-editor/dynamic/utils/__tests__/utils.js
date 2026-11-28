@@ -316,14 +316,6 @@ describe('utils', () => {
 		});
 	});
 
-	describe('objectToFormData', () => {
-		it('should convert input object to FormData', () => {
-			expect(utils.objectToFormData({foo: 'bar'})).toBeInstanceOf(
-				FormData
-			);
-		});
-	});
-
 	describe('parseActivityKey', () => {
 		it('should return an object containing the eventId, id, & objectType from the activityKey', () => {
 			expect(utils.parseActivityKey('foo#bar#test')).toMatchObject({

@@ -302,22 +302,6 @@ export const isOfKnownType = (key: string): boolean =>
 	[isKnown, isUnknown].includes(key);
 
 /**
- * Converts an object of key value pairs to a form data object for passing
- * into a fetch body.
- */
-export const objectToFormData = (
-	dataObject: Record<string, string | Blob>
-): FormData => {
-	const formData = new FormData();
-
-	Object.keys(dataObject).forEach((key) => {
-		formData.set(key, dataObject[key]);
-	});
-
-	return formData;
-};
-
-/**
  * Parse an activityKey string into an object.
  */
 export const parseActivityKey = (
